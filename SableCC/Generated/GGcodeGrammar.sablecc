@@ -1,6 +1,9 @@
 Package GGCodeParser;
 
 Helpers
+  all = [0 .. 127];
+  curleys = '{' + '}';
+  not_curleys = [all - curleys];
   tab   = 9;
   cr    = 13;
   lf    = 10;
@@ -12,45 +15,124 @@ Helpers
   idchar  = letter | '_' | digit;
 
 Tokens
+  all_chars_except_curly = not_curleys;
   eol   = cr | lf | cr lf;
   blank = ' ' | tab;
-  star  = '*';
-  slash = '/';
-  plus  = '+';
-  minus = '-';
+  assignment_op = '=';
+  multiplication_op  = '*';
+  modulo_op  = '%';
+  division_op = '/';
+  plus_op  = '+';
+  minus_op = '-';
   l_par = '(';
   r_par = ')';
+  equal = '==';
+  not_equal = '!=';
+  less_than = '<';
+  less_than_or_equal = '<=';
+  greater_than = '>';
+  greater_than_or_equal = '>=';
+  not = '!';
   number  = '0'| [digit-'0'] digit*;
-  id    = idletter idchar*;
+  identifier    = idletter idchar*;
+  const = 'const';
 
 Ignored Tokens
-  blank, eol;
+  blank;
 
 Productions
-cst_exp {-> exp} = 
-  {cst_plus}    cst_exp plus factor 
-                {-> New exp.plus(cst_exp.exp,factor.exp)}
-| {cst_minus}   cst_exp minus factor 
-	              {-> New exp.minus(cst_exp.exp,factor.exp)}
-| {factor}      factor {-> factor.exp};
 
-factor {-> exp} =
-  {cst_mult}    factor star term 
-                {-> New exp.mult(Null,term.exp)}
-| {cst_divd}    factor slash term 
-                {-> New exp.divd(factor.exp,term.exp)}
-| {term}        term {-> term.exp};
+Program = DeclarationList? Main DeclarationList?;
 
-term {-> exp} =
-  {paren}       l_par cst_exp r_par {-> cst_exp.exp}
-| {cst_id}      id {-> New exp.id(id)}
-| {cst_number}  number {-> New exp.number(number)};
+Main = Block;
 
-Abstract Syntax Tree
-exp = 
-  {plus}     [l]:exp [r]:exp 
-| {minus}    [l]:exp [r]:exp
-| {mult}     [l]:exp? [r]:exp 
-| {divd}     [l]:exp [r]:exp 
-| {id}       id 
-| {number}   number;
+DeclarationList =
+        Declaration eol declarationList | 
+        Declaration eol;
+
+Declaration = 
+        VariableDeclaration eol | 
+        FunctionDeclaration eol;
+
+VariableDeclaration =
+        const? simpleTypes identifier assignment_op expression| 
+        VectorDeclaration;
+
+VectorDeclaration = const? vector identifier assignment_op (expression);
+
+AllTypes = 
+        SimpleTypes | 
+        vector;
+
+SimpleTypes =
+        int | 
+        float | 
+        boolean;
+
+VectorValues = (Expression, Expression, Expression);
+
+FunctionDeclaration =
+        AllType identifier (FormalParamList?) eol FunctionBody |
+        void identifier (FormalParamList?) eol FunctionBody;
+
+FormalParamList = 
+        FormalParam FormalParamList | 
+        FormalParam;
+
+FormalParam = AllType identifier;
+
+FunctionBody = Block eol;
+
+Block = {StatementList};
+
+StatementList = 
+        Statement eol StatementList | 
+        Statement eol;
+
+Statement = 
+        Declaration | 
+        IfStatement | 
+        RepeatStatement | 
+        WhileStatement | 
+        GCodeLiteral | 
+        Assignment | 
+        FunctionCall;
+
+IfStatement = 
+        if (Expression) Block | 
+        if (Expression) Block else Block;
+
+RepeatStatement = repeat (Expression) Block;
+
+WhileStatement = while (Expression) Block;
+
+GCodeLiteral = GCODE{all_chars_except_curly};
+
+Assignment = identifier assignment_op Expression eol;
+
+FunctionCall = identifier(ActualParamList?) eol;
+
+ActualParamList =
+        ActualParam, ActualParamList | 
+        ActualParam;
+
+ActualParam = 
+        identifier | 
+        Expression;
+
+Expression = 
+        Expression plus_op Expression | 
+        Expression minus_op Expression | 
+        Expression multiplication_op Expression | 
+        Expression division_op Expression | 
+        Expression modulo_operator Expression | 
+        Expression equal Expression | 
+        Expression notEqual Expression | 
+        not Expression | 
+        Expression less_than Expression | 
+        Expression less_than_or_equal Expression | 
+        Expression greater_than Expression | 
+        Expression greater_than_or_equal Expression | 
+        identifier | 
+        VectorValues | 
+        number;

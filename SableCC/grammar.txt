@@ -1,0 +1,94 @@
+﻿Program = DeclarationList? Main DeclarationList?
+
+DeclarationList =
+        Declaration declarationList | 
+        Declaration
+
+Declaration = 
+        VariableDeclaration | 
+        FunctionDeclaration
+
+VariableDeclaration =
+        const? simpleTypes identifier assign_operator expression | 
+        VectorDeclaration
+
+VectorDeclaration = 
+        const? vector identifier assign_operator (expression) 
+
+AllTypes = 
+        SimpleTypes | 
+        vector
+
+SimpleTypes =
+        int | 
+        float | 
+        boolean
+
+VectorValues = (Expression, Expression, Expression)
+
+FunctionDeclaration =
+        AllType identifier (FormalParamList?) FunctionBody |
+        void identifier (FormalParamList?) FunctionBody
+
+FormalParamList = 
+        FormalParam FormalParamList | 
+        FormalParam
+
+FormalParam = AllType identifier
+
+FunctionBody = Block
+
+Block = {StatementList}
+
+StatementList = 
+        Statement StatementList | 
+        Statement
+
+Statement = 
+        Declaration | 
+        IfStatement | 
+        RepeatStatement | 
+        WhileStatement | 
+        GCodeLiteral | 
+        Assignment | 
+        FunctionCall
+
+IfStatement = 
+        if (Expression) Block | 
+        if (Expression) Block else Block
+
+RepeatStatement = repeat (Expression) Block 
+
+WhileStatement = while (Expression) Block
+
+GCodeLiteral = GCODE{allCharsExceptCurly}
+
+Assignment = identifier assign_operator Expression
+
+FunctionCall = identifier(ActualParamList?)
+
+ActualParamList =
+        ActualParam ActualParamList | 
+        ActualParam
+
+ActualParam = 
+        identifier | 
+        Expression
+
+//Precedence will not be thought of!
+Expression = 
+        Expression add_operator Expression | 
+        Expression subtract_operator Expression | 
+        Expression multiplication_operator Expression | 
+        Expression division_operator Expression | 
+        Expression modulo_operator Expression | 
+        Expression equal Expression | 
+        Expression notEqual Expression | 
+        not Expression | 
+        Expression lessThan Expression | 
+        Expression lessThanOrEqual Expression | 
+        Expression greaterThan Expression | 
+        Expression greaterThanOrEqual Expression | 
+        identifier | 
+        VectorValues | 
+        number
