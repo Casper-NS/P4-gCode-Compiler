@@ -1,0 +1,5 @@
+﻿const float lineWidth = 0.2
+const float layerHeight = 0.2
+const Vector3 objectPosition = (1, 1, 0)
+const float objectSize = 10
+bool testRun = false

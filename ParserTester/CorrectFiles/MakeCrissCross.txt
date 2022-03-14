@@ -1,0 +1,13 @@
+﻿void MakeCrissCross(float length, int amount, Vector3 cornerPosition){
+	AbsMove(cornerPosition)
+	repeat(amount) {
+		if (!testRun){
+			build{
+				RelMove((length, 0, 0))
+				RelMove((0,lineWidth,0))
+				RelMove((length, 0, 0))
+				RelMove((0,lineWidth,0))
+			}	
+		}
+	}
+}
