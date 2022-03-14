@@ -1,0 +1,83 @@
+const float lineWidth = 0.2
+const float layerHeight = 0.2
+const Vector3 objectPosition = (1, 1, 0)
+const float objectSize = 10
+bool testRun = false
+
+void Start()
+{
+	// set temperature of both and wait
+	/* Forgot comment */
+	SetBedTemp(60)
+	SetNozzleTemp(200)
+	WaitForBedTemp()
+	WaitForNozzleTemp()
+
+	Home()
+
+	MakeCrissCross(objectSize, 100, objectPosition)
+
+	AbsMove(currentPosition + (0,0,1))
+
+	MakeLayer()
+	MakeCrissCross(2, 2)
+	
+}
+
+/* henrik wants to throw this out the window with force */
+Vector3 ScaleVector(Vector3 vector, float scale){
+	vector.x *= scale
+	return vector
+}
+
+void MakeCrissCross(float length, int amount, Vector3 cornerPosition){
+	AbsMove(cornerPosition)
+	repeat(amount) {
+		if (!testRun){
+			build{
+				RelMove((length, 0, 0))
+				RelMove((0,lineWidth,0))
+				RelMove((length, 0, 0))
+				RelMove((0,lineWidth,0))
+			}	
+		}
+	}
+}
+
+void MovementExamples(){
+	Vector3 position = (2, 2, 2)
+	float offset = 5;
+
+	AbsMove(position)
+	RelMove(position)
+	AbsArc(position, offset)
+	RelArc(position, offset)
+	
+	build{
+		AbsMove(position)
+		RelMove(position)
+		AbsArc(position, offset)
+		RelArc(position, offset)
+	}
+}
+
+float LookMomICanDoTrig(float in){
+	in = sin(in) * cos(in) / tan(in)
+}
+
+void Transformer(){
+	transform ((x, y, z) => (y, z, x)){
+		MakeCrissCross(objectSize, 100, objectPosition)
+	}
+}
+
+void Turtling(){
+	TurnTo(0)
+	repeat(10){
+		build{
+			int a = 3;
+			Forward(a)
+			Left(360/10)	
+		}
+	}
+}
