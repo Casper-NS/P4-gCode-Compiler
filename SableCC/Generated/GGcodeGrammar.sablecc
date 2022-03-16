@@ -16,7 +16,6 @@ Helpers
   idchar  = letter | '_' | digit;
 
 Tokens
-  all_chars_except_curly = 'b';
   eol   = cr | lf | cr lf;
   blank = ' ' | tab;
   assignment_op = '=';
@@ -25,8 +24,6 @@ Tokens
   division_op = '/';
   plus_op  = '+';
   minus_op = '-';
-  l_par = '(';
-  r_par = ')';
   equal = '==';
   not_equal = '!=';
   less_than = '<';
@@ -34,13 +31,13 @@ Tokens
   greater_than = '>';
   greater_than_or_equal = '>=';
   not = '!';
-  number  = '0'| [digit-'0'] digit*;
-  identifier    = idletter idchar*;
-  const = 'const';
   comma = ',';
+  l_par = '(';
+  r_par = ')';
   l_cur = '{';
   r_cur = '}';
   int = 'int';
+  const = 'const';
   float = 'float';
   bool = 'bool';
   void = 'void';
@@ -49,6 +46,9 @@ Tokens
   repeat = 'repeat';
   while = 'while';
   gcode = 'GCODE';
+  number  = '0'| [digit-'0'] digit*;
+  identifier    = idletter idchar*;
+  all_chars_except_curly = not_curleys;
 
 Ignored Tokens
   blank;
@@ -63,8 +63,8 @@ cst_declaration_list =
         cst_declaration eol;
 
 cst_declaration = 
-        {variable}cst_variable_declaration eol | 
-        {function}cst_function_declaration eol;
+        {variable}cst_variable_declaration | 
+        {function}cst_function_declaration;
 
 cst_variable_declaration =
         {simple}const? cst_simple_types identifier assignment_op cst_expression| 
@@ -95,7 +95,7 @@ cst_formal_param = cst_all_types identifier;
 
 cst_function_body = cst_block eol;
 
-cst_block = {cst_statement_list};
+cst_block = l_cur cst_statement_list r_cur;
 
 cst_statement_list = 
         {recursive}cst_statement eol cst_statement_list | 
