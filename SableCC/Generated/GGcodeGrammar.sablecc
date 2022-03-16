@@ -50,36 +50,36 @@ cst_program = cst_main;
 cst_main = cst_block;
 
 cst_declarationlist =
-        cst_declaration eol cst_declarationlist | 
+        {recursive}cst_declaration eol cst_declarationlist | 
         cst_declaration eol;
 
 cst_declaration = 
-        cst_variabledeclaration eol | 
-        cst_functiondeclaration eol;
+        {variable}cst_variabledeclaration eol | 
+        {function}cst_functiondeclaration eol;
 
 cst_variable_declaration =
-        const? simple_types identifier assignment_op expression| 
-        cst_vector_declaration;
+        {simple}const? simple_types identifier assignment_op expression| 
+        {vector}cst_vector_declaration;
 
 cst_vector_declaration = const? vector identifier assignment_op l_par cst_expression r_par;
 
 cst_all_types = 
-        cst_simple_types | 
+        {simple}cst_simple_types | 
         vector;
 
 cst_simple_types =
-        int | 
-        float | 
-        boolean;
+        {integer}int | 
+        {floatingpoint}float | 
+        {bool}boolean;
 
-cst_vector_values = l_par cst_expression comma cst_expression comma cst_expression r_par;
+cst_vector_values = l_par cst_expression comma;
 
 cst_function_declaration =
-        cst_all_type identifier l_par cst_formal_param_list? r_par eol cst_function_body |
+        {notvoid}cst_all_type identifier l_par cst_formal_param_list? r_par eol cst_function_body |
         void identifier l_par cst_formal_param_list? r_par eol cst_function_body;
 
 cst_formal_param_list = 
-        cst_formal_param cst_formal_param_list | 
+        {recursive}cst_formal_param cst_formal_param_list | 
         cst_formal_param;
 
 cst_formal_param = cst_all_type identifier;
@@ -89,21 +89,21 @@ cst_function_body = cst_block eol;
 cst_block = {cst_statement_list};
 
 cst_statement_list = 
-        cst_statement eol cst_statement_list | 
+        {recursive}cst_statement eol cst_statement_list | 
         cst_statement eol;
 
 cst_statement = 
-        cst_declaration | 
-        cst_if_statement | 
-        cst_repeat_statement | 
-        cst_while_statement | 
-        cst_gcode_literal | 
-        cst_assignment | 
-        cst_function_call;
+        {decl}cst_declaration | 
+        {if}cst_if_statement | 
+        {repeat}cst_repeat_statement | 
+        {while}cst_while_statement | 
+        {gcode}cst_gcode_literal | 
+        {assignment}cst_assignment | 
+        {function}cst_function_call;
 
 cst_if_statement = 
-        if l_par cst_expression r_par cst_block | 
-        if l_par cst_expression r_par cst_block else cst_block;
+        {noelse}if l_par cst_expression r_par cst_block | 
+        {withelse}if l_par cst_expression r_par cst_block;
 
 cst_repeat_statement = repeat l_par cst_expression r_par cst_block;
 
@@ -116,26 +116,26 @@ cst_assignment = identifier assignment_op cst_expression eol;
 cst_function_call = identifierl_par actualparamlist? r_par eol;
 
 cst_actual_param_list =
-        cst_actual_param comma cst_actual_param_list | 
+        {recursive}cst_actual_param comma cst_actual_param_list | 
         cst_actual_param;
 
 cst_actual_param = 
-        identifier | 
+        {id}identifier | 
         cst_expression;
 
 cst_expression = 
-        cst_expression plus_op cst_expression | 
-        cst_expression minus_op cst_expression | 
-        cst_expression multiplication_op cst_expression | 
-        cst_expression division_op cst_expression | 
-        cst_expression modulo_operator cst_expression | 
-        cst_expression equal cst_expression | 
-        cst_expression notequal cst_expression | 
-        not cst_expression | 
-        cst_expression less_than cst_expression | 
-        cst_expression less_than_or_equal cst_expression | 
-        cst_expression greater_than cst_expression | 
-        cst_expression greater_than_or_equal cst_expression | 
-        identifier | 
-        cst_vector_values | 
-        number;
+        {plus}cst_expression plus_op cst_expression | 
+        {minus}cst_expression minus_op cst_expression | 
+        {mult}cst_expression multiplication_op cst_expression | 
+        {division}cst_expression division_op cst_expression | 
+        {modulo}cst_expression modulo_operator cst_expression | 
+        {eq}cst_expression equal cst_expression | 
+        {neq}cst_expression notequal cst_expression | 
+        {not}not cst_expression | 
+        {lessthan}cst_expression less_than cst_expression | 
+        {leq}cst_expression less_than_or_equal cst_expression | 
+        {greaterthan}cst_expression greater_than cst_expression | 
+        {geq}cst_expression greater_than_or_equal cst_expression | 
+        {id}identifier | 
+        {vecvalue}cst_vector_values | 
+        {num}number;
