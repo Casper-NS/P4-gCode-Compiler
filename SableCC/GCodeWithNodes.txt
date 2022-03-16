@@ -1,4 +1,4 @@
-Package GGCodeParser;
+﻿Package GGCodeParser;
 
 Helpers
   all = [0 .. 127];
@@ -16,7 +16,7 @@ Helpers
   idchar  = letter | '_' | digit;
 
 Tokens
-  all_chars_except_curly = 'b';
+  all_chars_except_curly = not_curleys;
   eol   = cr | lf | cr lf;
   blank = ' ' | tab;
   assignment_op = '=';
@@ -133,4 +133,18 @@ cst_actual_param =
         cst_expression;
 
 cst_expression = 
-        number;
+        {plus}[a]:cst_expression plus_op [b]:cst_expression | 
+        {minus}[a]:cst_expression minus_op [b]:cst_expression | 
+        {mult}[a]:cst_expression multiplication_op [b]:cst_expression | 
+        {division}[a]:cst_expression division_op [b]:cst_expression | 
+        {modulo}[a]:cst_expression modulo_op [b]:cst_expression | 
+        {eq}[a]:cst_expression equal [b]:cst_expression | 
+        {neq}[a]:cst_expression not_equal [b]:cst_expression | 
+        {not}not cst_expression | 
+        {lessthan}[a]:cst_expression less_than [b]:cst_expression | 
+        {leq}[a]:cst_expression less_than_or_equal [b]:cst_expression | 
+        {greaterthan}[a]:cst_expression greater_than [b]:cst_expression | 
+        {geq}[a]:cst_expression greater_than_or_equal [b]:cst_expression | 
+        {id}identifier | 
+        {vecvalue}cst_vector_values | 
+        {num}number;
