@@ -409,31 +409,6 @@ public sealed class TNot : Token
     }
 }
 
-public sealed class TComma : Token
-{
-    public TComma(string text)
-    {
-        Text = text;
-    }
-
-    public TComma(string text, int line, int pos)
-    {
-        Text = text;
-        Line = line;
-        Pos = pos;
-    }
-
-    public override Object Clone()
-    {
-      return new TComma(Text, Line, Pos);
-    }
-
-    public override void Apply(Switch sw)
-    {
-        ((Analysis) sw).CaseTComma(this);
-    }
-}
-
 public sealed class TLPar : Token
 {
     public TLPar(string text)
@@ -531,6 +506,56 @@ public sealed class TRCur : Token
     public override void Apply(Switch sw)
     {
         ((Analysis) sw).CaseTRCur(this);
+    }
+}
+
+public sealed class TComma : Token
+{
+    public TComma(string text)
+    {
+        Text = text;
+    }
+
+    public TComma(string text, int line, int pos)
+    {
+        Text = text;
+        Line = line;
+        Pos = pos;
+    }
+
+    public override Object Clone()
+    {
+      return new TComma(Text, Line, Pos);
+    }
+
+    public override void Apply(Switch sw)
+    {
+        ((Analysis) sw).CaseTComma(this);
+    }
+}
+
+public sealed class TVector : Token
+{
+    public TVector(string text)
+    {
+        Text = text;
+    }
+
+    public TVector(string text, int line, int pos)
+    {
+        Text = text;
+        Line = line;
+        Pos = pos;
+    }
+
+    public override Object Clone()
+    {
+      return new TVector(Text, Line, Pos);
+    }
+
+    public override void Apply(Switch sw)
+    {
+        ((Analysis) sw).CaseTVector(this);
     }
 }
 
@@ -656,6 +681,31 @@ public sealed class TVoid : Token
     public override void Apply(Switch sw)
     {
         ((Analysis) sw).CaseTVoid(this);
+    }
+}
+
+public sealed class TBoolValue : Token
+{
+    public TBoolValue(string text)
+    {
+        Text = text;
+    }
+
+    public TBoolValue(string text, int line, int pos)
+    {
+        Text = text;
+        Line = line;
+        Pos = pos;
+    }
+
+    public override Object Clone()
+    {
+      return new TBoolValue(Text, Line, Pos);
+    }
+
+    public override void Apply(Switch sw)
+    {
+        ((Analysis) sw).CaseTBoolValue(this);
     }
 }
 

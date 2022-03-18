@@ -1629,23 +1629,23 @@ public sealed class ASimpleCstAllTypes : PCstAllTypes
 }
 public sealed class ACstAllTypes : PCstAllTypes
 {
-    private PCstVectorValues _cst_vector_values_;
+    private TVector _vector_;
 
     public ACstAllTypes ()
     {
     }
 
     public ACstAllTypes (
-            PCstVectorValues _cst_vector_values_
+            TVector _vector_
     )
     {
-        SetCstVectorValues (_cst_vector_values_);
+        SetVector (_vector_);
     }
 
     public override Object Clone()
     {
         return new ACstAllTypes (
-            (PCstVectorValues)CloneNode (_cst_vector_values_)
+            (TVector)CloneNode (_vector_)
         );
     }
 
@@ -1654,16 +1654,16 @@ public sealed class ACstAllTypes : PCstAllTypes
         ((Analysis) sw).CaseACstAllTypes(this);
     }
 
-    public PCstVectorValues GetCstVectorValues ()
+    public TVector GetVector ()
     {
-        return _cst_vector_values_;
+        return _vector_;
     }
 
-    public void SetCstVectorValues (PCstVectorValues node)
+    public void SetVector (TVector node)
     {
-        if(_cst_vector_values_ != null)
+        if(_vector_ != null)
         {
-            _cst_vector_values_.Parent(null);
+            _vector_.Parent(null);
         }
 
         if(node != null)
@@ -1676,30 +1676,30 @@ public sealed class ACstAllTypes : PCstAllTypes
             node.Parent(this);
         }
 
-        _cst_vector_values_ = node;
+        _vector_ = node;
     }
 
     public override string ToString()
     {
         return ""
-            + ToString (_cst_vector_values_)
+            + ToString (_vector_)
         ;
     }
 
     internal override void RemoveChild(Node child)
     {
-        if ( _cst_vector_values_ == child )
+        if ( _vector_ == child )
         {
-            _cst_vector_values_ = null;
+            _vector_ = null;
             return;
         }
     }
 
     internal override void ReplaceChild(Node oldChild, Node newChild)
     {
-        if ( _cst_vector_values_ == oldChild )
+        if ( _vector_ == oldChild )
         {
-            SetCstVectorValues ((PCstVectorValues) newChild);
+            SetVector ((TVector) newChild);
             return;
         }
     }
@@ -2878,6 +2878,7 @@ public sealed class ACstFunctionDeclaration : PCstFunctionDeclaration
 public sealed class ARecursiveCstFormalParamList : PCstFormalParamList
 {
     private PCstFormalParam _cst_formal_param_;
+    private TComma _comma_;
     private PCstFormalParamList _cst_formal_param_list_;
 
     public ARecursiveCstFormalParamList ()
@@ -2886,10 +2887,12 @@ public sealed class ARecursiveCstFormalParamList : PCstFormalParamList
 
     public ARecursiveCstFormalParamList (
             PCstFormalParam _cst_formal_param_,
+            TComma _comma_,
             PCstFormalParamList _cst_formal_param_list_
     )
     {
         SetCstFormalParam (_cst_formal_param_);
+        SetComma (_comma_);
         SetCstFormalParamList (_cst_formal_param_list_);
     }
 
@@ -2897,6 +2900,7 @@ public sealed class ARecursiveCstFormalParamList : PCstFormalParamList
     {
         return new ARecursiveCstFormalParamList (
             (PCstFormalParam)CloneNode (_cst_formal_param_),
+            (TComma)CloneNode (_comma_),
             (PCstFormalParamList)CloneNode (_cst_formal_param_list_)
         );
     }
@@ -2930,6 +2934,30 @@ public sealed class ARecursiveCstFormalParamList : PCstFormalParamList
 
         _cst_formal_param_ = node;
     }
+    public TComma GetComma ()
+    {
+        return _comma_;
+    }
+
+    public void SetComma (TComma node)
+    {
+        if(_comma_ != null)
+        {
+            _comma_.Parent(null);
+        }
+
+        if(node != null)
+        {
+            if(node.Parent() != null)
+            {
+                node.Parent().RemoveChild(node);
+            }
+
+            node.Parent(this);
+        }
+
+        _comma_ = node;
+    }
     public PCstFormalParamList GetCstFormalParamList ()
     {
         return _cst_formal_param_list_;
@@ -2959,6 +2987,7 @@ public sealed class ARecursiveCstFormalParamList : PCstFormalParamList
     {
         return ""
             + ToString (_cst_formal_param_)
+            + ToString (_comma_)
             + ToString (_cst_formal_param_list_)
         ;
     }
@@ -2968,6 +2997,11 @@ public sealed class ARecursiveCstFormalParamList : PCstFormalParamList
         if ( _cst_formal_param_ == child )
         {
             _cst_formal_param_ = null;
+            return;
+        }
+        if ( _comma_ == child )
+        {
+            _comma_ = null;
             return;
         }
         if ( _cst_formal_param_list_ == child )
@@ -2982,6 +3016,11 @@ public sealed class ARecursiveCstFormalParamList : PCstFormalParamList
         if ( _cst_formal_param_ == oldChild )
         {
             SetCstFormalParam ((PCstFormalParam) newChild);
+            return;
+        }
+        if ( _comma_ == oldChild )
+        {
+            SetComma ((TComma) newChild);
             return;
         }
         if ( _cst_formal_param_list_ == oldChild )
@@ -4829,8 +4868,9 @@ public sealed class ACstRepeatStatement : PCstRepeatStatement
 {
     private TRepeat _repeat_;
     private TLPar _l_par_;
-    private PCstExpression _cst_expression_;
+    private PCstActualParam _cst_actual_param_;
     private TRPar _r_par_;
+    private TEol _eol_;
     private PCstBlock _cst_block_;
 
     public ACstRepeatStatement ()
@@ -4840,15 +4880,17 @@ public sealed class ACstRepeatStatement : PCstRepeatStatement
     public ACstRepeatStatement (
             TRepeat _repeat_,
             TLPar _l_par_,
-            PCstExpression _cst_expression_,
+            PCstActualParam _cst_actual_param_,
             TRPar _r_par_,
+            TEol _eol_,
             PCstBlock _cst_block_
     )
     {
         SetRepeat (_repeat_);
         SetLPar (_l_par_);
-        SetCstExpression (_cst_expression_);
+        SetCstActualParam (_cst_actual_param_);
         SetRPar (_r_par_);
+        SetEol (_eol_);
         SetCstBlock (_cst_block_);
     }
 
@@ -4857,8 +4899,9 @@ public sealed class ACstRepeatStatement : PCstRepeatStatement
         return new ACstRepeatStatement (
             (TRepeat)CloneNode (_repeat_),
             (TLPar)CloneNode (_l_par_),
-            (PCstExpression)CloneNode (_cst_expression_),
+            (PCstActualParam)CloneNode (_cst_actual_param_),
             (TRPar)CloneNode (_r_par_),
+            (TEol)CloneNode (_eol_),
             (PCstBlock)CloneNode (_cst_block_)
         );
     }
@@ -4916,16 +4959,16 @@ public sealed class ACstRepeatStatement : PCstRepeatStatement
 
         _l_par_ = node;
     }
-    public PCstExpression GetCstExpression ()
+    public PCstActualParam GetCstActualParam ()
     {
-        return _cst_expression_;
+        return _cst_actual_param_;
     }
 
-    public void SetCstExpression (PCstExpression node)
+    public void SetCstActualParam (PCstActualParam node)
     {
-        if(_cst_expression_ != null)
+        if(_cst_actual_param_ != null)
         {
-            _cst_expression_.Parent(null);
+            _cst_actual_param_.Parent(null);
         }
 
         if(node != null)
@@ -4938,7 +4981,7 @@ public sealed class ACstRepeatStatement : PCstRepeatStatement
             node.Parent(this);
         }
 
-        _cst_expression_ = node;
+        _cst_actual_param_ = node;
     }
     public TRPar GetRPar ()
     {
@@ -4963,6 +5006,30 @@ public sealed class ACstRepeatStatement : PCstRepeatStatement
         }
 
         _r_par_ = node;
+    }
+    public TEol GetEol ()
+    {
+        return _eol_;
+    }
+
+    public void SetEol (TEol node)
+    {
+        if(_eol_ != null)
+        {
+            _eol_.Parent(null);
+        }
+
+        if(node != null)
+        {
+            if(node.Parent() != null)
+            {
+                node.Parent().RemoveChild(node);
+            }
+
+            node.Parent(this);
+        }
+
+        _eol_ = node;
     }
     public PCstBlock GetCstBlock ()
     {
@@ -4994,8 +5061,9 @@ public sealed class ACstRepeatStatement : PCstRepeatStatement
         return ""
             + ToString (_repeat_)
             + ToString (_l_par_)
-            + ToString (_cst_expression_)
+            + ToString (_cst_actual_param_)
             + ToString (_r_par_)
+            + ToString (_eol_)
             + ToString (_cst_block_)
         ;
     }
@@ -5012,14 +5080,19 @@ public sealed class ACstRepeatStatement : PCstRepeatStatement
             _l_par_ = null;
             return;
         }
-        if ( _cst_expression_ == child )
+        if ( _cst_actual_param_ == child )
         {
-            _cst_expression_ = null;
+            _cst_actual_param_ = null;
             return;
         }
         if ( _r_par_ == child )
         {
             _r_par_ = null;
+            return;
+        }
+        if ( _eol_ == child )
+        {
+            _eol_ = null;
             return;
         }
         if ( _cst_block_ == child )
@@ -5041,14 +5114,19 @@ public sealed class ACstRepeatStatement : PCstRepeatStatement
             SetLPar ((TLPar) newChild);
             return;
         }
-        if ( _cst_expression_ == oldChild )
+        if ( _cst_actual_param_ == oldChild )
         {
-            SetCstExpression ((PCstExpression) newChild);
+            SetCstActualParam ((PCstActualParam) newChild);
             return;
         }
         if ( _r_par_ == oldChild )
         {
             SetRPar ((TRPar) newChild);
+            return;
+        }
+        if ( _eol_ == oldChild )
+        {
+            SetEol ((TEol) newChild);
             return;
         }
         if ( _cst_block_ == oldChild )
@@ -5065,6 +5143,7 @@ public sealed class ACstWhileStatement : PCstWhileStatement
     private TLPar _l_par_;
     private PCstExpression _cst_expression_;
     private TRPar _r_par_;
+    private TEol _eol_;
     private PCstBlock _cst_block_;
 
     public ACstWhileStatement ()
@@ -5076,6 +5155,7 @@ public sealed class ACstWhileStatement : PCstWhileStatement
             TLPar _l_par_,
             PCstExpression _cst_expression_,
             TRPar _r_par_,
+            TEol _eol_,
             PCstBlock _cst_block_
     )
     {
@@ -5083,6 +5163,7 @@ public sealed class ACstWhileStatement : PCstWhileStatement
         SetLPar (_l_par_);
         SetCstExpression (_cst_expression_);
         SetRPar (_r_par_);
+        SetEol (_eol_);
         SetCstBlock (_cst_block_);
     }
 
@@ -5093,6 +5174,7 @@ public sealed class ACstWhileStatement : PCstWhileStatement
             (TLPar)CloneNode (_l_par_),
             (PCstExpression)CloneNode (_cst_expression_),
             (TRPar)CloneNode (_r_par_),
+            (TEol)CloneNode (_eol_),
             (PCstBlock)CloneNode (_cst_block_)
         );
     }
@@ -5198,6 +5280,30 @@ public sealed class ACstWhileStatement : PCstWhileStatement
 
         _r_par_ = node;
     }
+    public TEol GetEol ()
+    {
+        return _eol_;
+    }
+
+    public void SetEol (TEol node)
+    {
+        if(_eol_ != null)
+        {
+            _eol_.Parent(null);
+        }
+
+        if(node != null)
+        {
+            if(node.Parent() != null)
+            {
+                node.Parent().RemoveChild(node);
+            }
+
+            node.Parent(this);
+        }
+
+        _eol_ = node;
+    }
     public PCstBlock GetCstBlock ()
     {
         return _cst_block_;
@@ -5230,6 +5336,7 @@ public sealed class ACstWhileStatement : PCstWhileStatement
             + ToString (_l_par_)
             + ToString (_cst_expression_)
             + ToString (_r_par_)
+            + ToString (_eol_)
             + ToString (_cst_block_)
         ;
     }
@@ -5254,6 +5361,11 @@ public sealed class ACstWhileStatement : PCstWhileStatement
         if ( _r_par_ == child )
         {
             _r_par_ = null;
+            return;
+        }
+        if ( _eol_ == child )
+        {
+            _eol_ = null;
             return;
         }
         if ( _cst_block_ == child )
@@ -5283,6 +5395,11 @@ public sealed class ACstWhileStatement : PCstWhileStatement
         if ( _r_par_ == oldChild )
         {
             SetRPar ((TRPar) newChild);
+            return;
+        }
+        if ( _eol_ == oldChild )
+        {
+            SetEol ((TEol) newChild);
             return;
         }
         if ( _cst_block_ == oldChild )
@@ -6229,15 +6346,15 @@ public sealed class ACstActualParam : PCstActualParam
     }
 
 }
-public sealed class ACstExpression : PCstExpression
+public sealed class ANumberCstExpression : PCstExpression
 {
     private TNumber _number_;
 
-    public ACstExpression ()
+    public ANumberCstExpression ()
     {
     }
 
-    public ACstExpression (
+    public ANumberCstExpression (
             TNumber _number_
     )
     {
@@ -6246,14 +6363,14 @@ public sealed class ACstExpression : PCstExpression
 
     public override Object Clone()
     {
-        return new ACstExpression (
+        return new ANumberCstExpression (
             (TNumber)CloneNode (_number_)
         );
     }
 
     public override void Apply(Switch sw)
     {
-        ((Analysis) sw).CaseACstExpression(this);
+        ((Analysis) sw).CaseANumberCstExpression(this);
     }
 
     public TNumber GetNumber ()
@@ -6302,6 +6419,84 @@ public sealed class ACstExpression : PCstExpression
         if ( _number_ == oldChild )
         {
             SetNumber ((TNumber) newChild);
+            return;
+        }
+    }
+
+}
+public sealed class ACstExpression : PCstExpression
+{
+    private TBoolValue _bool_value_;
+
+    public ACstExpression ()
+    {
+    }
+
+    public ACstExpression (
+            TBoolValue _bool_value_
+    )
+    {
+        SetBoolValue (_bool_value_);
+    }
+
+    public override Object Clone()
+    {
+        return new ACstExpression (
+            (TBoolValue)CloneNode (_bool_value_)
+        );
+    }
+
+    public override void Apply(Switch sw)
+    {
+        ((Analysis) sw).CaseACstExpression(this);
+    }
+
+    public TBoolValue GetBoolValue ()
+    {
+        return _bool_value_;
+    }
+
+    public void SetBoolValue (TBoolValue node)
+    {
+        if(_bool_value_ != null)
+        {
+            _bool_value_.Parent(null);
+        }
+
+        if(node != null)
+        {
+            if(node.Parent() != null)
+            {
+                node.Parent().RemoveChild(node);
+            }
+
+            node.Parent(this);
+        }
+
+        _bool_value_ = node;
+    }
+
+    public override string ToString()
+    {
+        return ""
+            + ToString (_bool_value_)
+        ;
+    }
+
+    internal override void RemoveChild(Node child)
+    {
+        if ( _bool_value_ == child )
+        {
+            _bool_value_ = null;
+            return;
+        }
+    }
+
+    internal override void ReplaceChild(Node oldChild, Node newChild)
+    {
+        if ( _bool_value_ == oldChild )
+        {
+            SetBoolValue ((TBoolValue) newChild);
             return;
         }
     }

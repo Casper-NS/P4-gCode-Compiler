@@ -32,16 +32,18 @@ Tokens
   greater_than = '>';
   greater_than_or_equal = '>=';
   not = '!';
-  comma = ',';
   l_par = '(';
   r_par = ')';
   l_cur = '{';
   r_cur = '}';
+  comma = ',';
+  vector = 'vector';
   int = 'int';
   const = 'const';
   float = 'float';
   bool = 'bool';
   void = 'void';
+  bool_value = 'true' | 'false';
   if = 'if';
   else = 'else';
   repeat = 'repeat';
@@ -77,7 +79,7 @@ cst_vector_declaration = const? cst_vector_values identifier assignment_op l_par
 
 cst_all_types = 
         {simple}cst_simple_types | 
-        cst_vector_values;
+        vector;
 
 cst_simple_types =
         {integer}int | 
@@ -91,7 +93,7 @@ cst_function_declaration =
         void identifier l_par cst_formal_param_list? r_par eol cst_function_body;
 
 cst_formal_param_list = 
-        {recursive}cst_formal_param cst_formal_param_list | 
+        {recursive}cst_formal_param comma cst_formal_param_list | 
         cst_formal_param;
 
 cst_formal_param = cst_all_types identifier;
@@ -117,9 +119,9 @@ cst_if_statement =
         {noelse}if l_par cst_expression r_par cst_block | 
         {withelse}if l_par cst_expression r_par [a]:cst_block else [b]:cst_block;
 
-cst_repeat_statement = repeat l_par cst_expression r_par cst_block;
+cst_repeat_statement = repeat l_par cst_actual_param r_par eol cst_block;
 
-cst_while_statement = while l_par cst_expression r_par cst_block;
+cst_while_statement = while l_par cst_expression r_par eol cst_block;
 
 cst_gcode_literal = gcode l_cur all_chars_except_curly r_cur;
 
@@ -136,4 +138,5 @@ cst_actual_param =
         cst_expression;
 
 cst_expression = 
-        number;
+        {number}number |
+        bool_value;
