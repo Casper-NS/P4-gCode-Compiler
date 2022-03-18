@@ -60,13 +60,13 @@ Ignored Tokens
   blank;
 
 Productions
-cst_program = [a]:cst_declaration_list;
+cst_program = cst_declaration_list;
 
 cst_main_function_declaration =
-        main l_par r_par eol? cst_function_body;
+        main l_par r_par eol cst_function_body;
 
 cst_declaration_list =
-        {recursive}cst_declaration eol+ cst_declaration_list | 
+        {list}cst_declaration eol+ cst_declaration_list | 
         cst_declaration;
 
 cst_declaration = 
@@ -75,13 +75,13 @@ cst_declaration =
         {main}cst_main_function_declaration;
 
 cst_variable_declaration =
-        {simple_initial}const? cst_simple_types identifier assignment_op cst_expression |
-        {simple_uninitial}const? cst_simple_types identifier |
-        {vector}cst_vector_declaration;
+        {simple_initial}   const? cst_simple_types identifier assignment_op cst_expression |
+        {vector_initial}   const? vector           identifier assignment_op cst_vector_values|
+        cst_uninitialised_variable;
 
-cst_vector_declaration = 
-        {initial}const? vector identifier assignment_op cst_vector_values |
-        const? cst_vector_values identifier;
+cst_uninitialised_variable =
+        {simple_uninitial} const? cst_simple_types identifier |
+        {vector_uninitial} const? cst_vector_values identifier;
 
 cst_all_types = 
         {simple}cst_simple_types | 
@@ -95,21 +95,19 @@ cst_simple_types =
 cst_vector_values = l_par [a]:cst_expression [q]:comma [b]:cst_expression [w]:comma [c]:cst_expression r_par;
 
 cst_function_declaration =
-        {notvoid}cst_all_types identifier l_par cst_formal_param_list? r_par eol cst_function_body |
-        void identifier l_par cst_formal_param_list? r_par eol cst_function_body;
+        {notvoid} cst_all_types identifier l_par cst_formal_param_list? r_par eol cst_function_body |
+        {void} void             identifier l_par cst_formal_param_list? r_par eol cst_function_body;
 
 cst_formal_param_list = 
-        {recursive}cst_formal_param comma cst_formal_param_list | 
-        cst_formal_param;
-
-cst_formal_param = cst_all_types identifier;
+        {list}cst_uninitialised_variable comma cst_formal_param_list | 
+        cst_uninitialised_variable;
 
 cst_function_body = cst_block;
 
 cst_block = l_cur eol cst_statement_list r_cur;
 
 cst_statement_list = 
-        {recursive}cst_statement eol cst_statement_list | 
+        {list}cst_statement eol cst_statement_list | 
         cst_statement eol;
 
 cst_statement = 
@@ -145,39 +143,36 @@ cst_function_call = identifier l_par cst_actual_param_list? r_par;
 cst_return = return cst_expression;
 
 cst_actual_param_list =
-        {recursive}cst_expression comma cst_actual_param_list | 
+        {list}cst_expression comma cst_actual_param_list | 
         cst_expression;
 
 cst_expression =
-        {or} cst_expression or cst_buttom_exp |
-        {and} cst_expression and cst_buttom_exp |
-        cst_buttom_exp;
+        {or} cst_expression or cst_bool_exp |
+        {and} cst_expression and cst_bool_exp |
+        cst_bool_exp;
 
-cst_buttom_exp =
-        {not}not cst_buttom_exp |
-        cst_lowest_exp;
+cst_bool_exp =
+        {not}not cst_bool_exp |
+        {equal}cst_associative_exp [c]:equal [d]:equal cst_bool_exp |
+        {le}cst_associative_exp less_than cst_bool_exp |
+        {leq}cst_associative_exp less_than_or_equal cst_bool_exp |
+        {ge}cst_associative_exp greater_than cst_bool_exp | 
+        {geq}cst_associative_exp greater_than_or_equal cst_bool_exp |
+        {neq}cst_associative_exp not equal cst_bool_exp |
+        cst_associative_exp;
 
-cst_lowest_exp =
-        {equal}cst_low_exp [c]:equal [d]:equal cst_buttom_exp |
-        {le}cst_low_exp less_than cst_buttom_exp |
-        {leq}cst_low_exp less_than_or_equal cst_buttom_exp |
-        {ge}cst_low_exp greater_than cst_buttom_exp | 
-        {geq}cst_low_exp greater_than_or_equal cst_buttom_exp |
-        {neq}cst_low_exp not equal cst_buttom_exp |
-        cst_low_exp;
+cst_associative_exp = 
+        {plus}cst_not_associative_exp plus_op cst_associative_exp |
+        {minus}cst_not_associative_exp minus_op cst_associative_exp |
+        cst_not_associative_exp;
 
-cst_low_exp = 
-        {plus}cst_medium_exp plus_op cst_low_exp |
-        {minus}cst_medium_exp minus_op cst_low_exp |
-        cst_medium_exp;
+cst_not_associative_exp =
+        {mult}cst_not_associative_exp multiplication_op cst_leaf_exp |
+        {division}cst_not_associative_exp division_op cst_leaf_exp |
+        {modulo}cst_not_associative_exp modulo_op cst_leaf_exp |
+        cst_leaf_exp;
 
-cst_medium_exp =
-        {mult}cst_medium_exp multiplication_op cst_high_exp |
-        {division}cst_medium_exp division_op cst_high_exp |
-        {modulo}cst_medium_exp modulo_op cst_high_exp |
-        cst_high_exp;
-
-cst_high_exp =
+cst_leaf_exp =
         {paren}l_par cst_expression r_par |
         {number}number |
         {bool}bool_value |
