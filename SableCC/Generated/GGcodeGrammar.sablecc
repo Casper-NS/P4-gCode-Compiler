@@ -14,6 +14,7 @@ Helpers
   letter  = lowercase | uppercase;
   idletter = letter | '_';
   idchar  = letter | '_' | digit;
+  dot = '.';
 
 Tokens
   main = 'main';
@@ -47,8 +48,9 @@ Tokens
   else = 'else';
   repeat = 'repeat';
   while = 'while';
+  return = 'return';
   gcode = 'GCODE';
-  number  = '0'| [digit-'0'] digit*;
+  number  = '0'| [digit-'0'] digit* | digit* dot digit*;
   identifier    = idletter idchar*;
   all_chars_except_curly = not_curleys;
 
@@ -71,10 +73,13 @@ cst_declaration =
         {main}cst_main_function_declaration;
 
 cst_variable_declaration =
-        {simple}const? cst_simple_types identifier assignment_op cst_expression| 
+        {simple_initial}const? cst_simple_types identifier assignment_op cst_expression |
+        {simple_uninitial}const? cst_simple_types identifier |
         {vector}cst_vector_declaration;
 
-cst_vector_declaration = const? cst_vector_values identifier assignment_op l_par cst_expression r_par;
+cst_vector_declaration = 
+        {initial}const? vector identifier assignment_op cst_vector_values |
+        const? cst_vector_values identifier;
 
 cst_all_types = 
         {simple}cst_simple_types | 
@@ -112,7 +117,8 @@ cst_statement =
         {while}cst_while_statement | 
         {gcode}cst_gcode_literal | 
         {assignment}cst_assignment | 
-        {function}cst_function_call;
+        {function}cst_function_call |
+        {return}cst_return;
 
 cst_if_statement = 
         {noelse}if l_par cst_expression r_par eol cst_block | 
@@ -128,19 +134,21 @@ cst_assignment = identifier assignment_op cst_expression;
 
 cst_function_call = identifier l_par cst_actual_param_list? r_par;
 
+cst_return = return cst_expression;
+
 cst_actual_param_list =
         {recursive}cst_expression comma cst_actual_param_list | 
         cst_expression;
 
 cst_expression = 
-        cst_low_exp |
         {not}not cst_expression |
         {equal}cst_low_exp [c]:equal [d]:equal cst_expression |
         {le}cst_low_exp less_than cst_expression |
         {leq}cst_low_exp less_than_or_equal cst_expression |
         {ge}cst_low_exp greater_than cst_expression | 
         {geq}cst_low_exp greater_than_or_equal cst_expression |
-        {neq}cst_low_exp not equal cst_expression;
+        {neq}cst_low_exp not equal cst_expression |
+        cst_low_exp;
 
 cst_low_exp = 
         {plus}cst_medium_exp plus_op cst_low_exp |
@@ -157,5 +165,6 @@ cst_high_exp =
         {number}number |
         {bool}bool_value |
         {id}identifier |
+        {func_call}cst_function_call |
         {vector}cst_vector_values |
-        l_par cst_expression r_par;
+        {paren}l_par cst_expression r_par;

@@ -784,6 +784,31 @@ public sealed class TWhile : Token
     }
 }
 
+public sealed class TReturn : Token
+{
+    public TReturn(string text)
+    {
+        Text = text;
+    }
+
+    public TReturn(string text, int line, int pos)
+    {
+        Text = text;
+        Line = line;
+        Pos = pos;
+    }
+
+    public override Object Clone()
+    {
+      return new TReturn(Text, Line, Pos);
+    }
+
+    public override void Apply(Switch sw)
+    {
+        ((Analysis) sw).CaseTReturn(this);
+    }
+}
+
 public sealed class TGcode : Token
 {
     public TGcode(string text)
