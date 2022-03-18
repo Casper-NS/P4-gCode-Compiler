@@ -834,6 +834,56 @@ public sealed class TGcode : Token
     }
 }
 
+public sealed class TAnd : Token
+{
+    public TAnd(string text)
+    {
+        Text = text;
+    }
+
+    public TAnd(string text, int line, int pos)
+    {
+        Text = text;
+        Line = line;
+        Pos = pos;
+    }
+
+    public override Object Clone()
+    {
+      return new TAnd(Text, Line, Pos);
+    }
+
+    public override void Apply(Switch sw)
+    {
+        ((Analysis) sw).CaseTAnd(this);
+    }
+}
+
+public sealed class TOr : Token
+{
+    public TOr(string text)
+    {
+        Text = text;
+    }
+
+    public TOr(string text, int line, int pos)
+    {
+        Text = text;
+        Line = line;
+        Pos = pos;
+    }
+
+    public override Object Clone()
+    {
+      return new TOr(Text, Line, Pos);
+    }
+
+    public override void Apply(Switch sw)
+    {
+        ((Analysis) sw).CaseTOr(this);
+    }
+}
+
 public sealed class TNumber : Token
 {
     public TNumber(string text)

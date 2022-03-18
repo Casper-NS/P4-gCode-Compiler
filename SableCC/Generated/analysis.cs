@@ -55,19 +55,25 @@ public interface Analysis : Switch
     void CaseACstRepeatStatement(ACstRepeatStatement node);
     void CaseACstWhileStatement(ACstWhileStatement node);
     void CaseACstGcodeLiteral(ACstGcodeLiteral node);
-    void CaseACstAssignment(ACstAssignment node);
+    void CaseAAssignCstAssignments(AAssignCstAssignments node);
+    void CaseAAssignPlusCstAssignments(AAssignPlusCstAssignments node);
+    void CaseAAssignMinusCstAssignments(AAssignMinusCstAssignments node);
+    void CaseAAssignMultCstAssignments(AAssignMultCstAssignments node);
+    void CaseAAssignDivisionCstAssignments(AAssignDivisionCstAssignments node);
+    void CaseAAssignModCstAssignments(AAssignModCstAssignments node);
     void CaseACstFunctionCall(ACstFunctionCall node);
     void CaseACstReturn(ACstReturn node);
     void CaseARecursiveCstActualParamList(ARecursiveCstActualParamList node);
     void CaseACstActualParamList(ACstActualParamList node);
     void CaseANotCstExpression(ANotCstExpression node);
-    void CaseAEqualCstExpression(AEqualCstExpression node);
-    void CaseALeCstExpression(ALeCstExpression node);
-    void CaseALeqCstExpression(ALeqCstExpression node);
-    void CaseAGeCstExpression(AGeCstExpression node);
-    void CaseAGeqCstExpression(AGeqCstExpression node);
-    void CaseANeqCstExpression(ANeqCstExpression node);
     void CaseACstExpression(ACstExpression node);
+    void CaseAEqualCstLowestExp(AEqualCstLowestExp node);
+    void CaseALeCstLowestExp(ALeCstLowestExp node);
+    void CaseALeqCstLowestExp(ALeqCstLowestExp node);
+    void CaseAGeCstLowestExp(AGeCstLowestExp node);
+    void CaseAGeqCstLowestExp(AGeqCstLowestExp node);
+    void CaseANeqCstLowestExp(ANeqCstLowestExp node);
+    void CaseACstLowestExp(ACstLowestExp node);
     void CaseAPlusCstLowExp(APlusCstLowExp node);
     void CaseAMinusCstLowExp(AMinusCstLowExp node);
     void CaseACstLowExp(ACstLowExp node);
@@ -80,7 +86,8 @@ public interface Analysis : Switch
     void CaseAIdCstHighExp(AIdCstHighExp node);
     void CaseAFuncCallCstHighExp(AFuncCallCstHighExp node);
     void CaseAVectorCstHighExp(AVectorCstHighExp node);
-    void CaseAParenCstHighExp(AParenCstHighExp node);
+    void CaseACstHighExp(ACstHighExp node);
+    void CaseAParenCstHighestExp(AParenCstHighestExp node);
 
     void CaseTMain(TMain node);
     void CaseTEol(TEol node);
@@ -115,6 +122,8 @@ public interface Analysis : Switch
     void CaseTWhile(TWhile node);
     void CaseTReturn(TReturn node);
     void CaseTGcode(TGcode node);
+    void CaseTAnd(TAnd node);
+    void CaseTOr(TOr node);
     void CaseTNumber(TNumber node);
     void CaseTIdentifier(TIdentifier node);
     void CaseTAllCharsExceptCurly(TAllCharsExceptCurly node);
@@ -344,7 +353,27 @@ public class AnalysisAdapter : Analysis
     {
         DefaultCase(node);
     }
-    public virtual void CaseACstAssignment(ACstAssignment node)
+    public virtual void CaseAAssignCstAssignments(AAssignCstAssignments node)
+    {
+        DefaultCase(node);
+    }
+    public virtual void CaseAAssignPlusCstAssignments(AAssignPlusCstAssignments node)
+    {
+        DefaultCase(node);
+    }
+    public virtual void CaseAAssignMinusCstAssignments(AAssignMinusCstAssignments node)
+    {
+        DefaultCase(node);
+    }
+    public virtual void CaseAAssignMultCstAssignments(AAssignMultCstAssignments node)
+    {
+        DefaultCase(node);
+    }
+    public virtual void CaseAAssignDivisionCstAssignments(AAssignDivisionCstAssignments node)
+    {
+        DefaultCase(node);
+    }
+    public virtual void CaseAAssignModCstAssignments(AAssignModCstAssignments node)
     {
         DefaultCase(node);
     }
@@ -368,31 +397,35 @@ public class AnalysisAdapter : Analysis
     {
         DefaultCase(node);
     }
-    public virtual void CaseAEqualCstExpression(AEqualCstExpression node)
-    {
-        DefaultCase(node);
-    }
-    public virtual void CaseALeCstExpression(ALeCstExpression node)
-    {
-        DefaultCase(node);
-    }
-    public virtual void CaseALeqCstExpression(ALeqCstExpression node)
-    {
-        DefaultCase(node);
-    }
-    public virtual void CaseAGeCstExpression(AGeCstExpression node)
-    {
-        DefaultCase(node);
-    }
-    public virtual void CaseAGeqCstExpression(AGeqCstExpression node)
-    {
-        DefaultCase(node);
-    }
-    public virtual void CaseANeqCstExpression(ANeqCstExpression node)
-    {
-        DefaultCase(node);
-    }
     public virtual void CaseACstExpression(ACstExpression node)
+    {
+        DefaultCase(node);
+    }
+    public virtual void CaseAEqualCstLowestExp(AEqualCstLowestExp node)
+    {
+        DefaultCase(node);
+    }
+    public virtual void CaseALeCstLowestExp(ALeCstLowestExp node)
+    {
+        DefaultCase(node);
+    }
+    public virtual void CaseALeqCstLowestExp(ALeqCstLowestExp node)
+    {
+        DefaultCase(node);
+    }
+    public virtual void CaseAGeCstLowestExp(AGeCstLowestExp node)
+    {
+        DefaultCase(node);
+    }
+    public virtual void CaseAGeqCstLowestExp(AGeqCstLowestExp node)
+    {
+        DefaultCase(node);
+    }
+    public virtual void CaseANeqCstLowestExp(ANeqCstLowestExp node)
+    {
+        DefaultCase(node);
+    }
+    public virtual void CaseACstLowestExp(ACstLowestExp node)
     {
         DefaultCase(node);
     }
@@ -444,7 +477,11 @@ public class AnalysisAdapter : Analysis
     {
         DefaultCase(node);
     }
-    public virtual void CaseAParenCstHighExp(AParenCstHighExp node)
+    public virtual void CaseACstHighExp(ACstHighExp node)
+    {
+        DefaultCase(node);
+    }
+    public virtual void CaseAParenCstHighestExp(AParenCstHighestExp node)
     {
         DefaultCase(node);
     }
@@ -578,6 +615,14 @@ public class AnalysisAdapter : Analysis
         DefaultCase(node);
     }
     public virtual void CaseTGcode(TGcode node)
+    {
+        DefaultCase(node);
+    }
+    public virtual void CaseTAnd(TAnd node)
+    {
+        DefaultCase(node);
+    }
+    public virtual void CaseTOr(TOr node)
     {
         DefaultCase(node);
     }
@@ -1438,9 +1483,9 @@ public class DepthFirstAdapter : AnalysisAdapter
     public override void CaseAAssignmentCstStatement(AAssignmentCstStatement node)
     {
         InAAssignmentCstStatement(node);
-        if(node.GetCstAssignment() != null)
+        if(node.GetCstAssignments() != null)
         {
-            node.GetCstAssignment().Apply(this);
+            node.GetCstAssignments().Apply(this);
         }
         OutAAssignmentCstStatement(node);
     }
@@ -1677,19 +1722,19 @@ public class DepthFirstAdapter : AnalysisAdapter
         }
         OutACstGcodeLiteral(node);
     }
-    public virtual void InACstAssignment(ACstAssignment node)
+    public virtual void InAAssignCstAssignments(AAssignCstAssignments node)
     {
         DefaultIn(node);
     }
 
-    public virtual void OutACstAssignment(ACstAssignment node)
+    public virtual void OutAAssignCstAssignments(AAssignCstAssignments node)
     {
         DefaultOut(node);
     }
 
-    public override void CaseACstAssignment(ACstAssignment node)
+    public override void CaseAAssignCstAssignments(AAssignCstAssignments node)
     {
-        InACstAssignment(node);
+        InAAssignCstAssignments(node);
         if(node.GetIdentifier() != null)
         {
             node.GetIdentifier().Apply(this);
@@ -1702,7 +1747,162 @@ public class DepthFirstAdapter : AnalysisAdapter
         {
             node.GetCstExpression().Apply(this);
         }
-        OutACstAssignment(node);
+        OutAAssignCstAssignments(node);
+    }
+    public virtual void InAAssignPlusCstAssignments(AAssignPlusCstAssignments node)
+    {
+        DefaultIn(node);
+    }
+
+    public virtual void OutAAssignPlusCstAssignments(AAssignPlusCstAssignments node)
+    {
+        DefaultOut(node);
+    }
+
+    public override void CaseAAssignPlusCstAssignments(AAssignPlusCstAssignments node)
+    {
+        InAAssignPlusCstAssignments(node);
+        if(node.GetIdentifier() != null)
+        {
+            node.GetIdentifier().Apply(this);
+        }
+        if(node.GetPlusOp() != null)
+        {
+            node.GetPlusOp().Apply(this);
+        }
+        if(node.GetAssignmentOp() != null)
+        {
+            node.GetAssignmentOp().Apply(this);
+        }
+        if(node.GetCstExpression() != null)
+        {
+            node.GetCstExpression().Apply(this);
+        }
+        OutAAssignPlusCstAssignments(node);
+    }
+    public virtual void InAAssignMinusCstAssignments(AAssignMinusCstAssignments node)
+    {
+        DefaultIn(node);
+    }
+
+    public virtual void OutAAssignMinusCstAssignments(AAssignMinusCstAssignments node)
+    {
+        DefaultOut(node);
+    }
+
+    public override void CaseAAssignMinusCstAssignments(AAssignMinusCstAssignments node)
+    {
+        InAAssignMinusCstAssignments(node);
+        if(node.GetIdentifier() != null)
+        {
+            node.GetIdentifier().Apply(this);
+        }
+        if(node.GetMinusOp() != null)
+        {
+            node.GetMinusOp().Apply(this);
+        }
+        if(node.GetAssignmentOp() != null)
+        {
+            node.GetAssignmentOp().Apply(this);
+        }
+        if(node.GetCstExpression() != null)
+        {
+            node.GetCstExpression().Apply(this);
+        }
+        OutAAssignMinusCstAssignments(node);
+    }
+    public virtual void InAAssignMultCstAssignments(AAssignMultCstAssignments node)
+    {
+        DefaultIn(node);
+    }
+
+    public virtual void OutAAssignMultCstAssignments(AAssignMultCstAssignments node)
+    {
+        DefaultOut(node);
+    }
+
+    public override void CaseAAssignMultCstAssignments(AAssignMultCstAssignments node)
+    {
+        InAAssignMultCstAssignments(node);
+        if(node.GetIdentifier() != null)
+        {
+            node.GetIdentifier().Apply(this);
+        }
+        if(node.GetMultiplicationOp() != null)
+        {
+            node.GetMultiplicationOp().Apply(this);
+        }
+        if(node.GetAssignmentOp() != null)
+        {
+            node.GetAssignmentOp().Apply(this);
+        }
+        if(node.GetCstExpression() != null)
+        {
+            node.GetCstExpression().Apply(this);
+        }
+        OutAAssignMultCstAssignments(node);
+    }
+    public virtual void InAAssignDivisionCstAssignments(AAssignDivisionCstAssignments node)
+    {
+        DefaultIn(node);
+    }
+
+    public virtual void OutAAssignDivisionCstAssignments(AAssignDivisionCstAssignments node)
+    {
+        DefaultOut(node);
+    }
+
+    public override void CaseAAssignDivisionCstAssignments(AAssignDivisionCstAssignments node)
+    {
+        InAAssignDivisionCstAssignments(node);
+        if(node.GetIdentifier() != null)
+        {
+            node.GetIdentifier().Apply(this);
+        }
+        if(node.GetDivisionOp() != null)
+        {
+            node.GetDivisionOp().Apply(this);
+        }
+        if(node.GetAssignmentOp() != null)
+        {
+            node.GetAssignmentOp().Apply(this);
+        }
+        if(node.GetCstExpression() != null)
+        {
+            node.GetCstExpression().Apply(this);
+        }
+        OutAAssignDivisionCstAssignments(node);
+    }
+    public virtual void InAAssignModCstAssignments(AAssignModCstAssignments node)
+    {
+        DefaultIn(node);
+    }
+
+    public virtual void OutAAssignModCstAssignments(AAssignModCstAssignments node)
+    {
+        DefaultOut(node);
+    }
+
+    public override void CaseAAssignModCstAssignments(AAssignModCstAssignments node)
+    {
+        InAAssignModCstAssignments(node);
+        if(node.GetIdentifier() != null)
+        {
+            node.GetIdentifier().Apply(this);
+        }
+        if(node.GetModuloOp() != null)
+        {
+            node.GetModuloOp().Apply(this);
+        }
+        if(node.GetAssignmentOp() != null)
+        {
+            node.GetAssignmentOp().Apply(this);
+        }
+        if(node.GetCstExpression() != null)
+        {
+            node.GetCstExpression().Apply(this);
+        }
+        OutAAssignModCstAssignments(node);
     }
     public virtual void InACstFunctionCall(ACstFunctionCall node)
     {
@@ -1827,19 +2027,38 @@ public class DepthFirstAdapter : AnalysisAdapter
         }
         OutANotCstExpression(node);
     }
-    public virtual void InAEqualCstExpression(AEqualCstExpression node)
+    public virtual void InACstExpression(ACstExpression node)
     {
         DefaultIn(node);
     }
 
-    public virtual void OutAEqualCstExpression(AEqualCstExpression node)
+    public virtual void OutACstExpression(ACstExpression node)
     {
         DefaultOut(node);
     }
 
-    public override void CaseAEqualCstExpression(AEqualCstExpression node)
+    public override void CaseACstExpression(ACstExpression node)
     {
-        InAEqualCstExpression(node);
+        InACstExpression(node);
+        if(node.GetCstLowestExp() != null)
+        {
+            node.GetCstLowestExp().Apply(this);
+        }
+        OutACstExpression(node);
+    }
+    public virtual void InAEqualCstLowestExp(AEqualCstLowestExp node)
+    {
+        DefaultIn(node);
+    }
+
+    public virtual void OutAEqualCstLowestExp(AEqualCstLowestExp node)
+    {
+        DefaultOut(node);
+    }
+
+    public override void CaseAEqualCstLowestExp(AEqualCstLowestExp node)
+    {
+        InAEqualCstLowestExp(node);
         if(node.GetCstLowExp() != null)
         {
             node.GetCstLowExp().Apply(this);
@@ -1856,21 +2075,21 @@ public class DepthFirstAdapter : AnalysisAdapter
         {
             node.GetCstExpression().Apply(this);
         }
-        OutAEqualCstExpression(node);
+        OutAEqualCstLowestExp(node);
     }
-    public virtual void InALeCstExpression(ALeCstExpression node)
+    public virtual void InALeCstLowestExp(ALeCstLowestExp node)
     {
         DefaultIn(node);
     }
 
-    public virtual void OutALeCstExpression(ALeCstExpression node)
+    public virtual void OutALeCstLowestExp(ALeCstLowestExp node)
     {
         DefaultOut(node);
     }
 
-    public override void CaseALeCstExpression(ALeCstExpression node)
+    public override void CaseALeCstLowestExp(ALeCstLowestExp node)
     {
-        InALeCstExpression(node);
+        InALeCstLowestExp(node);
         if(node.GetCstLowExp() != null)
         {
             node.GetCstLowExp().Apply(this);
@@ -1883,21 +2102,21 @@ public class DepthFirstAdapter : AnalysisAdapter
         {
             node.GetCstExpression().Apply(this);
         }
-        OutALeCstExpression(node);
+        OutALeCstLowestExp(node);
     }
-    public virtual void InALeqCstExpression(ALeqCstExpression node)
+    public virtual void InALeqCstLowestExp(ALeqCstLowestExp node)
     {
         DefaultIn(node);
     }
 
-    public virtual void OutALeqCstExpression(ALeqCstExpression node)
+    public virtual void OutALeqCstLowestExp(ALeqCstLowestExp node)
     {
         DefaultOut(node);
     }
 
-    public override void CaseALeqCstExpression(ALeqCstExpression node)
+    public override void CaseALeqCstLowestExp(ALeqCstLowestExp node)
     {
-        InALeqCstExpression(node);
+        InALeqCstLowestExp(node);
         if(node.GetCstLowExp() != null)
         {
             node.GetCstLowExp().Apply(this);
@@ -1910,21 +2129,21 @@ public class DepthFirstAdapter : AnalysisAdapter
         {
             node.GetCstExpression().Apply(this);
         }
-        OutALeqCstExpression(node);
+        OutALeqCstLowestExp(node);
     }
-    public virtual void InAGeCstExpression(AGeCstExpression node)
+    public virtual void InAGeCstLowestExp(AGeCstLowestExp node)
     {
         DefaultIn(node);
     }
 
-    public virtual void OutAGeCstExpression(AGeCstExpression node)
+    public virtual void OutAGeCstLowestExp(AGeCstLowestExp node)
     {
         DefaultOut(node);
     }
 
-    public override void CaseAGeCstExpression(AGeCstExpression node)
+    public override void CaseAGeCstLowestExp(AGeCstLowestExp node)
     {
-        InAGeCstExpression(node);
+        InAGeCstLowestExp(node);
         if(node.GetCstLowExp() != null)
         {
             node.GetCstLowExp().Apply(this);
@@ -1937,21 +2156,21 @@ public class DepthFirstAdapter : AnalysisAdapter
         {
             node.GetCstExpression().Apply(this);
         }
-        OutAGeCstExpression(node);
+        OutAGeCstLowestExp(node);
     }
-    public virtual void InAGeqCstExpression(AGeqCstExpression node)
+    public virtual void InAGeqCstLowestExp(AGeqCstLowestExp node)
     {
         DefaultIn(node);
     }
 
-    public virtual void OutAGeqCstExpression(AGeqCstExpression node)
+    public virtual void OutAGeqCstLowestExp(AGeqCstLowestExp node)
     {
         DefaultOut(node);
     }
 
-    public override void CaseAGeqCstExpression(AGeqCstExpression node)
+    public override void CaseAGeqCstLowestExp(AGeqCstLowestExp node)
     {
-        InAGeqCstExpression(node);
+        InAGeqCstLowestExp(node);
         if(node.GetCstLowExp() != null)
         {
             node.GetCstLowExp().Apply(this);
@@ -1964,21 +2183,21 @@ public class DepthFirstAdapter : AnalysisAdapter
         {
             node.GetCstExpression().Apply(this);
         }
-        OutAGeqCstExpression(node);
+        OutAGeqCstLowestExp(node);
     }
-    public virtual void InANeqCstExpression(ANeqCstExpression node)
+    public virtual void InANeqCstLowestExp(ANeqCstLowestExp node)
     {
         DefaultIn(node);
     }
 
-    public virtual void OutANeqCstExpression(ANeqCstExpression node)
+    public virtual void OutANeqCstLowestExp(ANeqCstLowestExp node)
     {
         DefaultOut(node);
     }
 
-    public override void CaseANeqCstExpression(ANeqCstExpression node)
+    public override void CaseANeqCstLowestExp(ANeqCstLowestExp node)
     {
-        InANeqCstExpression(node);
+        InANeqCstLowestExp(node);
         if(node.GetCstLowExp() != null)
         {
             node.GetCstLowExp().Apply(this);
@@ -1995,26 +2214,26 @@ public class DepthFirstAdapter : AnalysisAdapter
         {
             node.GetCstExpression().Apply(this);
         }
-        OutANeqCstExpression(node);
+        OutANeqCstLowestExp(node);
     }
-    public virtual void InACstExpression(ACstExpression node)
+    public virtual void InACstLowestExp(ACstLowestExp node)
     {
         DefaultIn(node);
     }
 
-    public virtual void OutACstExpression(ACstExpression node)
+    public virtual void OutACstLowestExp(ACstLowestExp node)
     {
         DefaultOut(node);
     }
 
-    public override void CaseACstExpression(ACstExpression node)
+    public override void CaseACstLowestExp(ACstLowestExp node)
     {
-        InACstExpression(node);
+        InACstLowestExp(node);
         if(node.GetCstLowExp() != null)
         {
             node.GetCstLowExp().Apply(this);
         }
-        OutACstExpression(node);
+        OutACstLowestExp(node);
     }
     public virtual void InAPlusCstLowExp(APlusCstLowExp node)
     {
@@ -2284,19 +2503,38 @@ public class DepthFirstAdapter : AnalysisAdapter
         }
         OutAVectorCstHighExp(node);
     }
-    public virtual void InAParenCstHighExp(AParenCstHighExp node)
+    public virtual void InACstHighExp(ACstHighExp node)
     {
         DefaultIn(node);
     }
 
-    public virtual void OutAParenCstHighExp(AParenCstHighExp node)
+    public virtual void OutACstHighExp(ACstHighExp node)
     {
         DefaultOut(node);
     }
 
-    public override void CaseAParenCstHighExp(AParenCstHighExp node)
+    public override void CaseACstHighExp(ACstHighExp node)
     {
-        InAParenCstHighExp(node);
+        InACstHighExp(node);
+        if(node.GetCstHighestExp() != null)
+        {
+            node.GetCstHighestExp().Apply(this);
+        }
+        OutACstHighExp(node);
+    }
+    public virtual void InAParenCstHighestExp(AParenCstHighestExp node)
+    {
+        DefaultIn(node);
+    }
+
+    public virtual void OutAParenCstHighestExp(AParenCstHighestExp node)
+    {
+        DefaultOut(node);
+    }
+
+    public override void CaseAParenCstHighestExp(AParenCstHighestExp node)
+    {
+        InAParenCstHighestExp(node);
         if(node.GetLPar() != null)
         {
             node.GetLPar().Apply(this);
@@ -2309,7 +2547,7 @@ public class DepthFirstAdapter : AnalysisAdapter
         {
             node.GetRPar().Apply(this);
         }
-        OutAParenCstHighExp(node);
+        OutAParenCstHighestExp(node);
     }
 }
 
@@ -3147,9 +3385,9 @@ public class ReversedDepthFirstAdapter : AnalysisAdapter
     public override void CaseAAssignmentCstStatement(AAssignmentCstStatement node)
     {
         InAAssignmentCstStatement(node);
-        if(node.GetCstAssignment() != null)
+        if(node.GetCstAssignments() != null)
         {
-            node.GetCstAssignment().Apply(this);
+            node.GetCstAssignments().Apply(this);
         }
         OutAAssignmentCstStatement(node);
     }
@@ -3386,19 +3624,19 @@ public class ReversedDepthFirstAdapter : AnalysisAdapter
         }
         OutACstGcodeLiteral(node);
     }
-    public virtual void InACstAssignment(ACstAssignment node)
+    public virtual void InAAssignCstAssignments(AAssignCstAssignments node)
     {
         DefaultIn(node);
     }
 
-    public virtual void OutACstAssignment(ACstAssignment node)
+    public virtual void OutAAssignCstAssignments(AAssignCstAssignments node)
     {
         DefaultOut(node);
     }
 
-    public override void CaseACstAssignment(ACstAssignment node)
+    public override void CaseAAssignCstAssignments(AAssignCstAssignments node)
     {
-        InACstAssignment(node);
+        InAAssignCstAssignments(node);
         if(node.GetCstExpression() != null)
         {
             node.GetCstExpression().Apply(this);
@@ -3411,7 +3649,162 @@ public class ReversedDepthFirstAdapter : AnalysisAdapter
         {
             node.GetIdentifier().Apply(this);
         }
-        OutACstAssignment(node);
+        OutAAssignCstAssignments(node);
+    }
+    public virtual void InAAssignPlusCstAssignments(AAssignPlusCstAssignments node)
+    {
+        DefaultIn(node);
+    }
+
+    public virtual void OutAAssignPlusCstAssignments(AAssignPlusCstAssignments node)
+    {
+        DefaultOut(node);
+    }
+
+    public override void CaseAAssignPlusCstAssignments(AAssignPlusCstAssignments node)
+    {
+        InAAssignPlusCstAssignments(node);
+        if(node.GetCstExpression() != null)
+        {
+            node.GetCstExpression().Apply(this);
+        }
+        if(node.GetAssignmentOp() != null)
+        {
+            node.GetAssignmentOp().Apply(this);
+        }
+        if(node.GetPlusOp() != null)
+        {
+            node.GetPlusOp().Apply(this);
+        }
+        if(node.GetIdentifier() != null)
+        {
+            node.GetIdentifier().Apply(this);
+        }
+        OutAAssignPlusCstAssignments(node);
+    }
+    public virtual void InAAssignMinusCstAssignments(AAssignMinusCstAssignments node)
+    {
+        DefaultIn(node);
+    }
+
+    public virtual void OutAAssignMinusCstAssignments(AAssignMinusCstAssignments node)
+    {
+        DefaultOut(node);
+    }
+
+    public override void CaseAAssignMinusCstAssignments(AAssignMinusCstAssignments node)
+    {
+        InAAssignMinusCstAssignments(node);
+        if(node.GetCstExpression() != null)
+        {
+            node.GetCstExpression().Apply(this);
+        }
+        if(node.GetAssignmentOp() != null)
+        {
+            node.GetAssignmentOp().Apply(this);
+        }
+        if(node.GetMinusOp() != null)
+        {
+            node.GetMinusOp().Apply(this);
+        }
+        if(node.GetIdentifier() != null)
+        {
+            node.GetIdentifier().Apply(this);
+        }
+        OutAAssignMinusCstAssignments(node);
+    }
+    public virtual void InAAssignMultCstAssignments(AAssignMultCstAssignments node)
+    {
+        DefaultIn(node);
+    }
+
+    public virtual void OutAAssignMultCstAssignments(AAssignMultCstAssignments node)
+    {
+        DefaultOut(node);
+    }
+
+    public override void CaseAAssignMultCstAssignments(AAssignMultCstAssignments node)
+    {
+        InAAssignMultCstAssignments(node);
+        if(node.GetCstExpression() != null)
+        {
+            node.GetCstExpression().Apply(this);
+        }
+        if(node.GetAssignmentOp() != null)
+        {
+            node.GetAssignmentOp().Apply(this);
+        }
+        if(node.GetMultiplicationOp() != null)
+        {
+            node.GetMultiplicationOp().Apply(this);
+        }
+        if(node.GetIdentifier() != null)
+        {
+            node.GetIdentifier().Apply(this);
+        }
+        OutAAssignMultCstAssignments(node);
+    }
+    public virtual void InAAssignDivisionCstAssignments(AAssignDivisionCstAssignments node)
+    {
+        DefaultIn(node);
+    }
+
+    public virtual void OutAAssignDivisionCstAssignments(AAssignDivisionCstAssignments node)
+    {
+        DefaultOut(node);
+    }
+
+    public override void CaseAAssignDivisionCstAssignments(AAssignDivisionCstAssignments node)
+    {
+        InAAssignDivisionCstAssignments(node);
+        if(node.GetCstExpression() != null)
+        {
+            node.GetCstExpression().Apply(this);
+        }
+        if(node.GetAssignmentOp() != null)
+        {
+            node.GetAssignmentOp().Apply(this);
+        }
+        if(node.GetDivisionOp() != null)
+        {
+            node.GetDivisionOp().Apply(this);
+        }
+        if(node.GetIdentifier() != null)
+        {
+            node.GetIdentifier().Apply(this);
+        }
+        OutAAssignDivisionCstAssignments(node);
+    }
+    public virtual void InAAssignModCstAssignments(AAssignModCstAssignments node)
+    {
+        DefaultIn(node);
+    }
+
+    public virtual void OutAAssignModCstAssignments(AAssignModCstAssignments node)
+    {
+        DefaultOut(node);
+    }
+
+    public override void CaseAAssignModCstAssignments(AAssignModCstAssignments node)
+    {
+        InAAssignModCstAssignments(node);
+        if(node.GetCstExpression() != null)
+        {
+            node.GetCstExpression().Apply(this);
+        }
+        if(node.GetAssignmentOp() != null)
+        {
+            node.GetAssignmentOp().Apply(this);
+        }
+        if(node.GetModuloOp() != null)
+        {
+            node.GetModuloOp().Apply(this);
+        }
+        if(node.GetIdentifier() != null)
+        {
+            node.GetIdentifier().Apply(this);
+        }
+        OutAAssignModCstAssignments(node);
     }
     public virtual void InACstFunctionCall(ACstFunctionCall node)
     {
@@ -3536,19 +3929,38 @@ public class ReversedDepthFirstAdapter : AnalysisAdapter
         }
         OutANotCstExpression(node);
     }
-    public virtual void InAEqualCstExpression(AEqualCstExpression node)
+    public virtual void InACstExpression(ACstExpression node)
     {
         DefaultIn(node);
     }
 
-    public virtual void OutAEqualCstExpression(AEqualCstExpression node)
+    public virtual void OutACstExpression(ACstExpression node)
     {
         DefaultOut(node);
     }
 
-    public override void CaseAEqualCstExpression(AEqualCstExpression node)
+    public override void CaseACstExpression(ACstExpression node)
     {
-        InAEqualCstExpression(node);
+        InACstExpression(node);
+        if(node.GetCstLowestExp() != null)
+        {
+            node.GetCstLowestExp().Apply(this);
+        }
+        OutACstExpression(node);
+    }
+    public virtual void InAEqualCstLowestExp(AEqualCstLowestExp node)
+    {
+        DefaultIn(node);
+    }
+
+    public virtual void OutAEqualCstLowestExp(AEqualCstLowestExp node)
+    {
+        DefaultOut(node);
+    }
+
+    public override void CaseAEqualCstLowestExp(AEqualCstLowestExp node)
+    {
+        InAEqualCstLowestExp(node);
         if(node.GetCstExpression() != null)
         {
             node.GetCstExpression().Apply(this);
@@ -3565,21 +3977,21 @@ public class ReversedDepthFirstAdapter : AnalysisAdapter
         {
             node.GetCstLowExp().Apply(this);
         }
-        OutAEqualCstExpression(node);
+        OutAEqualCstLowestExp(node);
     }
-    public virtual void InALeCstExpression(ALeCstExpression node)
+    public virtual void InALeCstLowestExp(ALeCstLowestExp node)
     {
         DefaultIn(node);
     }
 
-    public virtual void OutALeCstExpression(ALeCstExpression node)
+    public virtual void OutALeCstLowestExp(ALeCstLowestExp node)
     {
         DefaultOut(node);
     }
 
-    public override void CaseALeCstExpression(ALeCstExpression node)
+    public override void CaseALeCstLowestExp(ALeCstLowestExp node)
     {
-        InALeCstExpression(node);
+        InALeCstLowestExp(node);
         if(node.GetCstExpression() != null)
         {
             node.GetCstExpression().Apply(this);
@@ -3592,21 +4004,21 @@ public class ReversedDepthFirstAdapter : AnalysisAdapter
         {
             node.GetCstLowExp().Apply(this);
         }
-        OutALeCstExpression(node);
+        OutALeCstLowestExp(node);
     }
-    public virtual void InALeqCstExpression(ALeqCstExpression node)
+    public virtual void InALeqCstLowestExp(ALeqCstLowestExp node)
     {
         DefaultIn(node);
     }
 
-    public virtual void OutALeqCstExpression(ALeqCstExpression node)
+    public virtual void OutALeqCstLowestExp(ALeqCstLowestExp node)
     {
         DefaultOut(node);
     }
 
-    public override void CaseALeqCstExpression(ALeqCstExpression node)
+    public override void CaseALeqCstLowestExp(ALeqCstLowestExp node)
     {
-        InALeqCstExpression(node);
+        InALeqCstLowestExp(node);
         if(node.GetCstExpression() != null)
         {
             node.GetCstExpression().Apply(this);
@@ -3619,21 +4031,21 @@ public class ReversedDepthFirstAdapter : AnalysisAdapter
         {
             node.GetCstLowExp().Apply(this);
         }
-        OutALeqCstExpression(node);
+        OutALeqCstLowestExp(node);
     }
-    public virtual void InAGeCstExpression(AGeCstExpression node)
+    public virtual void InAGeCstLowestExp(AGeCstLowestExp node)
     {
         DefaultIn(node);
     }
 
-    public virtual void OutAGeCstExpression(AGeCstExpression node)
+    public virtual void OutAGeCstLowestExp(AGeCstLowestExp node)
     {
         DefaultOut(node);
     }
 
-    public override void CaseAGeCstExpression(AGeCstExpression node)
+    public override void CaseAGeCstLowestExp(AGeCstLowestExp node)
     {
-        InAGeCstExpression(node);
+        InAGeCstLowestExp(node);
         if(node.GetCstExpression() != null)
         {
             node.GetCstExpression().Apply(this);
@@ -3646,21 +4058,21 @@ public class ReversedDepthFirstAdapter : AnalysisAdapter
         {
             node.GetCstLowExp().Apply(this);
         }
-        OutAGeCstExpression(node);
+        OutAGeCstLowestExp(node);
     }
-    public virtual void InAGeqCstExpression(AGeqCstExpression node)
+    public virtual void InAGeqCstLowestExp(AGeqCstLowestExp node)
     {
         DefaultIn(node);
     }
 
-    public virtual void OutAGeqCstExpression(AGeqCstExpression node)
+    public virtual void OutAGeqCstLowestExp(AGeqCstLowestExp node)
     {
         DefaultOut(node);
     }
 
-    public override void CaseAGeqCstExpression(AGeqCstExpression node)
+    public override void CaseAGeqCstLowestExp(AGeqCstLowestExp node)
     {
-        InAGeqCstExpression(node);
+        InAGeqCstLowestExp(node);
         if(node.GetCstExpression() != null)
         {
             node.GetCstExpression().Apply(this);
@@ -3673,21 +4085,21 @@ public class ReversedDepthFirstAdapter : AnalysisAdapter
         {
             node.GetCstLowExp().Apply(this);
         }
-        OutAGeqCstExpression(node);
+        OutAGeqCstLowestExp(node);
     }
-    public virtual void InANeqCstExpression(ANeqCstExpression node)
+    public virtual void InANeqCstLowestExp(ANeqCstLowestExp node)
     {
         DefaultIn(node);
     }
 
-    public virtual void OutANeqCstExpression(ANeqCstExpression node)
+    public virtual void OutANeqCstLowestExp(ANeqCstLowestExp node)
     {
         DefaultOut(node);
     }
 
-    public override void CaseANeqCstExpression(ANeqCstExpression node)
+    public override void CaseANeqCstLowestExp(ANeqCstLowestExp node)
     {
-        InANeqCstExpression(node);
+        InANeqCstLowestExp(node);
         if(node.GetCstExpression() != null)
         {
             node.GetCstExpression().Apply(this);
@@ -3704,26 +4116,26 @@ public class ReversedDepthFirstAdapter : AnalysisAdapter
         {
             node.GetCstLowExp().Apply(this);
         }
-        OutANeqCstExpression(node);
+        OutANeqCstLowestExp(node);
     }
-    public virtual void InACstExpression(ACstExpression node)
+    public virtual void InACstLowestExp(ACstLowestExp node)
     {
         DefaultIn(node);
     }
 
-    public virtual void OutACstExpression(ACstExpression node)
+    public virtual void OutACstLowestExp(ACstLowestExp node)
     {
         DefaultOut(node);
     }
 
-    public override void CaseACstExpression(ACstExpression node)
+    public override void CaseACstLowestExp(ACstLowestExp node)
     {
-        InACstExpression(node);
+        InACstLowestExp(node);
         if(node.GetCstLowExp() != null)
         {
             node.GetCstLowExp().Apply(this);
         }
-        OutACstExpression(node);
+        OutACstLowestExp(node);
     }
     public virtual void InAPlusCstLowExp(APlusCstLowExp node)
     {
@@ -3993,19 +4405,38 @@ public class ReversedDepthFirstAdapter : AnalysisAdapter
         }
         OutAVectorCstHighExp(node);
     }
-    public virtual void InAParenCstHighExp(AParenCstHighExp node)
+    public virtual void InACstHighExp(ACstHighExp node)
     {
         DefaultIn(node);
     }
 
-    public virtual void OutAParenCstHighExp(AParenCstHighExp node)
+    public virtual void OutACstHighExp(ACstHighExp node)
     {
         DefaultOut(node);
     }
 
-    public override void CaseAParenCstHighExp(AParenCstHighExp node)
+    public override void CaseACstHighExp(ACstHighExp node)
     {
-        InAParenCstHighExp(node);
+        InACstHighExp(node);
+        if(node.GetCstHighestExp() != null)
+        {
+            node.GetCstHighestExp().Apply(this);
+        }
+        OutACstHighExp(node);
+    }
+    public virtual void InAParenCstHighestExp(AParenCstHighestExp node)
+    {
+        DefaultIn(node);
+    }
+
+    public virtual void OutAParenCstHighestExp(AParenCstHighestExp node)
+    {
+        DefaultOut(node);
+    }
+
+    public override void CaseAParenCstHighestExp(AParenCstHighestExp node)
+    {
+        InAParenCstHighestExp(node);
         if(node.GetRPar() != null)
         {
             node.GetRPar().Apply(this);
@@ -4018,7 +4449,7 @@ public class ReversedDepthFirstAdapter : AnalysisAdapter
         {
             node.GetLPar().Apply(this);
         }
-        OutAParenCstHighExp(node);
+        OutAParenCstHighestExp(node);
     }
 }
 } // namespace GGCodeParser.analysis

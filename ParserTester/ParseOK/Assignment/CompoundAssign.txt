@@ -1,7 +1,6 @@
 ﻿int a = 1
-int a += 1
-int a -= 1
-int a *= 1
-int a /= 1
-int a %= 1
-bool b != true
+a += 1
+a -= 1
+a *= 1
+a /= 1
+a %= 1

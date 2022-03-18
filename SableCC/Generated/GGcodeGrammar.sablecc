@@ -50,6 +50,8 @@ Tokens
   while = 'while';
   return = 'return';
   gcode = 'GCODE';
+  and = '&&';
+  or = '||';
   number  = '0'| [digit-'0'] digit* | digit* dot digit*;
   identifier    = idletter idchar*;
   all_chars_except_curly = not_curleys;
@@ -116,7 +118,7 @@ cst_statement =
         {repeat}cst_repeat_statement | 
         {while}cst_while_statement | 
         {gcode}cst_gcode_literal | 
-        {assignment}cst_assignment | 
+        {assignment}cst_assignments | 
         {function}cst_function_call |
         {return}cst_return;
 
@@ -130,7 +132,13 @@ cst_while_statement = while l_par cst_expression r_par eol cst_block;
 
 cst_gcode_literal = gcode l_cur all_chars_except_curly r_cur;
 
-cst_assignment = identifier assignment_op cst_expression;
+cst_assignments = 
+        {assign}identifier assignment_op cst_expression |
+        {assign_plus}identifier plus_op assignment_op cst_expression |
+        {assign_minus}identifier minus_op assignment_op cst_expression |
+        {assign_mult}identifier multiplication_op assignment_op cst_expression |
+        {assign_division}identifier division_op assignment_op cst_expression |
+        {assign_mod}identifier modulo_op assignment_op cst_expression;
 
 cst_function_call = identifier l_par cst_actual_param_list? r_par;
 
@@ -140,8 +148,11 @@ cst_actual_param_list =
         {recursive}cst_expression comma cst_actual_param_list | 
         cst_expression;
 
-cst_expression = 
+cst_expression =
         {not}not cst_expression |
+        cst_lowest_exp;
+
+cst_lowest_exp =
         {equal}cst_low_exp [c]:equal [d]:equal cst_expression |
         {le}cst_low_exp less_than cst_expression |
         {leq}cst_low_exp less_than_or_equal cst_expression |
@@ -167,4 +178,7 @@ cst_high_exp =
         {id}identifier |
         {func_call}cst_function_call |
         {vector}cst_vector_values |
+        cst_highest_exp;
+
+cst_highest_exp =
         {paren}l_par cst_expression r_par;
