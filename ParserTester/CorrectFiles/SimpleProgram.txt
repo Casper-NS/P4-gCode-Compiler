@@ -1,0 +1,14 @@
+﻿const int hej = 0
+
+const float med = 1.1
+
+main()
+{
+float dig = hej + med
+int i = EnFunktion()
+}
+
+int EnFunktion()
+{
+    return 1
+}

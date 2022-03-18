@@ -1,4 +1,5 @@
-﻿void MovementExamples(){
+﻿void MovementExamples()
+{
 	Vector3 position = (2, 2, 2)
 	float offset = 5;
 
