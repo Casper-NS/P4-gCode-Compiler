@@ -1,0 +1,9 @@
+﻿int i = 4
+float q = 1
+void main()
+{q=2
+
+}
+
+{ int j=2
+}
