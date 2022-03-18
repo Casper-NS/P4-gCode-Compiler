@@ -1,0 +1,17 @@
+﻿main()
+{
+	while (true)
+	{
+		while (false)
+		{
+			while (2 < 3)
+			{
+
+			}
+		}
+	}
+	while( false   )
+	{
+		
+	}
+}

@@ -1,0 +1,17 @@
+﻿main()
+{
+	if (true)
+	{
+		if (false)
+		{
+			if (2 < 3)
+			{
+
+			}
+		}
+	}
+	if( false )
+	{
+	
+	}
+}
