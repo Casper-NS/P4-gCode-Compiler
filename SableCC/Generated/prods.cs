@@ -108,6 +108,10 @@ public abstract class PCstExpression : Node
 {
 }
 
+public abstract class PCstButtomExp : Node
+{
+}
+
 public abstract class PCstLowestExp : Node
 {
 }
@@ -121,10 +125,6 @@ public abstract class PCstMediumExp : Node
 }
 
 public abstract class PCstHighExp : Node
-{
-}
-
-public abstract class PCstHighestExp : Node
 {
 }
 
@@ -7692,35 +7692,425 @@ public sealed class ACstActualParamList : PCstActualParamList
     }
 
 }
-public sealed class ANotCstExpression : PCstExpression
+public sealed class AOrCstExpression : PCstExpression
 {
-    private TNot _not_;
     private PCstExpression _cst_expression_;
+    private TOr _or_;
+    private PCstButtomExp _cst_buttom_exp_;
 
-    public ANotCstExpression ()
+    public AOrCstExpression ()
     {
     }
 
-    public ANotCstExpression (
-            TNot _not_,
-            PCstExpression _cst_expression_
+    public AOrCstExpression (
+            PCstExpression _cst_expression_,
+            TOr _or_,
+            PCstButtomExp _cst_buttom_exp_
     )
     {
-        SetNot (_not_);
         SetCstExpression (_cst_expression_);
+        SetOr (_or_);
+        SetCstButtomExp (_cst_buttom_exp_);
     }
 
     public override Object Clone()
     {
-        return new ANotCstExpression (
-            (TNot)CloneNode (_not_),
-            (PCstExpression)CloneNode (_cst_expression_)
+        return new AOrCstExpression (
+            (PCstExpression)CloneNode (_cst_expression_),
+            (TOr)CloneNode (_or_),
+            (PCstButtomExp)CloneNode (_cst_buttom_exp_)
         );
     }
 
     public override void Apply(Switch sw)
     {
-        ((Analysis) sw).CaseANotCstExpression(this);
+        ((Analysis) sw).CaseAOrCstExpression(this);
+    }
+
+    public PCstExpression GetCstExpression ()
+    {
+        return _cst_expression_;
+    }
+
+    public void SetCstExpression (PCstExpression node)
+    {
+        if(_cst_expression_ != null)
+        {
+            _cst_expression_.Parent(null);
+        }
+
+        if(node != null)
+        {
+            if(node.Parent() != null)
+            {
+                node.Parent().RemoveChild(node);
+            }
+
+            node.Parent(this);
+        }
+
+        _cst_expression_ = node;
+    }
+    public TOr GetOr ()
+    {
+        return _or_;
+    }
+
+    public void SetOr (TOr node)
+    {
+        if(_or_ != null)
+        {
+            _or_.Parent(null);
+        }
+
+        if(node != null)
+        {
+            if(node.Parent() != null)
+            {
+                node.Parent().RemoveChild(node);
+            }
+
+            node.Parent(this);
+        }
+
+        _or_ = node;
+    }
+    public PCstButtomExp GetCstButtomExp ()
+    {
+        return _cst_buttom_exp_;
+    }
+
+    public void SetCstButtomExp (PCstButtomExp node)
+    {
+        if(_cst_buttom_exp_ != null)
+        {
+            _cst_buttom_exp_.Parent(null);
+        }
+
+        if(node != null)
+        {
+            if(node.Parent() != null)
+            {
+                node.Parent().RemoveChild(node);
+            }
+
+            node.Parent(this);
+        }
+
+        _cst_buttom_exp_ = node;
+    }
+
+    public override string ToString()
+    {
+        return ""
+            + ToString (_cst_expression_)
+            + ToString (_or_)
+            + ToString (_cst_buttom_exp_)
+        ;
+    }
+
+    internal override void RemoveChild(Node child)
+    {
+        if ( _cst_expression_ == child )
+        {
+            _cst_expression_ = null;
+            return;
+        }
+        if ( _or_ == child )
+        {
+            _or_ = null;
+            return;
+        }
+        if ( _cst_buttom_exp_ == child )
+        {
+            _cst_buttom_exp_ = null;
+            return;
+        }
+    }
+
+    internal override void ReplaceChild(Node oldChild, Node newChild)
+    {
+        if ( _cst_expression_ == oldChild )
+        {
+            SetCstExpression ((PCstExpression) newChild);
+            return;
+        }
+        if ( _or_ == oldChild )
+        {
+            SetOr ((TOr) newChild);
+            return;
+        }
+        if ( _cst_buttom_exp_ == oldChild )
+        {
+            SetCstButtomExp ((PCstButtomExp) newChild);
+            return;
+        }
+    }
+
+}
+public sealed class AAndCstExpression : PCstExpression
+{
+    private PCstExpression _cst_expression_;
+    private TAnd _and_;
+    private PCstButtomExp _cst_buttom_exp_;
+
+    public AAndCstExpression ()
+    {
+    }
+
+    public AAndCstExpression (
+            PCstExpression _cst_expression_,
+            TAnd _and_,
+            PCstButtomExp _cst_buttom_exp_
+    )
+    {
+        SetCstExpression (_cst_expression_);
+        SetAnd (_and_);
+        SetCstButtomExp (_cst_buttom_exp_);
+    }
+
+    public override Object Clone()
+    {
+        return new AAndCstExpression (
+            (PCstExpression)CloneNode (_cst_expression_),
+            (TAnd)CloneNode (_and_),
+            (PCstButtomExp)CloneNode (_cst_buttom_exp_)
+        );
+    }
+
+    public override void Apply(Switch sw)
+    {
+        ((Analysis) sw).CaseAAndCstExpression(this);
+    }
+
+    public PCstExpression GetCstExpression ()
+    {
+        return _cst_expression_;
+    }
+
+    public void SetCstExpression (PCstExpression node)
+    {
+        if(_cst_expression_ != null)
+        {
+            _cst_expression_.Parent(null);
+        }
+
+        if(node != null)
+        {
+            if(node.Parent() != null)
+            {
+                node.Parent().RemoveChild(node);
+            }
+
+            node.Parent(this);
+        }
+
+        _cst_expression_ = node;
+    }
+    public TAnd GetAnd ()
+    {
+        return _and_;
+    }
+
+    public void SetAnd (TAnd node)
+    {
+        if(_and_ != null)
+        {
+            _and_.Parent(null);
+        }
+
+        if(node != null)
+        {
+            if(node.Parent() != null)
+            {
+                node.Parent().RemoveChild(node);
+            }
+
+            node.Parent(this);
+        }
+
+        _and_ = node;
+    }
+    public PCstButtomExp GetCstButtomExp ()
+    {
+        return _cst_buttom_exp_;
+    }
+
+    public void SetCstButtomExp (PCstButtomExp node)
+    {
+        if(_cst_buttom_exp_ != null)
+        {
+            _cst_buttom_exp_.Parent(null);
+        }
+
+        if(node != null)
+        {
+            if(node.Parent() != null)
+            {
+                node.Parent().RemoveChild(node);
+            }
+
+            node.Parent(this);
+        }
+
+        _cst_buttom_exp_ = node;
+    }
+
+    public override string ToString()
+    {
+        return ""
+            + ToString (_cst_expression_)
+            + ToString (_and_)
+            + ToString (_cst_buttom_exp_)
+        ;
+    }
+
+    internal override void RemoveChild(Node child)
+    {
+        if ( _cst_expression_ == child )
+        {
+            _cst_expression_ = null;
+            return;
+        }
+        if ( _and_ == child )
+        {
+            _and_ = null;
+            return;
+        }
+        if ( _cst_buttom_exp_ == child )
+        {
+            _cst_buttom_exp_ = null;
+            return;
+        }
+    }
+
+    internal override void ReplaceChild(Node oldChild, Node newChild)
+    {
+        if ( _cst_expression_ == oldChild )
+        {
+            SetCstExpression ((PCstExpression) newChild);
+            return;
+        }
+        if ( _and_ == oldChild )
+        {
+            SetAnd ((TAnd) newChild);
+            return;
+        }
+        if ( _cst_buttom_exp_ == oldChild )
+        {
+            SetCstButtomExp ((PCstButtomExp) newChild);
+            return;
+        }
+    }
+
+}
+public sealed class ACstExpression : PCstExpression
+{
+    private PCstButtomExp _cst_buttom_exp_;
+
+    public ACstExpression ()
+    {
+    }
+
+    public ACstExpression (
+            PCstButtomExp _cst_buttom_exp_
+    )
+    {
+        SetCstButtomExp (_cst_buttom_exp_);
+    }
+
+    public override Object Clone()
+    {
+        return new ACstExpression (
+            (PCstButtomExp)CloneNode (_cst_buttom_exp_)
+        );
+    }
+
+    public override void Apply(Switch sw)
+    {
+        ((Analysis) sw).CaseACstExpression(this);
+    }
+
+    public PCstButtomExp GetCstButtomExp ()
+    {
+        return _cst_buttom_exp_;
+    }
+
+    public void SetCstButtomExp (PCstButtomExp node)
+    {
+        if(_cst_buttom_exp_ != null)
+        {
+            _cst_buttom_exp_.Parent(null);
+        }
+
+        if(node != null)
+        {
+            if(node.Parent() != null)
+            {
+                node.Parent().RemoveChild(node);
+            }
+
+            node.Parent(this);
+        }
+
+        _cst_buttom_exp_ = node;
+    }
+
+    public override string ToString()
+    {
+        return ""
+            + ToString (_cst_buttom_exp_)
+        ;
+    }
+
+    internal override void RemoveChild(Node child)
+    {
+        if ( _cst_buttom_exp_ == child )
+        {
+            _cst_buttom_exp_ = null;
+            return;
+        }
+    }
+
+    internal override void ReplaceChild(Node oldChild, Node newChild)
+    {
+        if ( _cst_buttom_exp_ == oldChild )
+        {
+            SetCstButtomExp ((PCstButtomExp) newChild);
+            return;
+        }
+    }
+
+}
+public sealed class ANotCstButtomExp : PCstButtomExp
+{
+    private TNot _not_;
+    private PCstButtomExp _cst_buttom_exp_;
+
+    public ANotCstButtomExp ()
+    {
+    }
+
+    public ANotCstButtomExp (
+            TNot _not_,
+            PCstButtomExp _cst_buttom_exp_
+    )
+    {
+        SetNot (_not_);
+        SetCstButtomExp (_cst_buttom_exp_);
+    }
+
+    public override Object Clone()
+    {
+        return new ANotCstButtomExp (
+            (TNot)CloneNode (_not_),
+            (PCstButtomExp)CloneNode (_cst_buttom_exp_)
+        );
+    }
+
+    public override void Apply(Switch sw)
+    {
+        ((Analysis) sw).CaseANotCstButtomExp(this);
     }
 
     public TNot GetNot ()
@@ -7747,16 +8137,16 @@ public sealed class ANotCstExpression : PCstExpression
 
         _not_ = node;
     }
-    public PCstExpression GetCstExpression ()
+    public PCstButtomExp GetCstButtomExp ()
     {
-        return _cst_expression_;
+        return _cst_buttom_exp_;
     }
 
-    public void SetCstExpression (PCstExpression node)
+    public void SetCstButtomExp (PCstButtomExp node)
     {
-        if(_cst_expression_ != null)
+        if(_cst_buttom_exp_ != null)
         {
-            _cst_expression_.Parent(null);
+            _cst_buttom_exp_.Parent(null);
         }
 
         if(node != null)
@@ -7769,14 +8159,14 @@ public sealed class ANotCstExpression : PCstExpression
             node.Parent(this);
         }
 
-        _cst_expression_ = node;
+        _cst_buttom_exp_ = node;
     }
 
     public override string ToString()
     {
         return ""
             + ToString (_not_)
-            + ToString (_cst_expression_)
+            + ToString (_cst_buttom_exp_)
         ;
     }
 
@@ -7787,9 +8177,9 @@ public sealed class ANotCstExpression : PCstExpression
             _not_ = null;
             return;
         }
-        if ( _cst_expression_ == child )
+        if ( _cst_buttom_exp_ == child )
         {
-            _cst_expression_ = null;
+            _cst_buttom_exp_ = null;
             return;
         }
     }
@@ -7801,23 +8191,23 @@ public sealed class ANotCstExpression : PCstExpression
             SetNot ((TNot) newChild);
             return;
         }
-        if ( _cst_expression_ == oldChild )
+        if ( _cst_buttom_exp_ == oldChild )
         {
-            SetCstExpression ((PCstExpression) newChild);
+            SetCstButtomExp ((PCstButtomExp) newChild);
             return;
         }
     }
 
 }
-public sealed class ACstExpression : PCstExpression
+public sealed class ACstButtomExp : PCstButtomExp
 {
     private PCstLowestExp _cst_lowest_exp_;
 
-    public ACstExpression ()
+    public ACstButtomExp ()
     {
     }
 
-    public ACstExpression (
+    public ACstButtomExp (
             PCstLowestExp _cst_lowest_exp_
     )
     {
@@ -7826,14 +8216,14 @@ public sealed class ACstExpression : PCstExpression
 
     public override Object Clone()
     {
-        return new ACstExpression (
+        return new ACstButtomExp (
             (PCstLowestExp)CloneNode (_cst_lowest_exp_)
         );
     }
 
     public override void Apply(Switch sw)
     {
-        ((Analysis) sw).CaseACstExpression(this);
+        ((Analysis) sw).CaseACstButtomExp(this);
     }
 
     public PCstLowestExp GetCstLowestExp ()
@@ -7892,7 +8282,7 @@ public sealed class AEqualCstLowestExp : PCstLowestExp
     private PCstLowExp _cst_low_exp_;
     private TEqual _c_;
     private TEqual _d_;
-    private PCstExpression _cst_expression_;
+    private PCstButtomExp _cst_buttom_exp_;
 
     public AEqualCstLowestExp ()
     {
@@ -7902,13 +8292,13 @@ public sealed class AEqualCstLowestExp : PCstLowestExp
             PCstLowExp _cst_low_exp_,
             TEqual _c_,
             TEqual _d_,
-            PCstExpression _cst_expression_
+            PCstButtomExp _cst_buttom_exp_
     )
     {
         SetCstLowExp (_cst_low_exp_);
         SetC (_c_);
         SetD (_d_);
-        SetCstExpression (_cst_expression_);
+        SetCstButtomExp (_cst_buttom_exp_);
     }
 
     public override Object Clone()
@@ -7917,7 +8307,7 @@ public sealed class AEqualCstLowestExp : PCstLowestExp
             (PCstLowExp)CloneNode (_cst_low_exp_),
             (TEqual)CloneNode (_c_),
             (TEqual)CloneNode (_d_),
-            (PCstExpression)CloneNode (_cst_expression_)
+            (PCstButtomExp)CloneNode (_cst_buttom_exp_)
         );
     }
 
@@ -7998,16 +8388,16 @@ public sealed class AEqualCstLowestExp : PCstLowestExp
 
         _d_ = node;
     }
-    public PCstExpression GetCstExpression ()
+    public PCstButtomExp GetCstButtomExp ()
     {
-        return _cst_expression_;
+        return _cst_buttom_exp_;
     }
 
-    public void SetCstExpression (PCstExpression node)
+    public void SetCstButtomExp (PCstButtomExp node)
     {
-        if(_cst_expression_ != null)
+        if(_cst_buttom_exp_ != null)
         {
-            _cst_expression_.Parent(null);
+            _cst_buttom_exp_.Parent(null);
         }
 
         if(node != null)
@@ -8020,7 +8410,7 @@ public sealed class AEqualCstLowestExp : PCstLowestExp
             node.Parent(this);
         }
 
-        _cst_expression_ = node;
+        _cst_buttom_exp_ = node;
     }
 
     public override string ToString()
@@ -8029,7 +8419,7 @@ public sealed class AEqualCstLowestExp : PCstLowestExp
             + ToString (_cst_low_exp_)
             + ToString (_c_)
             + ToString (_d_)
-            + ToString (_cst_expression_)
+            + ToString (_cst_buttom_exp_)
         ;
     }
 
@@ -8050,9 +8440,9 @@ public sealed class AEqualCstLowestExp : PCstLowestExp
             _d_ = null;
             return;
         }
-        if ( _cst_expression_ == child )
+        if ( _cst_buttom_exp_ == child )
         {
-            _cst_expression_ = null;
+            _cst_buttom_exp_ = null;
             return;
         }
     }
@@ -8074,9 +8464,9 @@ public sealed class AEqualCstLowestExp : PCstLowestExp
             SetD ((TEqual) newChild);
             return;
         }
-        if ( _cst_expression_ == oldChild )
+        if ( _cst_buttom_exp_ == oldChild )
         {
-            SetCstExpression ((PCstExpression) newChild);
+            SetCstButtomExp ((PCstButtomExp) newChild);
             return;
         }
     }
@@ -8086,7 +8476,7 @@ public sealed class ALeCstLowestExp : PCstLowestExp
 {
     private PCstLowExp _cst_low_exp_;
     private TLessThan _less_than_;
-    private PCstExpression _cst_expression_;
+    private PCstButtomExp _cst_buttom_exp_;
 
     public ALeCstLowestExp ()
     {
@@ -8095,12 +8485,12 @@ public sealed class ALeCstLowestExp : PCstLowestExp
     public ALeCstLowestExp (
             PCstLowExp _cst_low_exp_,
             TLessThan _less_than_,
-            PCstExpression _cst_expression_
+            PCstButtomExp _cst_buttom_exp_
     )
     {
         SetCstLowExp (_cst_low_exp_);
         SetLessThan (_less_than_);
-        SetCstExpression (_cst_expression_);
+        SetCstButtomExp (_cst_buttom_exp_);
     }
 
     public override Object Clone()
@@ -8108,7 +8498,7 @@ public sealed class ALeCstLowestExp : PCstLowestExp
         return new ALeCstLowestExp (
             (PCstLowExp)CloneNode (_cst_low_exp_),
             (TLessThan)CloneNode (_less_than_),
-            (PCstExpression)CloneNode (_cst_expression_)
+            (PCstButtomExp)CloneNode (_cst_buttom_exp_)
         );
     }
 
@@ -8165,16 +8555,16 @@ public sealed class ALeCstLowestExp : PCstLowestExp
 
         _less_than_ = node;
     }
-    public PCstExpression GetCstExpression ()
+    public PCstButtomExp GetCstButtomExp ()
     {
-        return _cst_expression_;
+        return _cst_buttom_exp_;
     }
 
-    public void SetCstExpression (PCstExpression node)
+    public void SetCstButtomExp (PCstButtomExp node)
     {
-        if(_cst_expression_ != null)
+        if(_cst_buttom_exp_ != null)
         {
-            _cst_expression_.Parent(null);
+            _cst_buttom_exp_.Parent(null);
         }
 
         if(node != null)
@@ -8187,7 +8577,7 @@ public sealed class ALeCstLowestExp : PCstLowestExp
             node.Parent(this);
         }
 
-        _cst_expression_ = node;
+        _cst_buttom_exp_ = node;
     }
 
     public override string ToString()
@@ -8195,7 +8585,7 @@ public sealed class ALeCstLowestExp : PCstLowestExp
         return ""
             + ToString (_cst_low_exp_)
             + ToString (_less_than_)
-            + ToString (_cst_expression_)
+            + ToString (_cst_buttom_exp_)
         ;
     }
 
@@ -8211,9 +8601,9 @@ public sealed class ALeCstLowestExp : PCstLowestExp
             _less_than_ = null;
             return;
         }
-        if ( _cst_expression_ == child )
+        if ( _cst_buttom_exp_ == child )
         {
-            _cst_expression_ = null;
+            _cst_buttom_exp_ = null;
             return;
         }
     }
@@ -8230,9 +8620,9 @@ public sealed class ALeCstLowestExp : PCstLowestExp
             SetLessThan ((TLessThan) newChild);
             return;
         }
-        if ( _cst_expression_ == oldChild )
+        if ( _cst_buttom_exp_ == oldChild )
         {
-            SetCstExpression ((PCstExpression) newChild);
+            SetCstButtomExp ((PCstButtomExp) newChild);
             return;
         }
     }
@@ -8242,7 +8632,7 @@ public sealed class ALeqCstLowestExp : PCstLowestExp
 {
     private PCstLowExp _cst_low_exp_;
     private TLessThanOrEqual _less_than_or_equal_;
-    private PCstExpression _cst_expression_;
+    private PCstButtomExp _cst_buttom_exp_;
 
     public ALeqCstLowestExp ()
     {
@@ -8251,12 +8641,12 @@ public sealed class ALeqCstLowestExp : PCstLowestExp
     public ALeqCstLowestExp (
             PCstLowExp _cst_low_exp_,
             TLessThanOrEqual _less_than_or_equal_,
-            PCstExpression _cst_expression_
+            PCstButtomExp _cst_buttom_exp_
     )
     {
         SetCstLowExp (_cst_low_exp_);
         SetLessThanOrEqual (_less_than_or_equal_);
-        SetCstExpression (_cst_expression_);
+        SetCstButtomExp (_cst_buttom_exp_);
     }
 
     public override Object Clone()
@@ -8264,7 +8654,7 @@ public sealed class ALeqCstLowestExp : PCstLowestExp
         return new ALeqCstLowestExp (
             (PCstLowExp)CloneNode (_cst_low_exp_),
             (TLessThanOrEqual)CloneNode (_less_than_or_equal_),
-            (PCstExpression)CloneNode (_cst_expression_)
+            (PCstButtomExp)CloneNode (_cst_buttom_exp_)
         );
     }
 
@@ -8321,16 +8711,16 @@ public sealed class ALeqCstLowestExp : PCstLowestExp
 
         _less_than_or_equal_ = node;
     }
-    public PCstExpression GetCstExpression ()
+    public PCstButtomExp GetCstButtomExp ()
     {
-        return _cst_expression_;
+        return _cst_buttom_exp_;
     }
 
-    public void SetCstExpression (PCstExpression node)
+    public void SetCstButtomExp (PCstButtomExp node)
     {
-        if(_cst_expression_ != null)
+        if(_cst_buttom_exp_ != null)
         {
-            _cst_expression_.Parent(null);
+            _cst_buttom_exp_.Parent(null);
         }
 
         if(node != null)
@@ -8343,7 +8733,7 @@ public sealed class ALeqCstLowestExp : PCstLowestExp
             node.Parent(this);
         }
 
-        _cst_expression_ = node;
+        _cst_buttom_exp_ = node;
     }
 
     public override string ToString()
@@ -8351,7 +8741,7 @@ public sealed class ALeqCstLowestExp : PCstLowestExp
         return ""
             + ToString (_cst_low_exp_)
             + ToString (_less_than_or_equal_)
-            + ToString (_cst_expression_)
+            + ToString (_cst_buttom_exp_)
         ;
     }
 
@@ -8367,9 +8757,9 @@ public sealed class ALeqCstLowestExp : PCstLowestExp
             _less_than_or_equal_ = null;
             return;
         }
-        if ( _cst_expression_ == child )
+        if ( _cst_buttom_exp_ == child )
         {
-            _cst_expression_ = null;
+            _cst_buttom_exp_ = null;
             return;
         }
     }
@@ -8386,9 +8776,9 @@ public sealed class ALeqCstLowestExp : PCstLowestExp
             SetLessThanOrEqual ((TLessThanOrEqual) newChild);
             return;
         }
-        if ( _cst_expression_ == oldChild )
+        if ( _cst_buttom_exp_ == oldChild )
         {
-            SetCstExpression ((PCstExpression) newChild);
+            SetCstButtomExp ((PCstButtomExp) newChild);
             return;
         }
     }
@@ -8398,7 +8788,7 @@ public sealed class AGeCstLowestExp : PCstLowestExp
 {
     private PCstLowExp _cst_low_exp_;
     private TGreaterThan _greater_than_;
-    private PCstExpression _cst_expression_;
+    private PCstButtomExp _cst_buttom_exp_;
 
     public AGeCstLowestExp ()
     {
@@ -8407,12 +8797,12 @@ public sealed class AGeCstLowestExp : PCstLowestExp
     public AGeCstLowestExp (
             PCstLowExp _cst_low_exp_,
             TGreaterThan _greater_than_,
-            PCstExpression _cst_expression_
+            PCstButtomExp _cst_buttom_exp_
     )
     {
         SetCstLowExp (_cst_low_exp_);
         SetGreaterThan (_greater_than_);
-        SetCstExpression (_cst_expression_);
+        SetCstButtomExp (_cst_buttom_exp_);
     }
 
     public override Object Clone()
@@ -8420,7 +8810,7 @@ public sealed class AGeCstLowestExp : PCstLowestExp
         return new AGeCstLowestExp (
             (PCstLowExp)CloneNode (_cst_low_exp_),
             (TGreaterThan)CloneNode (_greater_than_),
-            (PCstExpression)CloneNode (_cst_expression_)
+            (PCstButtomExp)CloneNode (_cst_buttom_exp_)
         );
     }
 
@@ -8477,16 +8867,16 @@ public sealed class AGeCstLowestExp : PCstLowestExp
 
         _greater_than_ = node;
     }
-    public PCstExpression GetCstExpression ()
+    public PCstButtomExp GetCstButtomExp ()
     {
-        return _cst_expression_;
+        return _cst_buttom_exp_;
     }
 
-    public void SetCstExpression (PCstExpression node)
+    public void SetCstButtomExp (PCstButtomExp node)
     {
-        if(_cst_expression_ != null)
+        if(_cst_buttom_exp_ != null)
         {
-            _cst_expression_.Parent(null);
+            _cst_buttom_exp_.Parent(null);
         }
 
         if(node != null)
@@ -8499,7 +8889,7 @@ public sealed class AGeCstLowestExp : PCstLowestExp
             node.Parent(this);
         }
 
-        _cst_expression_ = node;
+        _cst_buttom_exp_ = node;
     }
 
     public override string ToString()
@@ -8507,7 +8897,7 @@ public sealed class AGeCstLowestExp : PCstLowestExp
         return ""
             + ToString (_cst_low_exp_)
             + ToString (_greater_than_)
-            + ToString (_cst_expression_)
+            + ToString (_cst_buttom_exp_)
         ;
     }
 
@@ -8523,9 +8913,9 @@ public sealed class AGeCstLowestExp : PCstLowestExp
             _greater_than_ = null;
             return;
         }
-        if ( _cst_expression_ == child )
+        if ( _cst_buttom_exp_ == child )
         {
-            _cst_expression_ = null;
+            _cst_buttom_exp_ = null;
             return;
         }
     }
@@ -8542,9 +8932,9 @@ public sealed class AGeCstLowestExp : PCstLowestExp
             SetGreaterThan ((TGreaterThan) newChild);
             return;
         }
-        if ( _cst_expression_ == oldChild )
+        if ( _cst_buttom_exp_ == oldChild )
         {
-            SetCstExpression ((PCstExpression) newChild);
+            SetCstButtomExp ((PCstButtomExp) newChild);
             return;
         }
     }
@@ -8554,7 +8944,7 @@ public sealed class AGeqCstLowestExp : PCstLowestExp
 {
     private PCstLowExp _cst_low_exp_;
     private TGreaterThanOrEqual _greater_than_or_equal_;
-    private PCstExpression _cst_expression_;
+    private PCstButtomExp _cst_buttom_exp_;
 
     public AGeqCstLowestExp ()
     {
@@ -8563,12 +8953,12 @@ public sealed class AGeqCstLowestExp : PCstLowestExp
     public AGeqCstLowestExp (
             PCstLowExp _cst_low_exp_,
             TGreaterThanOrEqual _greater_than_or_equal_,
-            PCstExpression _cst_expression_
+            PCstButtomExp _cst_buttom_exp_
     )
     {
         SetCstLowExp (_cst_low_exp_);
         SetGreaterThanOrEqual (_greater_than_or_equal_);
-        SetCstExpression (_cst_expression_);
+        SetCstButtomExp (_cst_buttom_exp_);
     }
 
     public override Object Clone()
@@ -8576,7 +8966,7 @@ public sealed class AGeqCstLowestExp : PCstLowestExp
         return new AGeqCstLowestExp (
             (PCstLowExp)CloneNode (_cst_low_exp_),
             (TGreaterThanOrEqual)CloneNode (_greater_than_or_equal_),
-            (PCstExpression)CloneNode (_cst_expression_)
+            (PCstButtomExp)CloneNode (_cst_buttom_exp_)
         );
     }
 
@@ -8633,16 +9023,16 @@ public sealed class AGeqCstLowestExp : PCstLowestExp
 
         _greater_than_or_equal_ = node;
     }
-    public PCstExpression GetCstExpression ()
+    public PCstButtomExp GetCstButtomExp ()
     {
-        return _cst_expression_;
+        return _cst_buttom_exp_;
     }
 
-    public void SetCstExpression (PCstExpression node)
+    public void SetCstButtomExp (PCstButtomExp node)
     {
-        if(_cst_expression_ != null)
+        if(_cst_buttom_exp_ != null)
         {
-            _cst_expression_.Parent(null);
+            _cst_buttom_exp_.Parent(null);
         }
 
         if(node != null)
@@ -8655,7 +9045,7 @@ public sealed class AGeqCstLowestExp : PCstLowestExp
             node.Parent(this);
         }
 
-        _cst_expression_ = node;
+        _cst_buttom_exp_ = node;
     }
 
     public override string ToString()
@@ -8663,7 +9053,7 @@ public sealed class AGeqCstLowestExp : PCstLowestExp
         return ""
             + ToString (_cst_low_exp_)
             + ToString (_greater_than_or_equal_)
-            + ToString (_cst_expression_)
+            + ToString (_cst_buttom_exp_)
         ;
     }
 
@@ -8679,9 +9069,9 @@ public sealed class AGeqCstLowestExp : PCstLowestExp
             _greater_than_or_equal_ = null;
             return;
         }
-        if ( _cst_expression_ == child )
+        if ( _cst_buttom_exp_ == child )
         {
-            _cst_expression_ = null;
+            _cst_buttom_exp_ = null;
             return;
         }
     }
@@ -8698,9 +9088,9 @@ public sealed class AGeqCstLowestExp : PCstLowestExp
             SetGreaterThanOrEqual ((TGreaterThanOrEqual) newChild);
             return;
         }
-        if ( _cst_expression_ == oldChild )
+        if ( _cst_buttom_exp_ == oldChild )
         {
-            SetCstExpression ((PCstExpression) newChild);
+            SetCstButtomExp ((PCstButtomExp) newChild);
             return;
         }
     }
@@ -8711,7 +9101,7 @@ public sealed class ANeqCstLowestExp : PCstLowestExp
     private PCstLowExp _cst_low_exp_;
     private TNot _not_;
     private TEqual _equal_;
-    private PCstExpression _cst_expression_;
+    private PCstButtomExp _cst_buttom_exp_;
 
     public ANeqCstLowestExp ()
     {
@@ -8721,13 +9111,13 @@ public sealed class ANeqCstLowestExp : PCstLowestExp
             PCstLowExp _cst_low_exp_,
             TNot _not_,
             TEqual _equal_,
-            PCstExpression _cst_expression_
+            PCstButtomExp _cst_buttom_exp_
     )
     {
         SetCstLowExp (_cst_low_exp_);
         SetNot (_not_);
         SetEqual (_equal_);
-        SetCstExpression (_cst_expression_);
+        SetCstButtomExp (_cst_buttom_exp_);
     }
 
     public override Object Clone()
@@ -8736,7 +9126,7 @@ public sealed class ANeqCstLowestExp : PCstLowestExp
             (PCstLowExp)CloneNode (_cst_low_exp_),
             (TNot)CloneNode (_not_),
             (TEqual)CloneNode (_equal_),
-            (PCstExpression)CloneNode (_cst_expression_)
+            (PCstButtomExp)CloneNode (_cst_buttom_exp_)
         );
     }
 
@@ -8817,16 +9207,16 @@ public sealed class ANeqCstLowestExp : PCstLowestExp
 
         _equal_ = node;
     }
-    public PCstExpression GetCstExpression ()
+    public PCstButtomExp GetCstButtomExp ()
     {
-        return _cst_expression_;
+        return _cst_buttom_exp_;
     }
 
-    public void SetCstExpression (PCstExpression node)
+    public void SetCstButtomExp (PCstButtomExp node)
     {
-        if(_cst_expression_ != null)
+        if(_cst_buttom_exp_ != null)
         {
-            _cst_expression_.Parent(null);
+            _cst_buttom_exp_.Parent(null);
         }
 
         if(node != null)
@@ -8839,7 +9229,7 @@ public sealed class ANeqCstLowestExp : PCstLowestExp
             node.Parent(this);
         }
 
-        _cst_expression_ = node;
+        _cst_buttom_exp_ = node;
     }
 
     public override string ToString()
@@ -8848,7 +9238,7 @@ public sealed class ANeqCstLowestExp : PCstLowestExp
             + ToString (_cst_low_exp_)
             + ToString (_not_)
             + ToString (_equal_)
-            + ToString (_cst_expression_)
+            + ToString (_cst_buttom_exp_)
         ;
     }
 
@@ -8869,9 +9259,9 @@ public sealed class ANeqCstLowestExp : PCstLowestExp
             _equal_ = null;
             return;
         }
-        if ( _cst_expression_ == child )
+        if ( _cst_buttom_exp_ == child )
         {
-            _cst_expression_ = null;
+            _cst_buttom_exp_ = null;
             return;
         }
     }
@@ -8893,9 +9283,9 @@ public sealed class ANeqCstLowestExp : PCstLowestExp
             SetEqual ((TEqual) newChild);
             return;
         }
-        if ( _cst_expression_ == oldChild )
+        if ( _cst_buttom_exp_ == oldChild )
         {
-            SetCstExpression ((PCstExpression) newChild);
+            SetCstButtomExp ((PCstButtomExp) newChild);
             return;
         }
     }
@@ -9915,6 +10305,162 @@ public sealed class ACstMediumExp : PCstMediumExp
     }
 
 }
+public sealed class AParenCstHighExp : PCstHighExp
+{
+    private TLPar _l_par_;
+    private PCstExpression _cst_expression_;
+    private TRPar _r_par_;
+
+    public AParenCstHighExp ()
+    {
+    }
+
+    public AParenCstHighExp (
+            TLPar _l_par_,
+            PCstExpression _cst_expression_,
+            TRPar _r_par_
+    )
+    {
+        SetLPar (_l_par_);
+        SetCstExpression (_cst_expression_);
+        SetRPar (_r_par_);
+    }
+
+    public override Object Clone()
+    {
+        return new AParenCstHighExp (
+            (TLPar)CloneNode (_l_par_),
+            (PCstExpression)CloneNode (_cst_expression_),
+            (TRPar)CloneNode (_r_par_)
+        );
+    }
+
+    public override void Apply(Switch sw)
+    {
+        ((Analysis) sw).CaseAParenCstHighExp(this);
+    }
+
+    public TLPar GetLPar ()
+    {
+        return _l_par_;
+    }
+
+    public void SetLPar (TLPar node)
+    {
+        if(_l_par_ != null)
+        {
+            _l_par_.Parent(null);
+        }
+
+        if(node != null)
+        {
+            if(node.Parent() != null)
+            {
+                node.Parent().RemoveChild(node);
+            }
+
+            node.Parent(this);
+        }
+
+        _l_par_ = node;
+    }
+    public PCstExpression GetCstExpression ()
+    {
+        return _cst_expression_;
+    }
+
+    public void SetCstExpression (PCstExpression node)
+    {
+        if(_cst_expression_ != null)
+        {
+            _cst_expression_.Parent(null);
+        }
+
+        if(node != null)
+        {
+            if(node.Parent() != null)
+            {
+                node.Parent().RemoveChild(node);
+            }
+
+            node.Parent(this);
+        }
+
+        _cst_expression_ = node;
+    }
+    public TRPar GetRPar ()
+    {
+        return _r_par_;
+    }
+
+    public void SetRPar (TRPar node)
+    {
+        if(_r_par_ != null)
+        {
+            _r_par_.Parent(null);
+        }
+
+        if(node != null)
+        {
+            if(node.Parent() != null)
+            {
+                node.Parent().RemoveChild(node);
+            }
+
+            node.Parent(this);
+        }
+
+        _r_par_ = node;
+    }
+
+    public override string ToString()
+    {
+        return ""
+            + ToString (_l_par_)
+            + ToString (_cst_expression_)
+            + ToString (_r_par_)
+        ;
+    }
+
+    internal override void RemoveChild(Node child)
+    {
+        if ( _l_par_ == child )
+        {
+            _l_par_ = null;
+            return;
+        }
+        if ( _cst_expression_ == child )
+        {
+            _cst_expression_ = null;
+            return;
+        }
+        if ( _r_par_ == child )
+        {
+            _r_par_ = null;
+            return;
+        }
+    }
+
+    internal override void ReplaceChild(Node oldChild, Node newChild)
+    {
+        if ( _l_par_ == oldChild )
+        {
+            SetLPar ((TLPar) newChild);
+            return;
+        }
+        if ( _cst_expression_ == oldChild )
+        {
+            SetCstExpression ((PCstExpression) newChild);
+            return;
+        }
+        if ( _r_par_ == oldChild )
+        {
+            SetRPar ((TRPar) newChild);
+            return;
+        }
+    }
+
+}
 public sealed class ANumberCstHighExp : PCstHighExp
 {
     private TNumber _number_;
@@ -10300,240 +10846,6 @@ public sealed class AVectorCstHighExp : PCstHighExp
         if ( _cst_vector_values_ == oldChild )
         {
             SetCstVectorValues ((PCstVectorValues) newChild);
-            return;
-        }
-    }
-
-}
-public sealed class ACstHighExp : PCstHighExp
-{
-    private PCstHighestExp _cst_highest_exp_;
-
-    public ACstHighExp ()
-    {
-    }
-
-    public ACstHighExp (
-            PCstHighestExp _cst_highest_exp_
-    )
-    {
-        SetCstHighestExp (_cst_highest_exp_);
-    }
-
-    public override Object Clone()
-    {
-        return new ACstHighExp (
-            (PCstHighestExp)CloneNode (_cst_highest_exp_)
-        );
-    }
-
-    public override void Apply(Switch sw)
-    {
-        ((Analysis) sw).CaseACstHighExp(this);
-    }
-
-    public PCstHighestExp GetCstHighestExp ()
-    {
-        return _cst_highest_exp_;
-    }
-
-    public void SetCstHighestExp (PCstHighestExp node)
-    {
-        if(_cst_highest_exp_ != null)
-        {
-            _cst_highest_exp_.Parent(null);
-        }
-
-        if(node != null)
-        {
-            if(node.Parent() != null)
-            {
-                node.Parent().RemoveChild(node);
-            }
-
-            node.Parent(this);
-        }
-
-        _cst_highest_exp_ = node;
-    }
-
-    public override string ToString()
-    {
-        return ""
-            + ToString (_cst_highest_exp_)
-        ;
-    }
-
-    internal override void RemoveChild(Node child)
-    {
-        if ( _cst_highest_exp_ == child )
-        {
-            _cst_highest_exp_ = null;
-            return;
-        }
-    }
-
-    internal override void ReplaceChild(Node oldChild, Node newChild)
-    {
-        if ( _cst_highest_exp_ == oldChild )
-        {
-            SetCstHighestExp ((PCstHighestExp) newChild);
-            return;
-        }
-    }
-
-}
-public sealed class AParenCstHighestExp : PCstHighestExp
-{
-    private TLPar _l_par_;
-    private PCstExpression _cst_expression_;
-    private TRPar _r_par_;
-
-    public AParenCstHighestExp ()
-    {
-    }
-
-    public AParenCstHighestExp (
-            TLPar _l_par_,
-            PCstExpression _cst_expression_,
-            TRPar _r_par_
-    )
-    {
-        SetLPar (_l_par_);
-        SetCstExpression (_cst_expression_);
-        SetRPar (_r_par_);
-    }
-
-    public override Object Clone()
-    {
-        return new AParenCstHighestExp (
-            (TLPar)CloneNode (_l_par_),
-            (PCstExpression)CloneNode (_cst_expression_),
-            (TRPar)CloneNode (_r_par_)
-        );
-    }
-
-    public override void Apply(Switch sw)
-    {
-        ((Analysis) sw).CaseAParenCstHighestExp(this);
-    }
-
-    public TLPar GetLPar ()
-    {
-        return _l_par_;
-    }
-
-    public void SetLPar (TLPar node)
-    {
-        if(_l_par_ != null)
-        {
-            _l_par_.Parent(null);
-        }
-
-        if(node != null)
-        {
-            if(node.Parent() != null)
-            {
-                node.Parent().RemoveChild(node);
-            }
-
-            node.Parent(this);
-        }
-
-        _l_par_ = node;
-    }
-    public PCstExpression GetCstExpression ()
-    {
-        return _cst_expression_;
-    }
-
-    public void SetCstExpression (PCstExpression node)
-    {
-        if(_cst_expression_ != null)
-        {
-            _cst_expression_.Parent(null);
-        }
-
-        if(node != null)
-        {
-            if(node.Parent() != null)
-            {
-                node.Parent().RemoveChild(node);
-            }
-
-            node.Parent(this);
-        }
-
-        _cst_expression_ = node;
-    }
-    public TRPar GetRPar ()
-    {
-        return _r_par_;
-    }
-
-    public void SetRPar (TRPar node)
-    {
-        if(_r_par_ != null)
-        {
-            _r_par_.Parent(null);
-        }
-
-        if(node != null)
-        {
-            if(node.Parent() != null)
-            {
-                node.Parent().RemoveChild(node);
-            }
-
-            node.Parent(this);
-        }
-
-        _r_par_ = node;
-    }
-
-    public override string ToString()
-    {
-        return ""
-            + ToString (_l_par_)
-            + ToString (_cst_expression_)
-            + ToString (_r_par_)
-        ;
-    }
-
-    internal override void RemoveChild(Node child)
-    {
-        if ( _l_par_ == child )
-        {
-            _l_par_ = null;
-            return;
-        }
-        if ( _cst_expression_ == child )
-        {
-            _cst_expression_ = null;
-            return;
-        }
-        if ( _r_par_ == child )
-        {
-            _r_par_ = null;
-            return;
-        }
-    }
-
-    internal override void ReplaceChild(Node oldChild, Node newChild)
-    {
-        if ( _l_par_ == oldChild )
-        {
-            SetLPar ((TLPar) newChild);
-            return;
-        }
-        if ( _cst_expression_ == oldChild )
-        {
-            SetCstExpression ((PCstExpression) newChild);
-            return;
-        }
-        if ( _r_par_ == oldChild )
-        {
-            SetRPar ((TRPar) newChild);
             return;
         }
     }

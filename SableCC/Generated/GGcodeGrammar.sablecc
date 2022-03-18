@@ -149,16 +149,21 @@ cst_actual_param_list =
         cst_expression;
 
 cst_expression =
-        {not}not cst_expression |
+        {or} cst_expression or cst_buttom_exp |
+        {and} cst_expression and cst_buttom_exp |
+        cst_buttom_exp;
+
+cst_buttom_exp =
+        {not}not cst_buttom_exp |
         cst_lowest_exp;
 
 cst_lowest_exp =
-        {equal}cst_low_exp [c]:equal [d]:equal cst_expression |
-        {le}cst_low_exp less_than cst_expression |
-        {leq}cst_low_exp less_than_or_equal cst_expression |
-        {ge}cst_low_exp greater_than cst_expression | 
-        {geq}cst_low_exp greater_than_or_equal cst_expression |
-        {neq}cst_low_exp not equal cst_expression |
+        {equal}cst_low_exp [c]:equal [d]:equal cst_buttom_exp |
+        {le}cst_low_exp less_than cst_buttom_exp |
+        {leq}cst_low_exp less_than_or_equal cst_buttom_exp |
+        {ge}cst_low_exp greater_than cst_buttom_exp | 
+        {geq}cst_low_exp greater_than_or_equal cst_buttom_exp |
+        {neq}cst_low_exp not equal cst_buttom_exp |
         cst_low_exp;
 
 cst_low_exp = 
@@ -173,12 +178,9 @@ cst_medium_exp =
         cst_high_exp;
 
 cst_high_exp =
+        {paren}l_par cst_expression r_par |
         {number}number |
         {bool}bool_value |
         {id}identifier |
         {func_call}cst_function_call |
-        {vector}cst_vector_values |
-        cst_highest_exp;
-
-cst_highest_exp =
-        {paren}l_par cst_expression r_par;
+        {vector}cst_vector_values;
