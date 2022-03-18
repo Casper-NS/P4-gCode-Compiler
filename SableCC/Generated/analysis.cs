@@ -16,11 +16,12 @@ public interface Analysis : Switch
 
     void CaseStart(Start node);
     void CaseACstProgram(ACstProgram node);
-    void CaseACstMain(ACstMain node);
+    void CaseACstMainFunctionDeclaration(ACstMainFunctionDeclaration node);
     void CaseARecursiveCstDeclarationList(ARecursiveCstDeclarationList node);
     void CaseACstDeclarationList(ACstDeclarationList node);
     void CaseAVariableCstDeclaration(AVariableCstDeclaration node);
     void CaseAFunctionCstDeclaration(AFunctionCstDeclaration node);
+    void CaseAMainCstDeclaration(AMainCstDeclaration node);
     void CaseASimpleCstVariableDeclaration(ASimpleCstVariableDeclaration node);
     void CaseAVectorCstVariableDeclaration(AVectorCstVariableDeclaration node);
     void CaseACstVectorDeclaration(ACstVectorDeclaration node);
@@ -59,6 +60,7 @@ public interface Analysis : Switch
     void CaseACstActualParam(ACstActualParam node);
     void CaseACstExpression(ACstExpression node);
 
+    void CaseTMain(TMain node);
     void CaseTEol(TEol node);
     void CaseTBlank(TBlank node);
     void CaseTAssignmentOp(TAssignmentOp node);
@@ -162,7 +164,7 @@ public class AnalysisAdapter : Analysis
     {
         DefaultCase(node);
     }
-    public virtual void CaseACstMain(ACstMain node)
+    public virtual void CaseACstMainFunctionDeclaration(ACstMainFunctionDeclaration node)
     {
         DefaultCase(node);
     }
@@ -179,6 +181,10 @@ public class AnalysisAdapter : Analysis
         DefaultCase(node);
     }
     public virtual void CaseAFunctionCstDeclaration(AFunctionCstDeclaration node)
+    {
+        DefaultCase(node);
+    }
+    public virtual void CaseAMainCstDeclaration(AMainCstDeclaration node)
     {
         DefaultCase(node);
     }
@@ -331,6 +337,10 @@ public class AnalysisAdapter : Analysis
         DefaultCase(node);
     }
 
+    public virtual void CaseTMain(TMain node)
+    {
+        DefaultCase(node);
+    }
     public virtual void CaseTEol(TEol node)
     {
         DefaultCase(node);
@@ -516,34 +526,46 @@ public class DepthFirstAdapter : AnalysisAdapter
     public override void CaseACstProgram(ACstProgram node)
     {
         InACstProgram(node);
-        if(node.GetCstDeclarationList() != null)
+        if(node.GetA() != null)
         {
-            node.GetCstDeclarationList().Apply(this);
-        }
-        if(node.GetCstMain() != null)
-        {
-            node.GetCstMain().Apply(this);
+            node.GetA().Apply(this);
         }
         OutACstProgram(node);
     }
-    public virtual void InACstMain(ACstMain node)
+    public virtual void InACstMainFunctionDeclaration(ACstMainFunctionDeclaration node)
     {
         DefaultIn(node);
     }
 
-    public virtual void OutACstMain(ACstMain node)
+    public virtual void OutACstMainFunctionDeclaration(ACstMainFunctionDeclaration node)
     {
         DefaultOut(node);
     }
 
-    public override void CaseACstMain(ACstMain node)
+    public override void CaseACstMainFunctionDeclaration(ACstMainFunctionDeclaration node)
     {
-        InACstMain(node);
-        if(node.GetCstBlock() != null)
+        InACstMainFunctionDeclaration(node);
+        if(node.GetMain() != null)
         {
-            node.GetCstBlock().Apply(this);
+            node.GetMain().Apply(this);
         }
-        OutACstMain(node);
+        if(node.GetLPar() != null)
+        {
+            node.GetLPar().Apply(this);
+        }
+        if(node.GetRPar() != null)
+        {
+            node.GetRPar().Apply(this);
+        }
+        if(node.GetEol() != null)
+        {
+            node.GetEol().Apply(this);
+        }
+        if(node.GetCstFunctionBody() != null)
+        {
+            node.GetCstFunctionBody().Apply(this);
+        }
+        OutACstMainFunctionDeclaration(node);
     }
     public virtual void InARecursiveCstDeclarationList(ARecursiveCstDeclarationList node)
     {
@@ -562,9 +584,13 @@ public class DepthFirstAdapter : AnalysisAdapter
         {
             node.GetCstDeclaration().Apply(this);
         }
-        if(node.GetEol() != null)
         {
-            node.GetEol().Apply(this);
+            Object[] temp = new Object[node.GetEol().Count];
+            node.GetEol().CopyTo(temp, 0);
+            for(int i = 0; i < temp.Length; i++)
+            {
+                ((TEol) temp[i]).Apply(this);
+            }
         }
         if(node.GetCstDeclarationList() != null)
         {
@@ -588,10 +614,6 @@ public class DepthFirstAdapter : AnalysisAdapter
         if(node.GetCstDeclaration() != null)
         {
             node.GetCstDeclaration().Apply(this);
-        }
-        if(node.GetEol() != null)
-        {
-            node.GetEol().Apply(this);
         }
         OutACstDeclarationList(node);
     }
@@ -632,6 +654,25 @@ public class DepthFirstAdapter : AnalysisAdapter
             node.GetCstFunctionDeclaration().Apply(this);
         }
         OutAFunctionCstDeclaration(node);
+    }
+    public virtual void InAMainCstDeclaration(AMainCstDeclaration node)
+    {
+        DefaultIn(node);
+    }
+
+    public virtual void OutAMainCstDeclaration(AMainCstDeclaration node)
+    {
+        DefaultOut(node);
+    }
+
+    public override void CaseAMainCstDeclaration(AMainCstDeclaration node)
+    {
+        InAMainCstDeclaration(node);
+        if(node.GetCstMainFunctionDeclaration() != null)
+        {
+            node.GetCstMainFunctionDeclaration().Apply(this);
+        }
+        OutAMainCstDeclaration(node);
     }
     public virtual void InASimpleCstVariableDeclaration(ASimpleCstVariableDeclaration node)
     {
@@ -1036,10 +1077,6 @@ public class DepthFirstAdapter : AnalysisAdapter
         {
             node.GetCstBlock().Apply(this);
         }
-        if(node.GetEol() != null)
-        {
-            node.GetEol().Apply(this);
-        }
         OutACstFunctionBody(node);
     }
     public virtual void InACstBlock(ACstBlock node)
@@ -1058,6 +1095,10 @@ public class DepthFirstAdapter : AnalysisAdapter
         if(node.GetLCur() != null)
         {
             node.GetLCur().Apply(this);
+        }
+        if(node.GetEol() != null)
+        {
+            node.GetEol().Apply(this);
         }
         if(node.GetCstStatementList() != null)
         {
@@ -1456,10 +1497,6 @@ public class DepthFirstAdapter : AnalysisAdapter
         {
             node.GetCstExpression().Apply(this);
         }
-        if(node.GetEol() != null)
-        {
-            node.GetEol().Apply(this);
-        }
         OutACstAssignment(node);
     }
     public virtual void InACstFunctionCall(ACstFunctionCall node)
@@ -1490,10 +1527,6 @@ public class DepthFirstAdapter : AnalysisAdapter
         if(node.GetRPar() != null)
         {
             node.GetRPar().Apply(this);
-        }
-        if(node.GetEol() != null)
-        {
-            node.GetEol().Apply(this);
         }
         OutACstFunctionCall(node);
     }
@@ -1644,34 +1677,46 @@ public class ReversedDepthFirstAdapter : AnalysisAdapter
     public override void CaseACstProgram(ACstProgram node)
     {
         InACstProgram(node);
-        if(node.GetCstMain() != null)
+        if(node.GetA() != null)
         {
-            node.GetCstMain().Apply(this);
-        }
-        if(node.GetCstDeclarationList() != null)
-        {
-            node.GetCstDeclarationList().Apply(this);
+            node.GetA().Apply(this);
         }
         OutACstProgram(node);
     }
-    public virtual void InACstMain(ACstMain node)
+    public virtual void InACstMainFunctionDeclaration(ACstMainFunctionDeclaration node)
     {
         DefaultIn(node);
     }
 
-    public virtual void OutACstMain(ACstMain node)
+    public virtual void OutACstMainFunctionDeclaration(ACstMainFunctionDeclaration node)
     {
         DefaultOut(node);
     }
 
-    public override void CaseACstMain(ACstMain node)
+    public override void CaseACstMainFunctionDeclaration(ACstMainFunctionDeclaration node)
     {
-        InACstMain(node);
-        if(node.GetCstBlock() != null)
+        InACstMainFunctionDeclaration(node);
+        if(node.GetCstFunctionBody() != null)
         {
-            node.GetCstBlock().Apply(this);
+            node.GetCstFunctionBody().Apply(this);
         }
-        OutACstMain(node);
+        if(node.GetEol() != null)
+        {
+            node.GetEol().Apply(this);
+        }
+        if(node.GetRPar() != null)
+        {
+            node.GetRPar().Apply(this);
+        }
+        if(node.GetLPar() != null)
+        {
+            node.GetLPar().Apply(this);
+        }
+        if(node.GetMain() != null)
+        {
+            node.GetMain().Apply(this);
+        }
+        OutACstMainFunctionDeclaration(node);
     }
     public virtual void InARecursiveCstDeclarationList(ARecursiveCstDeclarationList node)
     {
@@ -1690,9 +1735,13 @@ public class ReversedDepthFirstAdapter : AnalysisAdapter
         {
             node.GetCstDeclarationList().Apply(this);
         }
-        if(node.GetEol() != null)
         {
-            node.GetEol().Apply(this);
+            Object[] temp = new Object[node.GetEol().Count];
+            node.GetEol().CopyTo(temp, 0);
+            for(int i = temp.Length - 1; i >= 0; i--)
+            {
+                ((TEol) temp[i]).Apply(this);
+            }
         }
         if(node.GetCstDeclaration() != null)
         {
@@ -1713,10 +1762,6 @@ public class ReversedDepthFirstAdapter : AnalysisAdapter
     public override void CaseACstDeclarationList(ACstDeclarationList node)
     {
         InACstDeclarationList(node);
-        if(node.GetEol() != null)
-        {
-            node.GetEol().Apply(this);
-        }
         if(node.GetCstDeclaration() != null)
         {
             node.GetCstDeclaration().Apply(this);
@@ -1760,6 +1805,25 @@ public class ReversedDepthFirstAdapter : AnalysisAdapter
             node.GetCstFunctionDeclaration().Apply(this);
         }
         OutAFunctionCstDeclaration(node);
+    }
+    public virtual void InAMainCstDeclaration(AMainCstDeclaration node)
+    {
+        DefaultIn(node);
+    }
+
+    public virtual void OutAMainCstDeclaration(AMainCstDeclaration node)
+    {
+        DefaultOut(node);
+    }
+
+    public override void CaseAMainCstDeclaration(AMainCstDeclaration node)
+    {
+        InAMainCstDeclaration(node);
+        if(node.GetCstMainFunctionDeclaration() != null)
+        {
+            node.GetCstMainFunctionDeclaration().Apply(this);
+        }
+        OutAMainCstDeclaration(node);
     }
     public virtual void InASimpleCstVariableDeclaration(ASimpleCstVariableDeclaration node)
     {
@@ -2160,10 +2224,6 @@ public class ReversedDepthFirstAdapter : AnalysisAdapter
     public override void CaseACstFunctionBody(ACstFunctionBody node)
     {
         InACstFunctionBody(node);
-        if(node.GetEol() != null)
-        {
-            node.GetEol().Apply(this);
-        }
         if(node.GetCstBlock() != null)
         {
             node.GetCstBlock().Apply(this);
@@ -2190,6 +2250,10 @@ public class ReversedDepthFirstAdapter : AnalysisAdapter
         if(node.GetCstStatementList() != null)
         {
             node.GetCstStatementList().Apply(this);
+        }
+        if(node.GetEol() != null)
+        {
+            node.GetEol().Apply(this);
         }
         if(node.GetLCur() != null)
         {
@@ -2572,10 +2636,6 @@ public class ReversedDepthFirstAdapter : AnalysisAdapter
     public override void CaseACstAssignment(ACstAssignment node)
     {
         InACstAssignment(node);
-        if(node.GetEol() != null)
-        {
-            node.GetEol().Apply(this);
-        }
         if(node.GetCstExpression() != null)
         {
             node.GetCstExpression().Apply(this);
@@ -2603,10 +2663,6 @@ public class ReversedDepthFirstAdapter : AnalysisAdapter
     public override void CaseACstFunctionCall(ACstFunctionCall node)
     {
         InACstFunctionCall(node);
-        if(node.GetEol() != null)
-        {
-            node.GetEol().Apply(this);
-        }
         if(node.GetRPar() != null)
         {
             node.GetRPar().Apply(this);

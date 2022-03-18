@@ -16,6 +16,7 @@ Helpers
   idchar  = letter | '_' | digit;
 
 Tokens
+  main = 'main';
   eol   = cr | lf | cr lf;
   blank = ' ' | tab;
   assignment_op = '=';
@@ -54,17 +55,19 @@ Ignored Tokens
   blank;
 
 Productions
-cst_program = cst_declaration_list cst_main;
+cst_program = [a]:cst_declaration_list;
 
-cst_main = cst_block;
+cst_main_function_declaration =
+        main l_par r_par eol? cst_function_body;
 
 cst_declaration_list =
-        {recursive}cst_declaration eol cst_declaration_list | 
-        cst_declaration eol;
+        {recursive}cst_declaration eol+ cst_declaration_list | 
+        cst_declaration;
 
 cst_declaration = 
         {variable}cst_variable_declaration | 
-        {function}cst_function_declaration;
+        {function}cst_function_declaration |
+        {main}cst_main_function_declaration;
 
 cst_variable_declaration =
         {simple}const? cst_simple_types identifier assignment_op cst_expression| 
@@ -93,9 +96,9 @@ cst_formal_param_list =
 
 cst_formal_param = cst_all_types identifier;
 
-cst_function_body = cst_block eol;
+cst_function_body = cst_block;
 
-cst_block = l_cur cst_statement_list r_cur;
+cst_block = l_cur eol cst_statement_list r_cur;
 
 cst_statement_list = 
         {recursive}cst_statement eol cst_statement_list | 
@@ -120,9 +123,9 @@ cst_while_statement = while l_par cst_expression r_par cst_block;
 
 cst_gcode_literal = gcode l_cur all_chars_except_curly r_cur;
 
-cst_assignment = identifier assignment_op cst_expression eol;
+cst_assignment = identifier assignment_op cst_expression;
 
-cst_function_call = identifier l_par cst_actual_param_list? r_par eol;
+cst_function_call = identifier l_par cst_actual_param_list? r_par;
 
 cst_actual_param_list =
         {recursive}cst_actual_param comma cst_actual_param_list | 
