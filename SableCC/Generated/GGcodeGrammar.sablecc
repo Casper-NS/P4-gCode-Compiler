@@ -26,7 +26,6 @@ Tokens
   plus_op  = '+';
   minus_op = '-';
   equal = '==';
-  not_equal = '!=';
   less_than = '<';
   less_than_or_equal = '<=';
   greater_than = '>';
@@ -107,7 +106,7 @@ cst_statement_list =
         cst_statement eol;
 
 cst_statement = 
-        {decl}cst_declaration | 
+        {decl}cst_variable_declaration | 
         {if}cst_if_statement | 
         {repeat}cst_repeat_statement | 
         {while}cst_while_statement | 
@@ -116,10 +115,10 @@ cst_statement =
         {function}cst_function_call;
 
 cst_if_statement = 
-        {noelse}if l_par cst_expression r_par cst_block | 
-        {withelse}if l_par cst_expression r_par [a]:cst_block else [b]:cst_block;
+        {noelse}if l_par cst_expression r_par eol cst_block | 
+        {withelse}if l_par cst_expression r_par eol [a]:cst_block else [b]:cst_block;
 
-cst_repeat_statement = repeat l_par cst_actual_param r_par eol cst_block;
+cst_repeat_statement = repeat l_par cst_expression r_par eol cst_block;
 
 cst_while_statement = while l_par cst_expression r_par eol cst_block;
 
@@ -130,13 +129,33 @@ cst_assignment = identifier assignment_op cst_expression;
 cst_function_call = identifier l_par cst_actual_param_list? r_par;
 
 cst_actual_param_list =
-        {recursive}cst_actual_param comma cst_actual_param_list | 
-        cst_actual_param;
-
-cst_actual_param = 
-        {id}identifier | 
+        {recursive}cst_expression comma cst_actual_param_list | 
         cst_expression;
 
 cst_expression = 
+        cst_low_exp |
+        {not}not cst_expression |
+        {equal}cst_low_exp [c]:equal [d]:equal cst_expression |
+        {le}cst_low_exp less_than cst_expression |
+        {leq}cst_low_exp less_than_or_equal cst_expression |
+        {ge}cst_low_exp greater_than cst_expression | 
+        {geq}cst_low_exp greater_than_or_equal cst_expression |
+        {neq}cst_low_exp not equal cst_expression;
+
+cst_low_exp = 
+        {plus}cst_medium_exp plus_op cst_low_exp |
+        {minus}cst_medium_exp minus_op cst_low_exp |
+        cst_medium_exp;
+
+cst_medium_exp =
+        {mult}cst_medium_exp multiplication_op cst_high_exp |
+        {division}cst_medium_exp division_op cst_high_exp |
+        {modulo}cst_medium_exp modulo_op cst_high_exp |
+        cst_high_exp;
+
+cst_high_exp =
         {number}number |
-        bool_value;
+        {bool}bool_value |
+        {id}identifier |
+        {vector}cst_vector_values |
+        l_par cst_expression r_par;

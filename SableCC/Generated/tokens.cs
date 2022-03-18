@@ -259,31 +259,6 @@ public sealed class TEqual : Token
     }
 }
 
-public sealed class TNotEqual : Token
-{
-    public TNotEqual(string text)
-    {
-        Text = text;
-    }
-
-    public TNotEqual(string text, int line, int pos)
-    {
-        Text = text;
-        Line = line;
-        Pos = pos;
-    }
-
-    public override Object Clone()
-    {
-      return new TNotEqual(Text, Line, Pos);
-    }
-
-    public override void Apply(Switch sw)
-    {
-        ((Analysis) sw).CaseTNotEqual(this);
-    }
-}
-
 public sealed class TLessThan : Token
 {
     public TLessThan(string text)

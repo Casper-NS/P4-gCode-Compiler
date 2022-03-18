@@ -100,11 +100,19 @@ public abstract class PCstActualParamList : Node
 {
 }
 
-public abstract class PCstActualParam : Node
+public abstract class PCstExpression : Node
 {
 }
 
-public abstract class PCstExpression : Node
+public abstract class PCstLowExp : Node
+{
+}
+
+public abstract class PCstMediumExp : Node
+{
+}
+
+public abstract class PCstHighExp : Node
 {
 }
 
@@ -3774,23 +3782,23 @@ public sealed class ACstStatementList : PCstStatementList
 }
 public sealed class ADeclCstStatement : PCstStatement
 {
-    private PCstDeclaration _cst_declaration_;
+    private PCstVariableDeclaration _cst_variable_declaration_;
 
     public ADeclCstStatement ()
     {
     }
 
     public ADeclCstStatement (
-            PCstDeclaration _cst_declaration_
+            PCstVariableDeclaration _cst_variable_declaration_
     )
     {
-        SetCstDeclaration (_cst_declaration_);
+        SetCstVariableDeclaration (_cst_variable_declaration_);
     }
 
     public override Object Clone()
     {
         return new ADeclCstStatement (
-            (PCstDeclaration)CloneNode (_cst_declaration_)
+            (PCstVariableDeclaration)CloneNode (_cst_variable_declaration_)
         );
     }
 
@@ -3799,16 +3807,16 @@ public sealed class ADeclCstStatement : PCstStatement
         ((Analysis) sw).CaseADeclCstStatement(this);
     }
 
-    public PCstDeclaration GetCstDeclaration ()
+    public PCstVariableDeclaration GetCstVariableDeclaration ()
     {
-        return _cst_declaration_;
+        return _cst_variable_declaration_;
     }
 
-    public void SetCstDeclaration (PCstDeclaration node)
+    public void SetCstVariableDeclaration (PCstVariableDeclaration node)
     {
-        if(_cst_declaration_ != null)
+        if(_cst_variable_declaration_ != null)
         {
-            _cst_declaration_.Parent(null);
+            _cst_variable_declaration_.Parent(null);
         }
 
         if(node != null)
@@ -3821,30 +3829,30 @@ public sealed class ADeclCstStatement : PCstStatement
             node.Parent(this);
         }
 
-        _cst_declaration_ = node;
+        _cst_variable_declaration_ = node;
     }
 
     public override string ToString()
     {
         return ""
-            + ToString (_cst_declaration_)
+            + ToString (_cst_variable_declaration_)
         ;
     }
 
     internal override void RemoveChild(Node child)
     {
-        if ( _cst_declaration_ == child )
+        if ( _cst_variable_declaration_ == child )
         {
-            _cst_declaration_ = null;
+            _cst_variable_declaration_ = null;
             return;
         }
     }
 
     internal override void ReplaceChild(Node oldChild, Node newChild)
     {
-        if ( _cst_declaration_ == oldChild )
+        if ( _cst_variable_declaration_ == oldChild )
         {
-            SetCstDeclaration ((PCstDeclaration) newChild);
+            SetCstVariableDeclaration ((PCstVariableDeclaration) newChild);
             return;
         }
     }
@@ -4324,6 +4332,7 @@ public sealed class ANoelseCstIfStatement : PCstIfStatement
     private TLPar _l_par_;
     private PCstExpression _cst_expression_;
     private TRPar _r_par_;
+    private TEol _eol_;
     private PCstBlock _cst_block_;
 
     public ANoelseCstIfStatement ()
@@ -4335,6 +4344,7 @@ public sealed class ANoelseCstIfStatement : PCstIfStatement
             TLPar _l_par_,
             PCstExpression _cst_expression_,
             TRPar _r_par_,
+            TEol _eol_,
             PCstBlock _cst_block_
     )
     {
@@ -4342,6 +4352,7 @@ public sealed class ANoelseCstIfStatement : PCstIfStatement
         SetLPar (_l_par_);
         SetCstExpression (_cst_expression_);
         SetRPar (_r_par_);
+        SetEol (_eol_);
         SetCstBlock (_cst_block_);
     }
 
@@ -4352,6 +4363,7 @@ public sealed class ANoelseCstIfStatement : PCstIfStatement
             (TLPar)CloneNode (_l_par_),
             (PCstExpression)CloneNode (_cst_expression_),
             (TRPar)CloneNode (_r_par_),
+            (TEol)CloneNode (_eol_),
             (PCstBlock)CloneNode (_cst_block_)
         );
     }
@@ -4457,6 +4469,30 @@ public sealed class ANoelseCstIfStatement : PCstIfStatement
 
         _r_par_ = node;
     }
+    public TEol GetEol ()
+    {
+        return _eol_;
+    }
+
+    public void SetEol (TEol node)
+    {
+        if(_eol_ != null)
+        {
+            _eol_.Parent(null);
+        }
+
+        if(node != null)
+        {
+            if(node.Parent() != null)
+            {
+                node.Parent().RemoveChild(node);
+            }
+
+            node.Parent(this);
+        }
+
+        _eol_ = node;
+    }
     public PCstBlock GetCstBlock ()
     {
         return _cst_block_;
@@ -4489,6 +4525,7 @@ public sealed class ANoelseCstIfStatement : PCstIfStatement
             + ToString (_l_par_)
             + ToString (_cst_expression_)
             + ToString (_r_par_)
+            + ToString (_eol_)
             + ToString (_cst_block_)
         ;
     }
@@ -4513,6 +4550,11 @@ public sealed class ANoelseCstIfStatement : PCstIfStatement
         if ( _r_par_ == child )
         {
             _r_par_ = null;
+            return;
+        }
+        if ( _eol_ == child )
+        {
+            _eol_ = null;
             return;
         }
         if ( _cst_block_ == child )
@@ -4544,6 +4586,11 @@ public sealed class ANoelseCstIfStatement : PCstIfStatement
             SetRPar ((TRPar) newChild);
             return;
         }
+        if ( _eol_ == oldChild )
+        {
+            SetEol ((TEol) newChild);
+            return;
+        }
         if ( _cst_block_ == oldChild )
         {
             SetCstBlock ((PCstBlock) newChild);
@@ -4558,6 +4605,7 @@ public sealed class AWithelseCstIfStatement : PCstIfStatement
     private TLPar _l_par_;
     private PCstExpression _cst_expression_;
     private TRPar _r_par_;
+    private TEol _eol_;
     private PCstBlock _a_;
     private TElse _else_;
     private PCstBlock _b_;
@@ -4571,6 +4619,7 @@ public sealed class AWithelseCstIfStatement : PCstIfStatement
             TLPar _l_par_,
             PCstExpression _cst_expression_,
             TRPar _r_par_,
+            TEol _eol_,
             PCstBlock _a_,
             TElse _else_,
             PCstBlock _b_
@@ -4580,6 +4629,7 @@ public sealed class AWithelseCstIfStatement : PCstIfStatement
         SetLPar (_l_par_);
         SetCstExpression (_cst_expression_);
         SetRPar (_r_par_);
+        SetEol (_eol_);
         SetA (_a_);
         SetElse (_else_);
         SetB (_b_);
@@ -4592,6 +4642,7 @@ public sealed class AWithelseCstIfStatement : PCstIfStatement
             (TLPar)CloneNode (_l_par_),
             (PCstExpression)CloneNode (_cst_expression_),
             (TRPar)CloneNode (_r_par_),
+            (TEol)CloneNode (_eol_),
             (PCstBlock)CloneNode (_a_),
             (TElse)CloneNode (_else_),
             (PCstBlock)CloneNode (_b_)
@@ -4699,6 +4750,30 @@ public sealed class AWithelseCstIfStatement : PCstIfStatement
 
         _r_par_ = node;
     }
+    public TEol GetEol ()
+    {
+        return _eol_;
+    }
+
+    public void SetEol (TEol node)
+    {
+        if(_eol_ != null)
+        {
+            _eol_.Parent(null);
+        }
+
+        if(node != null)
+        {
+            if(node.Parent() != null)
+            {
+                node.Parent().RemoveChild(node);
+            }
+
+            node.Parent(this);
+        }
+
+        _eol_ = node;
+    }
     public PCstBlock GetA ()
     {
         return _a_;
@@ -4779,6 +4854,7 @@ public sealed class AWithelseCstIfStatement : PCstIfStatement
             + ToString (_l_par_)
             + ToString (_cst_expression_)
             + ToString (_r_par_)
+            + ToString (_eol_)
             + ToString (_a_)
             + ToString (_else_)
             + ToString (_b_)
@@ -4805,6 +4881,11 @@ public sealed class AWithelseCstIfStatement : PCstIfStatement
         if ( _r_par_ == child )
         {
             _r_par_ = null;
+            return;
+        }
+        if ( _eol_ == child )
+        {
+            _eol_ = null;
             return;
         }
         if ( _a_ == child )
@@ -4846,6 +4927,11 @@ public sealed class AWithelseCstIfStatement : PCstIfStatement
             SetRPar ((TRPar) newChild);
             return;
         }
+        if ( _eol_ == oldChild )
+        {
+            SetEol ((TEol) newChild);
+            return;
+        }
         if ( _a_ == oldChild )
         {
             SetA ((PCstBlock) newChild);
@@ -4868,7 +4954,7 @@ public sealed class ACstRepeatStatement : PCstRepeatStatement
 {
     private TRepeat _repeat_;
     private TLPar _l_par_;
-    private PCstActualParam _cst_actual_param_;
+    private PCstExpression _cst_expression_;
     private TRPar _r_par_;
     private TEol _eol_;
     private PCstBlock _cst_block_;
@@ -4880,7 +4966,7 @@ public sealed class ACstRepeatStatement : PCstRepeatStatement
     public ACstRepeatStatement (
             TRepeat _repeat_,
             TLPar _l_par_,
-            PCstActualParam _cst_actual_param_,
+            PCstExpression _cst_expression_,
             TRPar _r_par_,
             TEol _eol_,
             PCstBlock _cst_block_
@@ -4888,7 +4974,7 @@ public sealed class ACstRepeatStatement : PCstRepeatStatement
     {
         SetRepeat (_repeat_);
         SetLPar (_l_par_);
-        SetCstActualParam (_cst_actual_param_);
+        SetCstExpression (_cst_expression_);
         SetRPar (_r_par_);
         SetEol (_eol_);
         SetCstBlock (_cst_block_);
@@ -4899,7 +4985,7 @@ public sealed class ACstRepeatStatement : PCstRepeatStatement
         return new ACstRepeatStatement (
             (TRepeat)CloneNode (_repeat_),
             (TLPar)CloneNode (_l_par_),
-            (PCstActualParam)CloneNode (_cst_actual_param_),
+            (PCstExpression)CloneNode (_cst_expression_),
             (TRPar)CloneNode (_r_par_),
             (TEol)CloneNode (_eol_),
             (PCstBlock)CloneNode (_cst_block_)
@@ -4959,16 +5045,16 @@ public sealed class ACstRepeatStatement : PCstRepeatStatement
 
         _l_par_ = node;
     }
-    public PCstActualParam GetCstActualParam ()
+    public PCstExpression GetCstExpression ()
     {
-        return _cst_actual_param_;
+        return _cst_expression_;
     }
 
-    public void SetCstActualParam (PCstActualParam node)
+    public void SetCstExpression (PCstExpression node)
     {
-        if(_cst_actual_param_ != null)
+        if(_cst_expression_ != null)
         {
-            _cst_actual_param_.Parent(null);
+            _cst_expression_.Parent(null);
         }
 
         if(node != null)
@@ -4981,7 +5067,7 @@ public sealed class ACstRepeatStatement : PCstRepeatStatement
             node.Parent(this);
         }
 
-        _cst_actual_param_ = node;
+        _cst_expression_ = node;
     }
     public TRPar GetRPar ()
     {
@@ -5061,7 +5147,7 @@ public sealed class ACstRepeatStatement : PCstRepeatStatement
         return ""
             + ToString (_repeat_)
             + ToString (_l_par_)
-            + ToString (_cst_actual_param_)
+            + ToString (_cst_expression_)
             + ToString (_r_par_)
             + ToString (_eol_)
             + ToString (_cst_block_)
@@ -5080,9 +5166,9 @@ public sealed class ACstRepeatStatement : PCstRepeatStatement
             _l_par_ = null;
             return;
         }
-        if ( _cst_actual_param_ == child )
+        if ( _cst_expression_ == child )
         {
-            _cst_actual_param_ = null;
+            _cst_expression_ = null;
             return;
         }
         if ( _r_par_ == child )
@@ -5114,9 +5200,9 @@ public sealed class ACstRepeatStatement : PCstRepeatStatement
             SetLPar ((TLPar) newChild);
             return;
         }
-        if ( _cst_actual_param_ == oldChild )
+        if ( _cst_expression_ == oldChild )
         {
-            SetCstActualParam ((PCstActualParam) newChild);
+            SetCstExpression ((PCstExpression) newChild);
             return;
         }
         if ( _r_par_ == oldChild )
@@ -5958,7 +6044,7 @@ public sealed class ACstFunctionCall : PCstFunctionCall
 }
 public sealed class ARecursiveCstActualParamList : PCstActualParamList
 {
-    private PCstActualParam _cst_actual_param_;
+    private PCstExpression _cst_expression_;
     private TComma _comma_;
     private PCstActualParamList _cst_actual_param_list_;
 
@@ -5967,12 +6053,12 @@ public sealed class ARecursiveCstActualParamList : PCstActualParamList
     }
 
     public ARecursiveCstActualParamList (
-            PCstActualParam _cst_actual_param_,
+            PCstExpression _cst_expression_,
             TComma _comma_,
             PCstActualParamList _cst_actual_param_list_
     )
     {
-        SetCstActualParam (_cst_actual_param_);
+        SetCstExpression (_cst_expression_);
         SetComma (_comma_);
         SetCstActualParamList (_cst_actual_param_list_);
     }
@@ -5980,7 +6066,7 @@ public sealed class ARecursiveCstActualParamList : PCstActualParamList
     public override Object Clone()
     {
         return new ARecursiveCstActualParamList (
-            (PCstActualParam)CloneNode (_cst_actual_param_),
+            (PCstExpression)CloneNode (_cst_expression_),
             (TComma)CloneNode (_comma_),
             (PCstActualParamList)CloneNode (_cst_actual_param_list_)
         );
@@ -5991,16 +6077,16 @@ public sealed class ARecursiveCstActualParamList : PCstActualParamList
         ((Analysis) sw).CaseARecursiveCstActualParamList(this);
     }
 
-    public PCstActualParam GetCstActualParam ()
+    public PCstExpression GetCstExpression ()
     {
-        return _cst_actual_param_;
+        return _cst_expression_;
     }
 
-    public void SetCstActualParam (PCstActualParam node)
+    public void SetCstExpression (PCstExpression node)
     {
-        if(_cst_actual_param_ != null)
+        if(_cst_expression_ != null)
         {
-            _cst_actual_param_.Parent(null);
+            _cst_expression_.Parent(null);
         }
 
         if(node != null)
@@ -6013,7 +6099,7 @@ public sealed class ARecursiveCstActualParamList : PCstActualParamList
             node.Parent(this);
         }
 
-        _cst_actual_param_ = node;
+        _cst_expression_ = node;
     }
     public TComma GetComma ()
     {
@@ -6067,7 +6153,7 @@ public sealed class ARecursiveCstActualParamList : PCstActualParamList
     public override string ToString()
     {
         return ""
-            + ToString (_cst_actual_param_)
+            + ToString (_cst_expression_)
             + ToString (_comma_)
             + ToString (_cst_actual_param_list_)
         ;
@@ -6075,9 +6161,9 @@ public sealed class ARecursiveCstActualParamList : PCstActualParamList
 
     internal override void RemoveChild(Node child)
     {
-        if ( _cst_actual_param_ == child )
+        if ( _cst_expression_ == child )
         {
-            _cst_actual_param_ = null;
+            _cst_expression_ = null;
             return;
         }
         if ( _comma_ == child )
@@ -6094,9 +6180,9 @@ public sealed class ARecursiveCstActualParamList : PCstActualParamList
 
     internal override void ReplaceChild(Node oldChild, Node newChild)
     {
-        if ( _cst_actual_param_ == oldChild )
+        if ( _cst_expression_ == oldChild )
         {
-            SetCstActualParam ((PCstActualParam) newChild);
+            SetCstExpression ((PCstExpression) newChild);
             return;
         }
         if ( _comma_ == oldChild )
@@ -6114,169 +6200,13 @@ public sealed class ARecursiveCstActualParamList : PCstActualParamList
 }
 public sealed class ACstActualParamList : PCstActualParamList
 {
-    private PCstActualParam _cst_actual_param_;
+    private PCstExpression _cst_expression_;
 
     public ACstActualParamList ()
     {
     }
 
     public ACstActualParamList (
-            PCstActualParam _cst_actual_param_
-    )
-    {
-        SetCstActualParam (_cst_actual_param_);
-    }
-
-    public override Object Clone()
-    {
-        return new ACstActualParamList (
-            (PCstActualParam)CloneNode (_cst_actual_param_)
-        );
-    }
-
-    public override void Apply(Switch sw)
-    {
-        ((Analysis) sw).CaseACstActualParamList(this);
-    }
-
-    public PCstActualParam GetCstActualParam ()
-    {
-        return _cst_actual_param_;
-    }
-
-    public void SetCstActualParam (PCstActualParam node)
-    {
-        if(_cst_actual_param_ != null)
-        {
-            _cst_actual_param_.Parent(null);
-        }
-
-        if(node != null)
-        {
-            if(node.Parent() != null)
-            {
-                node.Parent().RemoveChild(node);
-            }
-
-            node.Parent(this);
-        }
-
-        _cst_actual_param_ = node;
-    }
-
-    public override string ToString()
-    {
-        return ""
-            + ToString (_cst_actual_param_)
-        ;
-    }
-
-    internal override void RemoveChild(Node child)
-    {
-        if ( _cst_actual_param_ == child )
-        {
-            _cst_actual_param_ = null;
-            return;
-        }
-    }
-
-    internal override void ReplaceChild(Node oldChild, Node newChild)
-    {
-        if ( _cst_actual_param_ == oldChild )
-        {
-            SetCstActualParam ((PCstActualParam) newChild);
-            return;
-        }
-    }
-
-}
-public sealed class AIdCstActualParam : PCstActualParam
-{
-    private TIdentifier _identifier_;
-
-    public AIdCstActualParam ()
-    {
-    }
-
-    public AIdCstActualParam (
-            TIdentifier _identifier_
-    )
-    {
-        SetIdentifier (_identifier_);
-    }
-
-    public override Object Clone()
-    {
-        return new AIdCstActualParam (
-            (TIdentifier)CloneNode (_identifier_)
-        );
-    }
-
-    public override void Apply(Switch sw)
-    {
-        ((Analysis) sw).CaseAIdCstActualParam(this);
-    }
-
-    public TIdentifier GetIdentifier ()
-    {
-        return _identifier_;
-    }
-
-    public void SetIdentifier (TIdentifier node)
-    {
-        if(_identifier_ != null)
-        {
-            _identifier_.Parent(null);
-        }
-
-        if(node != null)
-        {
-            if(node.Parent() != null)
-            {
-                node.Parent().RemoveChild(node);
-            }
-
-            node.Parent(this);
-        }
-
-        _identifier_ = node;
-    }
-
-    public override string ToString()
-    {
-        return ""
-            + ToString (_identifier_)
-        ;
-    }
-
-    internal override void RemoveChild(Node child)
-    {
-        if ( _identifier_ == child )
-        {
-            _identifier_ = null;
-            return;
-        }
-    }
-
-    internal override void ReplaceChild(Node oldChild, Node newChild)
-    {
-        if ( _identifier_ == oldChild )
-        {
-            SetIdentifier ((TIdentifier) newChild);
-            return;
-        }
-    }
-
-}
-public sealed class ACstActualParam : PCstActualParam
-{
-    private PCstExpression _cst_expression_;
-
-    public ACstActualParam ()
-    {
-    }
-
-    public ACstActualParam (
             PCstExpression _cst_expression_
     )
     {
@@ -6285,14 +6215,14 @@ public sealed class ACstActualParam : PCstActualParam
 
     public override Object Clone()
     {
-        return new ACstActualParam (
+        return new ACstActualParamList (
             (PCstExpression)CloneNode (_cst_expression_)
         );
     }
 
     public override void Apply(Switch sw)
     {
-        ((Analysis) sw).CaseACstActualParam(this);
+        ((Analysis) sw).CaseACstActualParamList(this);
     }
 
     public PCstExpression GetCstExpression ()
@@ -6346,15 +6276,2160 @@ public sealed class ACstActualParam : PCstActualParam
     }
 
 }
-public sealed class ANumberCstExpression : PCstExpression
+public sealed class ACstExpression : PCstExpression
 {
-    private TNumber _number_;
+    private PCstLowExp _cst_low_exp_;
 
-    public ANumberCstExpression ()
+    public ACstExpression ()
     {
     }
 
-    public ANumberCstExpression (
+    public ACstExpression (
+            PCstLowExp _cst_low_exp_
+    )
+    {
+        SetCstLowExp (_cst_low_exp_);
+    }
+
+    public override Object Clone()
+    {
+        return new ACstExpression (
+            (PCstLowExp)CloneNode (_cst_low_exp_)
+        );
+    }
+
+    public override void Apply(Switch sw)
+    {
+        ((Analysis) sw).CaseACstExpression(this);
+    }
+
+    public PCstLowExp GetCstLowExp ()
+    {
+        return _cst_low_exp_;
+    }
+
+    public void SetCstLowExp (PCstLowExp node)
+    {
+        if(_cst_low_exp_ != null)
+        {
+            _cst_low_exp_.Parent(null);
+        }
+
+        if(node != null)
+        {
+            if(node.Parent() != null)
+            {
+                node.Parent().RemoveChild(node);
+            }
+
+            node.Parent(this);
+        }
+
+        _cst_low_exp_ = node;
+    }
+
+    public override string ToString()
+    {
+        return ""
+            + ToString (_cst_low_exp_)
+        ;
+    }
+
+    internal override void RemoveChild(Node child)
+    {
+        if ( _cst_low_exp_ == child )
+        {
+            _cst_low_exp_ = null;
+            return;
+        }
+    }
+
+    internal override void ReplaceChild(Node oldChild, Node newChild)
+    {
+        if ( _cst_low_exp_ == oldChild )
+        {
+            SetCstLowExp ((PCstLowExp) newChild);
+            return;
+        }
+    }
+
+}
+public sealed class ANotCstExpression : PCstExpression
+{
+    private TNot _not_;
+    private PCstExpression _cst_expression_;
+
+    public ANotCstExpression ()
+    {
+    }
+
+    public ANotCstExpression (
+            TNot _not_,
+            PCstExpression _cst_expression_
+    )
+    {
+        SetNot (_not_);
+        SetCstExpression (_cst_expression_);
+    }
+
+    public override Object Clone()
+    {
+        return new ANotCstExpression (
+            (TNot)CloneNode (_not_),
+            (PCstExpression)CloneNode (_cst_expression_)
+        );
+    }
+
+    public override void Apply(Switch sw)
+    {
+        ((Analysis) sw).CaseANotCstExpression(this);
+    }
+
+    public TNot GetNot ()
+    {
+        return _not_;
+    }
+
+    public void SetNot (TNot node)
+    {
+        if(_not_ != null)
+        {
+            _not_.Parent(null);
+        }
+
+        if(node != null)
+        {
+            if(node.Parent() != null)
+            {
+                node.Parent().RemoveChild(node);
+            }
+
+            node.Parent(this);
+        }
+
+        _not_ = node;
+    }
+    public PCstExpression GetCstExpression ()
+    {
+        return _cst_expression_;
+    }
+
+    public void SetCstExpression (PCstExpression node)
+    {
+        if(_cst_expression_ != null)
+        {
+            _cst_expression_.Parent(null);
+        }
+
+        if(node != null)
+        {
+            if(node.Parent() != null)
+            {
+                node.Parent().RemoveChild(node);
+            }
+
+            node.Parent(this);
+        }
+
+        _cst_expression_ = node;
+    }
+
+    public override string ToString()
+    {
+        return ""
+            + ToString (_not_)
+            + ToString (_cst_expression_)
+        ;
+    }
+
+    internal override void RemoveChild(Node child)
+    {
+        if ( _not_ == child )
+        {
+            _not_ = null;
+            return;
+        }
+        if ( _cst_expression_ == child )
+        {
+            _cst_expression_ = null;
+            return;
+        }
+    }
+
+    internal override void ReplaceChild(Node oldChild, Node newChild)
+    {
+        if ( _not_ == oldChild )
+        {
+            SetNot ((TNot) newChild);
+            return;
+        }
+        if ( _cst_expression_ == oldChild )
+        {
+            SetCstExpression ((PCstExpression) newChild);
+            return;
+        }
+    }
+
+}
+public sealed class AEqualCstExpression : PCstExpression
+{
+    private PCstLowExp _cst_low_exp_;
+    private TEqual _c_;
+    private TEqual _d_;
+    private PCstExpression _cst_expression_;
+
+    public AEqualCstExpression ()
+    {
+    }
+
+    public AEqualCstExpression (
+            PCstLowExp _cst_low_exp_,
+            TEqual _c_,
+            TEqual _d_,
+            PCstExpression _cst_expression_
+    )
+    {
+        SetCstLowExp (_cst_low_exp_);
+        SetC (_c_);
+        SetD (_d_);
+        SetCstExpression (_cst_expression_);
+    }
+
+    public override Object Clone()
+    {
+        return new AEqualCstExpression (
+            (PCstLowExp)CloneNode (_cst_low_exp_),
+            (TEqual)CloneNode (_c_),
+            (TEqual)CloneNode (_d_),
+            (PCstExpression)CloneNode (_cst_expression_)
+        );
+    }
+
+    public override void Apply(Switch sw)
+    {
+        ((Analysis) sw).CaseAEqualCstExpression(this);
+    }
+
+    public PCstLowExp GetCstLowExp ()
+    {
+        return _cst_low_exp_;
+    }
+
+    public void SetCstLowExp (PCstLowExp node)
+    {
+        if(_cst_low_exp_ != null)
+        {
+            _cst_low_exp_.Parent(null);
+        }
+
+        if(node != null)
+        {
+            if(node.Parent() != null)
+            {
+                node.Parent().RemoveChild(node);
+            }
+
+            node.Parent(this);
+        }
+
+        _cst_low_exp_ = node;
+    }
+    public TEqual GetC ()
+    {
+        return _c_;
+    }
+
+    public void SetC (TEqual node)
+    {
+        if(_c_ != null)
+        {
+            _c_.Parent(null);
+        }
+
+        if(node != null)
+        {
+            if(node.Parent() != null)
+            {
+                node.Parent().RemoveChild(node);
+            }
+
+            node.Parent(this);
+        }
+
+        _c_ = node;
+    }
+    public TEqual GetD ()
+    {
+        return _d_;
+    }
+
+    public void SetD (TEqual node)
+    {
+        if(_d_ != null)
+        {
+            _d_.Parent(null);
+        }
+
+        if(node != null)
+        {
+            if(node.Parent() != null)
+            {
+                node.Parent().RemoveChild(node);
+            }
+
+            node.Parent(this);
+        }
+
+        _d_ = node;
+    }
+    public PCstExpression GetCstExpression ()
+    {
+        return _cst_expression_;
+    }
+
+    public void SetCstExpression (PCstExpression node)
+    {
+        if(_cst_expression_ != null)
+        {
+            _cst_expression_.Parent(null);
+        }
+
+        if(node != null)
+        {
+            if(node.Parent() != null)
+            {
+                node.Parent().RemoveChild(node);
+            }
+
+            node.Parent(this);
+        }
+
+        _cst_expression_ = node;
+    }
+
+    public override string ToString()
+    {
+        return ""
+            + ToString (_cst_low_exp_)
+            + ToString (_c_)
+            + ToString (_d_)
+            + ToString (_cst_expression_)
+        ;
+    }
+
+    internal override void RemoveChild(Node child)
+    {
+        if ( _cst_low_exp_ == child )
+        {
+            _cst_low_exp_ = null;
+            return;
+        }
+        if ( _c_ == child )
+        {
+            _c_ = null;
+            return;
+        }
+        if ( _d_ == child )
+        {
+            _d_ = null;
+            return;
+        }
+        if ( _cst_expression_ == child )
+        {
+            _cst_expression_ = null;
+            return;
+        }
+    }
+
+    internal override void ReplaceChild(Node oldChild, Node newChild)
+    {
+        if ( _cst_low_exp_ == oldChild )
+        {
+            SetCstLowExp ((PCstLowExp) newChild);
+            return;
+        }
+        if ( _c_ == oldChild )
+        {
+            SetC ((TEqual) newChild);
+            return;
+        }
+        if ( _d_ == oldChild )
+        {
+            SetD ((TEqual) newChild);
+            return;
+        }
+        if ( _cst_expression_ == oldChild )
+        {
+            SetCstExpression ((PCstExpression) newChild);
+            return;
+        }
+    }
+
+}
+public sealed class ALeCstExpression : PCstExpression
+{
+    private PCstLowExp _cst_low_exp_;
+    private TLessThan _less_than_;
+    private PCstExpression _cst_expression_;
+
+    public ALeCstExpression ()
+    {
+    }
+
+    public ALeCstExpression (
+            PCstLowExp _cst_low_exp_,
+            TLessThan _less_than_,
+            PCstExpression _cst_expression_
+    )
+    {
+        SetCstLowExp (_cst_low_exp_);
+        SetLessThan (_less_than_);
+        SetCstExpression (_cst_expression_);
+    }
+
+    public override Object Clone()
+    {
+        return new ALeCstExpression (
+            (PCstLowExp)CloneNode (_cst_low_exp_),
+            (TLessThan)CloneNode (_less_than_),
+            (PCstExpression)CloneNode (_cst_expression_)
+        );
+    }
+
+    public override void Apply(Switch sw)
+    {
+        ((Analysis) sw).CaseALeCstExpression(this);
+    }
+
+    public PCstLowExp GetCstLowExp ()
+    {
+        return _cst_low_exp_;
+    }
+
+    public void SetCstLowExp (PCstLowExp node)
+    {
+        if(_cst_low_exp_ != null)
+        {
+            _cst_low_exp_.Parent(null);
+        }
+
+        if(node != null)
+        {
+            if(node.Parent() != null)
+            {
+                node.Parent().RemoveChild(node);
+            }
+
+            node.Parent(this);
+        }
+
+        _cst_low_exp_ = node;
+    }
+    public TLessThan GetLessThan ()
+    {
+        return _less_than_;
+    }
+
+    public void SetLessThan (TLessThan node)
+    {
+        if(_less_than_ != null)
+        {
+            _less_than_.Parent(null);
+        }
+
+        if(node != null)
+        {
+            if(node.Parent() != null)
+            {
+                node.Parent().RemoveChild(node);
+            }
+
+            node.Parent(this);
+        }
+
+        _less_than_ = node;
+    }
+    public PCstExpression GetCstExpression ()
+    {
+        return _cst_expression_;
+    }
+
+    public void SetCstExpression (PCstExpression node)
+    {
+        if(_cst_expression_ != null)
+        {
+            _cst_expression_.Parent(null);
+        }
+
+        if(node != null)
+        {
+            if(node.Parent() != null)
+            {
+                node.Parent().RemoveChild(node);
+            }
+
+            node.Parent(this);
+        }
+
+        _cst_expression_ = node;
+    }
+
+    public override string ToString()
+    {
+        return ""
+            + ToString (_cst_low_exp_)
+            + ToString (_less_than_)
+            + ToString (_cst_expression_)
+        ;
+    }
+
+    internal override void RemoveChild(Node child)
+    {
+        if ( _cst_low_exp_ == child )
+        {
+            _cst_low_exp_ = null;
+            return;
+        }
+        if ( _less_than_ == child )
+        {
+            _less_than_ = null;
+            return;
+        }
+        if ( _cst_expression_ == child )
+        {
+            _cst_expression_ = null;
+            return;
+        }
+    }
+
+    internal override void ReplaceChild(Node oldChild, Node newChild)
+    {
+        if ( _cst_low_exp_ == oldChild )
+        {
+            SetCstLowExp ((PCstLowExp) newChild);
+            return;
+        }
+        if ( _less_than_ == oldChild )
+        {
+            SetLessThan ((TLessThan) newChild);
+            return;
+        }
+        if ( _cst_expression_ == oldChild )
+        {
+            SetCstExpression ((PCstExpression) newChild);
+            return;
+        }
+    }
+
+}
+public sealed class ALeqCstExpression : PCstExpression
+{
+    private PCstLowExp _cst_low_exp_;
+    private TLessThanOrEqual _less_than_or_equal_;
+    private PCstExpression _cst_expression_;
+
+    public ALeqCstExpression ()
+    {
+    }
+
+    public ALeqCstExpression (
+            PCstLowExp _cst_low_exp_,
+            TLessThanOrEqual _less_than_or_equal_,
+            PCstExpression _cst_expression_
+    )
+    {
+        SetCstLowExp (_cst_low_exp_);
+        SetLessThanOrEqual (_less_than_or_equal_);
+        SetCstExpression (_cst_expression_);
+    }
+
+    public override Object Clone()
+    {
+        return new ALeqCstExpression (
+            (PCstLowExp)CloneNode (_cst_low_exp_),
+            (TLessThanOrEqual)CloneNode (_less_than_or_equal_),
+            (PCstExpression)CloneNode (_cst_expression_)
+        );
+    }
+
+    public override void Apply(Switch sw)
+    {
+        ((Analysis) sw).CaseALeqCstExpression(this);
+    }
+
+    public PCstLowExp GetCstLowExp ()
+    {
+        return _cst_low_exp_;
+    }
+
+    public void SetCstLowExp (PCstLowExp node)
+    {
+        if(_cst_low_exp_ != null)
+        {
+            _cst_low_exp_.Parent(null);
+        }
+
+        if(node != null)
+        {
+            if(node.Parent() != null)
+            {
+                node.Parent().RemoveChild(node);
+            }
+
+            node.Parent(this);
+        }
+
+        _cst_low_exp_ = node;
+    }
+    public TLessThanOrEqual GetLessThanOrEqual ()
+    {
+        return _less_than_or_equal_;
+    }
+
+    public void SetLessThanOrEqual (TLessThanOrEqual node)
+    {
+        if(_less_than_or_equal_ != null)
+        {
+            _less_than_or_equal_.Parent(null);
+        }
+
+        if(node != null)
+        {
+            if(node.Parent() != null)
+            {
+                node.Parent().RemoveChild(node);
+            }
+
+            node.Parent(this);
+        }
+
+        _less_than_or_equal_ = node;
+    }
+    public PCstExpression GetCstExpression ()
+    {
+        return _cst_expression_;
+    }
+
+    public void SetCstExpression (PCstExpression node)
+    {
+        if(_cst_expression_ != null)
+        {
+            _cst_expression_.Parent(null);
+        }
+
+        if(node != null)
+        {
+            if(node.Parent() != null)
+            {
+                node.Parent().RemoveChild(node);
+            }
+
+            node.Parent(this);
+        }
+
+        _cst_expression_ = node;
+    }
+
+    public override string ToString()
+    {
+        return ""
+            + ToString (_cst_low_exp_)
+            + ToString (_less_than_or_equal_)
+            + ToString (_cst_expression_)
+        ;
+    }
+
+    internal override void RemoveChild(Node child)
+    {
+        if ( _cst_low_exp_ == child )
+        {
+            _cst_low_exp_ = null;
+            return;
+        }
+        if ( _less_than_or_equal_ == child )
+        {
+            _less_than_or_equal_ = null;
+            return;
+        }
+        if ( _cst_expression_ == child )
+        {
+            _cst_expression_ = null;
+            return;
+        }
+    }
+
+    internal override void ReplaceChild(Node oldChild, Node newChild)
+    {
+        if ( _cst_low_exp_ == oldChild )
+        {
+            SetCstLowExp ((PCstLowExp) newChild);
+            return;
+        }
+        if ( _less_than_or_equal_ == oldChild )
+        {
+            SetLessThanOrEqual ((TLessThanOrEqual) newChild);
+            return;
+        }
+        if ( _cst_expression_ == oldChild )
+        {
+            SetCstExpression ((PCstExpression) newChild);
+            return;
+        }
+    }
+
+}
+public sealed class AGeCstExpression : PCstExpression
+{
+    private PCstLowExp _cst_low_exp_;
+    private TGreaterThan _greater_than_;
+    private PCstExpression _cst_expression_;
+
+    public AGeCstExpression ()
+    {
+    }
+
+    public AGeCstExpression (
+            PCstLowExp _cst_low_exp_,
+            TGreaterThan _greater_than_,
+            PCstExpression _cst_expression_
+    )
+    {
+        SetCstLowExp (_cst_low_exp_);
+        SetGreaterThan (_greater_than_);
+        SetCstExpression (_cst_expression_);
+    }
+
+    public override Object Clone()
+    {
+        return new AGeCstExpression (
+            (PCstLowExp)CloneNode (_cst_low_exp_),
+            (TGreaterThan)CloneNode (_greater_than_),
+            (PCstExpression)CloneNode (_cst_expression_)
+        );
+    }
+
+    public override void Apply(Switch sw)
+    {
+        ((Analysis) sw).CaseAGeCstExpression(this);
+    }
+
+    public PCstLowExp GetCstLowExp ()
+    {
+        return _cst_low_exp_;
+    }
+
+    public void SetCstLowExp (PCstLowExp node)
+    {
+        if(_cst_low_exp_ != null)
+        {
+            _cst_low_exp_.Parent(null);
+        }
+
+        if(node != null)
+        {
+            if(node.Parent() != null)
+            {
+                node.Parent().RemoveChild(node);
+            }
+
+            node.Parent(this);
+        }
+
+        _cst_low_exp_ = node;
+    }
+    public TGreaterThan GetGreaterThan ()
+    {
+        return _greater_than_;
+    }
+
+    public void SetGreaterThan (TGreaterThan node)
+    {
+        if(_greater_than_ != null)
+        {
+            _greater_than_.Parent(null);
+        }
+
+        if(node != null)
+        {
+            if(node.Parent() != null)
+            {
+                node.Parent().RemoveChild(node);
+            }
+
+            node.Parent(this);
+        }
+
+        _greater_than_ = node;
+    }
+    public PCstExpression GetCstExpression ()
+    {
+        return _cst_expression_;
+    }
+
+    public void SetCstExpression (PCstExpression node)
+    {
+        if(_cst_expression_ != null)
+        {
+            _cst_expression_.Parent(null);
+        }
+
+        if(node != null)
+        {
+            if(node.Parent() != null)
+            {
+                node.Parent().RemoveChild(node);
+            }
+
+            node.Parent(this);
+        }
+
+        _cst_expression_ = node;
+    }
+
+    public override string ToString()
+    {
+        return ""
+            + ToString (_cst_low_exp_)
+            + ToString (_greater_than_)
+            + ToString (_cst_expression_)
+        ;
+    }
+
+    internal override void RemoveChild(Node child)
+    {
+        if ( _cst_low_exp_ == child )
+        {
+            _cst_low_exp_ = null;
+            return;
+        }
+        if ( _greater_than_ == child )
+        {
+            _greater_than_ = null;
+            return;
+        }
+        if ( _cst_expression_ == child )
+        {
+            _cst_expression_ = null;
+            return;
+        }
+    }
+
+    internal override void ReplaceChild(Node oldChild, Node newChild)
+    {
+        if ( _cst_low_exp_ == oldChild )
+        {
+            SetCstLowExp ((PCstLowExp) newChild);
+            return;
+        }
+        if ( _greater_than_ == oldChild )
+        {
+            SetGreaterThan ((TGreaterThan) newChild);
+            return;
+        }
+        if ( _cst_expression_ == oldChild )
+        {
+            SetCstExpression ((PCstExpression) newChild);
+            return;
+        }
+    }
+
+}
+public sealed class AGeqCstExpression : PCstExpression
+{
+    private PCstLowExp _cst_low_exp_;
+    private TGreaterThanOrEqual _greater_than_or_equal_;
+    private PCstExpression _cst_expression_;
+
+    public AGeqCstExpression ()
+    {
+    }
+
+    public AGeqCstExpression (
+            PCstLowExp _cst_low_exp_,
+            TGreaterThanOrEqual _greater_than_or_equal_,
+            PCstExpression _cst_expression_
+    )
+    {
+        SetCstLowExp (_cst_low_exp_);
+        SetGreaterThanOrEqual (_greater_than_or_equal_);
+        SetCstExpression (_cst_expression_);
+    }
+
+    public override Object Clone()
+    {
+        return new AGeqCstExpression (
+            (PCstLowExp)CloneNode (_cst_low_exp_),
+            (TGreaterThanOrEqual)CloneNode (_greater_than_or_equal_),
+            (PCstExpression)CloneNode (_cst_expression_)
+        );
+    }
+
+    public override void Apply(Switch sw)
+    {
+        ((Analysis) sw).CaseAGeqCstExpression(this);
+    }
+
+    public PCstLowExp GetCstLowExp ()
+    {
+        return _cst_low_exp_;
+    }
+
+    public void SetCstLowExp (PCstLowExp node)
+    {
+        if(_cst_low_exp_ != null)
+        {
+            _cst_low_exp_.Parent(null);
+        }
+
+        if(node != null)
+        {
+            if(node.Parent() != null)
+            {
+                node.Parent().RemoveChild(node);
+            }
+
+            node.Parent(this);
+        }
+
+        _cst_low_exp_ = node;
+    }
+    public TGreaterThanOrEqual GetGreaterThanOrEqual ()
+    {
+        return _greater_than_or_equal_;
+    }
+
+    public void SetGreaterThanOrEqual (TGreaterThanOrEqual node)
+    {
+        if(_greater_than_or_equal_ != null)
+        {
+            _greater_than_or_equal_.Parent(null);
+        }
+
+        if(node != null)
+        {
+            if(node.Parent() != null)
+            {
+                node.Parent().RemoveChild(node);
+            }
+
+            node.Parent(this);
+        }
+
+        _greater_than_or_equal_ = node;
+    }
+    public PCstExpression GetCstExpression ()
+    {
+        return _cst_expression_;
+    }
+
+    public void SetCstExpression (PCstExpression node)
+    {
+        if(_cst_expression_ != null)
+        {
+            _cst_expression_.Parent(null);
+        }
+
+        if(node != null)
+        {
+            if(node.Parent() != null)
+            {
+                node.Parent().RemoveChild(node);
+            }
+
+            node.Parent(this);
+        }
+
+        _cst_expression_ = node;
+    }
+
+    public override string ToString()
+    {
+        return ""
+            + ToString (_cst_low_exp_)
+            + ToString (_greater_than_or_equal_)
+            + ToString (_cst_expression_)
+        ;
+    }
+
+    internal override void RemoveChild(Node child)
+    {
+        if ( _cst_low_exp_ == child )
+        {
+            _cst_low_exp_ = null;
+            return;
+        }
+        if ( _greater_than_or_equal_ == child )
+        {
+            _greater_than_or_equal_ = null;
+            return;
+        }
+        if ( _cst_expression_ == child )
+        {
+            _cst_expression_ = null;
+            return;
+        }
+    }
+
+    internal override void ReplaceChild(Node oldChild, Node newChild)
+    {
+        if ( _cst_low_exp_ == oldChild )
+        {
+            SetCstLowExp ((PCstLowExp) newChild);
+            return;
+        }
+        if ( _greater_than_or_equal_ == oldChild )
+        {
+            SetGreaterThanOrEqual ((TGreaterThanOrEqual) newChild);
+            return;
+        }
+        if ( _cst_expression_ == oldChild )
+        {
+            SetCstExpression ((PCstExpression) newChild);
+            return;
+        }
+    }
+
+}
+public sealed class ANeqCstExpression : PCstExpression
+{
+    private PCstLowExp _cst_low_exp_;
+    private TNot _not_;
+    private TEqual _equal_;
+    private PCstExpression _cst_expression_;
+
+    public ANeqCstExpression ()
+    {
+    }
+
+    public ANeqCstExpression (
+            PCstLowExp _cst_low_exp_,
+            TNot _not_,
+            TEqual _equal_,
+            PCstExpression _cst_expression_
+    )
+    {
+        SetCstLowExp (_cst_low_exp_);
+        SetNot (_not_);
+        SetEqual (_equal_);
+        SetCstExpression (_cst_expression_);
+    }
+
+    public override Object Clone()
+    {
+        return new ANeqCstExpression (
+            (PCstLowExp)CloneNode (_cst_low_exp_),
+            (TNot)CloneNode (_not_),
+            (TEqual)CloneNode (_equal_),
+            (PCstExpression)CloneNode (_cst_expression_)
+        );
+    }
+
+    public override void Apply(Switch sw)
+    {
+        ((Analysis) sw).CaseANeqCstExpression(this);
+    }
+
+    public PCstLowExp GetCstLowExp ()
+    {
+        return _cst_low_exp_;
+    }
+
+    public void SetCstLowExp (PCstLowExp node)
+    {
+        if(_cst_low_exp_ != null)
+        {
+            _cst_low_exp_.Parent(null);
+        }
+
+        if(node != null)
+        {
+            if(node.Parent() != null)
+            {
+                node.Parent().RemoveChild(node);
+            }
+
+            node.Parent(this);
+        }
+
+        _cst_low_exp_ = node;
+    }
+    public TNot GetNot ()
+    {
+        return _not_;
+    }
+
+    public void SetNot (TNot node)
+    {
+        if(_not_ != null)
+        {
+            _not_.Parent(null);
+        }
+
+        if(node != null)
+        {
+            if(node.Parent() != null)
+            {
+                node.Parent().RemoveChild(node);
+            }
+
+            node.Parent(this);
+        }
+
+        _not_ = node;
+    }
+    public TEqual GetEqual ()
+    {
+        return _equal_;
+    }
+
+    public void SetEqual (TEqual node)
+    {
+        if(_equal_ != null)
+        {
+            _equal_.Parent(null);
+        }
+
+        if(node != null)
+        {
+            if(node.Parent() != null)
+            {
+                node.Parent().RemoveChild(node);
+            }
+
+            node.Parent(this);
+        }
+
+        _equal_ = node;
+    }
+    public PCstExpression GetCstExpression ()
+    {
+        return _cst_expression_;
+    }
+
+    public void SetCstExpression (PCstExpression node)
+    {
+        if(_cst_expression_ != null)
+        {
+            _cst_expression_.Parent(null);
+        }
+
+        if(node != null)
+        {
+            if(node.Parent() != null)
+            {
+                node.Parent().RemoveChild(node);
+            }
+
+            node.Parent(this);
+        }
+
+        _cst_expression_ = node;
+    }
+
+    public override string ToString()
+    {
+        return ""
+            + ToString (_cst_low_exp_)
+            + ToString (_not_)
+            + ToString (_equal_)
+            + ToString (_cst_expression_)
+        ;
+    }
+
+    internal override void RemoveChild(Node child)
+    {
+        if ( _cst_low_exp_ == child )
+        {
+            _cst_low_exp_ = null;
+            return;
+        }
+        if ( _not_ == child )
+        {
+            _not_ = null;
+            return;
+        }
+        if ( _equal_ == child )
+        {
+            _equal_ = null;
+            return;
+        }
+        if ( _cst_expression_ == child )
+        {
+            _cst_expression_ = null;
+            return;
+        }
+    }
+
+    internal override void ReplaceChild(Node oldChild, Node newChild)
+    {
+        if ( _cst_low_exp_ == oldChild )
+        {
+            SetCstLowExp ((PCstLowExp) newChild);
+            return;
+        }
+        if ( _not_ == oldChild )
+        {
+            SetNot ((TNot) newChild);
+            return;
+        }
+        if ( _equal_ == oldChild )
+        {
+            SetEqual ((TEqual) newChild);
+            return;
+        }
+        if ( _cst_expression_ == oldChild )
+        {
+            SetCstExpression ((PCstExpression) newChild);
+            return;
+        }
+    }
+
+}
+public sealed class APlusCstLowExp : PCstLowExp
+{
+    private PCstMediumExp _cst_medium_exp_;
+    private TPlusOp _plus_op_;
+    private PCstLowExp _cst_low_exp_;
+
+    public APlusCstLowExp ()
+    {
+    }
+
+    public APlusCstLowExp (
+            PCstMediumExp _cst_medium_exp_,
+            TPlusOp _plus_op_,
+            PCstLowExp _cst_low_exp_
+    )
+    {
+        SetCstMediumExp (_cst_medium_exp_);
+        SetPlusOp (_plus_op_);
+        SetCstLowExp (_cst_low_exp_);
+    }
+
+    public override Object Clone()
+    {
+        return new APlusCstLowExp (
+            (PCstMediumExp)CloneNode (_cst_medium_exp_),
+            (TPlusOp)CloneNode (_plus_op_),
+            (PCstLowExp)CloneNode (_cst_low_exp_)
+        );
+    }
+
+    public override void Apply(Switch sw)
+    {
+        ((Analysis) sw).CaseAPlusCstLowExp(this);
+    }
+
+    public PCstMediumExp GetCstMediumExp ()
+    {
+        return _cst_medium_exp_;
+    }
+
+    public void SetCstMediumExp (PCstMediumExp node)
+    {
+        if(_cst_medium_exp_ != null)
+        {
+            _cst_medium_exp_.Parent(null);
+        }
+
+        if(node != null)
+        {
+            if(node.Parent() != null)
+            {
+                node.Parent().RemoveChild(node);
+            }
+
+            node.Parent(this);
+        }
+
+        _cst_medium_exp_ = node;
+    }
+    public TPlusOp GetPlusOp ()
+    {
+        return _plus_op_;
+    }
+
+    public void SetPlusOp (TPlusOp node)
+    {
+        if(_plus_op_ != null)
+        {
+            _plus_op_.Parent(null);
+        }
+
+        if(node != null)
+        {
+            if(node.Parent() != null)
+            {
+                node.Parent().RemoveChild(node);
+            }
+
+            node.Parent(this);
+        }
+
+        _plus_op_ = node;
+    }
+    public PCstLowExp GetCstLowExp ()
+    {
+        return _cst_low_exp_;
+    }
+
+    public void SetCstLowExp (PCstLowExp node)
+    {
+        if(_cst_low_exp_ != null)
+        {
+            _cst_low_exp_.Parent(null);
+        }
+
+        if(node != null)
+        {
+            if(node.Parent() != null)
+            {
+                node.Parent().RemoveChild(node);
+            }
+
+            node.Parent(this);
+        }
+
+        _cst_low_exp_ = node;
+    }
+
+    public override string ToString()
+    {
+        return ""
+            + ToString (_cst_medium_exp_)
+            + ToString (_plus_op_)
+            + ToString (_cst_low_exp_)
+        ;
+    }
+
+    internal override void RemoveChild(Node child)
+    {
+        if ( _cst_medium_exp_ == child )
+        {
+            _cst_medium_exp_ = null;
+            return;
+        }
+        if ( _plus_op_ == child )
+        {
+            _plus_op_ = null;
+            return;
+        }
+        if ( _cst_low_exp_ == child )
+        {
+            _cst_low_exp_ = null;
+            return;
+        }
+    }
+
+    internal override void ReplaceChild(Node oldChild, Node newChild)
+    {
+        if ( _cst_medium_exp_ == oldChild )
+        {
+            SetCstMediumExp ((PCstMediumExp) newChild);
+            return;
+        }
+        if ( _plus_op_ == oldChild )
+        {
+            SetPlusOp ((TPlusOp) newChild);
+            return;
+        }
+        if ( _cst_low_exp_ == oldChild )
+        {
+            SetCstLowExp ((PCstLowExp) newChild);
+            return;
+        }
+    }
+
+}
+public sealed class AMinusCstLowExp : PCstLowExp
+{
+    private PCstMediumExp _cst_medium_exp_;
+    private TMinusOp _minus_op_;
+    private PCstLowExp _cst_low_exp_;
+
+    public AMinusCstLowExp ()
+    {
+    }
+
+    public AMinusCstLowExp (
+            PCstMediumExp _cst_medium_exp_,
+            TMinusOp _minus_op_,
+            PCstLowExp _cst_low_exp_
+    )
+    {
+        SetCstMediumExp (_cst_medium_exp_);
+        SetMinusOp (_minus_op_);
+        SetCstLowExp (_cst_low_exp_);
+    }
+
+    public override Object Clone()
+    {
+        return new AMinusCstLowExp (
+            (PCstMediumExp)CloneNode (_cst_medium_exp_),
+            (TMinusOp)CloneNode (_minus_op_),
+            (PCstLowExp)CloneNode (_cst_low_exp_)
+        );
+    }
+
+    public override void Apply(Switch sw)
+    {
+        ((Analysis) sw).CaseAMinusCstLowExp(this);
+    }
+
+    public PCstMediumExp GetCstMediumExp ()
+    {
+        return _cst_medium_exp_;
+    }
+
+    public void SetCstMediumExp (PCstMediumExp node)
+    {
+        if(_cst_medium_exp_ != null)
+        {
+            _cst_medium_exp_.Parent(null);
+        }
+
+        if(node != null)
+        {
+            if(node.Parent() != null)
+            {
+                node.Parent().RemoveChild(node);
+            }
+
+            node.Parent(this);
+        }
+
+        _cst_medium_exp_ = node;
+    }
+    public TMinusOp GetMinusOp ()
+    {
+        return _minus_op_;
+    }
+
+    public void SetMinusOp (TMinusOp node)
+    {
+        if(_minus_op_ != null)
+        {
+            _minus_op_.Parent(null);
+        }
+
+        if(node != null)
+        {
+            if(node.Parent() != null)
+            {
+                node.Parent().RemoveChild(node);
+            }
+
+            node.Parent(this);
+        }
+
+        _minus_op_ = node;
+    }
+    public PCstLowExp GetCstLowExp ()
+    {
+        return _cst_low_exp_;
+    }
+
+    public void SetCstLowExp (PCstLowExp node)
+    {
+        if(_cst_low_exp_ != null)
+        {
+            _cst_low_exp_.Parent(null);
+        }
+
+        if(node != null)
+        {
+            if(node.Parent() != null)
+            {
+                node.Parent().RemoveChild(node);
+            }
+
+            node.Parent(this);
+        }
+
+        _cst_low_exp_ = node;
+    }
+
+    public override string ToString()
+    {
+        return ""
+            + ToString (_cst_medium_exp_)
+            + ToString (_minus_op_)
+            + ToString (_cst_low_exp_)
+        ;
+    }
+
+    internal override void RemoveChild(Node child)
+    {
+        if ( _cst_medium_exp_ == child )
+        {
+            _cst_medium_exp_ = null;
+            return;
+        }
+        if ( _minus_op_ == child )
+        {
+            _minus_op_ = null;
+            return;
+        }
+        if ( _cst_low_exp_ == child )
+        {
+            _cst_low_exp_ = null;
+            return;
+        }
+    }
+
+    internal override void ReplaceChild(Node oldChild, Node newChild)
+    {
+        if ( _cst_medium_exp_ == oldChild )
+        {
+            SetCstMediumExp ((PCstMediumExp) newChild);
+            return;
+        }
+        if ( _minus_op_ == oldChild )
+        {
+            SetMinusOp ((TMinusOp) newChild);
+            return;
+        }
+        if ( _cst_low_exp_ == oldChild )
+        {
+            SetCstLowExp ((PCstLowExp) newChild);
+            return;
+        }
+    }
+
+}
+public sealed class ACstLowExp : PCstLowExp
+{
+    private PCstMediumExp _cst_medium_exp_;
+
+    public ACstLowExp ()
+    {
+    }
+
+    public ACstLowExp (
+            PCstMediumExp _cst_medium_exp_
+    )
+    {
+        SetCstMediumExp (_cst_medium_exp_);
+    }
+
+    public override Object Clone()
+    {
+        return new ACstLowExp (
+            (PCstMediumExp)CloneNode (_cst_medium_exp_)
+        );
+    }
+
+    public override void Apply(Switch sw)
+    {
+        ((Analysis) sw).CaseACstLowExp(this);
+    }
+
+    public PCstMediumExp GetCstMediumExp ()
+    {
+        return _cst_medium_exp_;
+    }
+
+    public void SetCstMediumExp (PCstMediumExp node)
+    {
+        if(_cst_medium_exp_ != null)
+        {
+            _cst_medium_exp_.Parent(null);
+        }
+
+        if(node != null)
+        {
+            if(node.Parent() != null)
+            {
+                node.Parent().RemoveChild(node);
+            }
+
+            node.Parent(this);
+        }
+
+        _cst_medium_exp_ = node;
+    }
+
+    public override string ToString()
+    {
+        return ""
+            + ToString (_cst_medium_exp_)
+        ;
+    }
+
+    internal override void RemoveChild(Node child)
+    {
+        if ( _cst_medium_exp_ == child )
+        {
+            _cst_medium_exp_ = null;
+            return;
+        }
+    }
+
+    internal override void ReplaceChild(Node oldChild, Node newChild)
+    {
+        if ( _cst_medium_exp_ == oldChild )
+        {
+            SetCstMediumExp ((PCstMediumExp) newChild);
+            return;
+        }
+    }
+
+}
+public sealed class AMultCstMediumExp : PCstMediumExp
+{
+    private PCstMediumExp _cst_medium_exp_;
+    private TMultiplicationOp _multiplication_op_;
+    private PCstHighExp _cst_high_exp_;
+
+    public AMultCstMediumExp ()
+    {
+    }
+
+    public AMultCstMediumExp (
+            PCstMediumExp _cst_medium_exp_,
+            TMultiplicationOp _multiplication_op_,
+            PCstHighExp _cst_high_exp_
+    )
+    {
+        SetCstMediumExp (_cst_medium_exp_);
+        SetMultiplicationOp (_multiplication_op_);
+        SetCstHighExp (_cst_high_exp_);
+    }
+
+    public override Object Clone()
+    {
+        return new AMultCstMediumExp (
+            (PCstMediumExp)CloneNode (_cst_medium_exp_),
+            (TMultiplicationOp)CloneNode (_multiplication_op_),
+            (PCstHighExp)CloneNode (_cst_high_exp_)
+        );
+    }
+
+    public override void Apply(Switch sw)
+    {
+        ((Analysis) sw).CaseAMultCstMediumExp(this);
+    }
+
+    public PCstMediumExp GetCstMediumExp ()
+    {
+        return _cst_medium_exp_;
+    }
+
+    public void SetCstMediumExp (PCstMediumExp node)
+    {
+        if(_cst_medium_exp_ != null)
+        {
+            _cst_medium_exp_.Parent(null);
+        }
+
+        if(node != null)
+        {
+            if(node.Parent() != null)
+            {
+                node.Parent().RemoveChild(node);
+            }
+
+            node.Parent(this);
+        }
+
+        _cst_medium_exp_ = node;
+    }
+    public TMultiplicationOp GetMultiplicationOp ()
+    {
+        return _multiplication_op_;
+    }
+
+    public void SetMultiplicationOp (TMultiplicationOp node)
+    {
+        if(_multiplication_op_ != null)
+        {
+            _multiplication_op_.Parent(null);
+        }
+
+        if(node != null)
+        {
+            if(node.Parent() != null)
+            {
+                node.Parent().RemoveChild(node);
+            }
+
+            node.Parent(this);
+        }
+
+        _multiplication_op_ = node;
+    }
+    public PCstHighExp GetCstHighExp ()
+    {
+        return _cst_high_exp_;
+    }
+
+    public void SetCstHighExp (PCstHighExp node)
+    {
+        if(_cst_high_exp_ != null)
+        {
+            _cst_high_exp_.Parent(null);
+        }
+
+        if(node != null)
+        {
+            if(node.Parent() != null)
+            {
+                node.Parent().RemoveChild(node);
+            }
+
+            node.Parent(this);
+        }
+
+        _cst_high_exp_ = node;
+    }
+
+    public override string ToString()
+    {
+        return ""
+            + ToString (_cst_medium_exp_)
+            + ToString (_multiplication_op_)
+            + ToString (_cst_high_exp_)
+        ;
+    }
+
+    internal override void RemoveChild(Node child)
+    {
+        if ( _cst_medium_exp_ == child )
+        {
+            _cst_medium_exp_ = null;
+            return;
+        }
+        if ( _multiplication_op_ == child )
+        {
+            _multiplication_op_ = null;
+            return;
+        }
+        if ( _cst_high_exp_ == child )
+        {
+            _cst_high_exp_ = null;
+            return;
+        }
+    }
+
+    internal override void ReplaceChild(Node oldChild, Node newChild)
+    {
+        if ( _cst_medium_exp_ == oldChild )
+        {
+            SetCstMediumExp ((PCstMediumExp) newChild);
+            return;
+        }
+        if ( _multiplication_op_ == oldChild )
+        {
+            SetMultiplicationOp ((TMultiplicationOp) newChild);
+            return;
+        }
+        if ( _cst_high_exp_ == oldChild )
+        {
+            SetCstHighExp ((PCstHighExp) newChild);
+            return;
+        }
+    }
+
+}
+public sealed class ADivisionCstMediumExp : PCstMediumExp
+{
+    private PCstMediumExp _cst_medium_exp_;
+    private TDivisionOp _division_op_;
+    private PCstHighExp _cst_high_exp_;
+
+    public ADivisionCstMediumExp ()
+    {
+    }
+
+    public ADivisionCstMediumExp (
+            PCstMediumExp _cst_medium_exp_,
+            TDivisionOp _division_op_,
+            PCstHighExp _cst_high_exp_
+    )
+    {
+        SetCstMediumExp (_cst_medium_exp_);
+        SetDivisionOp (_division_op_);
+        SetCstHighExp (_cst_high_exp_);
+    }
+
+    public override Object Clone()
+    {
+        return new ADivisionCstMediumExp (
+            (PCstMediumExp)CloneNode (_cst_medium_exp_),
+            (TDivisionOp)CloneNode (_division_op_),
+            (PCstHighExp)CloneNode (_cst_high_exp_)
+        );
+    }
+
+    public override void Apply(Switch sw)
+    {
+        ((Analysis) sw).CaseADivisionCstMediumExp(this);
+    }
+
+    public PCstMediumExp GetCstMediumExp ()
+    {
+        return _cst_medium_exp_;
+    }
+
+    public void SetCstMediumExp (PCstMediumExp node)
+    {
+        if(_cst_medium_exp_ != null)
+        {
+            _cst_medium_exp_.Parent(null);
+        }
+
+        if(node != null)
+        {
+            if(node.Parent() != null)
+            {
+                node.Parent().RemoveChild(node);
+            }
+
+            node.Parent(this);
+        }
+
+        _cst_medium_exp_ = node;
+    }
+    public TDivisionOp GetDivisionOp ()
+    {
+        return _division_op_;
+    }
+
+    public void SetDivisionOp (TDivisionOp node)
+    {
+        if(_division_op_ != null)
+        {
+            _division_op_.Parent(null);
+        }
+
+        if(node != null)
+        {
+            if(node.Parent() != null)
+            {
+                node.Parent().RemoveChild(node);
+            }
+
+            node.Parent(this);
+        }
+
+        _division_op_ = node;
+    }
+    public PCstHighExp GetCstHighExp ()
+    {
+        return _cst_high_exp_;
+    }
+
+    public void SetCstHighExp (PCstHighExp node)
+    {
+        if(_cst_high_exp_ != null)
+        {
+            _cst_high_exp_.Parent(null);
+        }
+
+        if(node != null)
+        {
+            if(node.Parent() != null)
+            {
+                node.Parent().RemoveChild(node);
+            }
+
+            node.Parent(this);
+        }
+
+        _cst_high_exp_ = node;
+    }
+
+    public override string ToString()
+    {
+        return ""
+            + ToString (_cst_medium_exp_)
+            + ToString (_division_op_)
+            + ToString (_cst_high_exp_)
+        ;
+    }
+
+    internal override void RemoveChild(Node child)
+    {
+        if ( _cst_medium_exp_ == child )
+        {
+            _cst_medium_exp_ = null;
+            return;
+        }
+        if ( _division_op_ == child )
+        {
+            _division_op_ = null;
+            return;
+        }
+        if ( _cst_high_exp_ == child )
+        {
+            _cst_high_exp_ = null;
+            return;
+        }
+    }
+
+    internal override void ReplaceChild(Node oldChild, Node newChild)
+    {
+        if ( _cst_medium_exp_ == oldChild )
+        {
+            SetCstMediumExp ((PCstMediumExp) newChild);
+            return;
+        }
+        if ( _division_op_ == oldChild )
+        {
+            SetDivisionOp ((TDivisionOp) newChild);
+            return;
+        }
+        if ( _cst_high_exp_ == oldChild )
+        {
+            SetCstHighExp ((PCstHighExp) newChild);
+            return;
+        }
+    }
+
+}
+public sealed class AModuloCstMediumExp : PCstMediumExp
+{
+    private PCstMediumExp _cst_medium_exp_;
+    private TModuloOp _modulo_op_;
+    private PCstHighExp _cst_high_exp_;
+
+    public AModuloCstMediumExp ()
+    {
+    }
+
+    public AModuloCstMediumExp (
+            PCstMediumExp _cst_medium_exp_,
+            TModuloOp _modulo_op_,
+            PCstHighExp _cst_high_exp_
+    )
+    {
+        SetCstMediumExp (_cst_medium_exp_);
+        SetModuloOp (_modulo_op_);
+        SetCstHighExp (_cst_high_exp_);
+    }
+
+    public override Object Clone()
+    {
+        return new AModuloCstMediumExp (
+            (PCstMediumExp)CloneNode (_cst_medium_exp_),
+            (TModuloOp)CloneNode (_modulo_op_),
+            (PCstHighExp)CloneNode (_cst_high_exp_)
+        );
+    }
+
+    public override void Apply(Switch sw)
+    {
+        ((Analysis) sw).CaseAModuloCstMediumExp(this);
+    }
+
+    public PCstMediumExp GetCstMediumExp ()
+    {
+        return _cst_medium_exp_;
+    }
+
+    public void SetCstMediumExp (PCstMediumExp node)
+    {
+        if(_cst_medium_exp_ != null)
+        {
+            _cst_medium_exp_.Parent(null);
+        }
+
+        if(node != null)
+        {
+            if(node.Parent() != null)
+            {
+                node.Parent().RemoveChild(node);
+            }
+
+            node.Parent(this);
+        }
+
+        _cst_medium_exp_ = node;
+    }
+    public TModuloOp GetModuloOp ()
+    {
+        return _modulo_op_;
+    }
+
+    public void SetModuloOp (TModuloOp node)
+    {
+        if(_modulo_op_ != null)
+        {
+            _modulo_op_.Parent(null);
+        }
+
+        if(node != null)
+        {
+            if(node.Parent() != null)
+            {
+                node.Parent().RemoveChild(node);
+            }
+
+            node.Parent(this);
+        }
+
+        _modulo_op_ = node;
+    }
+    public PCstHighExp GetCstHighExp ()
+    {
+        return _cst_high_exp_;
+    }
+
+    public void SetCstHighExp (PCstHighExp node)
+    {
+        if(_cst_high_exp_ != null)
+        {
+            _cst_high_exp_.Parent(null);
+        }
+
+        if(node != null)
+        {
+            if(node.Parent() != null)
+            {
+                node.Parent().RemoveChild(node);
+            }
+
+            node.Parent(this);
+        }
+
+        _cst_high_exp_ = node;
+    }
+
+    public override string ToString()
+    {
+        return ""
+            + ToString (_cst_medium_exp_)
+            + ToString (_modulo_op_)
+            + ToString (_cst_high_exp_)
+        ;
+    }
+
+    internal override void RemoveChild(Node child)
+    {
+        if ( _cst_medium_exp_ == child )
+        {
+            _cst_medium_exp_ = null;
+            return;
+        }
+        if ( _modulo_op_ == child )
+        {
+            _modulo_op_ = null;
+            return;
+        }
+        if ( _cst_high_exp_ == child )
+        {
+            _cst_high_exp_ = null;
+            return;
+        }
+    }
+
+    internal override void ReplaceChild(Node oldChild, Node newChild)
+    {
+        if ( _cst_medium_exp_ == oldChild )
+        {
+            SetCstMediumExp ((PCstMediumExp) newChild);
+            return;
+        }
+        if ( _modulo_op_ == oldChild )
+        {
+            SetModuloOp ((TModuloOp) newChild);
+            return;
+        }
+        if ( _cst_high_exp_ == oldChild )
+        {
+            SetCstHighExp ((PCstHighExp) newChild);
+            return;
+        }
+    }
+
+}
+public sealed class ACstMediumExp : PCstMediumExp
+{
+    private PCstHighExp _cst_high_exp_;
+
+    public ACstMediumExp ()
+    {
+    }
+
+    public ACstMediumExp (
+            PCstHighExp _cst_high_exp_
+    )
+    {
+        SetCstHighExp (_cst_high_exp_);
+    }
+
+    public override Object Clone()
+    {
+        return new ACstMediumExp (
+            (PCstHighExp)CloneNode (_cst_high_exp_)
+        );
+    }
+
+    public override void Apply(Switch sw)
+    {
+        ((Analysis) sw).CaseACstMediumExp(this);
+    }
+
+    public PCstHighExp GetCstHighExp ()
+    {
+        return _cst_high_exp_;
+    }
+
+    public void SetCstHighExp (PCstHighExp node)
+    {
+        if(_cst_high_exp_ != null)
+        {
+            _cst_high_exp_.Parent(null);
+        }
+
+        if(node != null)
+        {
+            if(node.Parent() != null)
+            {
+                node.Parent().RemoveChild(node);
+            }
+
+            node.Parent(this);
+        }
+
+        _cst_high_exp_ = node;
+    }
+
+    public override string ToString()
+    {
+        return ""
+            + ToString (_cst_high_exp_)
+        ;
+    }
+
+    internal override void RemoveChild(Node child)
+    {
+        if ( _cst_high_exp_ == child )
+        {
+            _cst_high_exp_ = null;
+            return;
+        }
+    }
+
+    internal override void ReplaceChild(Node oldChild, Node newChild)
+    {
+        if ( _cst_high_exp_ == oldChild )
+        {
+            SetCstHighExp ((PCstHighExp) newChild);
+            return;
+        }
+    }
+
+}
+public sealed class ANumberCstHighExp : PCstHighExp
+{
+    private TNumber _number_;
+
+    public ANumberCstHighExp ()
+    {
+    }
+
+    public ANumberCstHighExp (
             TNumber _number_
     )
     {
@@ -6363,14 +8438,14 @@ public sealed class ANumberCstExpression : PCstExpression
 
     public override Object Clone()
     {
-        return new ANumberCstExpression (
+        return new ANumberCstHighExp (
             (TNumber)CloneNode (_number_)
         );
     }
 
     public override void Apply(Switch sw)
     {
-        ((Analysis) sw).CaseANumberCstExpression(this);
+        ((Analysis) sw).CaseANumberCstHighExp(this);
     }
 
     public TNumber GetNumber ()
@@ -6424,15 +8499,15 @@ public sealed class ANumberCstExpression : PCstExpression
     }
 
 }
-public sealed class ACstExpression : PCstExpression
+public sealed class ABoolCstHighExp : PCstHighExp
 {
     private TBoolValue _bool_value_;
 
-    public ACstExpression ()
+    public ABoolCstHighExp ()
     {
     }
 
-    public ACstExpression (
+    public ABoolCstHighExp (
             TBoolValue _bool_value_
     )
     {
@@ -6441,14 +8516,14 @@ public sealed class ACstExpression : PCstExpression
 
     public override Object Clone()
     {
-        return new ACstExpression (
+        return new ABoolCstHighExp (
             (TBoolValue)CloneNode (_bool_value_)
         );
     }
 
     public override void Apply(Switch sw)
     {
-        ((Analysis) sw).CaseACstExpression(this);
+        ((Analysis) sw).CaseABoolCstHighExp(this);
     }
 
     public TBoolValue GetBoolValue ()
@@ -6497,6 +8572,318 @@ public sealed class ACstExpression : PCstExpression
         if ( _bool_value_ == oldChild )
         {
             SetBoolValue ((TBoolValue) newChild);
+            return;
+        }
+    }
+
+}
+public sealed class AIdCstHighExp : PCstHighExp
+{
+    private TIdentifier _identifier_;
+
+    public AIdCstHighExp ()
+    {
+    }
+
+    public AIdCstHighExp (
+            TIdentifier _identifier_
+    )
+    {
+        SetIdentifier (_identifier_);
+    }
+
+    public override Object Clone()
+    {
+        return new AIdCstHighExp (
+            (TIdentifier)CloneNode (_identifier_)
+        );
+    }
+
+    public override void Apply(Switch sw)
+    {
+        ((Analysis) sw).CaseAIdCstHighExp(this);
+    }
+
+    public TIdentifier GetIdentifier ()
+    {
+        return _identifier_;
+    }
+
+    public void SetIdentifier (TIdentifier node)
+    {
+        if(_identifier_ != null)
+        {
+            _identifier_.Parent(null);
+        }
+
+        if(node != null)
+        {
+            if(node.Parent() != null)
+            {
+                node.Parent().RemoveChild(node);
+            }
+
+            node.Parent(this);
+        }
+
+        _identifier_ = node;
+    }
+
+    public override string ToString()
+    {
+        return ""
+            + ToString (_identifier_)
+        ;
+    }
+
+    internal override void RemoveChild(Node child)
+    {
+        if ( _identifier_ == child )
+        {
+            _identifier_ = null;
+            return;
+        }
+    }
+
+    internal override void ReplaceChild(Node oldChild, Node newChild)
+    {
+        if ( _identifier_ == oldChild )
+        {
+            SetIdentifier ((TIdentifier) newChild);
+            return;
+        }
+    }
+
+}
+public sealed class AVectorCstHighExp : PCstHighExp
+{
+    private PCstVectorValues _cst_vector_values_;
+
+    public AVectorCstHighExp ()
+    {
+    }
+
+    public AVectorCstHighExp (
+            PCstVectorValues _cst_vector_values_
+    )
+    {
+        SetCstVectorValues (_cst_vector_values_);
+    }
+
+    public override Object Clone()
+    {
+        return new AVectorCstHighExp (
+            (PCstVectorValues)CloneNode (_cst_vector_values_)
+        );
+    }
+
+    public override void Apply(Switch sw)
+    {
+        ((Analysis) sw).CaseAVectorCstHighExp(this);
+    }
+
+    public PCstVectorValues GetCstVectorValues ()
+    {
+        return _cst_vector_values_;
+    }
+
+    public void SetCstVectorValues (PCstVectorValues node)
+    {
+        if(_cst_vector_values_ != null)
+        {
+            _cst_vector_values_.Parent(null);
+        }
+
+        if(node != null)
+        {
+            if(node.Parent() != null)
+            {
+                node.Parent().RemoveChild(node);
+            }
+
+            node.Parent(this);
+        }
+
+        _cst_vector_values_ = node;
+    }
+
+    public override string ToString()
+    {
+        return ""
+            + ToString (_cst_vector_values_)
+        ;
+    }
+
+    internal override void RemoveChild(Node child)
+    {
+        if ( _cst_vector_values_ == child )
+        {
+            _cst_vector_values_ = null;
+            return;
+        }
+    }
+
+    internal override void ReplaceChild(Node oldChild, Node newChild)
+    {
+        if ( _cst_vector_values_ == oldChild )
+        {
+            SetCstVectorValues ((PCstVectorValues) newChild);
+            return;
+        }
+    }
+
+}
+public sealed class ACstHighExp : PCstHighExp
+{
+    private TLPar _l_par_;
+    private PCstExpression _cst_expression_;
+    private TRPar _r_par_;
+
+    public ACstHighExp ()
+    {
+    }
+
+    public ACstHighExp (
+            TLPar _l_par_,
+            PCstExpression _cst_expression_,
+            TRPar _r_par_
+    )
+    {
+        SetLPar (_l_par_);
+        SetCstExpression (_cst_expression_);
+        SetRPar (_r_par_);
+    }
+
+    public override Object Clone()
+    {
+        return new ACstHighExp (
+            (TLPar)CloneNode (_l_par_),
+            (PCstExpression)CloneNode (_cst_expression_),
+            (TRPar)CloneNode (_r_par_)
+        );
+    }
+
+    public override void Apply(Switch sw)
+    {
+        ((Analysis) sw).CaseACstHighExp(this);
+    }
+
+    public TLPar GetLPar ()
+    {
+        return _l_par_;
+    }
+
+    public void SetLPar (TLPar node)
+    {
+        if(_l_par_ != null)
+        {
+            _l_par_.Parent(null);
+        }
+
+        if(node != null)
+        {
+            if(node.Parent() != null)
+            {
+                node.Parent().RemoveChild(node);
+            }
+
+            node.Parent(this);
+        }
+
+        _l_par_ = node;
+    }
+    public PCstExpression GetCstExpression ()
+    {
+        return _cst_expression_;
+    }
+
+    public void SetCstExpression (PCstExpression node)
+    {
+        if(_cst_expression_ != null)
+        {
+            _cst_expression_.Parent(null);
+        }
+
+        if(node != null)
+        {
+            if(node.Parent() != null)
+            {
+                node.Parent().RemoveChild(node);
+            }
+
+            node.Parent(this);
+        }
+
+        _cst_expression_ = node;
+    }
+    public TRPar GetRPar ()
+    {
+        return _r_par_;
+    }
+
+    public void SetRPar (TRPar node)
+    {
+        if(_r_par_ != null)
+        {
+            _r_par_.Parent(null);
+        }
+
+        if(node != null)
+        {
+            if(node.Parent() != null)
+            {
+                node.Parent().RemoveChild(node);
+            }
+
+            node.Parent(this);
+        }
+
+        _r_par_ = node;
+    }
+
+    public override string ToString()
+    {
+        return ""
+            + ToString (_l_par_)
+            + ToString (_cst_expression_)
+            + ToString (_r_par_)
+        ;
+    }
+
+    internal override void RemoveChild(Node child)
+    {
+        if ( _l_par_ == child )
+        {
+            _l_par_ = null;
+            return;
+        }
+        if ( _cst_expression_ == child )
+        {
+            _cst_expression_ = null;
+            return;
+        }
+        if ( _r_par_ == child )
+        {
+            _r_par_ = null;
+            return;
+        }
+    }
+
+    internal override void ReplaceChild(Node oldChild, Node newChild)
+    {
+        if ( _l_par_ == oldChild )
+        {
+            SetLPar ((TLPar) newChild);
+            return;
+        }
+        if ( _cst_expression_ == oldChild )
+        {
+            SetCstExpression ((PCstExpression) newChild);
+            return;
+        }
+        if ( _r_par_ == oldChild )
+        {
+            SetRPar ((TRPar) newChild);
             return;
         }
     }

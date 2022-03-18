@@ -11,7 +11,7 @@
 				RelMove((0,lineWidth,0))
 				RelMove((length, 0, 0))
 				RelMove((0,lineWidth,0))
-			}	
+			}
 		}
 	}
 }
