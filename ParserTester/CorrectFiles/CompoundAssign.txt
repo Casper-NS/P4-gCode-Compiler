@@ -1,0 +1,7 @@
+﻿int a = 1
+int a += 1
+int a -= 1
+int a *= 1
+int a /= 1
+int a %= 1
+bool b != true
