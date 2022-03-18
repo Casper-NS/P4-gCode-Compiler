@@ -46,7 +46,7 @@ void MakeCrissCross(float length, int amount, Vector3 cornerPosition){
 
 void MovementExamples(){
 	Vector3 position = (2, 2, 2)
-	float offset = 5;
+	float offset = 5
 
 	AbsMove(position)
 	RelMove(position)
@@ -66,16 +66,19 @@ float LookMomICanDoTrig(float in){
 }
 
 void Transformer(){
-	transform ((x, y, z) => (y, z, x)){
+	transform ((x, y, z) => (y, z, x))
+	{
 		MakeCrissCross(objectSize, 100, objectPosition)
 	}
 }
 
 void Turtling(){
 	TurnTo(0)
-	repeat(10){
-		build{
-			int a = 3;
+	repeat(10)
+	{
+		build
+		{
+			int a = 3
 			Forward(a)
 			Left(360/10)	
 		}

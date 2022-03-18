@@ -3,7 +3,8 @@
 	AbsMove(cornerPosition)
 	repeat(amount)
 	{
-		if (true){
+		if (true)
+		{
 			build
 			{
 				RelMove((length, 0, 0))

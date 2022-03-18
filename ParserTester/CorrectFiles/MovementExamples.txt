@@ -1,14 +1,15 @@
 ﻿void MovementExamples()
 {
 	Vector3 position = (2, 2, 2)
-	float offset = 5;
+	float offset = 5
 
 	AbsMove(position)
 	RelMove(position)
 	AbsArc(position, offset)
 	RelArc(position, offset)
 	
-	build{
+	build
+	{
 		AbsMove(position)
 		RelMove(position)
 		AbsArc(position, offset)
