@@ -20,6 +20,7 @@ Helpers
   not_star = [all - star];
   not_star_slash = [not_star - '/'];
   eol_char = cr | lf | cr lf;
+  not_eol_char = [all - [cr + lf]];
 
 Tokens
   main = 'main';
@@ -54,16 +55,19 @@ Tokens
   repeat = 'repeat';
   while = 'while';
   return = 'return';
+  build = 'build';
+  walk = 'walk';
   gcode = 'GCODE';
   and = '&&';
   or = '||';
   number  = '0'| [digit-'0'] digit* | digit* dot digit*;
   identifier    = idletter idchar* | idletter idchar* dot xyz;
   all_chars_except_curly = not_curleys;
-  comment = '/*' not_star * '*' + ( not_star_slash not_star * '*'+) * '/' eol_char;
+  multiline_comment = '/*' not_star * '*' + ( not_star_slash not_star * '*'+) * '/' eol_char;
+  singleline_comment = '//' not_eol_char* eol_char;
 
 Ignored Tokens
-  blank, comment;
+  blank, multiline_comment, singleline_comment;
 
 Productions
 cst_program = cst_declaration_list;
@@ -113,8 +117,8 @@ cst_function_body = cst_block;
 cst_block = l_cur eol cst_statement_list r_cur;
 
 cst_statement_list = 
-        {list}cst_statement eol cst_statement_list | 
-        cst_statement eol;
+        {list}cst_statement eol+ cst_statement_list | 
+        cst_statement eol+;
 
 cst_statement = 
         {decl}cst_variable_declaration | 
@@ -124,7 +128,9 @@ cst_statement =
         {gcode}cst_gcode_literal | 
         {assignment}cst_assignments | 
         {function}cst_function_call |
-        {return}cst_return;
+        {return}cst_return |
+        {build} build eol cst_block |
+        {walk} walk eol cst_block;
 
 cst_if_statement = 
         {noelse}if l_par cst_expression r_par eol cst_block | 

@@ -3635,21 +3635,24 @@ public sealed class ACstBlock : PCstBlock
 public sealed class AListCstStatementList : PCstStatementList
 {
     private PCstStatement _cst_statement_;
-    private TEol _eol_;
+    private TypedList _eol_;
     private PCstStatementList _cst_statement_list_;
 
     public AListCstStatementList ()
     {
+        this._eol_ = new TypedList(new Eol_Cast(this));
     }
 
     public AListCstStatementList (
             PCstStatement _cst_statement_,
-            TEol _eol_,
+            IList _eol_,
             PCstStatementList _cst_statement_list_
     )
     {
         SetCstStatement (_cst_statement_);
-        SetEol (_eol_);
+        this._eol_ = new TypedList(new Eol_Cast(this));
+        this._eol_.Clear();
+        this._eol_.AddAll(_eol_);
         SetCstStatementList (_cst_statement_list_);
     }
 
@@ -3657,7 +3660,7 @@ public sealed class AListCstStatementList : PCstStatementList
     {
         return new AListCstStatementList (
             (PCstStatement)CloneNode (_cst_statement_),
-            (TEol)CloneNode (_eol_),
+            CloneList (_eol_),
             (PCstStatementList)CloneNode (_cst_statement_list_)
         );
     }
@@ -3691,29 +3694,15 @@ public sealed class AListCstStatementList : PCstStatementList
 
         _cst_statement_ = node;
     }
-    public TEol GetEol ()
+    public IList GetEol ()
     {
         return _eol_;
     }
 
-    public void SetEol (TEol node)
+    public void setEol (IList list)
     {
-        if(_eol_ != null)
-        {
-            _eol_.Parent(null);
-        }
-
-        if(node != null)
-        {
-            if(node.Parent() != null)
-            {
-                node.Parent().RemoveChild(node);
-            }
-
-            node.Parent(this);
-        }
-
-        _eol_ = node;
+        _eol_.Clear();
+        _eol_.AddAll(list);
     }
     public PCstStatementList GetCstStatementList ()
     {
@@ -3756,9 +3745,9 @@ public sealed class AListCstStatementList : PCstStatementList
             _cst_statement_ = null;
             return;
         }
-        if ( _eol_ == child )
+        if ( _eol_.Contains(child) )
         {
-            _eol_ = null;
+            _eol_.Remove(child);
             return;
         }
         if ( _cst_statement_list_ == child )
@@ -3775,10 +3764,22 @@ public sealed class AListCstStatementList : PCstStatementList
             SetCstStatement ((PCstStatement) newChild);
             return;
         }
-        if ( _eol_ == oldChild )
+        for ( int i = 0; i < _eol_.Count; i++ )
         {
-            SetEol ((TEol) newChild);
-            return;
+            Node n = (Node)_eol_[i];
+            if(n == oldChild)
+            {
+                if(newChild != null)
+                {
+                    _eol_[i] = newChild;
+                    oldChild.Parent(null);
+                    return;
+                }
+
+                _eol_.RemoveAt(i);
+                oldChild.Parent(null);
+                return;
+            }
         }
         if ( _cst_statement_list_ == oldChild )
         {
@@ -3787,30 +3788,68 @@ public sealed class AListCstStatementList : PCstStatementList
         }
     }
 
+    private class Eol_Cast : Cast
+    {
+        AListCstStatementList obj;
+
+        internal Eol_Cast (AListCstStatementList obj)
+        {
+          this.obj = obj;
+        }
+
+        public Object Cast(Object o)
+        {
+            TEol node = (TEol) o;
+
+            if((node.Parent() != null) &&
+                (node.Parent() != obj))
+            {
+                node.Parent().RemoveChild(node);
+            }
+
+            if((node.Parent() == null) ||
+                (node.Parent() != obj))
+            {
+                node.Parent(obj);
+            }
+
+            return node;
+        }
+
+        public Object UnCast(Object o)
+        {
+            TEol node = (TEol) o;
+            node.Parent(null);
+            return node;
+        }
+    }
 }
 public sealed class ACstStatementList : PCstStatementList
 {
     private PCstStatement _cst_statement_;
-    private TEol _eol_;
+    private TypedList _eol_;
 
     public ACstStatementList ()
     {
+        this._eol_ = new TypedList(new Eol_Cast(this));
     }
 
     public ACstStatementList (
             PCstStatement _cst_statement_,
-            TEol _eol_
+            IList _eol_
     )
     {
         SetCstStatement (_cst_statement_);
-        SetEol (_eol_);
+        this._eol_ = new TypedList(new Eol_Cast(this));
+        this._eol_.Clear();
+        this._eol_.AddAll(_eol_);
     }
 
     public override Object Clone()
     {
         return new ACstStatementList (
             (PCstStatement)CloneNode (_cst_statement_),
-            (TEol)CloneNode (_eol_)
+            CloneList (_eol_)
         );
     }
 
@@ -3843,29 +3882,15 @@ public sealed class ACstStatementList : PCstStatementList
 
         _cst_statement_ = node;
     }
-    public TEol GetEol ()
+    public IList GetEol ()
     {
         return _eol_;
     }
 
-    public void SetEol (TEol node)
+    public void setEol (IList list)
     {
-        if(_eol_ != null)
-        {
-            _eol_.Parent(null);
-        }
-
-        if(node != null)
-        {
-            if(node.Parent() != null)
-            {
-                node.Parent().RemoveChild(node);
-            }
-
-            node.Parent(this);
-        }
-
-        _eol_ = node;
+        _eol_.Clear();
+        _eol_.AddAll(list);
     }
 
     public override string ToString()
@@ -3883,9 +3908,9 @@ public sealed class ACstStatementList : PCstStatementList
             _cst_statement_ = null;
             return;
         }
-        if ( _eol_ == child )
+        if ( _eol_.Contains(child) )
         {
-            _eol_ = null;
+            _eol_.Remove(child);
             return;
         }
     }
@@ -3897,13 +3922,60 @@ public sealed class ACstStatementList : PCstStatementList
             SetCstStatement ((PCstStatement) newChild);
             return;
         }
-        if ( _eol_ == oldChild )
+        for ( int i = 0; i < _eol_.Count; i++ )
         {
-            SetEol ((TEol) newChild);
-            return;
+            Node n = (Node)_eol_[i];
+            if(n == oldChild)
+            {
+                if(newChild != null)
+                {
+                    _eol_[i] = newChild;
+                    oldChild.Parent(null);
+                    return;
+                }
+
+                _eol_.RemoveAt(i);
+                oldChild.Parent(null);
+                return;
+            }
         }
     }
 
+    private class Eol_Cast : Cast
+    {
+        ACstStatementList obj;
+
+        internal Eol_Cast (ACstStatementList obj)
+        {
+          this.obj = obj;
+        }
+
+        public Object Cast(Object o)
+        {
+            TEol node = (TEol) o;
+
+            if((node.Parent() != null) &&
+                (node.Parent() != obj))
+            {
+                node.Parent().RemoveChild(node);
+            }
+
+            if((node.Parent() == null) ||
+                (node.Parent() != obj))
+            {
+                node.Parent(obj);
+            }
+
+            return node;
+        }
+
+        public Object UnCast(Object o)
+        {
+            TEol node = (TEol) o;
+            node.Parent(null);
+            return node;
+        }
+    }
 }
 public sealed class ADeclCstStatement : PCstStatement
 {
@@ -4524,6 +4596,318 @@ public sealed class AReturnCstStatement : PCstStatement
         if ( _cst_return_ == oldChild )
         {
             SetCstReturn ((PCstReturn) newChild);
+            return;
+        }
+    }
+
+}
+public sealed class ABuildCstStatement : PCstStatement
+{
+    private TBuild _build_;
+    private TEol _eol_;
+    private PCstBlock _cst_block_;
+
+    public ABuildCstStatement ()
+    {
+    }
+
+    public ABuildCstStatement (
+            TBuild _build_,
+            TEol _eol_,
+            PCstBlock _cst_block_
+    )
+    {
+        SetBuild (_build_);
+        SetEol (_eol_);
+        SetCstBlock (_cst_block_);
+    }
+
+    public override Object Clone()
+    {
+        return new ABuildCstStatement (
+            (TBuild)CloneNode (_build_),
+            (TEol)CloneNode (_eol_),
+            (PCstBlock)CloneNode (_cst_block_)
+        );
+    }
+
+    public override void Apply(Switch sw)
+    {
+        ((Analysis) sw).CaseABuildCstStatement(this);
+    }
+
+    public TBuild GetBuild ()
+    {
+        return _build_;
+    }
+
+    public void SetBuild (TBuild node)
+    {
+        if(_build_ != null)
+        {
+            _build_.Parent(null);
+        }
+
+        if(node != null)
+        {
+            if(node.Parent() != null)
+            {
+                node.Parent().RemoveChild(node);
+            }
+
+            node.Parent(this);
+        }
+
+        _build_ = node;
+    }
+    public TEol GetEol ()
+    {
+        return _eol_;
+    }
+
+    public void SetEol (TEol node)
+    {
+        if(_eol_ != null)
+        {
+            _eol_.Parent(null);
+        }
+
+        if(node != null)
+        {
+            if(node.Parent() != null)
+            {
+                node.Parent().RemoveChild(node);
+            }
+
+            node.Parent(this);
+        }
+
+        _eol_ = node;
+    }
+    public PCstBlock GetCstBlock ()
+    {
+        return _cst_block_;
+    }
+
+    public void SetCstBlock (PCstBlock node)
+    {
+        if(_cst_block_ != null)
+        {
+            _cst_block_.Parent(null);
+        }
+
+        if(node != null)
+        {
+            if(node.Parent() != null)
+            {
+                node.Parent().RemoveChild(node);
+            }
+
+            node.Parent(this);
+        }
+
+        _cst_block_ = node;
+    }
+
+    public override string ToString()
+    {
+        return ""
+            + ToString (_build_)
+            + ToString (_eol_)
+            + ToString (_cst_block_)
+        ;
+    }
+
+    internal override void RemoveChild(Node child)
+    {
+        if ( _build_ == child )
+        {
+            _build_ = null;
+            return;
+        }
+        if ( _eol_ == child )
+        {
+            _eol_ = null;
+            return;
+        }
+        if ( _cst_block_ == child )
+        {
+            _cst_block_ = null;
+            return;
+        }
+    }
+
+    internal override void ReplaceChild(Node oldChild, Node newChild)
+    {
+        if ( _build_ == oldChild )
+        {
+            SetBuild ((TBuild) newChild);
+            return;
+        }
+        if ( _eol_ == oldChild )
+        {
+            SetEol ((TEol) newChild);
+            return;
+        }
+        if ( _cst_block_ == oldChild )
+        {
+            SetCstBlock ((PCstBlock) newChild);
+            return;
+        }
+    }
+
+}
+public sealed class AWalkCstStatement : PCstStatement
+{
+    private TWalk _walk_;
+    private TEol _eol_;
+    private PCstBlock _cst_block_;
+
+    public AWalkCstStatement ()
+    {
+    }
+
+    public AWalkCstStatement (
+            TWalk _walk_,
+            TEol _eol_,
+            PCstBlock _cst_block_
+    )
+    {
+        SetWalk (_walk_);
+        SetEol (_eol_);
+        SetCstBlock (_cst_block_);
+    }
+
+    public override Object Clone()
+    {
+        return new AWalkCstStatement (
+            (TWalk)CloneNode (_walk_),
+            (TEol)CloneNode (_eol_),
+            (PCstBlock)CloneNode (_cst_block_)
+        );
+    }
+
+    public override void Apply(Switch sw)
+    {
+        ((Analysis) sw).CaseAWalkCstStatement(this);
+    }
+
+    public TWalk GetWalk ()
+    {
+        return _walk_;
+    }
+
+    public void SetWalk (TWalk node)
+    {
+        if(_walk_ != null)
+        {
+            _walk_.Parent(null);
+        }
+
+        if(node != null)
+        {
+            if(node.Parent() != null)
+            {
+                node.Parent().RemoveChild(node);
+            }
+
+            node.Parent(this);
+        }
+
+        _walk_ = node;
+    }
+    public TEol GetEol ()
+    {
+        return _eol_;
+    }
+
+    public void SetEol (TEol node)
+    {
+        if(_eol_ != null)
+        {
+            _eol_.Parent(null);
+        }
+
+        if(node != null)
+        {
+            if(node.Parent() != null)
+            {
+                node.Parent().RemoveChild(node);
+            }
+
+            node.Parent(this);
+        }
+
+        _eol_ = node;
+    }
+    public PCstBlock GetCstBlock ()
+    {
+        return _cst_block_;
+    }
+
+    public void SetCstBlock (PCstBlock node)
+    {
+        if(_cst_block_ != null)
+        {
+            _cst_block_.Parent(null);
+        }
+
+        if(node != null)
+        {
+            if(node.Parent() != null)
+            {
+                node.Parent().RemoveChild(node);
+            }
+
+            node.Parent(this);
+        }
+
+        _cst_block_ = node;
+    }
+
+    public override string ToString()
+    {
+        return ""
+            + ToString (_walk_)
+            + ToString (_eol_)
+            + ToString (_cst_block_)
+        ;
+    }
+
+    internal override void RemoveChild(Node child)
+    {
+        if ( _walk_ == child )
+        {
+            _walk_ = null;
+            return;
+        }
+        if ( _eol_ == child )
+        {
+            _eol_ = null;
+            return;
+        }
+        if ( _cst_block_ == child )
+        {
+            _cst_block_ = null;
+            return;
+        }
+    }
+
+    internal override void ReplaceChild(Node oldChild, Node newChild)
+    {
+        if ( _walk_ == oldChild )
+        {
+            SetWalk ((TWalk) newChild);
+            return;
+        }
+        if ( _eol_ == oldChild )
+        {
+            SetEol ((TEol) newChild);
+            return;
+        }
+        if ( _cst_block_ == oldChild )
+        {
+            SetCstBlock ((PCstBlock) newChild);
             return;
         }
     }

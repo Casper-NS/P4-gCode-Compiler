@@ -1,4 +1,5 @@
-﻿void Turtling(){
+﻿void Turtling()
+{
 	TurnTo(0)
 	repeat(10)
 	{

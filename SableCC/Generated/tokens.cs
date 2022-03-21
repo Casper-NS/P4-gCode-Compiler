@@ -809,6 +809,56 @@ public sealed class TReturn : Token
     }
 }
 
+public sealed class TBuild : Token
+{
+    public TBuild(string text)
+    {
+        Text = text;
+    }
+
+    public TBuild(string text, int line, int pos)
+    {
+        Text = text;
+        Line = line;
+        Pos = pos;
+    }
+
+    public override Object Clone()
+    {
+      return new TBuild(Text, Line, Pos);
+    }
+
+    public override void Apply(Switch sw)
+    {
+        ((Analysis) sw).CaseTBuild(this);
+    }
+}
+
+public sealed class TWalk : Token
+{
+    public TWalk(string text)
+    {
+        Text = text;
+    }
+
+    public TWalk(string text, int line, int pos)
+    {
+        Text = text;
+        Line = line;
+        Pos = pos;
+    }
+
+    public override Object Clone()
+    {
+      return new TWalk(Text, Line, Pos);
+    }
+
+    public override void Apply(Switch sw)
+    {
+        ((Analysis) sw).CaseTWalk(this);
+    }
+}
+
 public sealed class TGcode : Token
 {
     public TGcode(string text)
@@ -959,14 +1009,14 @@ public sealed class TAllCharsExceptCurly : Token
     }
 }
 
-public sealed class TComment : Token
+public sealed class TMultilineComment : Token
 {
-    public TComment(string text)
+    public TMultilineComment(string text)
     {
         Text = text;
     }
 
-    public TComment(string text, int line, int pos)
+    public TMultilineComment(string text, int line, int pos)
     {
         Text = text;
         Line = line;
@@ -975,12 +1025,37 @@ public sealed class TComment : Token
 
     public override Object Clone()
     {
-      return new TComment(Text, Line, Pos);
+      return new TMultilineComment(Text, Line, Pos);
     }
 
     public override void Apply(Switch sw)
     {
-        ((Analysis) sw).CaseTComment(this);
+        ((Analysis) sw).CaseTMultilineComment(this);
+    }
+}
+
+public sealed class TSinglelineComment : Token
+{
+    public TSinglelineComment(string text)
+    {
+        Text = text;
+    }
+
+    public TSinglelineComment(string text, int line, int pos)
+    {
+        Text = text;
+        Line = line;
+        Pos = pos;
+    }
+
+    public override Object Clone()
+    {
+      return new TSinglelineComment(Text, Line, Pos);
+    }
+
+    public override void Apply(Switch sw)
+    {
+        ((Analysis) sw).CaseTSinglelineComment(this);
     }
 }
 

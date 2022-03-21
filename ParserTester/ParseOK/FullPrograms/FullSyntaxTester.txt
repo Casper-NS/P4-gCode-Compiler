@@ -1,6 +1,6 @@
 const float lineWidth = 0.2
 const float layerHeight = 0.2
-const Vector3 objectPosition = (1, 1, 0)
+const vector objectPosition = (1, 1, 0)
 const float objectSize = 10
 bool testRun = false
 
@@ -25,9 +25,9 @@ void Start()
 }
 
 /* henrik wants to throw this out the window with force */
-Vector3 ScaleVector(Vector3 vector, float scale){
-	vector.x *= scale
-	return vector
+vector ScaleVector(vector vec, float scale){
+	vec.x *= scale
+	return vec
 }
 
 void MakeCrissCross(float length, int amount, Vector3 cornerPosition){
@@ -45,7 +45,7 @@ void MakeCrissCross(float length, int amount, Vector3 cornerPosition){
 }
 
 void MovementExamples(){
-	Vector3 position = (2, 2, 2)
+	vector position = (2, 2, 2)
 	float offset = 5
 
 	AbsMove(position)
