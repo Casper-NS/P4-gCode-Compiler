@@ -100,7 +100,7 @@ cst_function_declaration =
 
 cst_formal_param_list = 
         {list}cst_uninitialised_variable comma cst_formal_param_list | 
-        cst_uninitialised_variable;
+              cst_uninitialised_variable;
 
 cst_function_body = cst_block;
 
@@ -147,18 +147,21 @@ cst_actual_param_list =
         cst_expression;
 
 cst_expression =
-        {or} cst_expression or cst_bool_exp |
-        {and} cst_expression and cst_bool_exp |
+        {and} cst_logic_or_exp and cst_expression |
+        cst_logic_or_exp;
+
+cst_logic_or_exp =
+        {or} cst_bool_exp or cst_logic_or_exp |
         cst_bool_exp;
 
 cst_bool_exp =
         {not}not cst_bool_exp |
-        {equal}cst_associative_exp [c]:equal [d]:equal cst_bool_exp |
+        {equal}cst_associative_exp equal cst_bool_exp |
         {le}cst_associative_exp less_than cst_bool_exp |
         {leq}cst_associative_exp less_than_or_equal cst_bool_exp |
         {ge}cst_associative_exp greater_than cst_bool_exp | 
         {geq}cst_associative_exp greater_than_or_equal cst_bool_exp |
-        {neq}cst_associative_exp not equal cst_bool_exp |
+        {neq}cst_associative_exp not assignment_op cst_bool_exp |
         cst_associative_exp;
 
 cst_associative_exp = 

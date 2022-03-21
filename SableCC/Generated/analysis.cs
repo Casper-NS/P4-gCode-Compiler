@@ -64,9 +64,10 @@ public interface Analysis : Switch
     void CaseACstReturn(ACstReturn node);
     void CaseAListCstActualParamList(AListCstActualParamList node);
     void CaseACstActualParamList(ACstActualParamList node);
-    void CaseAOrCstExpression(AOrCstExpression node);
     void CaseAAndCstExpression(AAndCstExpression node);
     void CaseACstExpression(ACstExpression node);
+    void CaseAOrCstLogicOrExp(AOrCstLogicOrExp node);
+    void CaseACstLogicOrExp(ACstLogicOrExp node);
     void CaseANotCstBoolExp(ANotCstBoolExp node);
     void CaseAEqualCstBoolExp(AEqualCstBoolExp node);
     void CaseALeCstBoolExp(ALeCstBoolExp node);
@@ -389,15 +390,19 @@ public class AnalysisAdapter : Analysis
     {
         DefaultCase(node);
     }
-    public virtual void CaseAOrCstExpression(AOrCstExpression node)
-    {
-        DefaultCase(node);
-    }
     public virtual void CaseAAndCstExpression(AAndCstExpression node)
     {
         DefaultCase(node);
     }
     public virtual void CaseACstExpression(ACstExpression node)
+    {
+        DefaultCase(node);
+    }
+    public virtual void CaseAOrCstLogicOrExp(AOrCstLogicOrExp node)
+    {
+        DefaultCase(node);
+    }
+    public virtual void CaseACstLogicOrExp(ACstLogicOrExp node)
     {
         DefaultCase(node);
     }
@@ -1981,33 +1986,6 @@ public class DepthFirstAdapter : AnalysisAdapter
         }
         OutACstActualParamList(node);
     }
-    public virtual void InAOrCstExpression(AOrCstExpression node)
-    {
-        DefaultIn(node);
-    }
-
-    public virtual void OutAOrCstExpression(AOrCstExpression node)
-    {
-        DefaultOut(node);
-    }
-
-    public override void CaseAOrCstExpression(AOrCstExpression node)
-    {
-        InAOrCstExpression(node);
-        if(node.GetCstExpression() != null)
-        {
-            node.GetCstExpression().Apply(this);
-        }
-        if(node.GetOr() != null)
-        {
-            node.GetOr().Apply(this);
-        }
-        if(node.GetCstBoolExp() != null)
-        {
-            node.GetCstBoolExp().Apply(this);
-        }
-        OutAOrCstExpression(node);
-    }
     public virtual void InAAndCstExpression(AAndCstExpression node)
     {
         DefaultIn(node);
@@ -2021,17 +1999,17 @@ public class DepthFirstAdapter : AnalysisAdapter
     public override void CaseAAndCstExpression(AAndCstExpression node)
     {
         InAAndCstExpression(node);
-        if(node.GetCstExpression() != null)
+        if(node.GetCstLogicOrExp() != null)
         {
-            node.GetCstExpression().Apply(this);
+            node.GetCstLogicOrExp().Apply(this);
         }
         if(node.GetAnd() != null)
         {
             node.GetAnd().Apply(this);
         }
-        if(node.GetCstBoolExp() != null)
+        if(node.GetCstExpression() != null)
         {
-            node.GetCstBoolExp().Apply(this);
+            node.GetCstExpression().Apply(this);
         }
         OutAAndCstExpression(node);
     }
@@ -2048,11 +2026,57 @@ public class DepthFirstAdapter : AnalysisAdapter
     public override void CaseACstExpression(ACstExpression node)
     {
         InACstExpression(node);
+        if(node.GetCstLogicOrExp() != null)
+        {
+            node.GetCstLogicOrExp().Apply(this);
+        }
+        OutACstExpression(node);
+    }
+    public virtual void InAOrCstLogicOrExp(AOrCstLogicOrExp node)
+    {
+        DefaultIn(node);
+    }
+
+    public virtual void OutAOrCstLogicOrExp(AOrCstLogicOrExp node)
+    {
+        DefaultOut(node);
+    }
+
+    public override void CaseAOrCstLogicOrExp(AOrCstLogicOrExp node)
+    {
+        InAOrCstLogicOrExp(node);
         if(node.GetCstBoolExp() != null)
         {
             node.GetCstBoolExp().Apply(this);
         }
-        OutACstExpression(node);
+        if(node.GetOr() != null)
+        {
+            node.GetOr().Apply(this);
+        }
+        if(node.GetCstLogicOrExp() != null)
+        {
+            node.GetCstLogicOrExp().Apply(this);
+        }
+        OutAOrCstLogicOrExp(node);
+    }
+    public virtual void InACstLogicOrExp(ACstLogicOrExp node)
+    {
+        DefaultIn(node);
+    }
+
+    public virtual void OutACstLogicOrExp(ACstLogicOrExp node)
+    {
+        DefaultOut(node);
+    }
+
+    public override void CaseACstLogicOrExp(ACstLogicOrExp node)
+    {
+        InACstLogicOrExp(node);
+        if(node.GetCstBoolExp() != null)
+        {
+            node.GetCstBoolExp().Apply(this);
+        }
+        OutACstLogicOrExp(node);
     }
     public virtual void InANotCstBoolExp(ANotCstBoolExp node)
     {
@@ -2094,13 +2118,9 @@ public class DepthFirstAdapter : AnalysisAdapter
         {
             node.GetCstAssociativeExp().Apply(this);
         }
-        if(node.GetC() != null)
+        if(node.GetEqual() != null)
         {
-            node.GetC().Apply(this);
-        }
-        if(node.GetD() != null)
-        {
-            node.GetD().Apply(this);
+            node.GetEqual().Apply(this);
         }
         if(node.GetCstBoolExp() != null)
         {
@@ -2237,9 +2257,9 @@ public class DepthFirstAdapter : AnalysisAdapter
         {
             node.GetNot().Apply(this);
         }
-        if(node.GetEqual() != null)
+        if(node.GetAssignmentOp() != null)
         {
-            node.GetEqual().Apply(this);
+            node.GetAssignmentOp().Apply(this);
         }
         if(node.GetCstBoolExp() != null)
         {
@@ -3895,33 +3915,6 @@ public class ReversedDepthFirstAdapter : AnalysisAdapter
         }
         OutACstActualParamList(node);
     }
-    public virtual void InAOrCstExpression(AOrCstExpression node)
-    {
-        DefaultIn(node);
-    }
-
-    public virtual void OutAOrCstExpression(AOrCstExpression node)
-    {
-        DefaultOut(node);
-    }
-
-    public override void CaseAOrCstExpression(AOrCstExpression node)
-    {
-        InAOrCstExpression(node);
-        if(node.GetCstBoolExp() != null)
-        {
-            node.GetCstBoolExp().Apply(this);
-        }
-        if(node.GetOr() != null)
-        {
-            node.GetOr().Apply(this);
-        }
-        if(node.GetCstExpression() != null)
-        {
-            node.GetCstExpression().Apply(this);
-        }
-        OutAOrCstExpression(node);
-    }
     public virtual void InAAndCstExpression(AAndCstExpression node)
     {
         DefaultIn(node);
@@ -3935,17 +3928,17 @@ public class ReversedDepthFirstAdapter : AnalysisAdapter
     public override void CaseAAndCstExpression(AAndCstExpression node)
     {
         InAAndCstExpression(node);
-        if(node.GetCstBoolExp() != null)
+        if(node.GetCstExpression() != null)
         {
-            node.GetCstBoolExp().Apply(this);
+            node.GetCstExpression().Apply(this);
         }
         if(node.GetAnd() != null)
         {
             node.GetAnd().Apply(this);
         }
-        if(node.GetCstExpression() != null)
+        if(node.GetCstLogicOrExp() != null)
         {
-            node.GetCstExpression().Apply(this);
+            node.GetCstLogicOrExp().Apply(this);
         }
         OutAAndCstExpression(node);
     }
@@ -3962,11 +3955,57 @@ public class ReversedDepthFirstAdapter : AnalysisAdapter
     public override void CaseACstExpression(ACstExpression node)
     {
         InACstExpression(node);
+        if(node.GetCstLogicOrExp() != null)
+        {
+            node.GetCstLogicOrExp().Apply(this);
+        }
+        OutACstExpression(node);
+    }
+    public virtual void InAOrCstLogicOrExp(AOrCstLogicOrExp node)
+    {
+        DefaultIn(node);
+    }
+
+    public virtual void OutAOrCstLogicOrExp(AOrCstLogicOrExp node)
+    {
+        DefaultOut(node);
+    }
+
+    public override void CaseAOrCstLogicOrExp(AOrCstLogicOrExp node)
+    {
+        InAOrCstLogicOrExp(node);
+        if(node.GetCstLogicOrExp() != null)
+        {
+            node.GetCstLogicOrExp().Apply(this);
+        }
+        if(node.GetOr() != null)
+        {
+            node.GetOr().Apply(this);
+        }
         if(node.GetCstBoolExp() != null)
         {
             node.GetCstBoolExp().Apply(this);
         }
-        OutACstExpression(node);
+        OutAOrCstLogicOrExp(node);
+    }
+    public virtual void InACstLogicOrExp(ACstLogicOrExp node)
+    {
+        DefaultIn(node);
+    }
+
+    public virtual void OutACstLogicOrExp(ACstLogicOrExp node)
+    {
+        DefaultOut(node);
+    }
+
+    public override void CaseACstLogicOrExp(ACstLogicOrExp node)
+    {
+        InACstLogicOrExp(node);
+        if(node.GetCstBoolExp() != null)
+        {
+            node.GetCstBoolExp().Apply(this);
+        }
+        OutACstLogicOrExp(node);
     }
     public virtual void InANotCstBoolExp(ANotCstBoolExp node)
     {
@@ -4008,13 +4047,9 @@ public class ReversedDepthFirstAdapter : AnalysisAdapter
         {
             node.GetCstBoolExp().Apply(this);
         }
-        if(node.GetD() != null)
+        if(node.GetEqual() != null)
         {
-            node.GetD().Apply(this);
-        }
-        if(node.GetC() != null)
-        {
-            node.GetC().Apply(this);
+            node.GetEqual().Apply(this);
         }
         if(node.GetCstAssociativeExp() != null)
         {
@@ -4147,9 +4182,9 @@ public class ReversedDepthFirstAdapter : AnalysisAdapter
         {
             node.GetCstBoolExp().Apply(this);
         }
-        if(node.GetEqual() != null)
+        if(node.GetAssignmentOp() != null)
         {
-            node.GetEqual().Apply(this);
+            node.GetAssignmentOp().Apply(this);
         }
         if(node.GetNot() != null)
         {
