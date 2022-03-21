@@ -30,7 +30,7 @@ vector ScaleVector(vector vec, float scale){
 	return vec
 }
 
-void MakeCrissCross(float length, int amount, Vector3 cornerPosition){
+void MakeCrissCross(float length, int amount, vector cornerPosition){
 	AbsMove(cornerPosition)
 	repeat(amount) {
 		if (!testRun){

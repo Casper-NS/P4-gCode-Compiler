@@ -73,7 +73,7 @@ Productions
 cst_program = cst_declaration_list;
 
 cst_main_function_declaration =
-        main l_par r_par eol cst_function_body;
+        main l_par r_par eol? cst_function_body;
 
 cst_declaration_list =
         {list}cst_declaration eol+ cst_declaration_list | 
@@ -105,8 +105,8 @@ cst_simple_types =
 cst_vector_values = l_par [a]:cst_expression [q]:comma [b]:cst_expression [w]:comma [c]:cst_expression r_par;
 
 cst_function_declaration =
-        {notvoid} cst_all_types identifier l_par cst_formal_param_list? r_par eol cst_function_body |
-        {void} void             identifier l_par cst_formal_param_list? r_par eol cst_function_body;
+        {notvoid} cst_all_types identifier l_par cst_formal_param_list? r_par eol? cst_function_body |
+        {void} void             identifier l_par cst_formal_param_list? r_par eol? cst_function_body;
 
 cst_formal_param_list = 
         {list}cst_uninitialised_variable comma cst_formal_param_list | 
@@ -129,16 +129,16 @@ cst_statement =
         {assignment}cst_assignments | 
         {function}cst_function_call |
         {return}cst_return |
-        {build} build eol cst_block |
-        {walk} walk eol cst_block;
+        {build} build eol? cst_block |
+        {walk} walk eol? cst_block;
 
 cst_if_statement = 
-        {noelse}if l_par cst_expression r_par eol cst_block | 
-        {withelse}if l_par cst_expression r_par eol [a]:cst_block else [b]:cst_block;
+        {noelse}if l_par cst_expression r_par eol? cst_block | 
+        {withelse}if l_par cst_expression r_par eol? [a]:cst_block else [b]:cst_block;
 
-cst_repeat_statement = repeat l_par cst_expression r_par eol cst_block;
+cst_repeat_statement = repeat l_par cst_expression r_par eol? cst_block;
 
-cst_while_statement = while l_par cst_expression r_par eol cst_block;
+cst_while_statement = while l_par cst_expression r_par eol? cst_block;
 
 cst_gcode_literal = gcode l_cur all_chars_except_curly r_cur;
 
