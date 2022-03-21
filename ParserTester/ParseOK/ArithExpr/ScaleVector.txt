@@ -1,4 +1,7 @@
 ﻿/* henrik wants to throw this out the window with force */
+main(){
+	int a=1
+}
 vector ScaleVector(vector vec, float scale)
 {
 	vec.x *= scale
