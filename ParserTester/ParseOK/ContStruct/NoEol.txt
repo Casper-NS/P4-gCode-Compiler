@@ -1,0 +1,12 @@
+﻿void q(){
+    int c=0
+}
+
+main(){
+    while(a){
+        int a=1
+    }
+    if(b){
+        int b=1
+    }
+}
