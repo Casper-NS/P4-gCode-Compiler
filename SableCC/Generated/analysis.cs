@@ -2206,17 +2206,17 @@ public class DepthFirstAdapter : AnalysisAdapter
     public override void CaseAEqualCstBoolExp(AEqualCstBoolExp node)
     {
         InAEqualCstBoolExp(node);
-        if(node.GetCstAssociativeExp() != null)
+        if(node.GetA() != null)
         {
-            node.GetCstAssociativeExp().Apply(this);
+            node.GetA().Apply(this);
         }
         if(node.GetEqual() != null)
         {
             node.GetEqual().Apply(this);
         }
-        if(node.GetCstBoolExp() != null)
+        if(node.GetB() != null)
         {
-            node.GetCstBoolExp().Apply(this);
+            node.GetB().Apply(this);
         }
         OutAEqualCstBoolExp(node);
     }
@@ -2233,17 +2233,17 @@ public class DepthFirstAdapter : AnalysisAdapter
     public override void CaseALeCstBoolExp(ALeCstBoolExp node)
     {
         InALeCstBoolExp(node);
-        if(node.GetCstAssociativeExp() != null)
+        if(node.GetA() != null)
         {
-            node.GetCstAssociativeExp().Apply(this);
+            node.GetA().Apply(this);
         }
         if(node.GetLessThan() != null)
         {
             node.GetLessThan().Apply(this);
         }
-        if(node.GetCstBoolExp() != null)
+        if(node.GetB() != null)
         {
-            node.GetCstBoolExp().Apply(this);
+            node.GetB().Apply(this);
         }
         OutALeCstBoolExp(node);
     }
@@ -2260,17 +2260,17 @@ public class DepthFirstAdapter : AnalysisAdapter
     public override void CaseALeqCstBoolExp(ALeqCstBoolExp node)
     {
         InALeqCstBoolExp(node);
-        if(node.GetCstAssociativeExp() != null)
+        if(node.GetA() != null)
         {
-            node.GetCstAssociativeExp().Apply(this);
+            node.GetA().Apply(this);
         }
         if(node.GetLessThanOrEqual() != null)
         {
             node.GetLessThanOrEqual().Apply(this);
         }
-        if(node.GetCstBoolExp() != null)
+        if(node.GetB() != null)
         {
-            node.GetCstBoolExp().Apply(this);
+            node.GetB().Apply(this);
         }
         OutALeqCstBoolExp(node);
     }
@@ -2287,17 +2287,17 @@ public class DepthFirstAdapter : AnalysisAdapter
     public override void CaseAGeCstBoolExp(AGeCstBoolExp node)
     {
         InAGeCstBoolExp(node);
-        if(node.GetCstAssociativeExp() != null)
+        if(node.GetA() != null)
         {
-            node.GetCstAssociativeExp().Apply(this);
+            node.GetA().Apply(this);
         }
         if(node.GetGreaterThan() != null)
         {
             node.GetGreaterThan().Apply(this);
         }
-        if(node.GetCstBoolExp() != null)
+        if(node.GetB() != null)
         {
-            node.GetCstBoolExp().Apply(this);
+            node.GetB().Apply(this);
         }
         OutAGeCstBoolExp(node);
     }
@@ -2314,17 +2314,17 @@ public class DepthFirstAdapter : AnalysisAdapter
     public override void CaseAGeqCstBoolExp(AGeqCstBoolExp node)
     {
         InAGeqCstBoolExp(node);
-        if(node.GetCstAssociativeExp() != null)
+        if(node.GetA() != null)
         {
-            node.GetCstAssociativeExp().Apply(this);
+            node.GetA().Apply(this);
         }
         if(node.GetGreaterThanOrEqual() != null)
         {
             node.GetGreaterThanOrEqual().Apply(this);
         }
-        if(node.GetCstBoolExp() != null)
+        if(node.GetB() != null)
         {
-            node.GetCstBoolExp().Apply(this);
+            node.GetB().Apply(this);
         }
         OutAGeqCstBoolExp(node);
     }
@@ -2341,9 +2341,9 @@ public class DepthFirstAdapter : AnalysisAdapter
     public override void CaseANeqCstBoolExp(ANeqCstBoolExp node)
     {
         InANeqCstBoolExp(node);
-        if(node.GetCstAssociativeExp() != null)
+        if(node.GetA() != null)
         {
-            node.GetCstAssociativeExp().Apply(this);
+            node.GetA().Apply(this);
         }
         if(node.GetNot() != null)
         {
@@ -2353,9 +2353,9 @@ public class DepthFirstAdapter : AnalysisAdapter
         {
             node.GetAssignmentOp().Apply(this);
         }
-        if(node.GetCstBoolExp() != null)
+        if(node.GetB() != null)
         {
-            node.GetCstBoolExp().Apply(this);
+            node.GetB().Apply(this);
         }
         OutANeqCstBoolExp(node);
     }
@@ -4197,17 +4197,17 @@ public class ReversedDepthFirstAdapter : AnalysisAdapter
     public override void CaseAEqualCstBoolExp(AEqualCstBoolExp node)
     {
         InAEqualCstBoolExp(node);
-        if(node.GetCstBoolExp() != null)
+        if(node.GetB() != null)
         {
-            node.GetCstBoolExp().Apply(this);
+            node.GetB().Apply(this);
         }
         if(node.GetEqual() != null)
         {
             node.GetEqual().Apply(this);
         }
-        if(node.GetCstAssociativeExp() != null)
+        if(node.GetA() != null)
         {
-            node.GetCstAssociativeExp().Apply(this);
+            node.GetA().Apply(this);
         }
         OutAEqualCstBoolExp(node);
     }
@@ -4224,17 +4224,17 @@ public class ReversedDepthFirstAdapter : AnalysisAdapter
     public override void CaseALeCstBoolExp(ALeCstBoolExp node)
     {
         InALeCstBoolExp(node);
-        if(node.GetCstBoolExp() != null)
+        if(node.GetB() != null)
         {
-            node.GetCstBoolExp().Apply(this);
+            node.GetB().Apply(this);
         }
         if(node.GetLessThan() != null)
         {
             node.GetLessThan().Apply(this);
         }
-        if(node.GetCstAssociativeExp() != null)
+        if(node.GetA() != null)
         {
-            node.GetCstAssociativeExp().Apply(this);
+            node.GetA().Apply(this);
         }
         OutALeCstBoolExp(node);
     }
@@ -4251,17 +4251,17 @@ public class ReversedDepthFirstAdapter : AnalysisAdapter
     public override void CaseALeqCstBoolExp(ALeqCstBoolExp node)
     {
         InALeqCstBoolExp(node);
-        if(node.GetCstBoolExp() != null)
+        if(node.GetB() != null)
         {
-            node.GetCstBoolExp().Apply(this);
+            node.GetB().Apply(this);
         }
         if(node.GetLessThanOrEqual() != null)
         {
             node.GetLessThanOrEqual().Apply(this);
         }
-        if(node.GetCstAssociativeExp() != null)
+        if(node.GetA() != null)
         {
-            node.GetCstAssociativeExp().Apply(this);
+            node.GetA().Apply(this);
         }
         OutALeqCstBoolExp(node);
     }
@@ -4278,17 +4278,17 @@ public class ReversedDepthFirstAdapter : AnalysisAdapter
     public override void CaseAGeCstBoolExp(AGeCstBoolExp node)
     {
         InAGeCstBoolExp(node);
-        if(node.GetCstBoolExp() != null)
+        if(node.GetB() != null)
         {
-            node.GetCstBoolExp().Apply(this);
+            node.GetB().Apply(this);
         }
         if(node.GetGreaterThan() != null)
         {
             node.GetGreaterThan().Apply(this);
         }
-        if(node.GetCstAssociativeExp() != null)
+        if(node.GetA() != null)
         {
-            node.GetCstAssociativeExp().Apply(this);
+            node.GetA().Apply(this);
         }
         OutAGeCstBoolExp(node);
     }
@@ -4305,17 +4305,17 @@ public class ReversedDepthFirstAdapter : AnalysisAdapter
     public override void CaseAGeqCstBoolExp(AGeqCstBoolExp node)
     {
         InAGeqCstBoolExp(node);
-        if(node.GetCstBoolExp() != null)
+        if(node.GetB() != null)
         {
-            node.GetCstBoolExp().Apply(this);
+            node.GetB().Apply(this);
         }
         if(node.GetGreaterThanOrEqual() != null)
         {
             node.GetGreaterThanOrEqual().Apply(this);
         }
-        if(node.GetCstAssociativeExp() != null)
+        if(node.GetA() != null)
         {
-            node.GetCstAssociativeExp().Apply(this);
+            node.GetA().Apply(this);
         }
         OutAGeqCstBoolExp(node);
     }
@@ -4332,9 +4332,9 @@ public class ReversedDepthFirstAdapter : AnalysisAdapter
     public override void CaseANeqCstBoolExp(ANeqCstBoolExp node)
     {
         InANeqCstBoolExp(node);
-        if(node.GetCstBoolExp() != null)
+        if(node.GetB() != null)
         {
-            node.GetCstBoolExp().Apply(this);
+            node.GetB().Apply(this);
         }
         if(node.GetAssignmentOp() != null)
         {
@@ -4344,9 +4344,9 @@ public class ReversedDepthFirstAdapter : AnalysisAdapter
         {
             node.GetNot().Apply(this);
         }
-        if(node.GetCstAssociativeExp() != null)
+        if(node.GetA() != null)
         {
-            node.GetCstAssociativeExp().Apply(this);
+            node.GetA().Apply(this);
         }
         OutANeqCstBoolExp(node);
     }

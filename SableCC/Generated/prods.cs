@@ -8542,31 +8542,31 @@ public sealed class ANotCstBoolExp : PCstBoolExp
 }
 public sealed class AEqualCstBoolExp : PCstBoolExp
 {
-    private PCstAssociativeExp _cst_associative_exp_;
+    private PCstAssociativeExp _a_;
     private TEqual _equal_;
-    private PCstBoolExp _cst_bool_exp_;
+    private PCstAssociativeExp _b_;
 
     public AEqualCstBoolExp ()
     {
     }
 
     public AEqualCstBoolExp (
-            PCstAssociativeExp _cst_associative_exp_,
+            PCstAssociativeExp _a_,
             TEqual _equal_,
-            PCstBoolExp _cst_bool_exp_
+            PCstAssociativeExp _b_
     )
     {
-        SetCstAssociativeExp (_cst_associative_exp_);
+        SetA (_a_);
         SetEqual (_equal_);
-        SetCstBoolExp (_cst_bool_exp_);
+        SetB (_b_);
     }
 
     public override Object Clone()
     {
         return new AEqualCstBoolExp (
-            (PCstAssociativeExp)CloneNode (_cst_associative_exp_),
+            (PCstAssociativeExp)CloneNode (_a_),
             (TEqual)CloneNode (_equal_),
-            (PCstBoolExp)CloneNode (_cst_bool_exp_)
+            (PCstAssociativeExp)CloneNode (_b_)
         );
     }
 
@@ -8575,16 +8575,16 @@ public sealed class AEqualCstBoolExp : PCstBoolExp
         ((Analysis) sw).CaseAEqualCstBoolExp(this);
     }
 
-    public PCstAssociativeExp GetCstAssociativeExp ()
+    public PCstAssociativeExp GetA ()
     {
-        return _cst_associative_exp_;
+        return _a_;
     }
 
-    public void SetCstAssociativeExp (PCstAssociativeExp node)
+    public void SetA (PCstAssociativeExp node)
     {
-        if(_cst_associative_exp_ != null)
+        if(_a_ != null)
         {
-            _cst_associative_exp_.Parent(null);
+            _a_.Parent(null);
         }
 
         if(node != null)
@@ -8597,7 +8597,7 @@ public sealed class AEqualCstBoolExp : PCstBoolExp
             node.Parent(this);
         }
 
-        _cst_associative_exp_ = node;
+        _a_ = node;
     }
     public TEqual GetEqual ()
     {
@@ -8623,16 +8623,16 @@ public sealed class AEqualCstBoolExp : PCstBoolExp
 
         _equal_ = node;
     }
-    public PCstBoolExp GetCstBoolExp ()
+    public PCstAssociativeExp GetB ()
     {
-        return _cst_bool_exp_;
+        return _b_;
     }
 
-    public void SetCstBoolExp (PCstBoolExp node)
+    public void SetB (PCstAssociativeExp node)
     {
-        if(_cst_bool_exp_ != null)
+        if(_b_ != null)
         {
-            _cst_bool_exp_.Parent(null);
+            _b_.Parent(null);
         }
 
         if(node != null)
@@ -8645,23 +8645,23 @@ public sealed class AEqualCstBoolExp : PCstBoolExp
             node.Parent(this);
         }
 
-        _cst_bool_exp_ = node;
+        _b_ = node;
     }
 
     public override string ToString()
     {
         return ""
-            + ToString (_cst_associative_exp_)
+            + ToString (_a_)
             + ToString (_equal_)
-            + ToString (_cst_bool_exp_)
+            + ToString (_b_)
         ;
     }
 
     internal override void RemoveChild(Node child)
     {
-        if ( _cst_associative_exp_ == child )
+        if ( _a_ == child )
         {
-            _cst_associative_exp_ = null;
+            _a_ = null;
             return;
         }
         if ( _equal_ == child )
@@ -8669,18 +8669,18 @@ public sealed class AEqualCstBoolExp : PCstBoolExp
             _equal_ = null;
             return;
         }
-        if ( _cst_bool_exp_ == child )
+        if ( _b_ == child )
         {
-            _cst_bool_exp_ = null;
+            _b_ = null;
             return;
         }
     }
 
     internal override void ReplaceChild(Node oldChild, Node newChild)
     {
-        if ( _cst_associative_exp_ == oldChild )
+        if ( _a_ == oldChild )
         {
-            SetCstAssociativeExp ((PCstAssociativeExp) newChild);
+            SetA ((PCstAssociativeExp) newChild);
             return;
         }
         if ( _equal_ == oldChild )
@@ -8688,9 +8688,9 @@ public sealed class AEqualCstBoolExp : PCstBoolExp
             SetEqual ((TEqual) newChild);
             return;
         }
-        if ( _cst_bool_exp_ == oldChild )
+        if ( _b_ == oldChild )
         {
-            SetCstBoolExp ((PCstBoolExp) newChild);
+            SetB ((PCstAssociativeExp) newChild);
             return;
         }
     }
@@ -8698,31 +8698,31 @@ public sealed class AEqualCstBoolExp : PCstBoolExp
 }
 public sealed class ALeCstBoolExp : PCstBoolExp
 {
-    private PCstAssociativeExp _cst_associative_exp_;
+    private PCstAssociativeExp _a_;
     private TLessThan _less_than_;
-    private PCstBoolExp _cst_bool_exp_;
+    private PCstAssociativeExp _b_;
 
     public ALeCstBoolExp ()
     {
     }
 
     public ALeCstBoolExp (
-            PCstAssociativeExp _cst_associative_exp_,
+            PCstAssociativeExp _a_,
             TLessThan _less_than_,
-            PCstBoolExp _cst_bool_exp_
+            PCstAssociativeExp _b_
     )
     {
-        SetCstAssociativeExp (_cst_associative_exp_);
+        SetA (_a_);
         SetLessThan (_less_than_);
-        SetCstBoolExp (_cst_bool_exp_);
+        SetB (_b_);
     }
 
     public override Object Clone()
     {
         return new ALeCstBoolExp (
-            (PCstAssociativeExp)CloneNode (_cst_associative_exp_),
+            (PCstAssociativeExp)CloneNode (_a_),
             (TLessThan)CloneNode (_less_than_),
-            (PCstBoolExp)CloneNode (_cst_bool_exp_)
+            (PCstAssociativeExp)CloneNode (_b_)
         );
     }
 
@@ -8731,16 +8731,16 @@ public sealed class ALeCstBoolExp : PCstBoolExp
         ((Analysis) sw).CaseALeCstBoolExp(this);
     }
 
-    public PCstAssociativeExp GetCstAssociativeExp ()
+    public PCstAssociativeExp GetA ()
     {
-        return _cst_associative_exp_;
+        return _a_;
     }
 
-    public void SetCstAssociativeExp (PCstAssociativeExp node)
+    public void SetA (PCstAssociativeExp node)
     {
-        if(_cst_associative_exp_ != null)
+        if(_a_ != null)
         {
-            _cst_associative_exp_.Parent(null);
+            _a_.Parent(null);
         }
 
         if(node != null)
@@ -8753,7 +8753,7 @@ public sealed class ALeCstBoolExp : PCstBoolExp
             node.Parent(this);
         }
 
-        _cst_associative_exp_ = node;
+        _a_ = node;
     }
     public TLessThan GetLessThan ()
     {
@@ -8779,16 +8779,16 @@ public sealed class ALeCstBoolExp : PCstBoolExp
 
         _less_than_ = node;
     }
-    public PCstBoolExp GetCstBoolExp ()
+    public PCstAssociativeExp GetB ()
     {
-        return _cst_bool_exp_;
+        return _b_;
     }
 
-    public void SetCstBoolExp (PCstBoolExp node)
+    public void SetB (PCstAssociativeExp node)
     {
-        if(_cst_bool_exp_ != null)
+        if(_b_ != null)
         {
-            _cst_bool_exp_.Parent(null);
+            _b_.Parent(null);
         }
 
         if(node != null)
@@ -8801,23 +8801,23 @@ public sealed class ALeCstBoolExp : PCstBoolExp
             node.Parent(this);
         }
 
-        _cst_bool_exp_ = node;
+        _b_ = node;
     }
 
     public override string ToString()
     {
         return ""
-            + ToString (_cst_associative_exp_)
+            + ToString (_a_)
             + ToString (_less_than_)
-            + ToString (_cst_bool_exp_)
+            + ToString (_b_)
         ;
     }
 
     internal override void RemoveChild(Node child)
     {
-        if ( _cst_associative_exp_ == child )
+        if ( _a_ == child )
         {
-            _cst_associative_exp_ = null;
+            _a_ = null;
             return;
         }
         if ( _less_than_ == child )
@@ -8825,18 +8825,18 @@ public sealed class ALeCstBoolExp : PCstBoolExp
             _less_than_ = null;
             return;
         }
-        if ( _cst_bool_exp_ == child )
+        if ( _b_ == child )
         {
-            _cst_bool_exp_ = null;
+            _b_ = null;
             return;
         }
     }
 
     internal override void ReplaceChild(Node oldChild, Node newChild)
     {
-        if ( _cst_associative_exp_ == oldChild )
+        if ( _a_ == oldChild )
         {
-            SetCstAssociativeExp ((PCstAssociativeExp) newChild);
+            SetA ((PCstAssociativeExp) newChild);
             return;
         }
         if ( _less_than_ == oldChild )
@@ -8844,9 +8844,9 @@ public sealed class ALeCstBoolExp : PCstBoolExp
             SetLessThan ((TLessThan) newChild);
             return;
         }
-        if ( _cst_bool_exp_ == oldChild )
+        if ( _b_ == oldChild )
         {
-            SetCstBoolExp ((PCstBoolExp) newChild);
+            SetB ((PCstAssociativeExp) newChild);
             return;
         }
     }
@@ -8854,31 +8854,31 @@ public sealed class ALeCstBoolExp : PCstBoolExp
 }
 public sealed class ALeqCstBoolExp : PCstBoolExp
 {
-    private PCstAssociativeExp _cst_associative_exp_;
+    private PCstAssociativeExp _a_;
     private TLessThanOrEqual _less_than_or_equal_;
-    private PCstBoolExp _cst_bool_exp_;
+    private PCstAssociativeExp _b_;
 
     public ALeqCstBoolExp ()
     {
     }
 
     public ALeqCstBoolExp (
-            PCstAssociativeExp _cst_associative_exp_,
+            PCstAssociativeExp _a_,
             TLessThanOrEqual _less_than_or_equal_,
-            PCstBoolExp _cst_bool_exp_
+            PCstAssociativeExp _b_
     )
     {
-        SetCstAssociativeExp (_cst_associative_exp_);
+        SetA (_a_);
         SetLessThanOrEqual (_less_than_or_equal_);
-        SetCstBoolExp (_cst_bool_exp_);
+        SetB (_b_);
     }
 
     public override Object Clone()
     {
         return new ALeqCstBoolExp (
-            (PCstAssociativeExp)CloneNode (_cst_associative_exp_),
+            (PCstAssociativeExp)CloneNode (_a_),
             (TLessThanOrEqual)CloneNode (_less_than_or_equal_),
-            (PCstBoolExp)CloneNode (_cst_bool_exp_)
+            (PCstAssociativeExp)CloneNode (_b_)
         );
     }
 
@@ -8887,16 +8887,16 @@ public sealed class ALeqCstBoolExp : PCstBoolExp
         ((Analysis) sw).CaseALeqCstBoolExp(this);
     }
 
-    public PCstAssociativeExp GetCstAssociativeExp ()
+    public PCstAssociativeExp GetA ()
     {
-        return _cst_associative_exp_;
+        return _a_;
     }
 
-    public void SetCstAssociativeExp (PCstAssociativeExp node)
+    public void SetA (PCstAssociativeExp node)
     {
-        if(_cst_associative_exp_ != null)
+        if(_a_ != null)
         {
-            _cst_associative_exp_.Parent(null);
+            _a_.Parent(null);
         }
 
         if(node != null)
@@ -8909,7 +8909,7 @@ public sealed class ALeqCstBoolExp : PCstBoolExp
             node.Parent(this);
         }
 
-        _cst_associative_exp_ = node;
+        _a_ = node;
     }
     public TLessThanOrEqual GetLessThanOrEqual ()
     {
@@ -8935,16 +8935,16 @@ public sealed class ALeqCstBoolExp : PCstBoolExp
 
         _less_than_or_equal_ = node;
     }
-    public PCstBoolExp GetCstBoolExp ()
+    public PCstAssociativeExp GetB ()
     {
-        return _cst_bool_exp_;
+        return _b_;
     }
 
-    public void SetCstBoolExp (PCstBoolExp node)
+    public void SetB (PCstAssociativeExp node)
     {
-        if(_cst_bool_exp_ != null)
+        if(_b_ != null)
         {
-            _cst_bool_exp_.Parent(null);
+            _b_.Parent(null);
         }
 
         if(node != null)
@@ -8957,23 +8957,23 @@ public sealed class ALeqCstBoolExp : PCstBoolExp
             node.Parent(this);
         }
 
-        _cst_bool_exp_ = node;
+        _b_ = node;
     }
 
     public override string ToString()
     {
         return ""
-            + ToString (_cst_associative_exp_)
+            + ToString (_a_)
             + ToString (_less_than_or_equal_)
-            + ToString (_cst_bool_exp_)
+            + ToString (_b_)
         ;
     }
 
     internal override void RemoveChild(Node child)
     {
-        if ( _cst_associative_exp_ == child )
+        if ( _a_ == child )
         {
-            _cst_associative_exp_ = null;
+            _a_ = null;
             return;
         }
         if ( _less_than_or_equal_ == child )
@@ -8981,18 +8981,18 @@ public sealed class ALeqCstBoolExp : PCstBoolExp
             _less_than_or_equal_ = null;
             return;
         }
-        if ( _cst_bool_exp_ == child )
+        if ( _b_ == child )
         {
-            _cst_bool_exp_ = null;
+            _b_ = null;
             return;
         }
     }
 
     internal override void ReplaceChild(Node oldChild, Node newChild)
     {
-        if ( _cst_associative_exp_ == oldChild )
+        if ( _a_ == oldChild )
         {
-            SetCstAssociativeExp ((PCstAssociativeExp) newChild);
+            SetA ((PCstAssociativeExp) newChild);
             return;
         }
         if ( _less_than_or_equal_ == oldChild )
@@ -9000,9 +9000,9 @@ public sealed class ALeqCstBoolExp : PCstBoolExp
             SetLessThanOrEqual ((TLessThanOrEqual) newChild);
             return;
         }
-        if ( _cst_bool_exp_ == oldChild )
+        if ( _b_ == oldChild )
         {
-            SetCstBoolExp ((PCstBoolExp) newChild);
+            SetB ((PCstAssociativeExp) newChild);
             return;
         }
     }
@@ -9010,31 +9010,31 @@ public sealed class ALeqCstBoolExp : PCstBoolExp
 }
 public sealed class AGeCstBoolExp : PCstBoolExp
 {
-    private PCstAssociativeExp _cst_associative_exp_;
+    private PCstAssociativeExp _a_;
     private TGreaterThan _greater_than_;
-    private PCstBoolExp _cst_bool_exp_;
+    private PCstAssociativeExp _b_;
 
     public AGeCstBoolExp ()
     {
     }
 
     public AGeCstBoolExp (
-            PCstAssociativeExp _cst_associative_exp_,
+            PCstAssociativeExp _a_,
             TGreaterThan _greater_than_,
-            PCstBoolExp _cst_bool_exp_
+            PCstAssociativeExp _b_
     )
     {
-        SetCstAssociativeExp (_cst_associative_exp_);
+        SetA (_a_);
         SetGreaterThan (_greater_than_);
-        SetCstBoolExp (_cst_bool_exp_);
+        SetB (_b_);
     }
 
     public override Object Clone()
     {
         return new AGeCstBoolExp (
-            (PCstAssociativeExp)CloneNode (_cst_associative_exp_),
+            (PCstAssociativeExp)CloneNode (_a_),
             (TGreaterThan)CloneNode (_greater_than_),
-            (PCstBoolExp)CloneNode (_cst_bool_exp_)
+            (PCstAssociativeExp)CloneNode (_b_)
         );
     }
 
@@ -9043,16 +9043,16 @@ public sealed class AGeCstBoolExp : PCstBoolExp
         ((Analysis) sw).CaseAGeCstBoolExp(this);
     }
 
-    public PCstAssociativeExp GetCstAssociativeExp ()
+    public PCstAssociativeExp GetA ()
     {
-        return _cst_associative_exp_;
+        return _a_;
     }
 
-    public void SetCstAssociativeExp (PCstAssociativeExp node)
+    public void SetA (PCstAssociativeExp node)
     {
-        if(_cst_associative_exp_ != null)
+        if(_a_ != null)
         {
-            _cst_associative_exp_.Parent(null);
+            _a_.Parent(null);
         }
 
         if(node != null)
@@ -9065,7 +9065,7 @@ public sealed class AGeCstBoolExp : PCstBoolExp
             node.Parent(this);
         }
 
-        _cst_associative_exp_ = node;
+        _a_ = node;
     }
     public TGreaterThan GetGreaterThan ()
     {
@@ -9091,16 +9091,16 @@ public sealed class AGeCstBoolExp : PCstBoolExp
 
         _greater_than_ = node;
     }
-    public PCstBoolExp GetCstBoolExp ()
+    public PCstAssociativeExp GetB ()
     {
-        return _cst_bool_exp_;
+        return _b_;
     }
 
-    public void SetCstBoolExp (PCstBoolExp node)
+    public void SetB (PCstAssociativeExp node)
     {
-        if(_cst_bool_exp_ != null)
+        if(_b_ != null)
         {
-            _cst_bool_exp_.Parent(null);
+            _b_.Parent(null);
         }
 
         if(node != null)
@@ -9113,23 +9113,23 @@ public sealed class AGeCstBoolExp : PCstBoolExp
             node.Parent(this);
         }
 
-        _cst_bool_exp_ = node;
+        _b_ = node;
     }
 
     public override string ToString()
     {
         return ""
-            + ToString (_cst_associative_exp_)
+            + ToString (_a_)
             + ToString (_greater_than_)
-            + ToString (_cst_bool_exp_)
+            + ToString (_b_)
         ;
     }
 
     internal override void RemoveChild(Node child)
     {
-        if ( _cst_associative_exp_ == child )
+        if ( _a_ == child )
         {
-            _cst_associative_exp_ = null;
+            _a_ = null;
             return;
         }
         if ( _greater_than_ == child )
@@ -9137,18 +9137,18 @@ public sealed class AGeCstBoolExp : PCstBoolExp
             _greater_than_ = null;
             return;
         }
-        if ( _cst_bool_exp_ == child )
+        if ( _b_ == child )
         {
-            _cst_bool_exp_ = null;
+            _b_ = null;
             return;
         }
     }
 
     internal override void ReplaceChild(Node oldChild, Node newChild)
     {
-        if ( _cst_associative_exp_ == oldChild )
+        if ( _a_ == oldChild )
         {
-            SetCstAssociativeExp ((PCstAssociativeExp) newChild);
+            SetA ((PCstAssociativeExp) newChild);
             return;
         }
         if ( _greater_than_ == oldChild )
@@ -9156,9 +9156,9 @@ public sealed class AGeCstBoolExp : PCstBoolExp
             SetGreaterThan ((TGreaterThan) newChild);
             return;
         }
-        if ( _cst_bool_exp_ == oldChild )
+        if ( _b_ == oldChild )
         {
-            SetCstBoolExp ((PCstBoolExp) newChild);
+            SetB ((PCstAssociativeExp) newChild);
             return;
         }
     }
@@ -9166,31 +9166,31 @@ public sealed class AGeCstBoolExp : PCstBoolExp
 }
 public sealed class AGeqCstBoolExp : PCstBoolExp
 {
-    private PCstAssociativeExp _cst_associative_exp_;
+    private PCstAssociativeExp _a_;
     private TGreaterThanOrEqual _greater_than_or_equal_;
-    private PCstBoolExp _cst_bool_exp_;
+    private PCstAssociativeExp _b_;
 
     public AGeqCstBoolExp ()
     {
     }
 
     public AGeqCstBoolExp (
-            PCstAssociativeExp _cst_associative_exp_,
+            PCstAssociativeExp _a_,
             TGreaterThanOrEqual _greater_than_or_equal_,
-            PCstBoolExp _cst_bool_exp_
+            PCstAssociativeExp _b_
     )
     {
-        SetCstAssociativeExp (_cst_associative_exp_);
+        SetA (_a_);
         SetGreaterThanOrEqual (_greater_than_or_equal_);
-        SetCstBoolExp (_cst_bool_exp_);
+        SetB (_b_);
     }
 
     public override Object Clone()
     {
         return new AGeqCstBoolExp (
-            (PCstAssociativeExp)CloneNode (_cst_associative_exp_),
+            (PCstAssociativeExp)CloneNode (_a_),
             (TGreaterThanOrEqual)CloneNode (_greater_than_or_equal_),
-            (PCstBoolExp)CloneNode (_cst_bool_exp_)
+            (PCstAssociativeExp)CloneNode (_b_)
         );
     }
 
@@ -9199,16 +9199,16 @@ public sealed class AGeqCstBoolExp : PCstBoolExp
         ((Analysis) sw).CaseAGeqCstBoolExp(this);
     }
 
-    public PCstAssociativeExp GetCstAssociativeExp ()
+    public PCstAssociativeExp GetA ()
     {
-        return _cst_associative_exp_;
+        return _a_;
     }
 
-    public void SetCstAssociativeExp (PCstAssociativeExp node)
+    public void SetA (PCstAssociativeExp node)
     {
-        if(_cst_associative_exp_ != null)
+        if(_a_ != null)
         {
-            _cst_associative_exp_.Parent(null);
+            _a_.Parent(null);
         }
 
         if(node != null)
@@ -9221,7 +9221,7 @@ public sealed class AGeqCstBoolExp : PCstBoolExp
             node.Parent(this);
         }
 
-        _cst_associative_exp_ = node;
+        _a_ = node;
     }
     public TGreaterThanOrEqual GetGreaterThanOrEqual ()
     {
@@ -9247,16 +9247,16 @@ public sealed class AGeqCstBoolExp : PCstBoolExp
 
         _greater_than_or_equal_ = node;
     }
-    public PCstBoolExp GetCstBoolExp ()
+    public PCstAssociativeExp GetB ()
     {
-        return _cst_bool_exp_;
+        return _b_;
     }
 
-    public void SetCstBoolExp (PCstBoolExp node)
+    public void SetB (PCstAssociativeExp node)
     {
-        if(_cst_bool_exp_ != null)
+        if(_b_ != null)
         {
-            _cst_bool_exp_.Parent(null);
+            _b_.Parent(null);
         }
 
         if(node != null)
@@ -9269,23 +9269,23 @@ public sealed class AGeqCstBoolExp : PCstBoolExp
             node.Parent(this);
         }
 
-        _cst_bool_exp_ = node;
+        _b_ = node;
     }
 
     public override string ToString()
     {
         return ""
-            + ToString (_cst_associative_exp_)
+            + ToString (_a_)
             + ToString (_greater_than_or_equal_)
-            + ToString (_cst_bool_exp_)
+            + ToString (_b_)
         ;
     }
 
     internal override void RemoveChild(Node child)
     {
-        if ( _cst_associative_exp_ == child )
+        if ( _a_ == child )
         {
-            _cst_associative_exp_ = null;
+            _a_ = null;
             return;
         }
         if ( _greater_than_or_equal_ == child )
@@ -9293,18 +9293,18 @@ public sealed class AGeqCstBoolExp : PCstBoolExp
             _greater_than_or_equal_ = null;
             return;
         }
-        if ( _cst_bool_exp_ == child )
+        if ( _b_ == child )
         {
-            _cst_bool_exp_ = null;
+            _b_ = null;
             return;
         }
     }
 
     internal override void ReplaceChild(Node oldChild, Node newChild)
     {
-        if ( _cst_associative_exp_ == oldChild )
+        if ( _a_ == oldChild )
         {
-            SetCstAssociativeExp ((PCstAssociativeExp) newChild);
+            SetA ((PCstAssociativeExp) newChild);
             return;
         }
         if ( _greater_than_or_equal_ == oldChild )
@@ -9312,9 +9312,9 @@ public sealed class AGeqCstBoolExp : PCstBoolExp
             SetGreaterThanOrEqual ((TGreaterThanOrEqual) newChild);
             return;
         }
-        if ( _cst_bool_exp_ == oldChild )
+        if ( _b_ == oldChild )
         {
-            SetCstBoolExp ((PCstBoolExp) newChild);
+            SetB ((PCstAssociativeExp) newChild);
             return;
         }
     }
@@ -9322,35 +9322,35 @@ public sealed class AGeqCstBoolExp : PCstBoolExp
 }
 public sealed class ANeqCstBoolExp : PCstBoolExp
 {
-    private PCstAssociativeExp _cst_associative_exp_;
+    private PCstAssociativeExp _a_;
     private TNot _not_;
     private TAssignmentOp _assignment_op_;
-    private PCstBoolExp _cst_bool_exp_;
+    private PCstAssociativeExp _b_;
 
     public ANeqCstBoolExp ()
     {
     }
 
     public ANeqCstBoolExp (
-            PCstAssociativeExp _cst_associative_exp_,
+            PCstAssociativeExp _a_,
             TNot _not_,
             TAssignmentOp _assignment_op_,
-            PCstBoolExp _cst_bool_exp_
+            PCstAssociativeExp _b_
     )
     {
-        SetCstAssociativeExp (_cst_associative_exp_);
+        SetA (_a_);
         SetNot (_not_);
         SetAssignmentOp (_assignment_op_);
-        SetCstBoolExp (_cst_bool_exp_);
+        SetB (_b_);
     }
 
     public override Object Clone()
     {
         return new ANeqCstBoolExp (
-            (PCstAssociativeExp)CloneNode (_cst_associative_exp_),
+            (PCstAssociativeExp)CloneNode (_a_),
             (TNot)CloneNode (_not_),
             (TAssignmentOp)CloneNode (_assignment_op_),
-            (PCstBoolExp)CloneNode (_cst_bool_exp_)
+            (PCstAssociativeExp)CloneNode (_b_)
         );
     }
 
@@ -9359,16 +9359,16 @@ public sealed class ANeqCstBoolExp : PCstBoolExp
         ((Analysis) sw).CaseANeqCstBoolExp(this);
     }
 
-    public PCstAssociativeExp GetCstAssociativeExp ()
+    public PCstAssociativeExp GetA ()
     {
-        return _cst_associative_exp_;
+        return _a_;
     }
 
-    public void SetCstAssociativeExp (PCstAssociativeExp node)
+    public void SetA (PCstAssociativeExp node)
     {
-        if(_cst_associative_exp_ != null)
+        if(_a_ != null)
         {
-            _cst_associative_exp_.Parent(null);
+            _a_.Parent(null);
         }
 
         if(node != null)
@@ -9381,7 +9381,7 @@ public sealed class ANeqCstBoolExp : PCstBoolExp
             node.Parent(this);
         }
 
-        _cst_associative_exp_ = node;
+        _a_ = node;
     }
     public TNot GetNot ()
     {
@@ -9431,16 +9431,16 @@ public sealed class ANeqCstBoolExp : PCstBoolExp
 
         _assignment_op_ = node;
     }
-    public PCstBoolExp GetCstBoolExp ()
+    public PCstAssociativeExp GetB ()
     {
-        return _cst_bool_exp_;
+        return _b_;
     }
 
-    public void SetCstBoolExp (PCstBoolExp node)
+    public void SetB (PCstAssociativeExp node)
     {
-        if(_cst_bool_exp_ != null)
+        if(_b_ != null)
         {
-            _cst_bool_exp_.Parent(null);
+            _b_.Parent(null);
         }
 
         if(node != null)
@@ -9453,24 +9453,24 @@ public sealed class ANeqCstBoolExp : PCstBoolExp
             node.Parent(this);
         }
 
-        _cst_bool_exp_ = node;
+        _b_ = node;
     }
 
     public override string ToString()
     {
         return ""
-            + ToString (_cst_associative_exp_)
+            + ToString (_a_)
             + ToString (_not_)
             + ToString (_assignment_op_)
-            + ToString (_cst_bool_exp_)
+            + ToString (_b_)
         ;
     }
 
     internal override void RemoveChild(Node child)
     {
-        if ( _cst_associative_exp_ == child )
+        if ( _a_ == child )
         {
-            _cst_associative_exp_ = null;
+            _a_ = null;
             return;
         }
         if ( _not_ == child )
@@ -9483,18 +9483,18 @@ public sealed class ANeqCstBoolExp : PCstBoolExp
             _assignment_op_ = null;
             return;
         }
-        if ( _cst_bool_exp_ == child )
+        if ( _b_ == child )
         {
-            _cst_bool_exp_ = null;
+            _b_ = null;
             return;
         }
     }
 
     internal override void ReplaceChild(Node oldChild, Node newChild)
     {
-        if ( _cst_associative_exp_ == oldChild )
+        if ( _a_ == oldChild )
         {
-            SetCstAssociativeExp ((PCstAssociativeExp) newChild);
+            SetA ((PCstAssociativeExp) newChild);
             return;
         }
         if ( _not_ == oldChild )
@@ -9507,9 +9507,9 @@ public sealed class ANeqCstBoolExp : PCstBoolExp
             SetAssignmentOp ((TAssignmentOp) newChild);
             return;
         }
-        if ( _cst_bool_exp_ == oldChild )
+        if ( _b_ == oldChild )
         {
-            SetCstBoolExp ((PCstBoolExp) newChild);
+            SetB ((PCstAssociativeExp) newChild);
             return;
         }
     }

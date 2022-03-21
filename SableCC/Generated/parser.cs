@@ -2051,11 +2051,11 @@ public class Parser
         ArrayList nodeArrayList1 = (ArrayList) Pop();
         PCstAssociativeExp pcstassociativeexpNode2 = (PCstAssociativeExp)nodeArrayList1[0];
         TEqual tequalNode3 = (TEqual)nodeArrayList2[0];
-        PCstBoolExp pcstboolexpNode4 = (PCstBoolExp)nodeArrayList3[0];
+        PCstAssociativeExp pcstassociativeexpNode4 = (PCstAssociativeExp)nodeArrayList3[0];
         AEqualCstBoolExp pcstboolexpNode1 = new AEqualCstBoolExp (
               pcstassociativeexpNode2,
               tequalNode3,
-              pcstboolexpNode4
+              pcstassociativeexpNode4
         );
         nodeList.Add(pcstboolexpNode1);
         return nodeList;
@@ -2068,11 +2068,11 @@ public class Parser
         ArrayList nodeArrayList1 = (ArrayList) Pop();
         PCstAssociativeExp pcstassociativeexpNode2 = (PCstAssociativeExp)nodeArrayList1[0];
         TLessThan tlessthanNode3 = (TLessThan)nodeArrayList2[0];
-        PCstBoolExp pcstboolexpNode4 = (PCstBoolExp)nodeArrayList3[0];
+        PCstAssociativeExp pcstassociativeexpNode4 = (PCstAssociativeExp)nodeArrayList3[0];
         ALeCstBoolExp pcstboolexpNode1 = new ALeCstBoolExp (
               pcstassociativeexpNode2,
               tlessthanNode3,
-              pcstboolexpNode4
+              pcstassociativeexpNode4
         );
         nodeList.Add(pcstboolexpNode1);
         return nodeList;
@@ -2085,11 +2085,11 @@ public class Parser
         ArrayList nodeArrayList1 = (ArrayList) Pop();
         PCstAssociativeExp pcstassociativeexpNode2 = (PCstAssociativeExp)nodeArrayList1[0];
         TLessThanOrEqual tlessthanorequalNode3 = (TLessThanOrEqual)nodeArrayList2[0];
-        PCstBoolExp pcstboolexpNode4 = (PCstBoolExp)nodeArrayList3[0];
+        PCstAssociativeExp pcstassociativeexpNode4 = (PCstAssociativeExp)nodeArrayList3[0];
         ALeqCstBoolExp pcstboolexpNode1 = new ALeqCstBoolExp (
               pcstassociativeexpNode2,
               tlessthanorequalNode3,
-              pcstboolexpNode4
+              pcstassociativeexpNode4
         );
         nodeList.Add(pcstboolexpNode1);
         return nodeList;
@@ -2102,11 +2102,11 @@ public class Parser
         ArrayList nodeArrayList1 = (ArrayList) Pop();
         PCstAssociativeExp pcstassociativeexpNode2 = (PCstAssociativeExp)nodeArrayList1[0];
         TGreaterThan tgreaterthanNode3 = (TGreaterThan)nodeArrayList2[0];
-        PCstBoolExp pcstboolexpNode4 = (PCstBoolExp)nodeArrayList3[0];
+        PCstAssociativeExp pcstassociativeexpNode4 = (PCstAssociativeExp)nodeArrayList3[0];
         AGeCstBoolExp pcstboolexpNode1 = new AGeCstBoolExp (
               pcstassociativeexpNode2,
               tgreaterthanNode3,
-              pcstboolexpNode4
+              pcstassociativeexpNode4
         );
         nodeList.Add(pcstboolexpNode1);
         return nodeList;
@@ -2119,11 +2119,11 @@ public class Parser
         ArrayList nodeArrayList1 = (ArrayList) Pop();
         PCstAssociativeExp pcstassociativeexpNode2 = (PCstAssociativeExp)nodeArrayList1[0];
         TGreaterThanOrEqual tgreaterthanorequalNode3 = (TGreaterThanOrEqual)nodeArrayList2[0];
-        PCstBoolExp pcstboolexpNode4 = (PCstBoolExp)nodeArrayList3[0];
+        PCstAssociativeExp pcstassociativeexpNode4 = (PCstAssociativeExp)nodeArrayList3[0];
         AGeqCstBoolExp pcstboolexpNode1 = new AGeqCstBoolExp (
               pcstassociativeexpNode2,
               tgreaterthanorequalNode3,
-              pcstboolexpNode4
+              pcstassociativeexpNode4
         );
         nodeList.Add(pcstboolexpNode1);
         return nodeList;
@@ -2138,12 +2138,12 @@ public class Parser
         PCstAssociativeExp pcstassociativeexpNode2 = (PCstAssociativeExp)nodeArrayList1[0];
         TNot tnotNode3 = (TNot)nodeArrayList2[0];
         TAssignmentOp tassignmentopNode4 = (TAssignmentOp)nodeArrayList3[0];
-        PCstBoolExp pcstboolexpNode5 = (PCstBoolExp)nodeArrayList4[0];
+        PCstAssociativeExp pcstassociativeexpNode5 = (PCstAssociativeExp)nodeArrayList4[0];
         ANeqCstBoolExp pcstboolexpNode1 = new ANeqCstBoolExp (
               pcstassociativeexpNode2,
               tnotNode3,
               tassignmentopNode4,
-              pcstboolexpNode5
+              pcstassociativeexpNode5
         );
         nodeList.Add(pcstboolexpNode1);
         return nodeList;
@@ -2760,7 +2760,6 @@ public class Parser
       },
       new int[][] {
         new int[] {-1, 3, 82},
-        new int[] {13, 0, 47},
         new int[] {14, 0, 48},
         new int[] {25, 0, 49},
         new int[] {36, 0, 50},
@@ -2768,7 +2767,6 @@ public class Parser
       },
       new int[][] {
         new int[] {-1, 3, 83},
-        new int[] {13, 0, 47},
         new int[] {14, 0, 48},
         new int[] {25, 0, 49},
         new int[] {36, 0, 50},
@@ -2776,7 +2774,6 @@ public class Parser
       },
       new int[][] {
         new int[] {-1, 3, 84},
-        new int[] {13, 0, 47},
         new int[] {14, 0, 48},
         new int[] {25, 0, 49},
         new int[] {36, 0, 50},
@@ -2784,7 +2781,6 @@ public class Parser
       },
       new int[][] {
         new int[] {-1, 3, 85},
-        new int[] {13, 0, 47},
         new int[] {14, 0, 48},
         new int[] {25, 0, 49},
         new int[] {36, 0, 50},
@@ -2792,7 +2788,6 @@ public class Parser
       },
       new int[][] {
         new int[] {-1, 3, 86},
-        new int[] {13, 0, 47},
         new int[] {14, 0, 48},
         new int[] {25, 0, 49},
         new int[] {36, 0, 50},
@@ -2929,7 +2924,6 @@ public class Parser
       },
       new int[][] {
         new int[] {-1, 3, 115},
-        new int[] {13, 0, 47},
         new int[] {14, 0, 48},
         new int[] {25, 0, 49},
         new int[] {36, 0, 50},
@@ -3436,17 +3430,17 @@ public class Parser
       new int[][] {
         new int[] {-1, 56},
         new int[] {47, 77},
+      },
+      new int[][] {
+        new int[] {-1, 57},
         new int[] {82, 110},
         new int[] {83, 111},
         new int[] {84, 112},
         new int[] {85, 113},
         new int[] {86, 114},
-        new int[] {115, 148},
-      },
-      new int[][] {
-        new int[] {-1, 57},
         new int[] {91, 119},
         new int[] {92, 120},
+        new int[] {115, 148},
       },
       new int[][] {
         new int[] {-1, 58},
@@ -3488,8 +3482,8 @@ public class Parser
       "expecting: ','",
       "expecting: 'vector', 'int', 'const', 'float', 'bool'",
       "expecting: '!', '(', ')', bool value, number, identifier",
-      "expecting: '='",
       "expecting: '(', bool value, number, identifier",
+      "expecting: '='",
       "expecting: 'vector', 'int', 'const', 'float', 'bool', 'if', 'repeat', 'while', 'return', 'build', 'walk', 'GCODE', identifier",
       "expecting: eol, ')', ',', EOF",
       "expecting: '=', '*', '%', '/', '+', '-', '('",
@@ -3507,12 +3501,12 @@ public class Parser
       13, 11, 14, 13, 5, 10, 2, 3, 15, 2, 6, 1, 13, 10, 6, 13, 
       13, 16, 16, 17, 16, 16, 5, 18, 19, 20, 16, 16, 10, 6, 10, 5, 
       5, 21, 14, 15, 2, 2, 22, 15, 10, 5, 5, 14, 10, 19, 15, 23, 
-      13, 13, 13, 13, 13, 13, 13, 24, 25, 25, 25, 25, 25, 14, 10, 26, 
+      13, 13, 24, 24, 24, 24, 24, 25, 24, 24, 24, 24, 24, 14, 10, 26, 
       13, 5, 15, 15, 6, 14, 5, 14, 16, 16, 6, 15, 27, 18, 19, 19, 
-      19, 19, 19, 13, 16, 16, 16, 20, 20, 5, 14, 2, 1, 1, 1, 13, 
+      19, 19, 19, 24, 16, 16, 16, 20, 20, 5, 14, 2, 1, 1, 1, 13, 
       10, 10, 14, 28, 10, 2, 29, 10, 10, 10, 10, 10, 10, 10, 10, 21, 
-      5, 5, 16, 13, 19, 5, 30, 13, 13, 13, 10, 14, 14, 31, 13, 24, 
-      24, 24, 24, 24, 30, 32, 33, 13, 6, 6, 6, 6, 10, 10, 29, 10, 
+      5, 5, 16, 13, 19, 5, 30, 13, 13, 13, 10, 14, 14, 31, 13, 25, 
+      25, 25, 25, 25, 30, 32, 33, 13, 6, 6, 6, 6, 10, 10, 29, 10, 
       13, 13, 13, 13, 13, 29, 6, 10, 10, 10, 10, 10, 10, 10, 10, 10, 
       16, 14, 14, 14, 34, 10, 10, 14, 10, 
     };

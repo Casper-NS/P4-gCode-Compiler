@@ -168,23 +168,23 @@ cst_logic_or_exp =
 
 cst_bool_exp =
         {not}not cst_bool_exp |
-        {equal}cst_associative_exp equal cst_bool_exp |
-        {le}cst_associative_exp less_than cst_bool_exp |
-        {leq}cst_associative_exp less_than_or_equal cst_bool_exp |
-        {ge}cst_associative_exp greater_than cst_bool_exp | 
-        {geq}cst_associative_exp greater_than_or_equal cst_bool_exp |
-        {neq}cst_associative_exp not assignment_op cst_bool_exp |
+        {equal}[a]:cst_associative_exp equal                 [b]:cst_associative_exp |
+        {le}   [a]:cst_associative_exp less_than             [b]:cst_associative_exp |
+        {leq}  [a]:cst_associative_exp less_than_or_equal    [b]:cst_associative_exp |
+        {ge}   [a]:cst_associative_exp greater_than          [b]:cst_associative_exp | 
+        {geq}  [a]:cst_associative_exp greater_than_or_equal [b]:cst_associative_exp |
+        {neq}  [a]:cst_associative_exp not assignment_op     [b]:cst_associative_exp |
         cst_associative_exp;
 
 cst_associative_exp = 
-        {plus}cst_not_associative_exp plus_op cst_associative_exp |
+        {plus} cst_not_associative_exp plus_op cst_associative_exp |
         {minus}cst_not_associative_exp minus_op cst_associative_exp |
         cst_not_associative_exp;
 
 cst_not_associative_exp =
-        {mult}cst_not_associative_exp multiplication_op cst_leaf_exp |
-        {division}cst_not_associative_exp division_op cst_leaf_exp |
-        {modulo}cst_not_associative_exp modulo_op cst_leaf_exp |
+        {mult}    cst_not_associative_exp multiplication_op cst_leaf_exp |
+        {division}cst_not_associative_exp division_op       cst_leaf_exp |
+        {modulo}  cst_not_associative_exp modulo_op         cst_leaf_exp |
         cst_leaf_exp;
 
 cst_leaf_exp =
