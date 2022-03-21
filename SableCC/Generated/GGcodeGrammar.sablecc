@@ -2,9 +2,7 @@ Package GGCodeParser;
 
 Helpers
   all = [0 .. 127];
-  l_curley = '{';
-  r_curley = '}';
-  not_curleys = [all - [l_curley + r_curley]];
+  not_curleys = [all - ['{' + '}']];
   tab   = 9;
   cr    = 13;
   lf    = 10;
@@ -15,7 +13,6 @@ Helpers
   idletter = letter | '_';
   idchar  = letter | '_' | digit;
   xyz = 'x' | 'y' | 'z' | 'X' | 'Y' | 'Z';
-  dot = '.';
   star = '*';
   not_star = [all - star];
   not_star_slash = [not_star - '/'];
@@ -24,7 +21,7 @@ Helpers
 
 Tokens
   main = 'main';
-  eol   = eol_char;
+  eol   = cr | lf | cr lf;
   blank = ' ' | tab;
   assignment_op = '=';
   multiplication_op  = '*';
@@ -38,6 +35,7 @@ Tokens
   greater_than = '>';
   greater_than_or_equal = '>=';
   not = '!';
+  not_equal = '!=';
   l_par = '(';
   r_par = ')';
   l_cur = '{';
@@ -60,20 +58,20 @@ Tokens
   gcode = 'GCODE';
   and = '&&';
   or = '||';
-  number  = '0'| [digit-'0'] digit* | digit* dot digit*;
-  identifier    = idletter idchar* | idletter idchar* dot xyz;
+  number  = '0'| [digit-'0'] digit* | digit* '.' digit*;
+  identifier    = idletter idchar* | idletter idchar* '.' xyz;
   all_chars_except_curly = not_curleys;
-  multiline_comment = '/*' not_star * '*' + ( not_star_slash not_star * '*'+) * '/' eol_char;
+  multiline_comment = '/*' not_star * star + ( not_star_slash not_star * star+) * '/' eol_char;
   singleline_comment = '//' not_eol_char* eol_char;
 
 Ignored Tokens
   blank, multiline_comment, singleline_comment;
 
 Productions
-cst_program = cst_declaration_list;
+cst_program = [a]:cst_declaration_list? cst_main_function_declaration [b]:cst_declaration_list?;
 
 cst_main_function_declaration =
-        main l_par r_par eol? cst_function_body;
+        main l_par r_par eol? cst_block;
 
 cst_declaration_list =
         {list}cst_declaration eol+ cst_declaration_list | 
@@ -81,38 +79,30 @@ cst_declaration_list =
 
 cst_declaration = 
         {variable}cst_variable_declaration | 
-        {function}cst_function_declaration |
-        {main}cst_main_function_declaration;
+        {function}cst_function_declaration;
 
 cst_variable_declaration =
-        {simple_initial}   const? cst_simple_types identifier assignment_op cst_expression |
-        {vector_initial}   const? vector           identifier assignment_op cst_vector_values|
+        {initialised}const? cst_types identifier assignment_op cst_expression |
         cst_uninitialised_variable;
 
 cst_uninitialised_variable =
-        {simple_uninitial} const? cst_simple_types identifier |
-        {vector_uninitial} const? vector           identifier;
+        const? cst_types identifier;
 
-cst_all_types = 
-        {simple}cst_simple_types | 
-        vector;
-
-cst_simple_types =
+cst_types = 
         {integer}int | 
         {floatingpoint}float | 
-        {bool}bool;
+        {bool}bool |
+        {vector}vector;
 
 cst_vector_values = l_par [a]:cst_expression [q]:comma [b]:cst_expression [w]:comma [c]:cst_expression r_par;
 
 cst_function_declaration =
-        {notvoid} cst_all_types identifier l_par cst_formal_param_list? r_par eol? cst_function_body |
-        {void} void             identifier l_par cst_formal_param_list? r_par eol? cst_function_body;
+        {notvoid} cst_types identifier l_par cst_formal_param_list? r_par eol? cst_block |
+        {void} void         identifier l_par cst_formal_param_list? r_par eol? cst_block;
 
 cst_formal_param_list = 
         {list}cst_uninitialised_variable comma cst_formal_param_list | 
               cst_uninitialised_variable;
-
-cst_function_body = cst_block;
 
 cst_block = l_cur eol cst_statement_list r_cur;
 
@@ -128,12 +118,12 @@ cst_statement =
         {gcode}cst_gcode_literal | 
         {assignment}cst_assignments | 
         {function}cst_function_call |
-        {return}cst_return |
+        {return}return cst_expression |
         {build} build eol? cst_block |
         {walk} walk eol? cst_block;
 
 cst_if_statement = 
-        {noelse}if l_par cst_expression r_par eol? cst_block | 
+        {noelse}  if l_par cst_expression r_par eol? cst_block | 
         {withelse}if l_par cst_expression r_par eol? [a]:cst_block else [b]:cst_block;
 
 cst_repeat_statement = repeat l_par cst_expression r_par eol? cst_block;
@@ -151,8 +141,6 @@ cst_assignments =
         {assign_mod}identifier modulo_op assignment_op cst_expression;
 
 cst_function_call = identifier l_par cst_actual_param_list? r_par;
-
-cst_return = return cst_expression;
 
 cst_actual_param_list =
         {list}cst_expression comma cst_actual_param_list | 
@@ -173,11 +161,11 @@ cst_bool_exp =
         {leq}  [a]:cst_associative_exp less_than_or_equal    [b]:cst_associative_exp |
         {ge}   [a]:cst_associative_exp greater_than          [b]:cst_associative_exp | 
         {geq}  [a]:cst_associative_exp greater_than_or_equal [b]:cst_associative_exp |
-        {neq}  [a]:cst_associative_exp not assignment_op     [b]:cst_associative_exp |
+        {neq}  [a]:cst_associative_exp not_equal             [b]:cst_associative_exp |
         cst_associative_exp;
 
 cst_associative_exp = 
-        {plus} cst_not_associative_exp plus_op cst_associative_exp |
+        {plus} cst_not_associative_exp plus_op  cst_associative_exp |
         {minus}cst_not_associative_exp minus_op cst_associative_exp |
         cst_not_associative_exp;
 
