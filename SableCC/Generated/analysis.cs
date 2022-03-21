@@ -128,6 +128,7 @@ public interface Analysis : Switch
     void CaseTNumber(TNumber node);
     void CaseTIdentifier(TIdentifier node);
     void CaseTAllCharsExceptCurly(TAllCharsExceptCurly node);
+    void CaseTComment(TComment node);
     void CaseEOF(EOF node);
 }
 
@@ -643,6 +644,10 @@ public class AnalysisAdapter : Analysis
     {
         DefaultCase(node);
     }
+    public virtual void CaseTComment(TComment node)
+    {
+        DefaultCase(node);
+    }
 
     public virtual void CaseEOF(EOF node)
     {
@@ -977,9 +982,9 @@ public class DepthFirstAdapter : AnalysisAdapter
         {
             node.GetConst().Apply(this);
         }
-        if(node.GetCstVectorValues() != null)
+        if(node.GetVector() != null)
         {
-            node.GetCstVectorValues().Apply(this);
+            node.GetVector().Apply(this);
         }
         if(node.GetIdentifier() != null)
         {
@@ -2906,9 +2911,9 @@ public class ReversedDepthFirstAdapter : AnalysisAdapter
         {
             node.GetIdentifier().Apply(this);
         }
-        if(node.GetCstVectorValues() != null)
+        if(node.GetVector() != null)
         {
-            node.GetCstVectorValues().Apply(this);
+            node.GetVector().Apply(this);
         }
         if(node.GetConst() != null)
         {

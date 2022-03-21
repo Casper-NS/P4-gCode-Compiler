@@ -1646,7 +1646,7 @@ public sealed class ASimpleUninitialCstUninitialisedVariable : PCstUninitialised
 public sealed class AVectorUninitialCstUninitialisedVariable : PCstUninitialisedVariable
 {
     private TConst _const_;
-    private PCstVectorValues _cst_vector_values_;
+    private TVector _vector_;
     private TIdentifier _identifier_;
 
     public AVectorUninitialCstUninitialisedVariable ()
@@ -1655,12 +1655,12 @@ public sealed class AVectorUninitialCstUninitialisedVariable : PCstUninitialised
 
     public AVectorUninitialCstUninitialisedVariable (
             TConst _const_,
-            PCstVectorValues _cst_vector_values_,
+            TVector _vector_,
             TIdentifier _identifier_
     )
     {
         SetConst (_const_);
-        SetCstVectorValues (_cst_vector_values_);
+        SetVector (_vector_);
         SetIdentifier (_identifier_);
     }
 
@@ -1668,7 +1668,7 @@ public sealed class AVectorUninitialCstUninitialisedVariable : PCstUninitialised
     {
         return new AVectorUninitialCstUninitialisedVariable (
             (TConst)CloneNode (_const_),
-            (PCstVectorValues)CloneNode (_cst_vector_values_),
+            (TVector)CloneNode (_vector_),
             (TIdentifier)CloneNode (_identifier_)
         );
     }
@@ -1702,16 +1702,16 @@ public sealed class AVectorUninitialCstUninitialisedVariable : PCstUninitialised
 
         _const_ = node;
     }
-    public PCstVectorValues GetCstVectorValues ()
+    public TVector GetVector ()
     {
-        return _cst_vector_values_;
+        return _vector_;
     }
 
-    public void SetCstVectorValues (PCstVectorValues node)
+    public void SetVector (TVector node)
     {
-        if(_cst_vector_values_ != null)
+        if(_vector_ != null)
         {
-            _cst_vector_values_.Parent(null);
+            _vector_.Parent(null);
         }
 
         if(node != null)
@@ -1724,7 +1724,7 @@ public sealed class AVectorUninitialCstUninitialisedVariable : PCstUninitialised
             node.Parent(this);
         }
 
-        _cst_vector_values_ = node;
+        _vector_ = node;
     }
     public TIdentifier GetIdentifier ()
     {
@@ -1755,7 +1755,7 @@ public sealed class AVectorUninitialCstUninitialisedVariable : PCstUninitialised
     {
         return ""
             + ToString (_const_)
-            + ToString (_cst_vector_values_)
+            + ToString (_vector_)
             + ToString (_identifier_)
         ;
     }
@@ -1767,9 +1767,9 @@ public sealed class AVectorUninitialCstUninitialisedVariable : PCstUninitialised
             _const_ = null;
             return;
         }
-        if ( _cst_vector_values_ == child )
+        if ( _vector_ == child )
         {
-            _cst_vector_values_ = null;
+            _vector_ = null;
             return;
         }
         if ( _identifier_ == child )
@@ -1786,9 +1786,9 @@ public sealed class AVectorUninitialCstUninitialisedVariable : PCstUninitialised
             SetConst ((TConst) newChild);
             return;
         }
-        if ( _cst_vector_values_ == oldChild )
+        if ( _vector_ == oldChild )
         {
-            SetCstVectorValues ((PCstVectorValues) newChild);
+            SetVector ((TVector) newChild);
             return;
         }
         if ( _identifier_ == oldChild )

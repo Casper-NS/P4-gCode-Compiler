@@ -14,11 +14,16 @@ Helpers
   letter  = lowercase | uppercase;
   idletter = letter | '_';
   idchar  = letter | '_' | digit;
+  xyz = 'x' | 'y' | 'z' | 'X' | 'Y' | 'Z';
   dot = '.';
+  star = '*';
+  not_star = [all - star];
+  not_star_slash = [not_star - '/'];
+  eol_char = cr | lf | cr lf;
 
 Tokens
   main = 'main';
-  eol   = cr | lf | cr lf;
+  eol   = eol_char;
   blank = ' ' | tab;
   assignment_op = '=';
   multiplication_op  = '*';
@@ -53,11 +58,12 @@ Tokens
   and = '&&';
   or = '||';
   number  = '0'| [digit-'0'] digit* | digit* dot digit*;
-  identifier    = idletter idchar*;
+  identifier    = idletter idchar* | idletter idchar* dot xyz;
   all_chars_except_curly = not_curleys;
+  comment = '/*' not_star * '*' + ( not_star_slash not_star * '*'+) * '/' eol_char;
 
 Ignored Tokens
-  blank;
+  blank, comment;
 
 Productions
 cst_program = cst_declaration_list;
@@ -81,7 +87,7 @@ cst_variable_declaration =
 
 cst_uninitialised_variable =
         {simple_uninitial} const? cst_simple_types identifier |
-        {vector_uninitial} const? cst_vector_values identifier;
+        {vector_uninitial} const? vector           identifier;
 
 cst_all_types = 
         {simple}cst_simple_types | 

@@ -959,6 +959,31 @@ public sealed class TAllCharsExceptCurly : Token
     }
 }
 
+public sealed class TComment : Token
+{
+    public TComment(string text)
+    {
+        Text = text;
+    }
+
+    public TComment(string text, int line, int pos)
+    {
+        Text = text;
+        Line = line;
+        Pos = pos;
+    }
+
+    public override Object Clone()
+    {
+      return new TComment(Text, Line, Pos);
+    }
+
+    public override void Apply(Switch sw)
+    {
+        ((Analysis) sw).CaseTComment(this);
+    }
+}
+
 
 public abstract class Token : Node
 {
