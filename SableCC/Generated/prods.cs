@@ -117,6 +117,7 @@ public sealed class ACstProgram : PCstProgram
 {
     private PCstDeclarationList _a_;
     private PCstMainFunctionDeclaration _cst_main_function_declaration_;
+    private TEol _eol_;
     private PCstDeclarationList _b_;
 
     public ACstProgram ()
@@ -126,11 +127,13 @@ public sealed class ACstProgram : PCstProgram
     public ACstProgram (
             PCstDeclarationList _a_,
             PCstMainFunctionDeclaration _cst_main_function_declaration_,
+            TEol _eol_,
             PCstDeclarationList _b_
     )
     {
         SetA (_a_);
         SetCstMainFunctionDeclaration (_cst_main_function_declaration_);
+        SetEol (_eol_);
         SetB (_b_);
     }
 
@@ -139,6 +142,7 @@ public sealed class ACstProgram : PCstProgram
         return new ACstProgram (
             (PCstDeclarationList)CloneNode (_a_),
             (PCstMainFunctionDeclaration)CloneNode (_cst_main_function_declaration_),
+            (TEol)CloneNode (_eol_),
             (PCstDeclarationList)CloneNode (_b_)
         );
     }
@@ -196,6 +200,30 @@ public sealed class ACstProgram : PCstProgram
 
         _cst_main_function_declaration_ = node;
     }
+    public TEol GetEol ()
+    {
+        return _eol_;
+    }
+
+    public void SetEol (TEol node)
+    {
+        if(_eol_ != null)
+        {
+            _eol_.Parent(null);
+        }
+
+        if(node != null)
+        {
+            if(node.Parent() != null)
+            {
+                node.Parent().RemoveChild(node);
+            }
+
+            node.Parent(this);
+        }
+
+        _eol_ = node;
+    }
     public PCstDeclarationList GetB ()
     {
         return _b_;
@@ -226,6 +254,7 @@ public sealed class ACstProgram : PCstProgram
         return ""
             + ToString (_a_)
             + ToString (_cst_main_function_declaration_)
+            + ToString (_eol_)
             + ToString (_b_)
         ;
     }
@@ -240,6 +269,11 @@ public sealed class ACstProgram : PCstProgram
         if ( _cst_main_function_declaration_ == child )
         {
             _cst_main_function_declaration_ = null;
+            return;
+        }
+        if ( _eol_ == child )
+        {
+            _eol_ = null;
             return;
         }
         if ( _b_ == child )
@@ -259,6 +293,11 @@ public sealed class ACstProgram : PCstProgram
         if ( _cst_main_function_declaration_ == oldChild )
         {
             SetCstMainFunctionDeclaration ((PCstMainFunctionDeclaration) newChild);
+            return;
+        }
+        if ( _eol_ == oldChild )
+        {
+            SetEol ((TEol) newChild);
             return;
         }
         if ( _b_ == oldChild )

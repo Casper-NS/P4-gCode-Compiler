@@ -709,6 +709,10 @@ public class DepthFirstAdapter : AnalysisAdapter
         {
             node.GetCstMainFunctionDeclaration().Apply(this);
         }
+        if(node.GetEol() != null)
+        {
+            node.GetEol().Apply(this);
+        }
         if(node.GetB() != null)
         {
             node.GetB().Apply(this);
@@ -2561,6 +2565,10 @@ public class ReversedDepthFirstAdapter : AnalysisAdapter
         if(node.GetB() != null)
         {
             node.GetB().Apply(this);
+        }
+        if(node.GetEol() != null)
+        {
+            node.GetEol().Apply(this);
         }
         if(node.GetCstMainFunctionDeclaration() != null)
         {

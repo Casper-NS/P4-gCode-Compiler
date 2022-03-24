@@ -68,7 +68,7 @@ Ignored Tokens
   blank, multiline_comment, singleline_comment;
 
 Productions
-cst_program = [a]:cst_declaration_list? cst_main_function_declaration [b]:cst_declaration_list?;
+cst_program = [a]:cst_declaration_list? cst_main_function_declaration eol [b]:cst_declaration_list?;
 
 cst_main_function_declaration =
         main l_par r_par eol? cst_block;
