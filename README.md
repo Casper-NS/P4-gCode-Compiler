@@ -22,4 +22,4 @@ C:\Users\Henri\OneDrive\Dokumenter\GithubClones\P4-gCode-Compiler\SableCC\Genera
 
 **For me the total command is:**
 
-java -jar _C:\Users\Henri\Downloads\sablecc-3-beta.3.altgen.20041114\sablecc-3-beta.3.altgen.20041114\lib\sablecc.jar_ -t csharp,csharp-build  _C:\Users\Henri\OneDrive\Dokumenter\GithubClones\P4-gCode-Compiler\SableCC\Generated\GGcodeGrammar.sablecc_
+java -jar C:\Users\Henri\Downloads\sablecc-3-beta.3.altgen.20041114\sablecc-3-beta.3.altgen.20041114\lib\sablecc.jar -t csharp,csharp-build  C:\Users\Henri\OneDrive\Dokumenter\GithubClones\P4-gCode-Compiler\SableCC\Generated\GGcodeGrammar.sablecc
