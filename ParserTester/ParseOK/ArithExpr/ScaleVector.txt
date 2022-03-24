@@ -1,4 +1,3 @@
-﻿/* henrik wants to throw this out the window with force */
 vector ScaleVector(vector vec, float scale)
 {
 	vec.x *= scale
