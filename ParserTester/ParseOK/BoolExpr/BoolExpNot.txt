@@ -1,1 +1,3 @@
-﻿bool a = !b
+﻿void main(){
+bool a = !b
+}

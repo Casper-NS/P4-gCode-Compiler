@@ -1,2 +1,5 @@
-﻿int b = 0
+﻿void main()
+{
+int b = 0
 int a = b
+}

@@ -1,1 +1,3 @@
-﻿bool a = b && c || d
+﻿void main(){
+bool a = b && c || d
+}

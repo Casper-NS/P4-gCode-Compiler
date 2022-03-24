@@ -4,7 +4,7 @@ const vector objectPosition = (1, 1, 0)
 const float objectSize = 10
 bool testRun = false
 
-void Start()
+void main()
 {
 	// set temperature of both and wait
 	/* Forgot comment */

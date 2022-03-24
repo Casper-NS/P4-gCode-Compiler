@@ -1,1 +1,3 @@
-﻿bool a = b == b
+﻿void main(){
+bool a = b == b
+}

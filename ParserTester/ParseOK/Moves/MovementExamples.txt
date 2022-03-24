@@ -16,3 +16,8 @@
 		RelArc(position, offset)
 	}
 }
+
+int main()
+{
+	int a = 1
+}
