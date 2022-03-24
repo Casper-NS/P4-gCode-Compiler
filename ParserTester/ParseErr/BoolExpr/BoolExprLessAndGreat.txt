@@ -1,4 +1,0 @@
-﻿bool a = a >< a
-bool a = a <> a
-bool a = a << a
-bool a = a !< a

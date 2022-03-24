@@ -1,9 +1,4 @@
-﻿void f(int x)
-{
-	x=2
-}
-
-if(x) = f()
+﻿if(x) = f()
 {
 	x = 5
 }
