@@ -1,0 +1,3 @@
+﻿int i = 4
+
+float q = 1

@@ -1,0 +1,17 @@
+﻿void main()
+{
+	while (true)
+	{
+		while (false)
+		{
+			while (2 < 3)
+			{
+				int a = 1
+			}
+		}
+	}
+	while( false   )
+	{
+		int b = 2
+	}
+}

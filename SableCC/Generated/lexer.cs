@@ -299,6 +299,358 @@ public class Lexer
                             line = accept_line;
                             return token;
                         }
+                    case 10:
+                        {
+                            Token token = New10(
+                                GetText(accept_length),
+                                start_line + 1,
+                                start_pos + 1);
+                            PushBack(accept_length);
+                            pos = accept_pos;
+                            line = accept_line;
+                            return token;
+                        }
+                    case 11:
+                        {
+                            Token token = New11(
+                                GetText(accept_length),
+                                start_line + 1,
+                                start_pos + 1);
+                            PushBack(accept_length);
+                            pos = accept_pos;
+                            line = accept_line;
+                            return token;
+                        }
+                    case 12:
+                        {
+                            Token token = New12(
+                                GetText(accept_length),
+                                start_line + 1,
+                                start_pos + 1);
+                            PushBack(accept_length);
+                            pos = accept_pos;
+                            line = accept_line;
+                            return token;
+                        }
+                    case 13:
+                        {
+                            Token token = New13(
+                                GetText(accept_length),
+                                start_line + 1,
+                                start_pos + 1);
+                            PushBack(accept_length);
+                            pos = accept_pos;
+                            line = accept_line;
+                            return token;
+                        }
+                    case 14:
+                        {
+                            Token token = New14(
+                                GetText(accept_length),
+                                start_line + 1,
+                                start_pos + 1);
+                            PushBack(accept_length);
+                            pos = accept_pos;
+                            line = accept_line;
+                            return token;
+                        }
+                    case 15:
+                        {
+                            Token token = New15(
+                                GetText(accept_length),
+                                start_line + 1,
+                                start_pos + 1);
+                            PushBack(accept_length);
+                            pos = accept_pos;
+                            line = accept_line;
+                            return token;
+                        }
+                    case 16:
+                        {
+                            Token token = New16(
+                                GetText(accept_length),
+                                start_line + 1,
+                                start_pos + 1);
+                            PushBack(accept_length);
+                            pos = accept_pos;
+                            line = accept_line;
+                            return token;
+                        }
+                    case 17:
+                        {
+                            Token token = New17(
+                                GetText(accept_length),
+                                start_line + 1,
+                                start_pos + 1);
+                            PushBack(accept_length);
+                            pos = accept_pos;
+                            line = accept_line;
+                            return token;
+                        }
+                    case 18:
+                        {
+                            Token token = New18(
+                                GetText(accept_length),
+                                start_line + 1,
+                                start_pos + 1);
+                            PushBack(accept_length);
+                            pos = accept_pos;
+                            line = accept_line;
+                            return token;
+                        }
+                    case 19:
+                        {
+                            Token token = New19(
+                                GetText(accept_length),
+                                start_line + 1,
+                                start_pos + 1);
+                            PushBack(accept_length);
+                            pos = accept_pos;
+                            line = accept_line;
+                            return token;
+                        }
+                    case 20:
+                        {
+                            Token token = New20(
+                                GetText(accept_length),
+                                start_line + 1,
+                                start_pos + 1);
+                            PushBack(accept_length);
+                            pos = accept_pos;
+                            line = accept_line;
+                            return token;
+                        }
+                    case 21:
+                        {
+                            Token token = New21(
+                                GetText(accept_length),
+                                start_line + 1,
+                                start_pos + 1);
+                            PushBack(accept_length);
+                            pos = accept_pos;
+                            line = accept_line;
+                            return token;
+                        }
+                    case 22:
+                        {
+                            Token token = New22(
+                                GetText(accept_length),
+                                start_line + 1,
+                                start_pos + 1);
+                            PushBack(accept_length);
+                            pos = accept_pos;
+                            line = accept_line;
+                            return token;
+                        }
+                    case 23:
+                        {
+                            Token token = New23(
+                                GetText(accept_length),
+                                start_line + 1,
+                                start_pos + 1);
+                            PushBack(accept_length);
+                            pos = accept_pos;
+                            line = accept_line;
+                            return token;
+                        }
+                    case 24:
+                        {
+                            Token token = New24(
+                                GetText(accept_length),
+                                start_line + 1,
+                                start_pos + 1);
+                            PushBack(accept_length);
+                            pos = accept_pos;
+                            line = accept_line;
+                            return token;
+                        }
+                    case 25:
+                        {
+                            Token token = New25(
+                                GetText(accept_length),
+                                start_line + 1,
+                                start_pos + 1);
+                            PushBack(accept_length);
+                            pos = accept_pos;
+                            line = accept_line;
+                            return token;
+                        }
+                    case 26:
+                        {
+                            Token token = New26(
+                                GetText(accept_length),
+                                start_line + 1,
+                                start_pos + 1);
+                            PushBack(accept_length);
+                            pos = accept_pos;
+                            line = accept_line;
+                            return token;
+                        }
+                    case 27:
+                        {
+                            Token token = New27(
+                                GetText(accept_length),
+                                start_line + 1,
+                                start_pos + 1);
+                            PushBack(accept_length);
+                            pos = accept_pos;
+                            line = accept_line;
+                            return token;
+                        }
+                    case 28:
+                        {
+                            Token token = New28(
+                                GetText(accept_length),
+                                start_line + 1,
+                                start_pos + 1);
+                            PushBack(accept_length);
+                            pos = accept_pos;
+                            line = accept_line;
+                            return token;
+                        }
+                    case 29:
+                        {
+                            Token token = New29(
+                                GetText(accept_length),
+                                start_line + 1,
+                                start_pos + 1);
+                            PushBack(accept_length);
+                            pos = accept_pos;
+                            line = accept_line;
+                            return token;
+                        }
+                    case 30:
+                        {
+                            Token token = New30(
+                                GetText(accept_length),
+                                start_line + 1,
+                                start_pos + 1);
+                            PushBack(accept_length);
+                            pos = accept_pos;
+                            line = accept_line;
+                            return token;
+                        }
+                    case 31:
+                        {
+                            Token token = New31(
+                                GetText(accept_length),
+                                start_line + 1,
+                                start_pos + 1);
+                            PushBack(accept_length);
+                            pos = accept_pos;
+                            line = accept_line;
+                            return token;
+                        }
+                    case 32:
+                        {
+                            Token token = New32(
+                                GetText(accept_length),
+                                start_line + 1,
+                                start_pos + 1);
+                            PushBack(accept_length);
+                            pos = accept_pos;
+                            line = accept_line;
+                            return token;
+                        }
+                    case 33:
+                        {
+                            Token token = New33(
+                                GetText(accept_length),
+                                start_line + 1,
+                                start_pos + 1);
+                            PushBack(accept_length);
+                            pos = accept_pos;
+                            line = accept_line;
+                            return token;
+                        }
+                    case 34:
+                        {
+                            Token token = New34(
+                                GetText(accept_length),
+                                start_line + 1,
+                                start_pos + 1);
+                            PushBack(accept_length);
+                            pos = accept_pos;
+                            line = accept_line;
+                            return token;
+                        }
+                    case 35:
+                        {
+                            Token token = New35(
+                                GetText(accept_length),
+                                start_line + 1,
+                                start_pos + 1);
+                            PushBack(accept_length);
+                            pos = accept_pos;
+                            line = accept_line;
+                            return token;
+                        }
+                    case 36:
+                        {
+                            Token token = New36(
+                                GetText(accept_length),
+                                start_line + 1,
+                                start_pos + 1);
+                            PushBack(accept_length);
+                            pos = accept_pos;
+                            line = accept_line;
+                            return token;
+                        }
+                    case 37:
+                        {
+                            Token token = New37(
+                                GetText(accept_length),
+                                start_line + 1,
+                                start_pos + 1);
+                            PushBack(accept_length);
+                            pos = accept_pos;
+                            line = accept_line;
+                            return token;
+                        }
+                    case 38:
+                        {
+                            Token token = New38(
+                                GetText(accept_length),
+                                start_line + 1,
+                                start_pos + 1);
+                            PushBack(accept_length);
+                            pos = accept_pos;
+                            line = accept_line;
+                            return token;
+                        }
+                    case 39:
+                        {
+                            Token token = New39(
+                                GetText(accept_length),
+                                start_line + 1,
+                                start_pos + 1);
+                            PushBack(accept_length);
+                            pos = accept_pos;
+                            line = accept_line;
+                            return token;
+                        }
+                    case 40:
+                        {
+                            Token token = New40(
+                                GetText(accept_length),
+                                start_line + 1,
+                                start_pos + 1);
+                            PushBack(accept_length);
+                            pos = accept_pos;
+                            line = accept_line;
+                            return token;
+                        }
+                    case 41:
+                        {
+                            Token token = New41(
+                                GetText(accept_length),
+                                start_line + 1,
+                                start_pos + 1);
+                            PushBack(accept_length);
+                            pos = accept_pos;
+                            line = accept_line;
+                            return token;
+                        }
                     }
                 }
                 else
@@ -323,14 +675,46 @@ public class Lexer
 
     private Token New0(String text, int line, int pos) { return new TEol(text, line, pos); }
     private Token New1(String text, int line, int pos) { return new TBlank(text, line, pos); }
-    private Token New2(String text, int line, int pos) { return new TStar(text, line, pos); }
-    private Token New3(String text, int line, int pos) { return new TSlash(text, line, pos); }
-    private Token New4(String text, int line, int pos) { return new TPlus(text, line, pos); }
-    private Token New5(String text, int line, int pos) { return new TMinus(text, line, pos); }
-    private Token New6(String text, int line, int pos) { return new TLPar(text, line, pos); }
-    private Token New7(String text, int line, int pos) { return new TRPar(text, line, pos); }
-    private Token New8(String text, int line, int pos) { return new TNumber(text, line, pos); }
-    private Token New9(String text, int line, int pos) { return new TId(text, line, pos); }
+    private Token New2(String text, int line, int pos) { return new TAssignmentOp(text, line, pos); }
+    private Token New3(String text, int line, int pos) { return new TMultiplicationOp(text, line, pos); }
+    private Token New4(String text, int line, int pos) { return new TModuloOp(text, line, pos); }
+    private Token New5(String text, int line, int pos) { return new TDivisionOp(text, line, pos); }
+    private Token New6(String text, int line, int pos) { return new TPlusOp(text, line, pos); }
+    private Token New7(String text, int line, int pos) { return new TMinusOp(text, line, pos); }
+    private Token New8(String text, int line, int pos) { return new TEqual(text, line, pos); }
+    private Token New9(String text, int line, int pos) { return new TLessThan(text, line, pos); }
+    private Token New10(String text, int line, int pos) { return new TLessThanOrEqual(text, line, pos); }
+    private Token New11(String text, int line, int pos) { return new TGreaterThan(text, line, pos); }
+    private Token New12(String text, int line, int pos) { return new TGreaterThanOrEqual(text, line, pos); }
+    private Token New13(String text, int line, int pos) { return new TNot(text, line, pos); }
+    private Token New14(String text, int line, int pos) { return new TNotEqual(text, line, pos); }
+    private Token New15(String text, int line, int pos) { return new TLPar(text, line, pos); }
+    private Token New16(String text, int line, int pos) { return new TRPar(text, line, pos); }
+    private Token New17(String text, int line, int pos) { return new TLCur(text, line, pos); }
+    private Token New18(String text, int line, int pos) { return new TRCur(text, line, pos); }
+    private Token New19(String text, int line, int pos) { return new TComma(text, line, pos); }
+    private Token New20(String text, int line, int pos) { return new TVector(text, line, pos); }
+    private Token New21(String text, int line, int pos) { return new TInt(text, line, pos); }
+    private Token New22(String text, int line, int pos) { return new TConst(text, line, pos); }
+    private Token New23(String text, int line, int pos) { return new TFloat(text, line, pos); }
+    private Token New24(String text, int line, int pos) { return new TBool(text, line, pos); }
+    private Token New25(String text, int line, int pos) { return new TVoid(text, line, pos); }
+    private Token New26(String text, int line, int pos) { return new TBoolValue(text, line, pos); }
+    private Token New27(String text, int line, int pos) { return new TIf(text, line, pos); }
+    private Token New28(String text, int line, int pos) { return new TElse(text, line, pos); }
+    private Token New29(String text, int line, int pos) { return new TRepeat(text, line, pos); }
+    private Token New30(String text, int line, int pos) { return new TWhile(text, line, pos); }
+    private Token New31(String text, int line, int pos) { return new TReturn(text, line, pos); }
+    private Token New32(String text, int line, int pos) { return new TBuild(text, line, pos); }
+    private Token New33(String text, int line, int pos) { return new TWalk(text, line, pos); }
+    private Token New34(String text, int line, int pos) { return new TGcode(text, line, pos); }
+    private Token New35(String text, int line, int pos) { return new TAnd(text, line, pos); }
+    private Token New36(String text, int line, int pos) { return new TOr(text, line, pos); }
+    private Token New37(String text, int line, int pos) { return new TNumber(text, line, pos); }
+    private Token New38(String text, int line, int pos) { return new TIdentifier(text, line, pos); }
+    private Token New39(String text, int line, int pos) { return new TAllCharsExceptCurly(text, line, pos); }
+    private Token New40(String text, int line, int pos) { return new TMultilineComment(text, line, pos); }
+    private Token New41(String text, int line, int pos) { return new TSinglelineComment(text, line, pos); }
 
     private int GetChar()
     {
@@ -391,28 +775,78 @@ public class Lexer
     private static int[][][][] gotoTable = {
       new int[][][] {
         new int[][] {
-          new int[] {9, 9, 1},
-          new int[] {10, 10, 2},
-          new int[] {13, 13, 3},
-          new int[] {32, 32, 4},
-          new int[] {40, 40, 5},
-          new int[] {41, 41, 6},
-          new int[] {42, 42, 7},
-          new int[] {43, 43, 8},
-          new int[] {45, 45, 9},
-          new int[] {47, 47, 10},
-          new int[] {48, 48, 11},
-          new int[] {49, 57, 12},
-          new int[] {65, 90, 13},
-          new int[] {95, 95, 14},
-          new int[] {97, 122, 15},
+          new int[] {0, 8, 1},
+          new int[] {9, 9, 2},
+          new int[] {10, 10, 3},
+          new int[] {11, 12, 1},
+          new int[] {13, 13, 4},
+          new int[] {14, 31, 1},
+          new int[] {32, 32, 5},
+          new int[] {33, 33, 6},
+          new int[] {34, 36, 1},
+          new int[] {37, 37, 7},
+          new int[] {38, 38, 8},
+          new int[] {39, 39, 1},
+          new int[] {40, 40, 9},
+          new int[] {41, 41, 10},
+          new int[] {42, 42, 11},
+          new int[] {43, 43, 12},
+          new int[] {44, 44, 13},
+          new int[] {45, 45, 14},
+          new int[] {46, 46, 15},
+          new int[] {47, 47, 16},
+          new int[] {48, 48, 17},
+          new int[] {49, 57, 18},
+          new int[] {58, 59, 1},
+          new int[] {60, 60, 19},
+          new int[] {61, 61, 20},
+          new int[] {62, 62, 21},
+          new int[] {63, 64, 1},
+          new int[] {65, 70, 22},
+          new int[] {71, 71, 23},
+          new int[] {72, 90, 22},
+          new int[] {91, 94, 1},
+          new int[] {95, 95, 24},
+          new int[] {96, 96, 1},
+          new int[] {97, 97, 25},
+          new int[] {98, 98, 26},
+          new int[] {99, 99, 27},
+          new int[] {100, 100, 25},
+          new int[] {101, 101, 28},
+          new int[] {102, 102, 29},
+          new int[] {103, 104, 25},
+          new int[] {105, 105, 30},
+          new int[] {106, 113, 25},
+          new int[] {114, 114, 31},
+          new int[] {115, 115, 25},
+          new int[] {116, 116, 32},
+          new int[] {117, 117, 25},
+          new int[] {118, 118, 33},
+          new int[] {119, 119, 34},
+          new int[] {120, 122, 25},
+          new int[] {123, 123, 35},
+          new int[] {124, 124, 36},
+          new int[] {125, 125, 37},
+          new int[] {126, 127, 1},
         },
         new int[][] {
         },
         new int[][] {
         },
         new int[][] {
-          new int[] {10, 10, 16},
+        },
+        new int[][] {
+          new int[] {10, 10, 38},
+        },
+        new int[][] {
+        },
+        new int[][] {
+          new int[] {61, 61, 39},
+        },
+        new int[][] {
+        },
+        new int[][] {
+          new int[] {38, 38, 40},
         },
         new int[][] {
         },
@@ -427,48 +861,500 @@ public class Lexer
         new int[][] {
         },
         new int[][] {
+          new int[] {48, 57, 41},
+        },
+        new int[][] {
+          new int[] {42, 42, 42},
+          new int[] {47, 47, 43},
+        },
+        new int[][] {
+          new int[] {46, 46, 44},
+          new int[] {48, 57, 45},
+        },
+        new int[][] {
+          new int[] {46, 46, 44},
+          new int[] {48, 57, 46},
+        },
+        new int[][] {
+          new int[] {61, 61, 47},
+        },
+        new int[][] {
+          new int[] {61, 61, 48},
+        },
+        new int[][] {
+          new int[] {61, 61, 49},
+        },
+        new int[][] {
+          new int[] {46, 46, 50},
+          new int[] {48, 57, 51},
+          new int[] {65, 90, 52},
+          new int[] {95, 95, 53},
+          new int[] {97, 122, 54},
+        },
+        new int[][] {
+          new int[] {46, 57, -24},
+          new int[] {65, 66, 52},
+          new int[] {67, 67, 55},
+          new int[] {68, 90, 52},
+          new int[] {95, 122, -24},
+        },
+        new int[][] {
+          new int[] {46, 122, -24},
+        },
+        new int[][] {
+          new int[] {46, 122, -24},
+        },
+        new int[][] {
+          new int[] {46, 95, -24},
+          new int[] {97, 110, 54},
+          new int[] {111, 111, 56},
+          new int[] {112, 116, 54},
+          new int[] {117, 117, 57},
+          new int[] {118, 122, 54},
+        },
+        new int[][] {
+          new int[] {46, 110, -28},
+          new int[] {111, 111, 58},
+          new int[] {112, 122, 54},
+        },
+        new int[][] {
+          new int[] {46, 95, -24},
+          new int[] {97, 107, 54},
+          new int[] {108, 108, 59},
+          new int[] {109, 122, 54},
+        },
+        new int[][] {
+          new int[] {46, 95, -24},
+          new int[] {97, 97, 60},
+          new int[] {98, 107, 54},
+          new int[] {108, 108, 61},
+          new int[] {109, 122, 54},
+        },
+        new int[][] {
+          new int[] {46, 95, -24},
+          new int[] {97, 101, 54},
+          new int[] {102, 102, 62},
+          new int[] {103, 109, 54},
+          new int[] {110, 110, 63},
+          new int[] {111, 122, 54},
+        },
+        new int[][] {
+          new int[] {46, 95, -24},
+          new int[] {97, 100, 54},
+          new int[] {101, 101, 64},
+          new int[] {102, 122, 54},
+        },
+        new int[][] {
+          new int[] {46, 95, -24},
+          new int[] {97, 113, 54},
+          new int[] {114, 114, 65},
+          new int[] {115, 122, 54},
+        },
+        new int[][] {
+          new int[] {46, 100, -33},
+          new int[] {101, 101, 66},
+          new int[] {102, 110, 54},
+          new int[] {111, 111, 67},
+          new int[] {112, 122, 54},
+        },
+        new int[][] {
+          new int[] {46, 95, -24},
+          new int[] {97, 97, 68},
+          new int[] {98, 103, 54},
+          new int[] {104, 104, 69},
+          new int[] {105, 122, 54},
         },
         new int[][] {
         },
         new int[][] {
-          new int[] {48, 57, 17},
-        },
-        new int[][] {
-          new int[] {48, 57, 18},
-          new int[] {65, 90, 19},
-          new int[] {95, 95, 20},
-          new int[] {97, 122, 21},
-        },
-        new int[][] {
-          new int[] {48, 122, -15},
-        },
-        new int[][] {
-          new int[] {48, 122, -15},
+          new int[] {124, 124, 70},
         },
         new int[][] {
         },
         new int[][] {
-          new int[] {48, 57, 17},
         },
         new int[][] {
-          new int[] {48, 122, -15},
         },
         new int[][] {
-          new int[] {48, 122, -15},
         },
         new int[][] {
-          new int[] {48, 122, -15},
+          new int[] {48, 57, 41},
         },
         new int[][] {
-          new int[] {48, 122, -15},
+          new int[] {0, 41, 71},
+          new int[] {42, 42, 72},
+          new int[] {43, 127, 71},
+        },
+        new int[][] {
+          new int[] {0, 9, 73},
+          new int[] {10, 10, 74},
+          new int[] {11, 12, 73},
+          new int[] {13, 13, 75},
+          new int[] {14, 127, 73},
+        },
+        new int[][] {
+          new int[] {48, 57, 41},
+        },
+        new int[][] {
+          new int[] {46, 57, -19},
+        },
+        new int[][] {
+          new int[] {46, 57, -20},
+        },
+        new int[][] {
+        },
+        new int[][] {
+        },
+        new int[][] {
+        },
+        new int[][] {
+          new int[] {120, 120, 76},
+          new int[] {121, 121, 77},
+          new int[] {122, 122, 78},
+        },
+        new int[][] {
+          new int[] {46, 122, -24},
+        },
+        new int[][] {
+          new int[] {46, 122, -24},
+        },
+        new int[][] {
+          new int[] {46, 122, -24},
+        },
+        new int[][] {
+          new int[] {46, 122, -24},
+        },
+        new int[][] {
+          new int[] {46, 57, -24},
+          new int[] {65, 78, 52},
+          new int[] {79, 79, 79},
+          new int[] {80, 90, 52},
+          new int[] {95, 122, -24},
+        },
+        new int[][] {
+          new int[] {46, 110, -28},
+          new int[] {111, 111, 80},
+          new int[] {112, 122, 54},
+        },
+        new int[][] {
+          new int[] {46, 95, -24},
+          new int[] {97, 104, 54},
+          new int[] {105, 105, 81},
+          new int[] {106, 122, 54},
+        },
+        new int[][] {
+          new int[] {46, 95, -24},
+          new int[] {97, 109, 54},
+          new int[] {110, 110, 82},
+          new int[] {111, 122, 54},
+        },
+        new int[][] {
+          new int[] {46, 95, -24},
+          new int[] {97, 114, 54},
+          new int[] {115, 115, 83},
+          new int[] {116, 122, 54},
+        },
+        new int[][] {
+          new int[] {46, 107, -30},
+          new int[] {108, 108, 84},
+          new int[] {109, 122, 54},
+        },
+        new int[][] {
+          new int[] {46, 110, -28},
+          new int[] {111, 111, 85},
+          new int[] {112, 122, 54},
+        },
+        new int[][] {
+          new int[] {46, 122, -24},
+        },
+        new int[][] {
+          new int[] {46, 95, -24},
+          new int[] {97, 115, 54},
+          new int[] {116, 116, 86},
+          new int[] {117, 122, 54},
+        },
+        new int[][] {
+          new int[] {46, 95, -24},
+          new int[] {97, 111, 54},
+          new int[] {112, 112, 87},
+          new int[] {113, 115, 54},
+          new int[] {116, 116, 88},
+          new int[] {117, 122, 54},
+        },
+        new int[][] {
+          new int[] {46, 95, -24},
+          new int[] {97, 116, 54},
+          new int[] {117, 117, 89},
+          new int[] {118, 122, 54},
+        },
+        new int[][] {
+          new int[] {46, 95, -24},
+          new int[] {97, 98, 54},
+          new int[] {99, 99, 90},
+          new int[] {100, 122, 54},
+        },
+        new int[][] {
+          new int[] {46, 104, -59},
+          new int[] {105, 105, 91},
+          new int[] {106, 122, 54},
+        },
+        new int[][] {
+          new int[] {46, 107, -30},
+          new int[] {108, 108, 92},
+          new int[] {109, 122, 54},
+        },
+        new int[][] {
+          new int[] {46, 104, -59},
+          new int[] {105, 105, 93},
+          new int[] {106, 122, 54},
+        },
+        new int[][] {
+        },
+        new int[][] {
+          new int[] {0, 127, -44},
+        },
+        new int[][] {
+          new int[] {0, 41, 94},
+          new int[] {42, 42, 72},
+          new int[] {43, 46, 94},
+          new int[] {47, 47, 95},
+          new int[] {48, 127, 94},
+        },
+        new int[][] {
+          new int[] {0, 127, -45},
+        },
+        new int[][] {
+        },
+        new int[][] {
+          new int[] {10, 10, 96},
+        },
+        new int[][] {
+        },
+        new int[][] {
+        },
+        new int[][] {
+        },
+        new int[][] {
+          new int[] {46, 57, -24},
+          new int[] {65, 67, 52},
+          new int[] {68, 68, 97},
+          new int[] {69, 90, 52},
+          new int[] {95, 122, -24},
+        },
+        new int[][] {
+          new int[] {46, 107, -30},
+          new int[] {108, 108, 98},
+          new int[] {109, 122, 54},
+        },
+        new int[][] {
+          new int[] {46, 107, -30},
+          new int[] {108, 108, 99},
+          new int[] {109, 122, 54},
+        },
+        new int[][] {
+          new int[] {46, 114, -61},
+          new int[] {115, 115, 100},
+          new int[] {116, 122, 54},
+        },
+        new int[][] {
+          new int[] {46, 100, -33},
+          new int[] {101, 101, 101},
+          new int[] {102, 122, 54},
+        },
+        new int[][] {
+          new int[] {46, 114, -61},
+          new int[] {115, 115, 102},
+          new int[] {116, 122, 54},
+        },
+        new int[][] {
+          new int[] {46, 95, -24},
+          new int[] {97, 97, 103},
+          new int[] {98, 122, 54},
+        },
+        new int[][] {
+          new int[] {46, 122, -24},
+        },
+        new int[][] {
+          new int[] {46, 100, -33},
+          new int[] {101, 101, 104},
+          new int[] {102, 122, 54},
+        },
+        new int[][] {
+          new int[] {46, 116, -67},
+          new int[] {117, 117, 105},
+          new int[] {118, 122, 54},
+        },
+        new int[][] {
+          new int[] {46, 100, -33},
+          new int[] {101, 101, 106},
+          new int[] {102, 122, 54},
+        },
+        new int[][] {
+          new int[] {46, 115, -65},
+          new int[] {116, 116, 107},
+          new int[] {117, 122, 54},
+        },
+        new int[][] {
+          new int[] {46, 95, -24},
+          new int[] {97, 99, 54},
+          new int[] {100, 100, 108},
+          new int[] {101, 122, 54},
+        },
+        new int[][] {
+          new int[] {46, 95, -24},
+          new int[] {97, 106, 54},
+          new int[] {107, 107, 109},
+          new int[] {108, 122, 54},
+        },
+        new int[][] {
+          new int[] {46, 107, -30},
+          new int[] {108, 108, 110},
+          new int[] {109, 122, 54},
+        },
+        new int[][] {
+          new int[] {0, 41, 111},
+          new int[] {42, 42, 112},
+          new int[] {43, 127, 111},
+        },
+        new int[][] {
+          new int[] {10, 10, 113},
+          new int[] {13, 13, 114},
+        },
+        new int[][] {
+        },
+        new int[][] {
+          new int[] {46, 57, -24},
+          new int[] {65, 68, 52},
+          new int[] {69, 69, 115},
+          new int[] {70, 90, 52},
+          new int[] {95, 122, -24},
+        },
+        new int[][] {
+          new int[] {46, 122, -24},
+        },
+        new int[][] {
+          new int[] {46, 99, -93},
+          new int[] {100, 100, 116},
+          new int[] {101, 122, 54},
+        },
+        new int[][] {
+          new int[] {46, 115, -65},
+          new int[] {116, 116, 117},
+          new int[] {117, 122, 54},
+        },
+        new int[][] {
+          new int[] {46, 122, -24},
+        },
+        new int[][] {
+          new int[] {46, 100, -33},
+          new int[] {101, 101, 118},
+          new int[] {102, 122, 54},
+        },
+        new int[][] {
+          new int[] {46, 115, -65},
+          new int[] {116, 116, 119},
+          new int[] {117, 122, 54},
+        },
+        new int[][] {
+          new int[] {46, 95, -24},
+          new int[] {97, 97, 120},
+          new int[] {98, 122, 54},
+        },
+        new int[][] {
+          new int[] {46, 113, -34},
+          new int[] {114, 114, 121},
+          new int[] {115, 122, 54},
+        },
+        new int[][] {
+          new int[] {46, 122, -24},
+        },
+        new int[][] {
+          new int[] {46, 110, -28},
+          new int[] {111, 111, 122},
+          new int[] {112, 122, 54},
+        },
+        new int[][] {
+          new int[] {46, 122, -24},
+        },
+        new int[][] {
+          new int[] {46, 122, -24},
+        },
+        new int[][] {
+          new int[] {46, 100, -33},
+          new int[] {101, 101, 123},
+          new int[] {102, 122, 54},
+        },
+        new int[][] {
+          new int[] {0, 127, -96},
+        },
+        new int[][] {
+          new int[] {0, 41, 94},
+          new int[] {42, 42, 112},
+          new int[] {43, 127, -74},
+        },
+        new int[][] {
+        },
+        new int[][] {
+          new int[] {10, 10, 124},
+        },
+        new int[][] {
+          new int[] {46, 122, -24},
+        },
+        new int[][] {
+          new int[] {46, 122, -24},
+        },
+        new int[][] {
+          new int[] {46, 122, -24},
+        },
+        new int[][] {
+          new int[] {46, 122, -24},
+        },
+        new int[][] {
+          new int[] {46, 122, -24},
+        },
+        new int[][] {
+          new int[] {46, 115, -65},
+          new int[] {116, 116, 125},
+          new int[] {117, 122, 54},
+        },
+        new int[][] {
+          new int[] {46, 109, -60},
+          new int[] {110, 110, 126},
+          new int[] {111, 122, 54},
+        },
+        new int[][] {
+          new int[] {46, 113, -34},
+          new int[] {114, 114, 127},
+          new int[] {115, 122, 54},
+        },
+        new int[][] {
+          new int[] {46, 122, -24},
+        },
+        new int[][] {
+        },
+        new int[][] {
+          new int[] {46, 122, -24},
+        },
+        new int[][] {
+          new int[] {46, 122, -24},
+        },
+        new int[][] {
+          new int[] {46, 122, -24},
         },
       },
     };
 
     private static int[][] accept = {
       new int[] {
-        -1, 1, 0, 0, 1, 6, 7, 2, 4, 5, 3, 8, 8, 9, 9, 9, 
-        0, 8, 9, 9, 9, 9, 
+        -1, 39, 1, 0, 0, 1, 13, 4, 39, 15, 16, 3, 6, 19, 7, 37, 
+        5, 37, 37, 9, 2, 11, 38, 38, 38, 38, 38, 38, 38, 38, 38, 38, 
+        38, 38, 38, 17, 39, 18, 0, 14, 35, 37, -1, -1, 37, -1, 37, 10, 
+        8, 12, -1, 38, 38, 38, 38, 38, 38, 38, 38, 38, 38, 38, 27, 38, 
+        38, 38, 38, 38, 38, 38, 36, -1, -1, -1, 41, 41, 38, 38, 38, 38, 
+        38, 38, 38, 38, 38, 38, 21, 38, 38, 38, 38, 38, 38, 38, -1, -1, 
+        41, 38, 24, 38, 38, 28, 38, 38, 38, 38, 26, 38, 25, 33, 38, -1, 
+        -1, 40, 40, 34, 32, 22, 26, 23, 38, 38, 38, 30, 40, 29, 31, 20, 
+        
       },
     };
 
