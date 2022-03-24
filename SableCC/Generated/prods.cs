@@ -737,22 +737,29 @@ public sealed class AListCstDeclarationList : PCstDeclarationList
 public sealed class ACstDeclarationList : PCstDeclarationList
 {
     private PCstDeclaration _cst_declaration_;
+    private TypedList _eol_;
 
     public ACstDeclarationList ()
     {
+        this._eol_ = new TypedList(new Eol_Cast(this));
     }
 
     public ACstDeclarationList (
-            PCstDeclaration _cst_declaration_
+            PCstDeclaration _cst_declaration_,
+            IList _eol_
     )
     {
         SetCstDeclaration (_cst_declaration_);
+        this._eol_ = new TypedList(new Eol_Cast(this));
+        this._eol_.Clear();
+        this._eol_.AddAll(_eol_);
     }
 
     public override Object Clone()
     {
         return new ACstDeclarationList (
-            (PCstDeclaration)CloneNode (_cst_declaration_)
+            (PCstDeclaration)CloneNode (_cst_declaration_),
+            CloneList (_eol_)
         );
     }
 
@@ -785,11 +792,22 @@ public sealed class ACstDeclarationList : PCstDeclarationList
 
         _cst_declaration_ = node;
     }
+    public IList GetEol ()
+    {
+        return _eol_;
+    }
+
+    public void setEol (IList list)
+    {
+        _eol_.Clear();
+        _eol_.AddAll(list);
+    }
 
     public override string ToString()
     {
         return ""
             + ToString (_cst_declaration_)
+            + ToString (_eol_)
         ;
     }
 
@@ -798,6 +816,11 @@ public sealed class ACstDeclarationList : PCstDeclarationList
         if ( _cst_declaration_ == child )
         {
             _cst_declaration_ = null;
+            return;
+        }
+        if ( _eol_.Contains(child) )
+        {
+            _eol_.Remove(child);
             return;
         }
     }
@@ -809,8 +832,60 @@ public sealed class ACstDeclarationList : PCstDeclarationList
             SetCstDeclaration ((PCstDeclaration) newChild);
             return;
         }
+        for ( int i = 0; i < _eol_.Count; i++ )
+        {
+            Node n = (Node)_eol_[i];
+            if(n == oldChild)
+            {
+                if(newChild != null)
+                {
+                    _eol_[i] = newChild;
+                    oldChild.Parent(null);
+                    return;
+                }
+
+                _eol_.RemoveAt(i);
+                oldChild.Parent(null);
+                return;
+            }
+        }
     }
 
+    private class Eol_Cast : Cast
+    {
+        ACstDeclarationList obj;
+
+        internal Eol_Cast (ACstDeclarationList obj)
+        {
+          this.obj = obj;
+        }
+
+        public Object Cast(Object o)
+        {
+            TEol node = (TEol) o;
+
+            if((node.Parent() != null) &&
+                (node.Parent() != obj))
+            {
+                node.Parent().RemoveChild(node);
+            }
+
+            if((node.Parent() == null) ||
+                (node.Parent() != obj))
+            {
+                node.Parent(obj);
+            }
+
+            return node;
+        }
+
+        public Object UnCast(Object o)
+        {
+            TEol node = (TEol) o;
+            node.Parent(null);
+            return node;
+        }
+    }
 }
 public sealed class AVariableCstDeclaration : PCstDeclaration
 {

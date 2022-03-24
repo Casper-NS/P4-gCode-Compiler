@@ -802,6 +802,14 @@ public class DepthFirstAdapter : AnalysisAdapter
         {
             node.GetCstDeclaration().Apply(this);
         }
+        {
+            Object[] temp = new Object[node.GetEol().Count];
+            node.GetEol().CopyTo(temp, 0);
+            for(int i = 0; i < temp.Length; i++)
+            {
+                ((TEol) temp[i]).Apply(this);
+            }
+        }
         OutACstDeclarationList(node);
     }
     public virtual void InAVariableCstDeclaration(AVariableCstDeclaration node)
@@ -2659,6 +2667,14 @@ public class ReversedDepthFirstAdapter : AnalysisAdapter
     public override void CaseACstDeclarationList(ACstDeclarationList node)
     {
         InACstDeclarationList(node);
+        {
+            Object[] temp = new Object[node.GetEol().Count];
+            node.GetEol().CopyTo(temp, 0);
+            for(int i = temp.Length - 1; i >= 0; i--)
+            {
+                ((TEol) temp[i]).Apply(this);
+            }
+        }
         if(node.GetCstDeclaration() != null)
         {
             node.GetCstDeclaration().Apply(this);
