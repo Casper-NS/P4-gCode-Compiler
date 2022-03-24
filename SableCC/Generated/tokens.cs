@@ -9,31 +9,6 @@ using  GGCodeParser.analysis;
 namespace GGCodeParser.node {
 
 
-public sealed class TMain : Token
-{
-    public TMain(string text)
-    {
-        Text = text;
-    }
-
-    public TMain(string text, int line, int pos)
-    {
-        Text = text;
-        Line = line;
-        Pos = pos;
-    }
-
-    public override Object Clone()
-    {
-      return new TMain(Text, Line, Pos);
-    }
-
-    public override void Apply(Switch sw)
-    {
-        ((Analysis) sw).CaseTMain(this);
-    }
-}
-
 public sealed class TEol : Token
 {
     public TEol(string text)

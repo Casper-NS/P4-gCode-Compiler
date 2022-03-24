@@ -2,7 +2,7 @@
 {
     int c=0
 }
-main()
+void main()
 {
     while(a)
     {

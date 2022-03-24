@@ -16,7 +16,6 @@ public interface Analysis : Switch
 
     void CaseStart(Start node);
     void CaseACstProgram(ACstProgram node);
-    void CaseACstMainFunctionDeclaration(ACstMainFunctionDeclaration node);
     void CaseAListCstDeclarationList(AListCstDeclarationList node);
     void CaseACstDeclarationList(ACstDeclarationList node);
     void CaseAVariableCstDeclaration(AVariableCstDeclaration node);
@@ -86,7 +85,6 @@ public interface Analysis : Switch
     void CaseAFuncCallCstLeafExp(AFuncCallCstLeafExp node);
     void CaseAVectorCstLeafExp(AVectorCstLeafExp node);
 
-    void CaseTMain(TMain node);
     void CaseTEol(TEol node);
     void CaseTBlank(TBlank node);
     void CaseTAssignmentOp(TAssignmentOp node);
@@ -196,10 +194,6 @@ public class AnalysisAdapter : Analysis
     }
 
     public virtual void CaseACstProgram(ACstProgram node)
-    {
-        DefaultCase(node);
-    }
-    public virtual void CaseACstMainFunctionDeclaration(ACstMainFunctionDeclaration node)
     {
         DefaultCase(node);
     }
@@ -476,10 +470,6 @@ public class AnalysisAdapter : Analysis
         DefaultCase(node);
     }
 
-    public virtual void CaseTMain(TMain node)
-    {
-        DefaultCase(node);
-    }
     public virtual void CaseTEol(TEol node)
     {
         DefaultCase(node);
@@ -701,58 +691,11 @@ public class DepthFirstAdapter : AnalysisAdapter
     public override void CaseACstProgram(ACstProgram node)
     {
         InACstProgram(node);
-        if(node.GetA() != null)
+        if(node.GetCstDeclarationList() != null)
         {
-            node.GetA().Apply(this);
-        }
-        if(node.GetCstMainFunctionDeclaration() != null)
-        {
-            node.GetCstMainFunctionDeclaration().Apply(this);
-        }
-        if(node.GetEol() != null)
-        {
-            node.GetEol().Apply(this);
-        }
-        if(node.GetB() != null)
-        {
-            node.GetB().Apply(this);
+            node.GetCstDeclarationList().Apply(this);
         }
         OutACstProgram(node);
-    }
-    public virtual void InACstMainFunctionDeclaration(ACstMainFunctionDeclaration node)
-    {
-        DefaultIn(node);
-    }
-
-    public virtual void OutACstMainFunctionDeclaration(ACstMainFunctionDeclaration node)
-    {
-        DefaultOut(node);
-    }
-
-    public override void CaseACstMainFunctionDeclaration(ACstMainFunctionDeclaration node)
-    {
-        InACstMainFunctionDeclaration(node);
-        if(node.GetMain() != null)
-        {
-            node.GetMain().Apply(this);
-        }
-        if(node.GetLPar() != null)
-        {
-            node.GetLPar().Apply(this);
-        }
-        if(node.GetRPar() != null)
-        {
-            node.GetRPar().Apply(this);
-        }
-        if(node.GetEol() != null)
-        {
-            node.GetEol().Apply(this);
-        }
-        if(node.GetCstBlock() != null)
-        {
-            node.GetCstBlock().Apply(this);
-        }
-        OutACstMainFunctionDeclaration(node);
     }
     public virtual void InAListCstDeclarationList(AListCstDeclarationList node)
     {
@@ -2570,58 +2513,11 @@ public class ReversedDepthFirstAdapter : AnalysisAdapter
     public override void CaseACstProgram(ACstProgram node)
     {
         InACstProgram(node);
-        if(node.GetB() != null)
+        if(node.GetCstDeclarationList() != null)
         {
-            node.GetB().Apply(this);
-        }
-        if(node.GetEol() != null)
-        {
-            node.GetEol().Apply(this);
-        }
-        if(node.GetCstMainFunctionDeclaration() != null)
-        {
-            node.GetCstMainFunctionDeclaration().Apply(this);
-        }
-        if(node.GetA() != null)
-        {
-            node.GetA().Apply(this);
+            node.GetCstDeclarationList().Apply(this);
         }
         OutACstProgram(node);
-    }
-    public virtual void InACstMainFunctionDeclaration(ACstMainFunctionDeclaration node)
-    {
-        DefaultIn(node);
-    }
-
-    public virtual void OutACstMainFunctionDeclaration(ACstMainFunctionDeclaration node)
-    {
-        DefaultOut(node);
-    }
-
-    public override void CaseACstMainFunctionDeclaration(ACstMainFunctionDeclaration node)
-    {
-        InACstMainFunctionDeclaration(node);
-        if(node.GetCstBlock() != null)
-        {
-            node.GetCstBlock().Apply(this);
-        }
-        if(node.GetEol() != null)
-        {
-            node.GetEol().Apply(this);
-        }
-        if(node.GetRPar() != null)
-        {
-            node.GetRPar().Apply(this);
-        }
-        if(node.GetLPar() != null)
-        {
-            node.GetLPar().Apply(this);
-        }
-        if(node.GetMain() != null)
-        {
-            node.GetMain().Apply(this);
-        }
-        OutACstMainFunctionDeclaration(node);
     }
     public virtual void InAListCstDeclarationList(AListCstDeclarationList node)
     {

@@ -20,7 +20,6 @@ Helpers
   not_eol_char = [all - [cr + lf]];
 
 Tokens
-  main = 'main';
   eol   = cr | lf | cr lf;
   blank = ' ' | tab;
   assignment_op = '=';
@@ -68,10 +67,7 @@ Ignored Tokens
   blank, multiline_comment, singleline_comment;
 
 Productions
-cst_program = [a]:cst_declaration_list? cst_main_function_declaration eol? [b]:cst_declaration_list?;
-
-cst_main_function_declaration =
-        main l_par r_par eol? cst_block;
+cst_program = cst_declaration_list;
 
 cst_declaration_list =
         {list}cst_declaration eol+ cst_declaration_list | 
