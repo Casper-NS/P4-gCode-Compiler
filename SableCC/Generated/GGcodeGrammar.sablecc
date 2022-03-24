@@ -12,7 +12,7 @@ Helpers
   letter  = lowercase | uppercase;
   idletter = letter | '_';
   idchar  = letter | '_' | digit;
-  xyz = 'x' | 'y' | 'z' | 'X' | 'Y' | 'Z';
+  xyz = 'x' | 'y' | 'z';
   star = '*';
   not_star = [all - star];
   not_star_slash = [not_star - '/'];
