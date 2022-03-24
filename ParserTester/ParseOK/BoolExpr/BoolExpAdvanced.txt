@@ -1,3 +1,1 @@
-﻿void main(){
-bool a = a < b && a == c || d == v
-}
+﻿bool a = a < b && a == c || d == v

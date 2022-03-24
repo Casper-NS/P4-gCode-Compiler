@@ -1,4 +1,2 @@
-﻿void main(){
-bool c = a <= a
+﻿bool c = a <= a
 bool b = a >= a
-}
