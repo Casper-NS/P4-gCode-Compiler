@@ -1,4 +1,11 @@
-﻿using GGCodeParser.analysis;
+﻿/*
+ * Disclaimer: This file is from the SableCC generated code.
+ * It has copied into this project to allow modifying it
+ * without it getting overwritten by regenerating the parser.
+ */
+
+
+using GGCodeParser.analysis;
 using GGCodeParser.node;
 using System;
 using System.Collections;
