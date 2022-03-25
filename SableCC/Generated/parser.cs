@@ -1011,7 +1011,7 @@ public class Parser
     {
         ArrayList nodeList = new ArrayList();
         ArrayList nodeArrayList1 = (ArrayList) Pop();
-        PCstFunctionDeclaration pcstfunctiondeclarationNode2 = (PCstFunctionDeclaration)nodeArrayList1[0];
+        PCstFunctionDeclaration pctiondeclarationNode2 = (PCstFunctionDeclaration)nodeArrayList1[0];
         AFunctionCstDeclaration pcstdeclarationNode1 = new AFunctionCstDeclaration (
               pcstfunctiondeclarationNode2
         );
