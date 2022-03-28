@@ -1,0 +1,25 @@
+﻿build void funsies(int a, float b)
+{
+	Forward(b*a)
+}
+
+walk int num()
+{
+	Forward(100)
+	return 1
+}
+
+float fl()
+{
+	left(12)
+	up(4)
+	return 1.5
+}
+
+int main()
+{
+	funsies(2, 100)
+	num()
+	build fl()
+	walk fl()
+}
