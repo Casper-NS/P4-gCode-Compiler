@@ -4,12 +4,12 @@ using System;
 using System.Collections;
 using System.Text;
 using System.IO;
-using GGCodeParser.parser;
-using GGCodeParser.analysis;
-using GGCodeParser.lexer;
-using GGCodeParser.node;
+using GOATCode.parser;
+using GOATCode.analysis;
+using GOATCode.lexer;
+using GOATCode.node;
 
-class TextPrinter : ReversedDepthFirstAdapter {
+public class TextPrinter : ReversedDepthFirstAdapter {
   enum codes {
     ESC = 27
   };

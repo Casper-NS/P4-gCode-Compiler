@@ -4,9 +4,9 @@ using System;
 using System.Collections;
 using System.Text;
 
-using  GGCodeParser.analysis;
+using  GOATCode.analysis;
 
-namespace GGCodeParser.node {
+namespace GOATCode.node {
 
 
 public sealed class TEol : Token
@@ -959,14 +959,14 @@ public sealed class TNumber : Token
     }
 }
 
-public sealed class TIdentifier : Token
+public sealed class TId : Token
 {
-    public TIdentifier(string text)
+    public TId(string text)
     {
         Text = text;
     }
 
-    public TIdentifier(string text, int line, int pos)
+    public TId(string text, int line, int pos)
     {
         Text = text;
         Line = line;
@@ -975,12 +975,12 @@ public sealed class TIdentifier : Token
 
     public override Object Clone()
     {
-      return new TIdentifier(Text, Line, Pos);
+      return new TId(Text, Line, Pos);
     }
 
     public override void Apply(Switch sw)
     {
-        ((Analysis) sw).CaseTIdentifier(this);
+        ((Analysis) sw).CaseTId(this);
     }
 }
 

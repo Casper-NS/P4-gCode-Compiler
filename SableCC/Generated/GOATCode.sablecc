@@ -78,65 +78,65 @@ cst_declaration {-> decl} =
         {function}cst_function_declaration {-> cst_function_declaration.decl};
 
 cst_variable_declaration {-> decl} =
-        {initialised}const? cst_types id assignment_op cst_expression {-> New decl.vardecl(const, cst_types.types, id, cst_expression.exp)} |
-        cst_uninitialised_variable;
+        {initialised}const? cst_types id assignment_op cst_expression {-> New decl.vardecl(const, cst_types.types, id, cst_expression.exp)} | 
+        cst_uninitialised_variable {-> cst_uninitialised_variable.decl};
 
-cst_uninitialised_variable =
-        const? cst_types id;
+cst_uninitialised_variable {-> decl} =
+        const? cst_types id {-> New decl.vardecl(const, cst_types.types, id, Null)};
 
 cst_types {-> types} = 
-        {integer}int {-> New types.int(int.types)} | 
-        {floatingpoint}float {-> New types.float(float.types)} | 
-        {bool}bool {-> New types.bool(bool.types)} |
-        {vector}vector {-> New types.vector(vector.types)};
+        {integer} int {-> New types.int()} | 
+        {floatingpoint} float {-> New types.float()} | 
+        {bool} bool {-> New types.bool()} |
+        {vector} vector {-> New types.vector()} ;
 
 cst_vector_values {-> exp} = l_par [a]:cst_expression [q]:comma [b]:cst_expression [w]:comma [c]:cst_expression r_par {-> New exp.vector(a.exp, b.exp, c.exp)};
 
 cst_function_declaration {-> decl} =
-        {notvoid} cst_types id l_par cst_formal_param_list? r_par eol? cst_block {-> decl.funcdecl(cst_types.types, id, [cst_formal_param_list.decl], cst_block.stmt)}|
-        {void} void         id l_par cst_formal_param_list? r_par eol? cst_block;
+        {notvoid} cst_types id l_par cst_formal_param_list? r_par eol? cst_block {-> New decl.funcdecl(cst_types.types, id, [cst_formal_param_list.decl], cst_block.block)}|
+        {void} void         id l_par cst_formal_param_list? r_par eol? cst_block {-> New decl.procdecl(id, [cst_formal_param_list.decl], cst_block.block)};
 
-cst_formal_param_list = 
-        {list}cst_uninitialised_variable comma cst_formal_param_list | 
-              cst_uninitialised_variable;
+cst_formal_param_list {-> decl*} = 
+        {list}cst_uninitialised_variable comma cst_formal_param_list {-> [cst_uninitialised_variable.decl, cst_formal_param_list.decl]} | 
+              cst_uninitialised_variable {-> [cst_uninitialised_variable.decl]};
 
-cst_block {stmt} = l_cur eol cst_statement_list r_cur {-> [cst_statement_list.stmt]};
+cst_block {-> block} = l_cur eol cst_statement_list r_cur {-> New block.stmtlist([cst_statement_list.stmt])};
 
 cst_statement_list {-> stmt*} = 
-        {list}cst_statement eol+ cst_statement_list {-> [cst_statement.stmt, cst_statement_list.decl]}| 
+        {list}cst_statement eol+ cst_statement_list {-> [cst_statement.stmt, cst_statement_list.stmt]}| 
         cst_statement eol+ {-> [cst_statement.stmt]};
 
 cst_statement {-> stmt} = 
-        {decl}cst_variable_declaration | 
-        {if}cst_if_statement | 
-        {repeat}cst_repeat_statement | 
-        {while}cst_while_statement | 
-        {gcode}cst_gcode_literal | 
-        {assignment}cst_assignments | 
-        {function}cst_function_call |
-        {return}return cst_expression |
-        {build} build eol? cst_block |
-        {walk} walk eol? cst_block;
+        {decl} cst_variable_declaration {-> New stmt.decl(cst_variable_declaration.decl)} | 
+        {if}cst_if_statement {-> cst_if_statement.stmt}| 
+        {repeat}cst_repeat_statement {-> cst_repeat_statement.stmt}| 
+        {while}cst_while_statement {-> cst_while_statement.stmt}| 
+        {gcode}cst_gcode_literal {-> cst_gcode_literal.stmt} | 
+        {assignment}cst_assignments {-> cst_assignments.stmt} | 
+        {function} cst_function_call {-> New stmt.function(cst_function_call.exp)} |
+        {return} return cst_expression {-> New stmt.return(cst_expression.exp)} |
+        {build} build eol? cst_block {-> New stmt.build(cst_block.block)} |
+        {walk} walk eol? cst_block {-> New stmt.walk(cst_block.block)};
 
-cst_if_statement = 
-        {noelse}  if l_par cst_expression r_par eol? cst_block | 
-        {withelse}if l_par cst_expression r_par eol? [a]:cst_block else [b]:cst_block;
+cst_if_statement {-> stmt} = 
+        {noelse}  if l_par cst_expression r_par eol? cst_block {-> New stmt.if(cst_expression.exp, cst_block.block, Null)} | 
+        {withelse}if l_par cst_expression r_par eol? [a]:cst_block else [b]:cst_block {-> New stmt.if(cst_expression.exp, a.block, b.block)};
 
-cst_repeat_statement = repeat l_par cst_expression r_par eol? cst_block;
+cst_repeat_statement {-> stmt} = repeat l_par cst_expression r_par eol? cst_block {-> New stmt.repeat(cst_expression.exp, cst_block.block)};
 
-cst_while_statement = while l_par cst_expression r_par eol? cst_block;
+cst_while_statement {-> stmt} = while l_par cst_expression r_par eol? cst_block {-> New stmt.while(cst_expression.exp, cst_block.block)};
 
-cst_gcode_literal = gcode l_cur all_chars_except_curly r_cur;
+cst_gcode_literal {-> stmt} = gcode l_cur all_chars_except_curly r_cur {-> New stmt.gcode(all_chars_except_curly)};
 
-cst_assignments = 
-        {assign}id assignment_op cst_expression |
-        {assign_plus}id plus_op assignment_op cst_expression |
-        {assign_minus}id minus_op assignment_op cst_expression |
-        {assign_mult}id multiplication_op assignment_op cst_expression |
-        {assign_division}id division_op assignment_op cst_expression |
-        {assign_mod}id modulo_op assignment_op cst_expression;
+cst_assignments {-> stmt} = 
+        {assign}id assignment_op cst_expression {-> New stmt.assign(id, cst_expression.exp)} |
+        {assign_plus} id plus_op assignment_op cst_expression {-> New stmt.assign_plus(id, cst_expression.exp)} |
+        {assign_minus}id minus_op assignment_op cst_expression {-> New stmt.assign_minus(id, cst_expression.exp)} |
+        {assign_mult}id multiplication_op assignment_op cst_expression {-> New stmt.assign_mult(id, cst_expression.exp)} |
+        {assign_division}id division_op assignment_op cst_expression {-> New stmt.assign_division(id, cst_expression.exp)} |
+        {assign_mod}id modulo_op assignment_op cst_expression {-> New stmt.assign_mod(id, cst_expression.exp)};
 
-cst_function_call {-> exp}= id l_par cst_actual_param_list? r_par {-> New exp.function(id, [cst_actual_param_list.exp])};
+cst_function_call {-> exp} = id l_par cst_actual_param_list? r_par {-> New exp.function(id, [cst_actual_param_list.exp])};
 
 cst_actual_param_list {-> exp* }=
         {list}cst_expression comma cst_actual_param_list {-> [cst_expression.exp, cst_actual_param_list.exp]}| 
@@ -185,17 +185,33 @@ program = {decl} decl*;
 
 decl = 
 {vardecl} const? types id exp?
-{funcdecl}  
-{procdecl};
+| {funcdecl} types id decl* block 
+| {procdecl} id decl* block;
 
 types = 
-{int} int
-| {float} float
-| {bool} bool
-| {vector} vector;
+{int}
+| {float}
+| {bool}
+| {vector};
 
-stmt =
-;
+block = {stmtlist} stmt*;
+
+stmt = 
+{decl} decl
+| {if} exp [then]:block [else]:block?
+| {repeat} exp block
+| {while} exp block
+| {gcode} all_chars_except_curly 
+| {assign} id exp 
+| {assign_plus} id exp
+| {assign_minus} id exp
+| {assign_mult} id exp
+| {assign_division} id exp
+| {assign_mod} id exp
+| {function} exp
+| {return} exp
+| {build} block 
+| {walk} block;
 
 exp = 
 {vector}  [x]:exp [y]:exp [z]:exp

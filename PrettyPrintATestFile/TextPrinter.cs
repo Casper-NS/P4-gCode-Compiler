@@ -5,13 +5,14 @@
  */
 
 
-using GGCodeParser.analysis;
-using GGCodeParser.node;
 using System;
 using System.Collections;
+using GOATCode.analysis;
+using GOATCode.node;
 
 namespace PrettyPrintATestFile
 {
+    /*
     internal class TextPrinter : ReversedDepthFirstAdapter
     {
         private enum codes
@@ -134,4 +135,5 @@ namespace PrettyPrintATestFile
         private bool last = false;
         private bool color = false;
     }
+    */
 }

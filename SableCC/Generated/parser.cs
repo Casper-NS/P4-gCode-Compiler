@@ -4,11 +4,11 @@ using System;
 using System.Collections;
 using System.Text;
 using System.IO;
-using GGCodeParser.node;
-using GGCodeParser.lexer;
-using GGCodeParser.analysis;
+using GOATCode.node;
+using GOATCode.lexer;
+using GOATCode.analysis;
 
-namespace GGCodeParser.parser {
+namespace GOATCode.parser {
 
 public class ParserException : ApplicationException
 {
@@ -226,7 +226,7 @@ internal class TokenIndex : AnalysisAdapter
         index = 36;
     }
 
-    public override void CaseTIdentifier(TIdentifier node)
+    public override void CaseTId(TId node)
     {
         index = 37;
     }
@@ -919,7 +919,7 @@ public class Parser
                 case ACCEPT:
                     {
                         EOF node2 = (EOF) lexer.Next();
-                        PCstProgram node1 = (PCstProgram) ((ArrayList)Pop())[0];
+                        PProgram node1 = (PProgram) ((ArrayList)Pop())[0];
                         Start node = new Start(node1, node2);
                         return node;
                     }
@@ -935,11 +935,16 @@ public class Parser
     {
         ArrayList nodeList = new ArrayList();
         ArrayList nodeArrayList1 = (ArrayList) Pop();
-        PCstDeclarationList pcstdeclarationlistNode2 = (PCstDeclarationList)nodeArrayList1[0];
-        ACstProgram pcstprogramNode1 = new ACstProgram (
-              pcstdeclarationlistNode2
+        TypedList listNode3 = new TypedList();
+        TypedList listNode2 = (TypedList)nodeArrayList1[0];
+        if ( listNode2 != null )
+        {
+            listNode3.AddAll(listNode2);
+        }
+        ADeclProgram pprogramNode1 = new ADeclProgram (
+              listNode3
         );
-        nodeList.Add(pcstprogramNode1);
+        nodeList.Add(pprogramNode1);
         return nodeList;
     }
     ArrayList New1()
@@ -948,33 +953,31 @@ public class Parser
         ArrayList nodeArrayList3 = (ArrayList) Pop();
         ArrayList nodeArrayList2 = (ArrayList) Pop();
         ArrayList nodeArrayList1 = (ArrayList) Pop();
-        TypedList listNode4 = new TypedList();
-        PCstDeclaration pcstdeclarationNode2 = (PCstDeclaration)nodeArrayList1[0];
-        TypedList listNode3 = (TypedList)nodeArrayList2[0];
-        if ( listNode3 != null )
+        TypedList listNode3 = new TypedList();
+        PDecl pdeclNode1 = (PDecl)nodeArrayList1[0];
+        TypedList listNode2 = (TypedList)nodeArrayList3[0];
+        if ( pdeclNode1 != null )
         {
-            listNode4.AddAll(listNode3);
+            listNode3.Add(pdeclNode1);
         }
-        PCstDeclarationList pcstdeclarationlistNode5 = (PCstDeclarationList)nodeArrayList3[0];
-        AListCstDeclarationList pcstdeclarationlistNode1 = new AListCstDeclarationList (
-              pcstdeclarationNode2,
-              listNode4,
-              pcstdeclarationlistNode5
-        );
-        nodeList.Add(pcstdeclarationlistNode1);
+        if ( listNode2 != null )
+        {
+            listNode3.AddAll(listNode2);
+        }
+        nodeList.Add(listNode3);
         return nodeList;
     }
     ArrayList New2()
     {
         ArrayList nodeList = new ArrayList();
         ArrayList nodeArrayList1 = (ArrayList) Pop();
-        TypedList listNode3 = new TypedList();
-        PCstDeclaration pcstdeclarationNode2 = (PCstDeclaration)nodeArrayList1[0];
-        ACstDeclarationList pcstdeclarationlistNode1 = new ACstDeclarationList (
-              pcstdeclarationNode2,
-              listNode3
-        );
-        nodeList.Add(pcstdeclarationlistNode1);
+        TypedList listNode2 = new TypedList();
+        PDecl pdeclNode1 = (PDecl)nodeArrayList1[0];
+        if ( pdeclNode1 != null )
+        {
+            listNode2.Add(pdeclNode1);
+        }
+        nodeList.Add(listNode2);
         return nodeList;
     }
     ArrayList New3()
@@ -982,40 +985,29 @@ public class Parser
         ArrayList nodeList = new ArrayList();
         ArrayList nodeArrayList2 = (ArrayList) Pop();
         ArrayList nodeArrayList1 = (ArrayList) Pop();
-        TypedList listNode4 = new TypedList();
-        PCstDeclaration pcstdeclarationNode2 = (PCstDeclaration)nodeArrayList1[0];
-        TypedList listNode3 = (TypedList)nodeArrayList2[0];
-        if ( listNode3 != null )
+        TypedList listNode2 = new TypedList();
+        PDecl pdeclNode1 = (PDecl)nodeArrayList1[0];
+        if ( pdeclNode1 != null )
         {
-            listNode4.AddAll(listNode3);
+            listNode2.Add(pdeclNode1);
         }
-        ACstDeclarationList pcstdeclarationlistNode1 = new ACstDeclarationList (
-              pcstdeclarationNode2,
-              listNode4
-        );
-        nodeList.Add(pcstdeclarationlistNode1);
+        nodeList.Add(listNode2);
         return nodeList;
     }
     ArrayList New4()
     {
         ArrayList nodeList = new ArrayList();
         ArrayList nodeArrayList1 = (ArrayList) Pop();
-        PCstVariableDeclaration pcstvariabledeclarationNode2 = (PCstVariableDeclaration)nodeArrayList1[0];
-        AVariableCstDeclaration pcstdeclarationNode1 = new AVariableCstDeclaration (
-              pcstvariabledeclarationNode2
-        );
-        nodeList.Add(pcstdeclarationNode1);
+        PDecl pdeclNode1 = (PDecl)nodeArrayList1[0];
+        nodeList.Add(pdeclNode1);
         return nodeList;
     }
     ArrayList New5()
     {
         ArrayList nodeList = new ArrayList();
         ArrayList nodeArrayList1 = (ArrayList) Pop();
-        PCstFunctionDeclaration pctiondeclarationNode2 = (PCstFunctionDeclaration)nodeArrayList1[0];
-        AFunctionCstDeclaration pcstdeclarationNode1 = new AFunctionCstDeclaration (
-              pcstfunctiondeclarationNode2
-        );
-        nodeList.Add(pcstdeclarationNode1);
+        PDecl pdeclNode1 = (PDecl)nodeArrayList1[0];
+        nodeList.Add(pdeclNode1);
         return nodeList;
     }
     ArrayList New6()
@@ -1025,18 +1017,16 @@ public class Parser
         ArrayList nodeArrayList3 = (ArrayList) Pop();
         ArrayList nodeArrayList2 = (ArrayList) Pop();
         ArrayList nodeArrayList1 = (ArrayList) Pop();
-        PCstTypes pcsttypesNode3 = (PCstTypes)nodeArrayList1[0];
-        TIdentifier tidentifierNode4 = (TIdentifier)nodeArrayList2[0];
-        TAssignmentOp tassignmentopNode5 = (TAssignmentOp)nodeArrayList3[0];
-        PCstExpression pcstexpressionNode6 = (PCstExpression)nodeArrayList4[0];
-        AInitialisedCstVariableDeclaration pcstvariabledeclarationNode1 = new AInitialisedCstVariableDeclaration (
+        PTypes ptypesNode3 = (PTypes)nodeArrayList1[0];
+        TId tidNode4 = (TId)nodeArrayList2[0];
+        PExp pexpNode5 = (PExp)nodeArrayList4[0];
+        AVardeclDecl pdeclNode1 = new AVardeclDecl (
               null,
-              pcsttypesNode3,
-              tidentifierNode4,
-              tassignmentopNode5,
-              pcstexpressionNode6
+              ptypesNode3,
+              tidNode4,
+              pexpNode5
         );
-        nodeList.Add(pcstvariabledeclarationNode1);
+        nodeList.Add(pdeclNode1);
         return nodeList;
     }
     ArrayList New7()
@@ -1048,29 +1038,24 @@ public class Parser
         ArrayList nodeArrayList2 = (ArrayList) Pop();
         ArrayList nodeArrayList1 = (ArrayList) Pop();
         TConst tconstNode2 = (TConst)nodeArrayList1[0];
-        PCstTypes pcsttypesNode3 = (PCstTypes)nodeArrayList2[0];
-        TIdentifier tidentifierNode4 = (TIdentifier)nodeArrayList3[0];
-        TAssignmentOp tassignmentopNode5 = (TAssignmentOp)nodeArrayList4[0];
-        PCstExpression pcstexpressionNode6 = (PCstExpression)nodeArrayList5[0];
-        AInitialisedCstVariableDeclaration pcstvariabledeclarationNode1 = new AInitialisedCstVariableDeclaration (
+        PTypes ptypesNode3 = (PTypes)nodeArrayList2[0];
+        TId tidNode4 = (TId)nodeArrayList3[0];
+        PExp pexpNode5 = (PExp)nodeArrayList5[0];
+        AVardeclDecl pdeclNode1 = new AVardeclDecl (
               tconstNode2,
-              pcsttypesNode3,
-              tidentifierNode4,
-              tassignmentopNode5,
-              pcstexpressionNode6
+              ptypesNode3,
+              tidNode4,
+              pexpNode5
         );
-        nodeList.Add(pcstvariabledeclarationNode1);
+        nodeList.Add(pdeclNode1);
         return nodeList;
     }
     ArrayList New8()
     {
         ArrayList nodeList = new ArrayList();
         ArrayList nodeArrayList1 = (ArrayList) Pop();
-        PCstUninitialisedVariable pcstuninitialisedvariableNode2 = (PCstUninitialisedVariable)nodeArrayList1[0];
-        ACstVariableDeclaration pcstvariabledeclarationNode1 = new ACstVariableDeclaration (
-              pcstuninitialisedvariableNode2
-        );
-        nodeList.Add(pcstvariabledeclarationNode1);
+        PDecl pdeclNode1 = (PDecl)nodeArrayList1[0];
+        nodeList.Add(pdeclNode1);
         return nodeList;
     }
     ArrayList New9()
@@ -1078,14 +1063,15 @@ public class Parser
         ArrayList nodeList = new ArrayList();
         ArrayList nodeArrayList2 = (ArrayList) Pop();
         ArrayList nodeArrayList1 = (ArrayList) Pop();
-        PCstTypes pcsttypesNode3 = (PCstTypes)nodeArrayList1[0];
-        TIdentifier tidentifierNode4 = (TIdentifier)nodeArrayList2[0];
-        ACstUninitialisedVariable pcstuninitialisedvariableNode1 = new ACstUninitialisedVariable (
+        PTypes ptypesNode3 = (PTypes)nodeArrayList1[0];
+        TId tidNode4 = (TId)nodeArrayList2[0];
+        AVardeclDecl pdeclNode1 = new AVardeclDecl (
               null,
-              pcsttypesNode3,
-              tidentifierNode4
+              ptypesNode3,
+              tidNode4,
+              null
         );
-        nodeList.Add(pcstuninitialisedvariableNode1);
+        nodeList.Add(pdeclNode1);
         return nodeList;
     }
     ArrayList New10()
@@ -1095,58 +1081,51 @@ public class Parser
         ArrayList nodeArrayList2 = (ArrayList) Pop();
         ArrayList nodeArrayList1 = (ArrayList) Pop();
         TConst tconstNode2 = (TConst)nodeArrayList1[0];
-        PCstTypes pcsttypesNode3 = (PCstTypes)nodeArrayList2[0];
-        TIdentifier tidentifierNode4 = (TIdentifier)nodeArrayList3[0];
-        ACstUninitialisedVariable pcstuninitialisedvariableNode1 = new ACstUninitialisedVariable (
+        PTypes ptypesNode3 = (PTypes)nodeArrayList2[0];
+        TId tidNode4 = (TId)nodeArrayList3[0];
+        AVardeclDecl pdeclNode1 = new AVardeclDecl (
               tconstNode2,
-              pcsttypesNode3,
-              tidentifierNode4
+              ptypesNode3,
+              tidNode4,
+              null
         );
-        nodeList.Add(pcstuninitialisedvariableNode1);
+        nodeList.Add(pdeclNode1);
         return nodeList;
     }
     ArrayList New11()
     {
         ArrayList nodeList = new ArrayList();
         ArrayList nodeArrayList1 = (ArrayList) Pop();
-        TInt tintNode2 = (TInt)nodeArrayList1[0];
-        AIntegerCstTypes pcsttypesNode1 = new AIntegerCstTypes (
-              tintNode2
+        AIntTypes ptypesNode1 = new AIntTypes (
         );
-        nodeList.Add(pcsttypesNode1);
+        nodeList.Add(ptypesNode1);
         return nodeList;
     }
     ArrayList New12()
     {
         ArrayList nodeList = new ArrayList();
         ArrayList nodeArrayList1 = (ArrayList) Pop();
-        TFloat tfloatNode2 = (TFloat)nodeArrayList1[0];
-        AFloatingpointCstTypes pcsttypesNode1 = new AFloatingpointCstTypes (
-              tfloatNode2
+        AFloatTypes ptypesNode1 = new AFloatTypes (
         );
-        nodeList.Add(pcsttypesNode1);
+        nodeList.Add(ptypesNode1);
         return nodeList;
     }
     ArrayList New13()
     {
         ArrayList nodeList = new ArrayList();
         ArrayList nodeArrayList1 = (ArrayList) Pop();
-        TBool tboolNode2 = (TBool)nodeArrayList1[0];
-        ABoolCstTypes pcsttypesNode1 = new ABoolCstTypes (
-              tboolNode2
+        ABoolTypes ptypesNode1 = new ABoolTypes (
         );
-        nodeList.Add(pcsttypesNode1);
+        nodeList.Add(ptypesNode1);
         return nodeList;
     }
     ArrayList New14()
     {
         ArrayList nodeList = new ArrayList();
         ArrayList nodeArrayList1 = (ArrayList) Pop();
-        TVector tvectorNode2 = (TVector)nodeArrayList1[0];
-        AVectorCstTypes pcsttypesNode1 = new AVectorCstTypes (
-              tvectorNode2
+        AVectorTypes ptypesNode1 = new AVectorTypes (
         );
-        nodeList.Add(pcsttypesNode1);
+        nodeList.Add(ptypesNode1);
         return nodeList;
     }
     ArrayList New15()
@@ -1159,23 +1138,15 @@ public class Parser
         ArrayList nodeArrayList3 = (ArrayList) Pop();
         ArrayList nodeArrayList2 = (ArrayList) Pop();
         ArrayList nodeArrayList1 = (ArrayList) Pop();
-        TLPar tlparNode2 = (TLPar)nodeArrayList1[0];
-        PCstExpression pcstexpressionNode3 = (PCstExpression)nodeArrayList2[0];
-        TComma tcommaNode4 = (TComma)nodeArrayList3[0];
-        PCstExpression pcstexpressionNode5 = (PCstExpression)nodeArrayList4[0];
-        TComma tcommaNode6 = (TComma)nodeArrayList5[0];
-        PCstExpression pcstexpressionNode7 = (PCstExpression)nodeArrayList6[0];
-        TRPar trparNode8 = (TRPar)nodeArrayList7[0];
-        ACstVectorValues pcstvectorvaluesNode1 = new ACstVectorValues (
-              tlparNode2,
-              pcstexpressionNode3,
-              tcommaNode4,
-              pcstexpressionNode5,
-              tcommaNode6,
-              pcstexpressionNode7,
-              trparNode8
+        PExp pexpNode2 = (PExp)nodeArrayList2[0];
+        PExp pexpNode3 = (PExp)nodeArrayList4[0];
+        PExp pexpNode4 = (PExp)nodeArrayList6[0];
+        AVectorExp pexpNode1 = new AVectorExp (
+              pexpNode2,
+              pexpNode3,
+              pexpNode4
         );
-        nodeList.Add(pcstvectorvaluesNode1);
+        nodeList.Add(pexpNode1);
         return nodeList;
     }
     ArrayList New16()
@@ -1186,21 +1157,17 @@ public class Parser
         ArrayList nodeArrayList3 = (ArrayList) Pop();
         ArrayList nodeArrayList2 = (ArrayList) Pop();
         ArrayList nodeArrayList1 = (ArrayList) Pop();
-        PCstTypes pcsttypesNode2 = (PCstTypes)nodeArrayList1[0];
-        TIdentifier tidentifierNode3 = (TIdentifier)nodeArrayList2[0];
-        TLPar tlparNode4 = (TLPar)nodeArrayList3[0];
-        TRPar trparNode6 = (TRPar)nodeArrayList4[0];
-        PCstBlock pcstblockNode8 = (PCstBlock)nodeArrayList5[0];
-        ANotvoidCstFunctionDeclaration pcstfunctiondeclarationNode1 = new ANotvoidCstFunctionDeclaration (
-              pcsttypesNode2,
-              tidentifierNode3,
-              tlparNode4,
-              null,
-              trparNode6,
-              null,
-              pcstblockNode8
+        TypedList listNode4 = new TypedList();
+        PTypes ptypesNode2 = (PTypes)nodeArrayList1[0];
+        TId tidNode3 = (TId)nodeArrayList2[0];
+        PBlock pblockNode5 = (PBlock)nodeArrayList5[0];
+        AFuncdeclDecl pdeclNode1 = new AFuncdeclDecl (
+              ptypesNode2,
+              tidNode3,
+              listNode4,
+              pblockNode5
         );
-        nodeList.Add(pcstfunctiondeclarationNode1);
+        nodeList.Add(pdeclNode1);
         return nodeList;
     }
     ArrayList New17()
@@ -1212,22 +1179,22 @@ public class Parser
         ArrayList nodeArrayList3 = (ArrayList) Pop();
         ArrayList nodeArrayList2 = (ArrayList) Pop();
         ArrayList nodeArrayList1 = (ArrayList) Pop();
-        PCstTypes pcsttypesNode2 = (PCstTypes)nodeArrayList1[0];
-        TIdentifier tidentifierNode3 = (TIdentifier)nodeArrayList2[0];
-        TLPar tlparNode4 = (TLPar)nodeArrayList3[0];
-        PCstFormalParamList pcstformalparamlistNode5 = (PCstFormalParamList)nodeArrayList4[0];
-        TRPar trparNode6 = (TRPar)nodeArrayList5[0];
-        PCstBlock pcstblockNode8 = (PCstBlock)nodeArrayList6[0];
-        ANotvoidCstFunctionDeclaration pcstfunctiondeclarationNode1 = new ANotvoidCstFunctionDeclaration (
-              pcsttypesNode2,
-              tidentifierNode3,
-              tlparNode4,
-              pcstformalparamlistNode5,
-              trparNode6,
-              null,
-              pcstblockNode8
+        TypedList listNode5 = new TypedList();
+        PTypes ptypesNode2 = (PTypes)nodeArrayList1[0];
+        TId tidNode3 = (TId)nodeArrayList2[0];
+        TypedList listNode4 = (TypedList)nodeArrayList4[0];
+        if ( listNode4 != null )
+        {
+            listNode5.AddAll(listNode4);
+        }
+        PBlock pblockNode6 = (PBlock)nodeArrayList6[0];
+        AFuncdeclDecl pdeclNode1 = new AFuncdeclDecl (
+              ptypesNode2,
+              tidNode3,
+              listNode5,
+              pblockNode6
         );
-        nodeList.Add(pcstfunctiondeclarationNode1);
+        nodeList.Add(pdeclNode1);
         return nodeList;
     }
     ArrayList New18()
@@ -1239,22 +1206,17 @@ public class Parser
         ArrayList nodeArrayList3 = (ArrayList) Pop();
         ArrayList nodeArrayList2 = (ArrayList) Pop();
         ArrayList nodeArrayList1 = (ArrayList) Pop();
-        PCstTypes pcsttypesNode2 = (PCstTypes)nodeArrayList1[0];
-        TIdentifier tidentifierNode3 = (TIdentifier)nodeArrayList2[0];
-        TLPar tlparNode4 = (TLPar)nodeArrayList3[0];
-        TRPar trparNode6 = (TRPar)nodeArrayList4[0];
-        TEol teolNode7 = (TEol)nodeArrayList5[0];
-        PCstBlock pcstblockNode8 = (PCstBlock)nodeArrayList6[0];
-        ANotvoidCstFunctionDeclaration pcstfunctiondeclarationNode1 = new ANotvoidCstFunctionDeclaration (
-              pcsttypesNode2,
-              tidentifierNode3,
-              tlparNode4,
-              null,
-              trparNode6,
-              teolNode7,
-              pcstblockNode8
+        TypedList listNode4 = new TypedList();
+        PTypes ptypesNode2 = (PTypes)nodeArrayList1[0];
+        TId tidNode3 = (TId)nodeArrayList2[0];
+        PBlock pblockNode5 = (PBlock)nodeArrayList6[0];
+        AFuncdeclDecl pdeclNode1 = new AFuncdeclDecl (
+              ptypesNode2,
+              tidNode3,
+              listNode4,
+              pblockNode5
         );
-        nodeList.Add(pcstfunctiondeclarationNode1);
+        nodeList.Add(pdeclNode1);
         return nodeList;
     }
     ArrayList New19()
@@ -1267,23 +1229,22 @@ public class Parser
         ArrayList nodeArrayList3 = (ArrayList) Pop();
         ArrayList nodeArrayList2 = (ArrayList) Pop();
         ArrayList nodeArrayList1 = (ArrayList) Pop();
-        PCstTypes pcsttypesNode2 = (PCstTypes)nodeArrayList1[0];
-        TIdentifier tidentifierNode3 = (TIdentifier)nodeArrayList2[0];
-        TLPar tlparNode4 = (TLPar)nodeArrayList3[0];
-        PCstFormalParamList pcstformalparamlistNode5 = (PCstFormalParamList)nodeArrayList4[0];
-        TRPar trparNode6 = (TRPar)nodeArrayList5[0];
-        TEol teolNode7 = (TEol)nodeArrayList6[0];
-        PCstBlock pcstblockNode8 = (PCstBlock)nodeArrayList7[0];
-        ANotvoidCstFunctionDeclaration pcstfunctiondeclarationNode1 = new ANotvoidCstFunctionDeclaration (
-              pcsttypesNode2,
-              tidentifierNode3,
-              tlparNode4,
-              pcstformalparamlistNode5,
-              trparNode6,
-              teolNode7,
-              pcstblockNode8
+        TypedList listNode5 = new TypedList();
+        PTypes ptypesNode2 = (PTypes)nodeArrayList1[0];
+        TId tidNode3 = (TId)nodeArrayList2[0];
+        TypedList listNode4 = (TypedList)nodeArrayList4[0];
+        if ( listNode4 != null )
+        {
+            listNode5.AddAll(listNode4);
+        }
+        PBlock pblockNode6 = (PBlock)nodeArrayList7[0];
+        AFuncdeclDecl pdeclNode1 = new AFuncdeclDecl (
+              ptypesNode2,
+              tidNode3,
+              listNode5,
+              pblockNode6
         );
-        nodeList.Add(pcstfunctiondeclarationNode1);
+        nodeList.Add(pdeclNode1);
         return nodeList;
     }
     ArrayList New20()
@@ -1294,21 +1255,15 @@ public class Parser
         ArrayList nodeArrayList3 = (ArrayList) Pop();
         ArrayList nodeArrayList2 = (ArrayList) Pop();
         ArrayList nodeArrayList1 = (ArrayList) Pop();
-        TVoid tvoidNode2 = (TVoid)nodeArrayList1[0];
-        TIdentifier tidentifierNode3 = (TIdentifier)nodeArrayList2[0];
-        TLPar tlparNode4 = (TLPar)nodeArrayList3[0];
-        TRPar trparNode6 = (TRPar)nodeArrayList4[0];
-        PCstBlock pcstblockNode8 = (PCstBlock)nodeArrayList5[0];
-        AVoidCstFunctionDeclaration pcstfunctiondeclarationNode1 = new AVoidCstFunctionDeclaration (
-              tvoidNode2,
-              tidentifierNode3,
-              tlparNode4,
-              null,
-              trparNode6,
-              null,
-              pcstblockNode8
+        TypedList listNode3 = new TypedList();
+        TId tidNode2 = (TId)nodeArrayList2[0];
+        PBlock pblockNode4 = (PBlock)nodeArrayList5[0];
+        AProcdeclDecl pdeclNode1 = new AProcdeclDecl (
+              tidNode2,
+              listNode3,
+              pblockNode4
         );
-        nodeList.Add(pcstfunctiondeclarationNode1);
+        nodeList.Add(pdeclNode1);
         return nodeList;
     }
     ArrayList New21()
@@ -1320,22 +1275,20 @@ public class Parser
         ArrayList nodeArrayList3 = (ArrayList) Pop();
         ArrayList nodeArrayList2 = (ArrayList) Pop();
         ArrayList nodeArrayList1 = (ArrayList) Pop();
-        TVoid tvoidNode2 = (TVoid)nodeArrayList1[0];
-        TIdentifier tidentifierNode3 = (TIdentifier)nodeArrayList2[0];
-        TLPar tlparNode4 = (TLPar)nodeArrayList3[0];
-        PCstFormalParamList pcstformalparamlistNode5 = (PCstFormalParamList)nodeArrayList4[0];
-        TRPar trparNode6 = (TRPar)nodeArrayList5[0];
-        PCstBlock pcstblockNode8 = (PCstBlock)nodeArrayList6[0];
-        AVoidCstFunctionDeclaration pcstfunctiondeclarationNode1 = new AVoidCstFunctionDeclaration (
-              tvoidNode2,
-              tidentifierNode3,
-              tlparNode4,
-              pcstformalparamlistNode5,
-              trparNode6,
-              null,
-              pcstblockNode8
+        TypedList listNode4 = new TypedList();
+        TId tidNode2 = (TId)nodeArrayList2[0];
+        TypedList listNode3 = (TypedList)nodeArrayList4[0];
+        if ( listNode3 != null )
+        {
+            listNode4.AddAll(listNode3);
+        }
+        PBlock pblockNode5 = (PBlock)nodeArrayList6[0];
+        AProcdeclDecl pdeclNode1 = new AProcdeclDecl (
+              tidNode2,
+              listNode4,
+              pblockNode5
         );
-        nodeList.Add(pcstfunctiondeclarationNode1);
+        nodeList.Add(pdeclNode1);
         return nodeList;
     }
     ArrayList New22()
@@ -1347,22 +1300,15 @@ public class Parser
         ArrayList nodeArrayList3 = (ArrayList) Pop();
         ArrayList nodeArrayList2 = (ArrayList) Pop();
         ArrayList nodeArrayList1 = (ArrayList) Pop();
-        TVoid tvoidNode2 = (TVoid)nodeArrayList1[0];
-        TIdentifier tidentifierNode3 = (TIdentifier)nodeArrayList2[0];
-        TLPar tlparNode4 = (TLPar)nodeArrayList3[0];
-        TRPar trparNode6 = (TRPar)nodeArrayList4[0];
-        TEol teolNode7 = (TEol)nodeArrayList5[0];
-        PCstBlock pcstblockNode8 = (PCstBlock)nodeArrayList6[0];
-        AVoidCstFunctionDeclaration pcstfunctiondeclarationNode1 = new AVoidCstFunctionDeclaration (
-              tvoidNode2,
-              tidentifierNode3,
-              tlparNode4,
-              null,
-              trparNode6,
-              teolNode7,
-              pcstblockNode8
+        TypedList listNode3 = new TypedList();
+        TId tidNode2 = (TId)nodeArrayList2[0];
+        PBlock pblockNode4 = (PBlock)nodeArrayList6[0];
+        AProcdeclDecl pdeclNode1 = new AProcdeclDecl (
+              tidNode2,
+              listNode3,
+              pblockNode4
         );
-        nodeList.Add(pcstfunctiondeclarationNode1);
+        nodeList.Add(pdeclNode1);
         return nodeList;
     }
     ArrayList New23()
@@ -1375,23 +1321,20 @@ public class Parser
         ArrayList nodeArrayList3 = (ArrayList) Pop();
         ArrayList nodeArrayList2 = (ArrayList) Pop();
         ArrayList nodeArrayList1 = (ArrayList) Pop();
-        TVoid tvoidNode2 = (TVoid)nodeArrayList1[0];
-        TIdentifier tidentifierNode3 = (TIdentifier)nodeArrayList2[0];
-        TLPar tlparNode4 = (TLPar)nodeArrayList3[0];
-        PCstFormalParamList pcstformalparamlistNode5 = (PCstFormalParamList)nodeArrayList4[0];
-        TRPar trparNode6 = (TRPar)nodeArrayList5[0];
-        TEol teolNode7 = (TEol)nodeArrayList6[0];
-        PCstBlock pcstblockNode8 = (PCstBlock)nodeArrayList7[0];
-        AVoidCstFunctionDeclaration pcstfunctiondeclarationNode1 = new AVoidCstFunctionDeclaration (
-              tvoidNode2,
-              tidentifierNode3,
-              tlparNode4,
-              pcstformalparamlistNode5,
-              trparNode6,
-              teolNode7,
-              pcstblockNode8
+        TypedList listNode4 = new TypedList();
+        TId tidNode2 = (TId)nodeArrayList2[0];
+        TypedList listNode3 = (TypedList)nodeArrayList4[0];
+        if ( listNode3 != null )
+        {
+            listNode4.AddAll(listNode3);
+        }
+        PBlock pblockNode5 = (PBlock)nodeArrayList7[0];
+        AProcdeclDecl pdeclNode1 = new AProcdeclDecl (
+              tidNode2,
+              listNode4,
+              pblockNode5
         );
-        nodeList.Add(pcstfunctiondeclarationNode1);
+        nodeList.Add(pdeclNode1);
         return nodeList;
     }
     ArrayList New24()
@@ -1400,26 +1343,31 @@ public class Parser
         ArrayList nodeArrayList3 = (ArrayList) Pop();
         ArrayList nodeArrayList2 = (ArrayList) Pop();
         ArrayList nodeArrayList1 = (ArrayList) Pop();
-        PCstUninitialisedVariable pcstuninitialisedvariableNode2 = (PCstUninitialisedVariable)nodeArrayList1[0];
-        TComma tcommaNode3 = (TComma)nodeArrayList2[0];
-        PCstFormalParamList pcstformalparamlistNode4 = (PCstFormalParamList)nodeArrayList3[0];
-        AListCstFormalParamList pcstformalparamlistNode1 = new AListCstFormalParamList (
-              pcstuninitialisedvariableNode2,
-              tcommaNode3,
-              pcstformalparamlistNode4
-        );
-        nodeList.Add(pcstformalparamlistNode1);
+        TypedList listNode3 = new TypedList();
+        PDecl pdeclNode1 = (PDecl)nodeArrayList1[0];
+        TypedList listNode2 = (TypedList)nodeArrayList3[0];
+        if ( pdeclNode1 != null )
+        {
+            listNode3.Add(pdeclNode1);
+        }
+        if ( listNode2 != null )
+        {
+            listNode3.AddAll(listNode2);
+        }
+        nodeList.Add(listNode3);
         return nodeList;
     }
     ArrayList New25()
     {
         ArrayList nodeList = new ArrayList();
         ArrayList nodeArrayList1 = (ArrayList) Pop();
-        PCstUninitialisedVariable pcstuninitialisedvariableNode2 = (PCstUninitialisedVariable)nodeArrayList1[0];
-        ACstFormalParamList pcstformalparamlistNode1 = new ACstFormalParamList (
-              pcstuninitialisedvariableNode2
-        );
-        nodeList.Add(pcstformalparamlistNode1);
+        TypedList listNode2 = new TypedList();
+        PDecl pdeclNode1 = (PDecl)nodeArrayList1[0];
+        if ( pdeclNode1 != null )
+        {
+            listNode2.Add(pdeclNode1);
+        }
+        nodeList.Add(listNode2);
         return nodeList;
     }
     ArrayList New26()
@@ -1429,17 +1377,16 @@ public class Parser
         ArrayList nodeArrayList3 = (ArrayList) Pop();
         ArrayList nodeArrayList2 = (ArrayList) Pop();
         ArrayList nodeArrayList1 = (ArrayList) Pop();
-        TLCur tlcurNode2 = (TLCur)nodeArrayList1[0];
-        TEol teolNode3 = (TEol)nodeArrayList2[0];
-        PCstStatementList pcststatementlistNode4 = (PCstStatementList)nodeArrayList3[0];
-        TRCur trcurNode5 = (TRCur)nodeArrayList4[0];
-        ACstBlock pcstblockNode1 = new ACstBlock (
-              tlcurNode2,
-              teolNode3,
-              pcststatementlistNode4,
-              trcurNode5
+        TypedList listNode3 = new TypedList();
+        TypedList listNode2 = (TypedList)nodeArrayList3[0];
+        if ( listNode2 != null )
+        {
+            listNode3.AddAll(listNode2);
+        }
+        AStmtlistBlock pblockNode1 = new AStmtlistBlock (
+              listNode3
         );
-        nodeList.Add(pcstblockNode1);
+        nodeList.Add(pblockNode1);
         return nodeList;
     }
     ArrayList New27()
@@ -1448,20 +1395,18 @@ public class Parser
         ArrayList nodeArrayList3 = (ArrayList) Pop();
         ArrayList nodeArrayList2 = (ArrayList) Pop();
         ArrayList nodeArrayList1 = (ArrayList) Pop();
-        TypedList listNode4 = new TypedList();
-        PCstStatement pcststatementNode2 = (PCstStatement)nodeArrayList1[0];
-        TypedList listNode3 = (TypedList)nodeArrayList2[0];
-        if ( listNode3 != null )
+        TypedList listNode3 = new TypedList();
+        PStmt pstmtNode1 = (PStmt)nodeArrayList1[0];
+        TypedList listNode2 = (TypedList)nodeArrayList3[0];
+        if ( pstmtNode1 != null )
         {
-            listNode4.AddAll(listNode3);
+            listNode3.Add(pstmtNode1);
         }
-        PCstStatementList pcststatementlistNode5 = (PCstStatementList)nodeArrayList3[0];
-        AListCstStatementList pcststatementlistNode1 = new AListCstStatementList (
-              pcststatementNode2,
-              listNode4,
-              pcststatementlistNode5
-        );
-        nodeList.Add(pcststatementlistNode1);
+        if ( listNode2 != null )
+        {
+            listNode3.AddAll(listNode2);
+        }
+        nodeList.Add(listNode3);
         return nodeList;
     }
     ArrayList New28()
@@ -1469,95 +1414,75 @@ public class Parser
         ArrayList nodeList = new ArrayList();
         ArrayList nodeArrayList2 = (ArrayList) Pop();
         ArrayList nodeArrayList1 = (ArrayList) Pop();
-        TypedList listNode4 = new TypedList();
-        PCstStatement pcststatementNode2 = (PCstStatement)nodeArrayList1[0];
-        TypedList listNode3 = (TypedList)nodeArrayList2[0];
-        if ( listNode3 != null )
+        TypedList listNode2 = new TypedList();
+        PStmt pstmtNode1 = (PStmt)nodeArrayList1[0];
+        if ( pstmtNode1 != null )
         {
-            listNode4.AddAll(listNode3);
+            listNode2.Add(pstmtNode1);
         }
-        ACstStatementList pcststatementlistNode1 = new ACstStatementList (
-              pcststatementNode2,
-              listNode4
-        );
-        nodeList.Add(pcststatementlistNode1);
+        nodeList.Add(listNode2);
         return nodeList;
     }
     ArrayList New29()
     {
         ArrayList nodeList = new ArrayList();
         ArrayList nodeArrayList1 = (ArrayList) Pop();
-        PCstVariableDeclaration pcstvariabledeclarationNode2 = (PCstVariableDeclaration)nodeArrayList1[0];
-        ADeclCstStatement pcststatementNode1 = new ADeclCstStatement (
-              pcstvariabledeclarationNode2
+        PDecl pdeclNode2 = (PDecl)nodeArrayList1[0];
+        ADeclStmt pstmtNode1 = new ADeclStmt (
+              pdeclNode2
         );
-        nodeList.Add(pcststatementNode1);
+        nodeList.Add(pstmtNode1);
         return nodeList;
     }
     ArrayList New30()
     {
         ArrayList nodeList = new ArrayList();
         ArrayList nodeArrayList1 = (ArrayList) Pop();
-        PCstIfStatement pcstifstatementNode2 = (PCstIfStatement)nodeArrayList1[0];
-        AIfCstStatement pcststatementNode1 = new AIfCstStatement (
-              pcstifstatementNode2
-        );
-        nodeList.Add(pcststatementNode1);
+        PStmt pstmtNode1 = (PStmt)nodeArrayList1[0];
+        nodeList.Add(pstmtNode1);
         return nodeList;
     }
     ArrayList New31()
     {
         ArrayList nodeList = new ArrayList();
         ArrayList nodeArrayList1 = (ArrayList) Pop();
-        PCstRepeatStatement pcstrepeatstatementNode2 = (PCstRepeatStatement)nodeArrayList1[0];
-        ARepeatCstStatement pcststatementNode1 = new ARepeatCstStatement (
-              pcstrepeatstatementNode2
-        );
-        nodeList.Add(pcststatementNode1);
+        PStmt pstmtNode1 = (PStmt)nodeArrayList1[0];
+        nodeList.Add(pstmtNode1);
         return nodeList;
     }
     ArrayList New32()
     {
         ArrayList nodeList = new ArrayList();
         ArrayList nodeArrayList1 = (ArrayList) Pop();
-        PCstWhileStatement pcstwhilestatementNode2 = (PCstWhileStatement)nodeArrayList1[0];
-        AWhileCstStatement pcststatementNode1 = new AWhileCstStatement (
-              pcstwhilestatementNode2
-        );
-        nodeList.Add(pcststatementNode1);
+        PStmt pstmtNode1 = (PStmt)nodeArrayList1[0];
+        nodeList.Add(pstmtNode1);
         return nodeList;
     }
     ArrayList New33()
     {
         ArrayList nodeList = new ArrayList();
         ArrayList nodeArrayList1 = (ArrayList) Pop();
-        PCstGcodeLiteral pcstgcodeliteralNode2 = (PCstGcodeLiteral)nodeArrayList1[0];
-        AGcodeCstStatement pcststatementNode1 = new AGcodeCstStatement (
-              pcstgcodeliteralNode2
-        );
-        nodeList.Add(pcststatementNode1);
+        PStmt pstmtNode1 = (PStmt)nodeArrayList1[0];
+        nodeList.Add(pstmtNode1);
         return nodeList;
     }
     ArrayList New34()
     {
         ArrayList nodeList = new ArrayList();
         ArrayList nodeArrayList1 = (ArrayList) Pop();
-        PCstAssignments pcstassignmentsNode2 = (PCstAssignments)nodeArrayList1[0];
-        AAssignmentCstStatement pcststatementNode1 = new AAssignmentCstStatement (
-              pcstassignmentsNode2
-        );
-        nodeList.Add(pcststatementNode1);
+        PStmt pstmtNode1 = (PStmt)nodeArrayList1[0];
+        nodeList.Add(pstmtNode1);
         return nodeList;
     }
     ArrayList New35()
     {
         ArrayList nodeList = new ArrayList();
         ArrayList nodeArrayList1 = (ArrayList) Pop();
-        PCstFunctionCall pcstfunctioncallNode2 = (PCstFunctionCall)nodeArrayList1[0];
-        AFunctionCstStatement pcststatementNode1 = new AFunctionCstStatement (
-              pcstfunctioncallNode2
+        PExp pexpNode2 = (PExp)nodeArrayList1[0];
+        AFunctionStmt pstmtNode1 = new AFunctionStmt (
+              pexpNode2
         );
-        nodeList.Add(pcststatementNode1);
+        nodeList.Add(pstmtNode1);
         return nodeList;
     }
     ArrayList New36()
@@ -1565,13 +1490,11 @@ public class Parser
         ArrayList nodeList = new ArrayList();
         ArrayList nodeArrayList2 = (ArrayList) Pop();
         ArrayList nodeArrayList1 = (ArrayList) Pop();
-        TReturn treturnNode2 = (TReturn)nodeArrayList1[0];
-        PCstExpression pcstexpressionNode3 = (PCstExpression)nodeArrayList2[0];
-        AReturnCstStatement pcststatementNode1 = new AReturnCstStatement (
-              treturnNode2,
-              pcstexpressionNode3
+        PExp pexpNode2 = (PExp)nodeArrayList2[0];
+        AReturnStmt pstmtNode1 = new AReturnStmt (
+              pexpNode2
         );
-        nodeList.Add(pcststatementNode1);
+        nodeList.Add(pstmtNode1);
         return nodeList;
     }
     ArrayList New37()
@@ -1579,14 +1502,11 @@ public class Parser
         ArrayList nodeList = new ArrayList();
         ArrayList nodeArrayList2 = (ArrayList) Pop();
         ArrayList nodeArrayList1 = (ArrayList) Pop();
-        TBuild tbuildNode2 = (TBuild)nodeArrayList1[0];
-        PCstBlock pcstblockNode4 = (PCstBlock)nodeArrayList2[0];
-        ABuildCstStatement pcststatementNode1 = new ABuildCstStatement (
-              tbuildNode2,
-              null,
-              pcstblockNode4
+        PBlock pblockNode2 = (PBlock)nodeArrayList2[0];
+        ABuildStmt pstmtNode1 = new ABuildStmt (
+              pblockNode2
         );
-        nodeList.Add(pcststatementNode1);
+        nodeList.Add(pstmtNode1);
         return nodeList;
     }
     ArrayList New38()
@@ -1595,15 +1515,11 @@ public class Parser
         ArrayList nodeArrayList3 = (ArrayList) Pop();
         ArrayList nodeArrayList2 = (ArrayList) Pop();
         ArrayList nodeArrayList1 = (ArrayList) Pop();
-        TBuild tbuildNode2 = (TBuild)nodeArrayList1[0];
-        TEol teolNode3 = (TEol)nodeArrayList2[0];
-        PCstBlock pcstblockNode4 = (PCstBlock)nodeArrayList3[0];
-        ABuildCstStatement pcststatementNode1 = new ABuildCstStatement (
-              tbuildNode2,
-              teolNode3,
-              pcstblockNode4
+        PBlock pblockNode2 = (PBlock)nodeArrayList3[0];
+        ABuildStmt pstmtNode1 = new ABuildStmt (
+              pblockNode2
         );
-        nodeList.Add(pcststatementNode1);
+        nodeList.Add(pstmtNode1);
         return nodeList;
     }
     ArrayList New39()
@@ -1611,14 +1527,11 @@ public class Parser
         ArrayList nodeList = new ArrayList();
         ArrayList nodeArrayList2 = (ArrayList) Pop();
         ArrayList nodeArrayList1 = (ArrayList) Pop();
-        TWalk twalkNode2 = (TWalk)nodeArrayList1[0];
-        PCstBlock pcstblockNode4 = (PCstBlock)nodeArrayList2[0];
-        AWalkCstStatement pcststatementNode1 = new AWalkCstStatement (
-              twalkNode2,
-              null,
-              pcstblockNode4
+        PBlock pblockNode2 = (PBlock)nodeArrayList2[0];
+        AWalkStmt pstmtNode1 = new AWalkStmt (
+              pblockNode2
         );
-        nodeList.Add(pcststatementNode1);
+        nodeList.Add(pstmtNode1);
         return nodeList;
     }
     ArrayList New40()
@@ -1627,15 +1540,11 @@ public class Parser
         ArrayList nodeArrayList3 = (ArrayList) Pop();
         ArrayList nodeArrayList2 = (ArrayList) Pop();
         ArrayList nodeArrayList1 = (ArrayList) Pop();
-        TWalk twalkNode2 = (TWalk)nodeArrayList1[0];
-        TEol teolNode3 = (TEol)nodeArrayList2[0];
-        PCstBlock pcstblockNode4 = (PCstBlock)nodeArrayList3[0];
-        AWalkCstStatement pcststatementNode1 = new AWalkCstStatement (
-              twalkNode2,
-              teolNode3,
-              pcstblockNode4
+        PBlock pblockNode2 = (PBlock)nodeArrayList3[0];
+        AWalkStmt pstmtNode1 = new AWalkStmt (
+              pblockNode2
         );
-        nodeList.Add(pcststatementNode1);
+        nodeList.Add(pstmtNode1);
         return nodeList;
     }
     ArrayList New41()
@@ -1646,20 +1555,14 @@ public class Parser
         ArrayList nodeArrayList3 = (ArrayList) Pop();
         ArrayList nodeArrayList2 = (ArrayList) Pop();
         ArrayList nodeArrayList1 = (ArrayList) Pop();
-        TIf tifNode2 = (TIf)nodeArrayList1[0];
-        TLPar tlparNode3 = (TLPar)nodeArrayList2[0];
-        PCstExpression pcstexpressionNode4 = (PCstExpression)nodeArrayList3[0];
-        TRPar trparNode5 = (TRPar)nodeArrayList4[0];
-        PCstBlock pcstblockNode7 = (PCstBlock)nodeArrayList5[0];
-        ANoelseCstIfStatement pcstifstatementNode1 = new ANoelseCstIfStatement (
-              tifNode2,
-              tlparNode3,
-              pcstexpressionNode4,
-              trparNode5,
-              null,
-              pcstblockNode7
+        PExp pexpNode2 = (PExp)nodeArrayList3[0];
+        PBlock pblockNode3 = (PBlock)nodeArrayList5[0];
+        AIfStmt pstmtNode1 = new AIfStmt (
+              pexpNode2,
+              pblockNode3,
+              null
         );
-        nodeList.Add(pcstifstatementNode1);
+        nodeList.Add(pstmtNode1);
         return nodeList;
     }
     ArrayList New42()
@@ -1671,21 +1574,14 @@ public class Parser
         ArrayList nodeArrayList3 = (ArrayList) Pop();
         ArrayList nodeArrayList2 = (ArrayList) Pop();
         ArrayList nodeArrayList1 = (ArrayList) Pop();
-        TIf tifNode2 = (TIf)nodeArrayList1[0];
-        TLPar tlparNode3 = (TLPar)nodeArrayList2[0];
-        PCstExpression pcstexpressionNode4 = (PCstExpression)nodeArrayList3[0];
-        TRPar trparNode5 = (TRPar)nodeArrayList4[0];
-        TEol teolNode6 = (TEol)nodeArrayList5[0];
-        PCstBlock pcstblockNode7 = (PCstBlock)nodeArrayList6[0];
-        ANoelseCstIfStatement pcstifstatementNode1 = new ANoelseCstIfStatement (
-              tifNode2,
-              tlparNode3,
-              pcstexpressionNode4,
-              trparNode5,
-              teolNode6,
-              pcstblockNode7
+        PExp pexpNode2 = (PExp)nodeArrayList3[0];
+        PBlock pblockNode3 = (PBlock)nodeArrayList6[0];
+        AIfStmt pstmtNode1 = new AIfStmt (
+              pexpNode2,
+              pblockNode3,
+              null
         );
-        nodeList.Add(pcstifstatementNode1);
+        nodeList.Add(pstmtNode1);
         return nodeList;
     }
     ArrayList New43()
@@ -1698,24 +1594,15 @@ public class Parser
         ArrayList nodeArrayList3 = (ArrayList) Pop();
         ArrayList nodeArrayList2 = (ArrayList) Pop();
         ArrayList nodeArrayList1 = (ArrayList) Pop();
-        TIf tifNode2 = (TIf)nodeArrayList1[0];
-        TLPar tlparNode3 = (TLPar)nodeArrayList2[0];
-        PCstExpression pcstexpressionNode4 = (PCstExpression)nodeArrayList3[0];
-        TRPar trparNode5 = (TRPar)nodeArrayList4[0];
-        PCstBlock pcstblockNode7 = (PCstBlock)nodeArrayList5[0];
-        TElse telseNode8 = (TElse)nodeArrayList6[0];
-        PCstBlock pcstblockNode9 = (PCstBlock)nodeArrayList7[0];
-        AWithelseCstIfStatement pcstifstatementNode1 = new AWithelseCstIfStatement (
-              tifNode2,
-              tlparNode3,
-              pcstexpressionNode4,
-              trparNode5,
-              null,
-              pcstblockNode7,
-              telseNode8,
-              pcstblockNode9
+        PExp pexpNode2 = (PExp)nodeArrayList3[0];
+        PBlock pblockNode3 = (PBlock)nodeArrayList5[0];
+        PBlock pblockNode4 = (PBlock)nodeArrayList7[0];
+        AIfStmt pstmtNode1 = new AIfStmt (
+              pexpNode2,
+              pblockNode3,
+              pblockNode4
         );
-        nodeList.Add(pcstifstatementNode1);
+        nodeList.Add(pstmtNode1);
         return nodeList;
     }
     ArrayList New44()
@@ -1729,25 +1616,15 @@ public class Parser
         ArrayList nodeArrayList3 = (ArrayList) Pop();
         ArrayList nodeArrayList2 = (ArrayList) Pop();
         ArrayList nodeArrayList1 = (ArrayList) Pop();
-        TIf tifNode2 = (TIf)nodeArrayList1[0];
-        TLPar tlparNode3 = (TLPar)nodeArrayList2[0];
-        PCstExpression pcstexpressionNode4 = (PCstExpression)nodeArrayList3[0];
-        TRPar trparNode5 = (TRPar)nodeArrayList4[0];
-        TEol teolNode6 = (TEol)nodeArrayList5[0];
-        PCstBlock pcstblockNode7 = (PCstBlock)nodeArrayList6[0];
-        TElse telseNode8 = (TElse)nodeArrayList7[0];
-        PCstBlock pcstblockNode9 = (PCstBlock)nodeArrayList8[0];
-        AWithelseCstIfStatement pcstifstatementNode1 = new AWithelseCstIfStatement (
-              tifNode2,
-              tlparNode3,
-              pcstexpressionNode4,
-              trparNode5,
-              teolNode6,
-              pcstblockNode7,
-              telseNode8,
-              pcstblockNode9
+        PExp pexpNode2 = (PExp)nodeArrayList3[0];
+        PBlock pblockNode3 = (PBlock)nodeArrayList6[0];
+        PBlock pblockNode4 = (PBlock)nodeArrayList8[0];
+        AIfStmt pstmtNode1 = new AIfStmt (
+              pexpNode2,
+              pblockNode3,
+              pblockNode4
         );
-        nodeList.Add(pcstifstatementNode1);
+        nodeList.Add(pstmtNode1);
         return nodeList;
     }
     ArrayList New45()
@@ -1758,20 +1635,13 @@ public class Parser
         ArrayList nodeArrayList3 = (ArrayList) Pop();
         ArrayList nodeArrayList2 = (ArrayList) Pop();
         ArrayList nodeArrayList1 = (ArrayList) Pop();
-        TRepeat trepeatNode2 = (TRepeat)nodeArrayList1[0];
-        TLPar tlparNode3 = (TLPar)nodeArrayList2[0];
-        PCstExpression pcstexpressionNode4 = (PCstExpression)nodeArrayList3[0];
-        TRPar trparNode5 = (TRPar)nodeArrayList4[0];
-        PCstBlock pcstblockNode7 = (PCstBlock)nodeArrayList5[0];
-        ACstRepeatStatement pcstrepeatstatementNode1 = new ACstRepeatStatement (
-              trepeatNode2,
-              tlparNode3,
-              pcstexpressionNode4,
-              trparNode5,
-              null,
-              pcstblockNode7
+        PExp pexpNode2 = (PExp)nodeArrayList3[0];
+        PBlock pblockNode3 = (PBlock)nodeArrayList5[0];
+        ARepeatStmt pstmtNode1 = new ARepeatStmt (
+              pexpNode2,
+              pblockNode3
         );
-        nodeList.Add(pcstrepeatstatementNode1);
+        nodeList.Add(pstmtNode1);
         return nodeList;
     }
     ArrayList New46()
@@ -1783,21 +1653,13 @@ public class Parser
         ArrayList nodeArrayList3 = (ArrayList) Pop();
         ArrayList nodeArrayList2 = (ArrayList) Pop();
         ArrayList nodeArrayList1 = (ArrayList) Pop();
-        TRepeat trepeatNode2 = (TRepeat)nodeArrayList1[0];
-        TLPar tlparNode3 = (TLPar)nodeArrayList2[0];
-        PCstExpression pcstexpressionNode4 = (PCstExpression)nodeArrayList3[0];
-        TRPar trparNode5 = (TRPar)nodeArrayList4[0];
-        TEol teolNode6 = (TEol)nodeArrayList5[0];
-        PCstBlock pcstblockNode7 = (PCstBlock)nodeArrayList6[0];
-        ACstRepeatStatement pcstrepeatstatementNode1 = new ACstRepeatStatement (
-              trepeatNode2,
-              tlparNode3,
-              pcstexpressionNode4,
-              trparNode5,
-              teolNode6,
-              pcstblockNode7
+        PExp pexpNode2 = (PExp)nodeArrayList3[0];
+        PBlock pblockNode3 = (PBlock)nodeArrayList6[0];
+        ARepeatStmt pstmtNode1 = new ARepeatStmt (
+              pexpNode2,
+              pblockNode3
         );
-        nodeList.Add(pcstrepeatstatementNode1);
+        nodeList.Add(pstmtNode1);
         return nodeList;
     }
     ArrayList New47()
@@ -1808,20 +1670,13 @@ public class Parser
         ArrayList nodeArrayList3 = (ArrayList) Pop();
         ArrayList nodeArrayList2 = (ArrayList) Pop();
         ArrayList nodeArrayList1 = (ArrayList) Pop();
-        TWhile twhileNode2 = (TWhile)nodeArrayList1[0];
-        TLPar tlparNode3 = (TLPar)nodeArrayList2[0];
-        PCstExpression pcstexpressionNode4 = (PCstExpression)nodeArrayList3[0];
-        TRPar trparNode5 = (TRPar)nodeArrayList4[0];
-        PCstBlock pcstblockNode7 = (PCstBlock)nodeArrayList5[0];
-        ACstWhileStatement pcstwhilestatementNode1 = new ACstWhileStatement (
-              twhileNode2,
-              tlparNode3,
-              pcstexpressionNode4,
-              trparNode5,
-              null,
-              pcstblockNode7
+        PExp pexpNode2 = (PExp)nodeArrayList3[0];
+        PBlock pblockNode3 = (PBlock)nodeArrayList5[0];
+        AWhileStmt pstmtNode1 = new AWhileStmt (
+              pexpNode2,
+              pblockNode3
         );
-        nodeList.Add(pcstwhilestatementNode1);
+        nodeList.Add(pstmtNode1);
         return nodeList;
     }
     ArrayList New48()
@@ -1833,21 +1688,13 @@ public class Parser
         ArrayList nodeArrayList3 = (ArrayList) Pop();
         ArrayList nodeArrayList2 = (ArrayList) Pop();
         ArrayList nodeArrayList1 = (ArrayList) Pop();
-        TWhile twhileNode2 = (TWhile)nodeArrayList1[0];
-        TLPar tlparNode3 = (TLPar)nodeArrayList2[0];
-        PCstExpression pcstexpressionNode4 = (PCstExpression)nodeArrayList3[0];
-        TRPar trparNode5 = (TRPar)nodeArrayList4[0];
-        TEol teolNode6 = (TEol)nodeArrayList5[0];
-        PCstBlock pcstblockNode7 = (PCstBlock)nodeArrayList6[0];
-        ACstWhileStatement pcstwhilestatementNode1 = new ACstWhileStatement (
-              twhileNode2,
-              tlparNode3,
-              pcstexpressionNode4,
-              trparNode5,
-              teolNode6,
-              pcstblockNode7
+        PExp pexpNode2 = (PExp)nodeArrayList3[0];
+        PBlock pblockNode3 = (PBlock)nodeArrayList6[0];
+        AWhileStmt pstmtNode1 = new AWhileStmt (
+              pexpNode2,
+              pblockNode3
         );
-        nodeList.Add(pcstwhilestatementNode1);
+        nodeList.Add(pstmtNode1);
         return nodeList;
     }
     ArrayList New49()
@@ -1857,17 +1704,11 @@ public class Parser
         ArrayList nodeArrayList3 = (ArrayList) Pop();
         ArrayList nodeArrayList2 = (ArrayList) Pop();
         ArrayList nodeArrayList1 = (ArrayList) Pop();
-        TGcode tgcodeNode2 = (TGcode)nodeArrayList1[0];
-        TLCur tlcurNode3 = (TLCur)nodeArrayList2[0];
-        TAllCharsExceptCurly tallcharsexceptcurlyNode4 = (TAllCharsExceptCurly)nodeArrayList3[0];
-        TRCur trcurNode5 = (TRCur)nodeArrayList4[0];
-        ACstGcodeLiteral pcstgcodeliteralNode1 = new ACstGcodeLiteral (
-              tgcodeNode2,
-              tlcurNode3,
-              tallcharsexceptcurlyNode4,
-              trcurNode5
+        TAllCharsExceptCurly tallcharsexceptcurlyNode2 = (TAllCharsExceptCurly)nodeArrayList3[0];
+        AGcodeStmt pstmtNode1 = new AGcodeStmt (
+              tallcharsexceptcurlyNode2
         );
-        nodeList.Add(pcstgcodeliteralNode1);
+        nodeList.Add(pstmtNode1);
         return nodeList;
     }
     ArrayList New50()
@@ -1876,15 +1717,13 @@ public class Parser
         ArrayList nodeArrayList3 = (ArrayList) Pop();
         ArrayList nodeArrayList2 = (ArrayList) Pop();
         ArrayList nodeArrayList1 = (ArrayList) Pop();
-        TIdentifier tidentifierNode2 = (TIdentifier)nodeArrayList1[0];
-        TAssignmentOp tassignmentopNode3 = (TAssignmentOp)nodeArrayList2[0];
-        PCstExpression pcstexpressionNode4 = (PCstExpression)nodeArrayList3[0];
-        AAssignCstAssignments pcstassignmentsNode1 = new AAssignCstAssignments (
-              tidentifierNode2,
-              tassignmentopNode3,
-              pcstexpressionNode4
+        TId tidNode2 = (TId)nodeArrayList1[0];
+        PExp pexpNode3 = (PExp)nodeArrayList3[0];
+        AAssignStmt pstmtNode1 = new AAssignStmt (
+              tidNode2,
+              pexpNode3
         );
-        nodeList.Add(pcstassignmentsNode1);
+        nodeList.Add(pstmtNode1);
         return nodeList;
     }
     ArrayList New51()
@@ -1894,17 +1733,13 @@ public class Parser
         ArrayList nodeArrayList3 = (ArrayList) Pop();
         ArrayList nodeArrayList2 = (ArrayList) Pop();
         ArrayList nodeArrayList1 = (ArrayList) Pop();
-        TIdentifier tidentifierNode2 = (TIdentifier)nodeArrayList1[0];
-        TPlusOp tplusopNode3 = (TPlusOp)nodeArrayList2[0];
-        TAssignmentOp tassignmentopNode4 = (TAssignmentOp)nodeArrayList3[0];
-        PCstExpression pcstexpressionNode5 = (PCstExpression)nodeArrayList4[0];
-        AAssignPlusCstAssignments pcstassignmentsNode1 = new AAssignPlusCstAssignments (
-              tidentifierNode2,
-              tplusopNode3,
-              tassignmentopNode4,
-              pcstexpressionNode5
+        TId tidNode2 = (TId)nodeArrayList1[0];
+        PExp pexpNode3 = (PExp)nodeArrayList4[0];
+        AAssignPlusStmt pstmtNode1 = new AAssignPlusStmt (
+              tidNode2,
+              pexpNode3
         );
-        nodeList.Add(pcstassignmentsNode1);
+        nodeList.Add(pstmtNode1);
         return nodeList;
     }
     ArrayList New52()
@@ -1914,17 +1749,13 @@ public class Parser
         ArrayList nodeArrayList3 = (ArrayList) Pop();
         ArrayList nodeArrayList2 = (ArrayList) Pop();
         ArrayList nodeArrayList1 = (ArrayList) Pop();
-        TIdentifier tidentifierNode2 = (TIdentifier)nodeArrayList1[0];
-        TMinusOp tminusopNode3 = (TMinusOp)nodeArrayList2[0];
-        TAssignmentOp tassignmentopNode4 = (TAssignmentOp)nodeArrayList3[0];
-        PCstExpression pcstexpressionNode5 = (PCstExpression)nodeArrayList4[0];
-        AAssignMinusCstAssignments pcstassignmentsNode1 = new AAssignMinusCstAssignments (
-              tidentifierNode2,
-              tminusopNode3,
-              tassignmentopNode4,
-              pcstexpressionNode5
+        TId tidNode2 = (TId)nodeArrayList1[0];
+        PExp pexpNode3 = (PExp)nodeArrayList4[0];
+        AAssignMinusStmt pstmtNode1 = new AAssignMinusStmt (
+              tidNode2,
+              pexpNode3
         );
-        nodeList.Add(pcstassignmentsNode1);
+        nodeList.Add(pstmtNode1);
         return nodeList;
     }
     ArrayList New53()
@@ -1934,17 +1765,13 @@ public class Parser
         ArrayList nodeArrayList3 = (ArrayList) Pop();
         ArrayList nodeArrayList2 = (ArrayList) Pop();
         ArrayList nodeArrayList1 = (ArrayList) Pop();
-        TIdentifier tidentifierNode2 = (TIdentifier)nodeArrayList1[0];
-        TMultiplicationOp tmultiplicationopNode3 = (TMultiplicationOp)nodeArrayList2[0];
-        TAssignmentOp tassignmentopNode4 = (TAssignmentOp)nodeArrayList3[0];
-        PCstExpression pcstexpressionNode5 = (PCstExpression)nodeArrayList4[0];
-        AAssignMultCstAssignments pcstassignmentsNode1 = new AAssignMultCstAssignments (
-              tidentifierNode2,
-              tmultiplicationopNode3,
-              tassignmentopNode4,
-              pcstexpressionNode5
+        TId tidNode2 = (TId)nodeArrayList1[0];
+        PExp pexpNode3 = (PExp)nodeArrayList4[0];
+        AAssignMultStmt pstmtNode1 = new AAssignMultStmt (
+              tidNode2,
+              pexpNode3
         );
-        nodeList.Add(pcstassignmentsNode1);
+        nodeList.Add(pstmtNode1);
         return nodeList;
     }
     ArrayList New54()
@@ -1954,17 +1781,13 @@ public class Parser
         ArrayList nodeArrayList3 = (ArrayList) Pop();
         ArrayList nodeArrayList2 = (ArrayList) Pop();
         ArrayList nodeArrayList1 = (ArrayList) Pop();
-        TIdentifier tidentifierNode2 = (TIdentifier)nodeArrayList1[0];
-        TDivisionOp tdivisionopNode3 = (TDivisionOp)nodeArrayList2[0];
-        TAssignmentOp tassignmentopNode4 = (TAssignmentOp)nodeArrayList3[0];
-        PCstExpression pcstexpressionNode5 = (PCstExpression)nodeArrayList4[0];
-        AAssignDivisionCstAssignments pcstassignmentsNode1 = new AAssignDivisionCstAssignments (
-              tidentifierNode2,
-              tdivisionopNode3,
-              tassignmentopNode4,
-              pcstexpressionNode5
+        TId tidNode2 = (TId)nodeArrayList1[0];
+        PExp pexpNode3 = (PExp)nodeArrayList4[0];
+        AAssignDivisionStmt pstmtNode1 = new AAssignDivisionStmt (
+              tidNode2,
+              pexpNode3
         );
-        nodeList.Add(pcstassignmentsNode1);
+        nodeList.Add(pstmtNode1);
         return nodeList;
     }
     ArrayList New55()
@@ -1974,17 +1797,13 @@ public class Parser
         ArrayList nodeArrayList3 = (ArrayList) Pop();
         ArrayList nodeArrayList2 = (ArrayList) Pop();
         ArrayList nodeArrayList1 = (ArrayList) Pop();
-        TIdentifier tidentifierNode2 = (TIdentifier)nodeArrayList1[0];
-        TModuloOp tmoduloopNode3 = (TModuloOp)nodeArrayList2[0];
-        TAssignmentOp tassignmentopNode4 = (TAssignmentOp)nodeArrayList3[0];
-        PCstExpression pcstexpressionNode5 = (PCstExpression)nodeArrayList4[0];
-        AAssignModCstAssignments pcstassignmentsNode1 = new AAssignModCstAssignments (
-              tidentifierNode2,
-              tmoduloopNode3,
-              tassignmentopNode4,
-              pcstexpressionNode5
+        TId tidNode2 = (TId)nodeArrayList1[0];
+        PExp pexpNode3 = (PExp)nodeArrayList4[0];
+        AAssignModStmt pstmtNode1 = new AAssignModStmt (
+              tidNode2,
+              pexpNode3
         );
-        nodeList.Add(pcstassignmentsNode1);
+        nodeList.Add(pstmtNode1);
         return nodeList;
     }
     ArrayList New56()
@@ -1993,16 +1812,13 @@ public class Parser
         ArrayList nodeArrayList3 = (ArrayList) Pop();
         ArrayList nodeArrayList2 = (ArrayList) Pop();
         ArrayList nodeArrayList1 = (ArrayList) Pop();
-        TIdentifier tidentifierNode2 = (TIdentifier)nodeArrayList1[0];
-        TLPar tlparNode3 = (TLPar)nodeArrayList2[0];
-        TRPar trparNode5 = (TRPar)nodeArrayList3[0];
-        ACstFunctionCall pcstfunctioncallNode1 = new ACstFunctionCall (
-              tidentifierNode2,
-              tlparNode3,
-              null,
-              trparNode5
+        TypedList listNode3 = new TypedList();
+        TId tidNode2 = (TId)nodeArrayList1[0];
+        AFunctionExp pexpNode1 = new AFunctionExp (
+              tidNode2,
+              listNode3
         );
-        nodeList.Add(pcstfunctioncallNode1);
+        nodeList.Add(pexpNode1);
         return nodeList;
     }
     ArrayList New57()
@@ -2012,17 +1828,18 @@ public class Parser
         ArrayList nodeArrayList3 = (ArrayList) Pop();
         ArrayList nodeArrayList2 = (ArrayList) Pop();
         ArrayList nodeArrayList1 = (ArrayList) Pop();
-        TIdentifier tidentifierNode2 = (TIdentifier)nodeArrayList1[0];
-        TLPar tlparNode3 = (TLPar)nodeArrayList2[0];
-        PCstActualParamList pcstactualparamlistNode4 = (PCstActualParamList)nodeArrayList3[0];
-        TRPar trparNode5 = (TRPar)nodeArrayList4[0];
-        ACstFunctionCall pcstfunctioncallNode1 = new ACstFunctionCall (
-              tidentifierNode2,
-              tlparNode3,
-              pcstactualparamlistNode4,
-              trparNode5
+        TypedList listNode4 = new TypedList();
+        TId tidNode2 = (TId)nodeArrayList1[0];
+        TypedList listNode3 = (TypedList)nodeArrayList3[0];
+        if ( listNode3 != null )
+        {
+            listNode4.AddAll(listNode3);
+        }
+        AFunctionExp pexpNode1 = new AFunctionExp (
+              tidNode2,
+              listNode4
         );
-        nodeList.Add(pcstfunctioncallNode1);
+        nodeList.Add(pexpNode1);
         return nodeList;
     }
     ArrayList New58()
@@ -2031,26 +1848,31 @@ public class Parser
         ArrayList nodeArrayList3 = (ArrayList) Pop();
         ArrayList nodeArrayList2 = (ArrayList) Pop();
         ArrayList nodeArrayList1 = (ArrayList) Pop();
-        PCstExpression pcstexpressionNode2 = (PCstExpression)nodeArrayList1[0];
-        TComma tcommaNode3 = (TComma)nodeArrayList2[0];
-        PCstActualParamList pcstactualparamlistNode4 = (PCstActualParamList)nodeArrayList3[0];
-        AListCstActualParamList pcstactualparamlistNode1 = new AListCstActualParamList (
-              pcstexpressionNode2,
-              tcommaNode3,
-              pcstactualparamlistNode4
-        );
-        nodeList.Add(pcstactualparamlistNode1);
+        TypedList listNode3 = new TypedList();
+        PExp pexpNode1 = (PExp)nodeArrayList1[0];
+        TypedList listNode2 = (TypedList)nodeArrayList3[0];
+        if ( pexpNode1 != null )
+        {
+            listNode3.Add(pexpNode1);
+        }
+        if ( listNode2 != null )
+        {
+            listNode3.AddAll(listNode2);
+        }
+        nodeList.Add(listNode3);
         return nodeList;
     }
     ArrayList New59()
     {
         ArrayList nodeList = new ArrayList();
         ArrayList nodeArrayList1 = (ArrayList) Pop();
-        PCstExpression pcstexpressionNode2 = (PCstExpression)nodeArrayList1[0];
-        ACstActualParamList pcstactualparamlistNode1 = new ACstActualParamList (
-              pcstexpressionNode2
-        );
-        nodeList.Add(pcstactualparamlistNode1);
+        TypedList listNode2 = new TypedList();
+        PExp pexpNode1 = (PExp)nodeArrayList1[0];
+        if ( pexpNode1 != null )
+        {
+            listNode2.Add(pexpNode1);
+        }
+        nodeList.Add(listNode2);
         return nodeList;
     }
     ArrayList New60()
@@ -2059,26 +1881,21 @@ public class Parser
         ArrayList nodeArrayList3 = (ArrayList) Pop();
         ArrayList nodeArrayList2 = (ArrayList) Pop();
         ArrayList nodeArrayList1 = (ArrayList) Pop();
-        PCstLogicOrExp pcstlogicorexpNode2 = (PCstLogicOrExp)nodeArrayList1[0];
-        TAnd tandNode3 = (TAnd)nodeArrayList2[0];
-        PCstExpression pcstexpressionNode4 = (PCstExpression)nodeArrayList3[0];
-        AAndCstExpression pcstexpressionNode1 = new AAndCstExpression (
-              pcstlogicorexpNode2,
-              tandNode3,
-              pcstexpressionNode4
+        PExp pexpNode2 = (PExp)nodeArrayList1[0];
+        PExp pexpNode3 = (PExp)nodeArrayList3[0];
+        AAndExp pexpNode1 = new AAndExp (
+              pexpNode2,
+              pexpNode3
         );
-        nodeList.Add(pcstexpressionNode1);
+        nodeList.Add(pexpNode1);
         return nodeList;
     }
     ArrayList New61()
     {
         ArrayList nodeList = new ArrayList();
         ArrayList nodeArrayList1 = (ArrayList) Pop();
-        PCstLogicOrExp pcstlogicorexpNode2 = (PCstLogicOrExp)nodeArrayList1[0];
-        ACstExpression pcstexpressionNode1 = new ACstExpression (
-              pcstlogicorexpNode2
-        );
-        nodeList.Add(pcstexpressionNode1);
+        PExp pexpNode1 = (PExp)nodeArrayList1[0];
+        nodeList.Add(pexpNode1);
         return nodeList;
     }
     ArrayList New62()
@@ -2087,26 +1904,21 @@ public class Parser
         ArrayList nodeArrayList3 = (ArrayList) Pop();
         ArrayList nodeArrayList2 = (ArrayList) Pop();
         ArrayList nodeArrayList1 = (ArrayList) Pop();
-        PCstBoolExp pcstboolexpNode2 = (PCstBoolExp)nodeArrayList1[0];
-        TOr torNode3 = (TOr)nodeArrayList2[0];
-        PCstLogicOrExp pcstlogicorexpNode4 = (PCstLogicOrExp)nodeArrayList3[0];
-        AOrCstLogicOrExp pcstlogicorexpNode1 = new AOrCstLogicOrExp (
-              pcstboolexpNode2,
-              torNode3,
-              pcstlogicorexpNode4
+        PExp pexpNode2 = (PExp)nodeArrayList1[0];
+        PExp pexpNode3 = (PExp)nodeArrayList3[0];
+        AOrExp pexpNode1 = new AOrExp (
+              pexpNode2,
+              pexpNode3
         );
-        nodeList.Add(pcstlogicorexpNode1);
+        nodeList.Add(pexpNode1);
         return nodeList;
     }
     ArrayList New63()
     {
         ArrayList nodeList = new ArrayList();
         ArrayList nodeArrayList1 = (ArrayList) Pop();
-        PCstBoolExp pcstboolexpNode2 = (PCstBoolExp)nodeArrayList1[0];
-        ACstLogicOrExp pcstlogicorexpNode1 = new ACstLogicOrExp (
-              pcstboolexpNode2
-        );
-        nodeList.Add(pcstlogicorexpNode1);
+        PExp pexpNode1 = (PExp)nodeArrayList1[0];
+        nodeList.Add(pexpNode1);
         return nodeList;
     }
     ArrayList New64()
@@ -2114,13 +1926,11 @@ public class Parser
         ArrayList nodeList = new ArrayList();
         ArrayList nodeArrayList2 = (ArrayList) Pop();
         ArrayList nodeArrayList1 = (ArrayList) Pop();
-        TNot tnotNode2 = (TNot)nodeArrayList1[0];
-        PCstBoolExp pcstboolexpNode3 = (PCstBoolExp)nodeArrayList2[0];
-        ANotCstBoolExp pcstboolexpNode1 = new ANotCstBoolExp (
-              tnotNode2,
-              pcstboolexpNode3
+        PExp pexpNode2 = (PExp)nodeArrayList2[0];
+        ANotExp pexpNode1 = new ANotExp (
+              pexpNode2
         );
-        nodeList.Add(pcstboolexpNode1);
+        nodeList.Add(pexpNode1);
         return nodeList;
     }
     ArrayList New65()
@@ -2129,15 +1939,13 @@ public class Parser
         ArrayList nodeArrayList3 = (ArrayList) Pop();
         ArrayList nodeArrayList2 = (ArrayList) Pop();
         ArrayList nodeArrayList1 = (ArrayList) Pop();
-        PCstAssociativeExp pcstassociativeexpNode2 = (PCstAssociativeExp)nodeArrayList1[0];
-        TEqual tequalNode3 = (TEqual)nodeArrayList2[0];
-        PCstAssociativeExp pcstassociativeexpNode4 = (PCstAssociativeExp)nodeArrayList3[0];
-        AEqualCstBoolExp pcstboolexpNode1 = new AEqualCstBoolExp (
-              pcstassociativeexpNode2,
-              tequalNode3,
-              pcstassociativeexpNode4
+        PExp pexpNode2 = (PExp)nodeArrayList1[0];
+        PExp pexpNode3 = (PExp)nodeArrayList3[0];
+        AEqExp pexpNode1 = new AEqExp (
+              pexpNode2,
+              pexpNode3
         );
-        nodeList.Add(pcstboolexpNode1);
+        nodeList.Add(pexpNode1);
         return nodeList;
     }
     ArrayList New66()
@@ -2146,15 +1954,13 @@ public class Parser
         ArrayList nodeArrayList3 = (ArrayList) Pop();
         ArrayList nodeArrayList2 = (ArrayList) Pop();
         ArrayList nodeArrayList1 = (ArrayList) Pop();
-        PCstAssociativeExp pcstassociativeexpNode2 = (PCstAssociativeExp)nodeArrayList1[0];
-        TLessThan tlessthanNode3 = (TLessThan)nodeArrayList2[0];
-        PCstAssociativeExp pcstassociativeexpNode4 = (PCstAssociativeExp)nodeArrayList3[0];
-        ALeCstBoolExp pcstboolexpNode1 = new ALeCstBoolExp (
-              pcstassociativeexpNode2,
-              tlessthanNode3,
-              pcstassociativeexpNode4
+        PExp pexpNode2 = (PExp)nodeArrayList1[0];
+        PExp pexpNode3 = (PExp)nodeArrayList3[0];
+        ALtExp pexpNode1 = new ALtExp (
+              pexpNode2,
+              pexpNode3
         );
-        nodeList.Add(pcstboolexpNode1);
+        nodeList.Add(pexpNode1);
         return nodeList;
     }
     ArrayList New67()
@@ -2163,15 +1969,13 @@ public class Parser
         ArrayList nodeArrayList3 = (ArrayList) Pop();
         ArrayList nodeArrayList2 = (ArrayList) Pop();
         ArrayList nodeArrayList1 = (ArrayList) Pop();
-        PCstAssociativeExp pcstassociativeexpNode2 = (PCstAssociativeExp)nodeArrayList1[0];
-        TLessThanOrEqual tlessthanorequalNode3 = (TLessThanOrEqual)nodeArrayList2[0];
-        PCstAssociativeExp pcstassociativeexpNode4 = (PCstAssociativeExp)nodeArrayList3[0];
-        ALeqCstBoolExp pcstboolexpNode1 = new ALeqCstBoolExp (
-              pcstassociativeexpNode2,
-              tlessthanorequalNode3,
-              pcstassociativeexpNode4
+        PExp pexpNode2 = (PExp)nodeArrayList1[0];
+        PExp pexpNode3 = (PExp)nodeArrayList3[0];
+        ALeqExp pexpNode1 = new ALeqExp (
+              pexpNode2,
+              pexpNode3
         );
-        nodeList.Add(pcstboolexpNode1);
+        nodeList.Add(pexpNode1);
         return nodeList;
     }
     ArrayList New68()
@@ -2180,15 +1984,13 @@ public class Parser
         ArrayList nodeArrayList3 = (ArrayList) Pop();
         ArrayList nodeArrayList2 = (ArrayList) Pop();
         ArrayList nodeArrayList1 = (ArrayList) Pop();
-        PCstAssociativeExp pcstassociativeexpNode2 = (PCstAssociativeExp)nodeArrayList1[0];
-        TGreaterThan tgreaterthanNode3 = (TGreaterThan)nodeArrayList2[0];
-        PCstAssociativeExp pcstassociativeexpNode4 = (PCstAssociativeExp)nodeArrayList3[0];
-        AGeCstBoolExp pcstboolexpNode1 = new AGeCstBoolExp (
-              pcstassociativeexpNode2,
-              tgreaterthanNode3,
-              pcstassociativeexpNode4
+        PExp pexpNode2 = (PExp)nodeArrayList1[0];
+        PExp pexpNode3 = (PExp)nodeArrayList3[0];
+        AGtExp pexpNode1 = new AGtExp (
+              pexpNode2,
+              pexpNode3
         );
-        nodeList.Add(pcstboolexpNode1);
+        nodeList.Add(pexpNode1);
         return nodeList;
     }
     ArrayList New69()
@@ -2197,15 +1999,13 @@ public class Parser
         ArrayList nodeArrayList3 = (ArrayList) Pop();
         ArrayList nodeArrayList2 = (ArrayList) Pop();
         ArrayList nodeArrayList1 = (ArrayList) Pop();
-        PCstAssociativeExp pcstassociativeexpNode2 = (PCstAssociativeExp)nodeArrayList1[0];
-        TGreaterThanOrEqual tgreaterthanorequalNode3 = (TGreaterThanOrEqual)nodeArrayList2[0];
-        PCstAssociativeExp pcstassociativeexpNode4 = (PCstAssociativeExp)nodeArrayList3[0];
-        AGeqCstBoolExp pcstboolexpNode1 = new AGeqCstBoolExp (
-              pcstassociativeexpNode2,
-              tgreaterthanorequalNode3,
-              pcstassociativeexpNode4
+        PExp pexpNode2 = (PExp)nodeArrayList1[0];
+        PExp pexpNode3 = (PExp)nodeArrayList3[0];
+        AGeqExp pexpNode1 = new AGeqExp (
+              pexpNode2,
+              pexpNode3
         );
-        nodeList.Add(pcstboolexpNode1);
+        nodeList.Add(pexpNode1);
         return nodeList;
     }
     ArrayList New70()
@@ -2214,26 +2014,21 @@ public class Parser
         ArrayList nodeArrayList3 = (ArrayList) Pop();
         ArrayList nodeArrayList2 = (ArrayList) Pop();
         ArrayList nodeArrayList1 = (ArrayList) Pop();
-        PCstAssociativeExp pcstassociativeexpNode2 = (PCstAssociativeExp)nodeArrayList1[0];
-        TNotEqual tnotequalNode3 = (TNotEqual)nodeArrayList2[0];
-        PCstAssociativeExp pcstassociativeexpNode4 = (PCstAssociativeExp)nodeArrayList3[0];
-        ANeqCstBoolExp pcstboolexpNode1 = new ANeqCstBoolExp (
-              pcstassociativeexpNode2,
-              tnotequalNode3,
-              pcstassociativeexpNode4
+        PExp pexpNode2 = (PExp)nodeArrayList1[0];
+        PExp pexpNode3 = (PExp)nodeArrayList3[0];
+        ANeqExp pexpNode1 = new ANeqExp (
+              pexpNode2,
+              pexpNode3
         );
-        nodeList.Add(pcstboolexpNode1);
+        nodeList.Add(pexpNode1);
         return nodeList;
     }
     ArrayList New71()
     {
         ArrayList nodeList = new ArrayList();
         ArrayList nodeArrayList1 = (ArrayList) Pop();
-        PCstAssociativeExp pcstassociativeexpNode2 = (PCstAssociativeExp)nodeArrayList1[0];
-        ACstBoolExp pcstboolexpNode1 = new ACstBoolExp (
-              pcstassociativeexpNode2
-        );
-        nodeList.Add(pcstboolexpNode1);
+        PExp pexpNode1 = (PExp)nodeArrayList1[0];
+        nodeList.Add(pexpNode1);
         return nodeList;
     }
     ArrayList New72()
@@ -2242,15 +2037,13 @@ public class Parser
         ArrayList nodeArrayList3 = (ArrayList) Pop();
         ArrayList nodeArrayList2 = (ArrayList) Pop();
         ArrayList nodeArrayList1 = (ArrayList) Pop();
-        PCstNotAssociativeExp pcstnotassociativeexpNode2 = (PCstNotAssociativeExp)nodeArrayList1[0];
-        TPlusOp tplusopNode3 = (TPlusOp)nodeArrayList2[0];
-        PCstAssociativeExp pcstassociativeexpNode4 = (PCstAssociativeExp)nodeArrayList3[0];
-        APlusCstAssociativeExp pcstassociativeexpNode1 = new APlusCstAssociativeExp (
-              pcstnotassociativeexpNode2,
-              tplusopNode3,
-              pcstassociativeexpNode4
+        PExp pexpNode2 = (PExp)nodeArrayList1[0];
+        PExp pexpNode3 = (PExp)nodeArrayList3[0];
+        APlusExp pexpNode1 = new APlusExp (
+              pexpNode2,
+              pexpNode3
         );
-        nodeList.Add(pcstassociativeexpNode1);
+        nodeList.Add(pexpNode1);
         return nodeList;
     }
     ArrayList New73()
@@ -2259,26 +2052,21 @@ public class Parser
         ArrayList nodeArrayList3 = (ArrayList) Pop();
         ArrayList nodeArrayList2 = (ArrayList) Pop();
         ArrayList nodeArrayList1 = (ArrayList) Pop();
-        PCstNotAssociativeExp pcstnotassociativeexpNode2 = (PCstNotAssociativeExp)nodeArrayList1[0];
-        TMinusOp tminusopNode3 = (TMinusOp)nodeArrayList2[0];
-        PCstAssociativeExp pcstassociativeexpNode4 = (PCstAssociativeExp)nodeArrayList3[0];
-        AMinusCstAssociativeExp pcstassociativeexpNode1 = new AMinusCstAssociativeExp (
-              pcstnotassociativeexpNode2,
-              tminusopNode3,
-              pcstassociativeexpNode4
+        PExp pexpNode2 = (PExp)nodeArrayList1[0];
+        PExp pexpNode3 = (PExp)nodeArrayList3[0];
+        AMinusExp pexpNode1 = new AMinusExp (
+              pexpNode2,
+              pexpNode3
         );
-        nodeList.Add(pcstassociativeexpNode1);
+        nodeList.Add(pexpNode1);
         return nodeList;
     }
     ArrayList New74()
     {
         ArrayList nodeList = new ArrayList();
         ArrayList nodeArrayList1 = (ArrayList) Pop();
-        PCstNotAssociativeExp pcstnotassociativeexpNode2 = (PCstNotAssociativeExp)nodeArrayList1[0];
-        ACstAssociativeExp pcstassociativeexpNode1 = new ACstAssociativeExp (
-              pcstnotassociativeexpNode2
-        );
-        nodeList.Add(pcstassociativeexpNode1);
+        PExp pexpNode1 = (PExp)nodeArrayList1[0];
+        nodeList.Add(pexpNode1);
         return nodeList;
     }
     ArrayList New75()
@@ -2287,15 +2075,13 @@ public class Parser
         ArrayList nodeArrayList3 = (ArrayList) Pop();
         ArrayList nodeArrayList2 = (ArrayList) Pop();
         ArrayList nodeArrayList1 = (ArrayList) Pop();
-        PCstNotAssociativeExp pcstnotassociativeexpNode2 = (PCstNotAssociativeExp)nodeArrayList1[0];
-        TMultiplicationOp tmultiplicationopNode3 = (TMultiplicationOp)nodeArrayList2[0];
-        PCstLeafExp pcstleafexpNode4 = (PCstLeafExp)nodeArrayList3[0];
-        AMultCstNotAssociativeExp pcstnotassociativeexpNode1 = new AMultCstNotAssociativeExp (
-              pcstnotassociativeexpNode2,
-              tmultiplicationopNode3,
-              pcstleafexpNode4
+        PExp pexpNode2 = (PExp)nodeArrayList1[0];
+        PExp pexpNode3 = (PExp)nodeArrayList3[0];
+        AMultExp pexpNode1 = new AMultExp (
+              pexpNode2,
+              pexpNode3
         );
-        nodeList.Add(pcstnotassociativeexpNode1);
+        nodeList.Add(pexpNode1);
         return nodeList;
     }
     ArrayList New76()
@@ -2304,15 +2090,13 @@ public class Parser
         ArrayList nodeArrayList3 = (ArrayList) Pop();
         ArrayList nodeArrayList2 = (ArrayList) Pop();
         ArrayList nodeArrayList1 = (ArrayList) Pop();
-        PCstNotAssociativeExp pcstnotassociativeexpNode2 = (PCstNotAssociativeExp)nodeArrayList1[0];
-        TDivisionOp tdivisionopNode3 = (TDivisionOp)nodeArrayList2[0];
-        PCstLeafExp pcstleafexpNode4 = (PCstLeafExp)nodeArrayList3[0];
-        ADivisionCstNotAssociativeExp pcstnotassociativeexpNode1 = new ADivisionCstNotAssociativeExp (
-              pcstnotassociativeexpNode2,
-              tdivisionopNode3,
-              pcstleafexpNode4
+        PExp pexpNode2 = (PExp)nodeArrayList1[0];
+        PExp pexpNode3 = (PExp)nodeArrayList3[0];
+        ADivdExp pexpNode1 = new ADivdExp (
+              pexpNode2,
+              pexpNode3
         );
-        nodeList.Add(pcstnotassociativeexpNode1);
+        nodeList.Add(pexpNode1);
         return nodeList;
     }
     ArrayList New77()
@@ -2321,26 +2105,21 @@ public class Parser
         ArrayList nodeArrayList3 = (ArrayList) Pop();
         ArrayList nodeArrayList2 = (ArrayList) Pop();
         ArrayList nodeArrayList1 = (ArrayList) Pop();
-        PCstNotAssociativeExp pcstnotassociativeexpNode2 = (PCstNotAssociativeExp)nodeArrayList1[0];
-        TModuloOp tmoduloopNode3 = (TModuloOp)nodeArrayList2[0];
-        PCstLeafExp pcstleafexpNode4 = (PCstLeafExp)nodeArrayList3[0];
-        AModuloCstNotAssociativeExp pcstnotassociativeexpNode1 = new AModuloCstNotAssociativeExp (
-              pcstnotassociativeexpNode2,
-              tmoduloopNode3,
-              pcstleafexpNode4
+        PExp pexpNode2 = (PExp)nodeArrayList1[0];
+        PExp pexpNode3 = (PExp)nodeArrayList3[0];
+        AModuloExp pexpNode1 = new AModuloExp (
+              pexpNode2,
+              pexpNode3
         );
-        nodeList.Add(pcstnotassociativeexpNode1);
+        nodeList.Add(pexpNode1);
         return nodeList;
     }
     ArrayList New78()
     {
         ArrayList nodeList = new ArrayList();
         ArrayList nodeArrayList1 = (ArrayList) Pop();
-        PCstLeafExp pcstleafexpNode2 = (PCstLeafExp)nodeArrayList1[0];
-        ACstNotAssociativeExp pcstnotassociativeexpNode1 = new ACstNotAssociativeExp (
-              pcstleafexpNode2
-        );
-        nodeList.Add(pcstnotassociativeexpNode1);
+        PExp pexpNode1 = (PExp)nodeArrayList1[0];
+        nodeList.Add(pexpNode1);
         return nodeList;
     }
     ArrayList New79()
@@ -2349,15 +2128,8 @@ public class Parser
         ArrayList nodeArrayList3 = (ArrayList) Pop();
         ArrayList nodeArrayList2 = (ArrayList) Pop();
         ArrayList nodeArrayList1 = (ArrayList) Pop();
-        TLPar tlparNode2 = (TLPar)nodeArrayList1[0];
-        PCstExpression pcstexpressionNode3 = (PCstExpression)nodeArrayList2[0];
-        TRPar trparNode4 = (TRPar)nodeArrayList3[0];
-        AParenCstLeafExp pcstleafexpNode1 = new AParenCstLeafExp (
-              tlparNode2,
-              pcstexpressionNode3,
-              trparNode4
-        );
-        nodeList.Add(pcstleafexpNode1);
+        PExp pexpNode1 = (PExp)nodeArrayList2[0];
+        nodeList.Add(pexpNode1);
         return nodeList;
     }
     ArrayList New80()
@@ -2365,10 +2137,10 @@ public class Parser
         ArrayList nodeList = new ArrayList();
         ArrayList nodeArrayList1 = (ArrayList) Pop();
         TNumber tnumberNode2 = (TNumber)nodeArrayList1[0];
-        ANumberCstLeafExp pcstleafexpNode1 = new ANumberCstLeafExp (
+        ANumberExp pexpNode1 = new ANumberExp (
               tnumberNode2
         );
-        nodeList.Add(pcstleafexpNode1);
+        nodeList.Add(pexpNode1);
         return nodeList;
     }
     ArrayList New81()
@@ -2376,43 +2148,37 @@ public class Parser
         ArrayList nodeList = new ArrayList();
         ArrayList nodeArrayList1 = (ArrayList) Pop();
         TBoolValue tboolvalueNode2 = (TBoolValue)nodeArrayList1[0];
-        ABoolCstLeafExp pcstleafexpNode1 = new ABoolCstLeafExp (
+        ABoolvalExp pexpNode1 = new ABoolvalExp (
               tboolvalueNode2
         );
-        nodeList.Add(pcstleafexpNode1);
+        nodeList.Add(pexpNode1);
         return nodeList;
     }
     ArrayList New82()
     {
         ArrayList nodeList = new ArrayList();
         ArrayList nodeArrayList1 = (ArrayList) Pop();
-        TIdentifier tidentifierNode2 = (TIdentifier)nodeArrayList1[0];
-        AIdCstLeafExp pcstleafexpNode1 = new AIdCstLeafExp (
-              tidentifierNode2
+        TId tidNode2 = (TId)nodeArrayList1[0];
+        AIdExp pexpNode1 = new AIdExp (
+              tidNode2
         );
-        nodeList.Add(pcstleafexpNode1);
+        nodeList.Add(pexpNode1);
         return nodeList;
     }
     ArrayList New83()
     {
         ArrayList nodeList = new ArrayList();
         ArrayList nodeArrayList1 = (ArrayList) Pop();
-        PCstFunctionCall pcstfunctioncallNode2 = (PCstFunctionCall)nodeArrayList1[0];
-        AFuncCallCstLeafExp pcstleafexpNode1 = new AFuncCallCstLeafExp (
-              pcstfunctioncallNode2
-        );
-        nodeList.Add(pcstleafexpNode1);
+        PExp pexpNode1 = (PExp)nodeArrayList1[0];
+        nodeList.Add(pexpNode1);
         return nodeList;
     }
     ArrayList New84()
     {
         ArrayList nodeList = new ArrayList();
         ArrayList nodeArrayList1 = (ArrayList) Pop();
-        PCstVectorValues pcstvectorvaluesNode2 = (PCstVectorValues)nodeArrayList1[0];
-        AVectorCstLeafExp pcstleafexpNode1 = new AVectorCstLeafExp (
-              pcstvectorvaluesNode2
-        );
-        nodeList.Add(pcstleafexpNode1);
+        PExp pexpNode1 = (PExp)nodeArrayList1[0];
+        nodeList.Add(pexpNode1);
         return nodeList;
     }
     ArrayList New85()
@@ -3442,17 +3208,17 @@ public class Parser
 
     private static String[] errorMessages = {
       "expecting: 'vector', 'int', 'const', 'float', 'bool', 'void'",
-      "expecting: identifier",
+      "expecting: id",
       "expecting: 'vector', 'int', 'float', 'bool'",
       "expecting: EOF",
       "expecting: eol, EOF",
       "expecting: '('",
-      "expecting: eol, '}', 'vector', 'int', 'const', 'float', 'bool', 'void', 'if', 'repeat', 'while', 'return', 'build', 'walk', 'GCODE', identifier, EOF",
+      "expecting: eol, '}', 'vector', 'int', 'const', 'float', 'bool', 'void', 'if', 'repeat', 'while', 'return', 'build', 'walk', 'GCODE', id, EOF",
       "expecting: eol, 'vector', 'int', 'const', 'float', 'bool', 'void', EOF",
       "expecting: eol, '=', '(', EOF",
       "expecting: eol, '=', EOF",
       "expecting: ')', 'vector', 'int', 'const', 'float', 'bool'",
-      "expecting: '!', '(', bool value, number, identifier",
+      "expecting: '!', '(', bool value, number, id",
       "expecting: eol, '{'",
       "expecting: ')', ','",
       "expecting: ')'",
@@ -3464,9 +3230,9 @@ public class Parser
       "expecting: '{'",
       "expecting: eol",
       "expecting: 'vector', 'int', 'const', 'float', 'bool'",
-      "expecting: '!', '(', ')', bool value, number, identifier",
-      "expecting: '(', bool value, number, identifier",
-      "expecting: 'vector', 'int', 'const', 'float', 'bool', 'if', 'repeat', 'while', 'return', 'build', 'walk', 'GCODE', identifier",
+      "expecting: '!', '(', ')', bool value, number, id",
+      "expecting: '(', bool value, number, id",
+      "expecting: 'vector', 'int', 'const', 'float', 'bool', 'if', 'repeat', 'while', 'return', 'build', 'walk', 'GCODE', id",
       "expecting: eol, ')', ',', EOF",
       "expecting: '=', '*', '%', '/', '+', '-', '('",
       "expecting: '}'",
@@ -3475,7 +3241,7 @@ public class Parser
       "expecting: '='",
       "expecting: eol, '='",
       "expecting: eol, 'else', EOF",
-      "expecting: eol, '}', 'vector', 'int', 'const', 'float', 'bool', 'if', 'repeat', 'while', 'return', 'build', 'walk', 'GCODE', identifier",
+      "expecting: eol, '}', 'vector', 'int', 'const', 'float', 'bool', 'if', 'repeat', 'while', 'return', 'build', 'walk', 'GCODE', id",
       "expecting: eol, 'else'",
     };
 

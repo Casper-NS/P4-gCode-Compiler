@@ -4,9 +4,9 @@ using System;
 using System.Collections;
 using System.Text;
 using System.IO;
-using GGCodeParser.node;
+using GOATCode.node;
 
-namespace GGCodeParser.lexer {
+namespace GOATCode.lexer {
 
 internal class PushbackReader {
   private TextReader reader;
@@ -711,7 +711,7 @@ public class Lexer
     private Token New35(String text, int line, int pos) { return new TAnd(text, line, pos); }
     private Token New36(String text, int line, int pos) { return new TOr(text, line, pos); }
     private Token New37(String text, int line, int pos) { return new TNumber(text, line, pos); }
-    private Token New38(String text, int line, int pos) { return new TIdentifier(text, line, pos); }
+    private Token New38(String text, int line, int pos) { return new TId(text, line, pos); }
     private Token New39(String text, int line, int pos) { return new TAllCharsExceptCurly(text, line, pos); }
     private Token New40(String text, int line, int pos) { return new TMultilineComment(text, line, pos); }
     private Token New41(String text, int line, int pos) { return new TSinglelineComment(text, line, pos); }
