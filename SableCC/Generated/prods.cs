@@ -108,6 +108,10 @@ public abstract class PCstLeafExp : Node
 {
 }
 
+public abstract class PCstBuildOrWalk : Node
+{
+}
+
 
 public sealed class ACstProgram : PCstProgram
 {
@@ -1782,6 +1786,7 @@ public sealed class ACstVectorValues : PCstVectorValues
 }
 public sealed class ANotvoidCstFunctionDeclaration : PCstFunctionDeclaration
 {
+    private PCstBuildOrWalk _cst_build_or_walk_;
     private PCstTypes _cst_types_;
     private TIdentifier _identifier_;
     private TLPar _l_par_;
@@ -1795,6 +1800,7 @@ public sealed class ANotvoidCstFunctionDeclaration : PCstFunctionDeclaration
     }
 
     public ANotvoidCstFunctionDeclaration (
+            PCstBuildOrWalk _cst_build_or_walk_,
             PCstTypes _cst_types_,
             TIdentifier _identifier_,
             TLPar _l_par_,
@@ -1804,6 +1810,7 @@ public sealed class ANotvoidCstFunctionDeclaration : PCstFunctionDeclaration
             PCstBlock _cst_block_
     )
     {
+        SetCstBuildOrWalk (_cst_build_or_walk_);
         SetCstTypes (_cst_types_);
         SetIdentifier (_identifier_);
         SetLPar (_l_par_);
@@ -1816,6 +1823,7 @@ public sealed class ANotvoidCstFunctionDeclaration : PCstFunctionDeclaration
     public override Object Clone()
     {
         return new ANotvoidCstFunctionDeclaration (
+            (PCstBuildOrWalk)CloneNode (_cst_build_or_walk_),
             (PCstTypes)CloneNode (_cst_types_),
             (TIdentifier)CloneNode (_identifier_),
             (TLPar)CloneNode (_l_par_),
@@ -1831,6 +1839,30 @@ public sealed class ANotvoidCstFunctionDeclaration : PCstFunctionDeclaration
         ((Analysis) sw).CaseANotvoidCstFunctionDeclaration(this);
     }
 
+    public PCstBuildOrWalk GetCstBuildOrWalk ()
+    {
+        return _cst_build_or_walk_;
+    }
+
+    public void SetCstBuildOrWalk (PCstBuildOrWalk node)
+    {
+        if(_cst_build_or_walk_ != null)
+        {
+            _cst_build_or_walk_.Parent(null);
+        }
+
+        if(node != null)
+        {
+            if(node.Parent() != null)
+            {
+                node.Parent().RemoveChild(node);
+            }
+
+            node.Parent(this);
+        }
+
+        _cst_build_or_walk_ = node;
+    }
     public PCstTypes GetCstTypes ()
     {
         return _cst_types_;
@@ -2003,6 +2035,7 @@ public sealed class ANotvoidCstFunctionDeclaration : PCstFunctionDeclaration
     public override string ToString()
     {
         return ""
+            + ToString (_cst_build_or_walk_)
             + ToString (_cst_types_)
             + ToString (_identifier_)
             + ToString (_l_par_)
@@ -2015,6 +2048,11 @@ public sealed class ANotvoidCstFunctionDeclaration : PCstFunctionDeclaration
 
     internal override void RemoveChild(Node child)
     {
+        if ( _cst_build_or_walk_ == child )
+        {
+            _cst_build_or_walk_ = null;
+            return;
+        }
         if ( _cst_types_ == child )
         {
             _cst_types_ = null;
@@ -2054,6 +2092,11 @@ public sealed class ANotvoidCstFunctionDeclaration : PCstFunctionDeclaration
 
     internal override void ReplaceChild(Node oldChild, Node newChild)
     {
+        if ( _cst_build_or_walk_ == oldChild )
+        {
+            SetCstBuildOrWalk ((PCstBuildOrWalk) newChild);
+            return;
+        }
         if ( _cst_types_ == oldChild )
         {
             SetCstTypes ((PCstTypes) newChild);
@@ -2094,6 +2137,7 @@ public sealed class ANotvoidCstFunctionDeclaration : PCstFunctionDeclaration
 }
 public sealed class AVoidCstFunctionDeclaration : PCstFunctionDeclaration
 {
+    private PCstBuildOrWalk _cst_build_or_walk_;
     private TVoid _void_;
     private TIdentifier _identifier_;
     private TLPar _l_par_;
@@ -2107,6 +2151,7 @@ public sealed class AVoidCstFunctionDeclaration : PCstFunctionDeclaration
     }
 
     public AVoidCstFunctionDeclaration (
+            PCstBuildOrWalk _cst_build_or_walk_,
             TVoid _void_,
             TIdentifier _identifier_,
             TLPar _l_par_,
@@ -2116,6 +2161,7 @@ public sealed class AVoidCstFunctionDeclaration : PCstFunctionDeclaration
             PCstBlock _cst_block_
     )
     {
+        SetCstBuildOrWalk (_cst_build_or_walk_);
         SetVoid (_void_);
         SetIdentifier (_identifier_);
         SetLPar (_l_par_);
@@ -2128,6 +2174,7 @@ public sealed class AVoidCstFunctionDeclaration : PCstFunctionDeclaration
     public override Object Clone()
     {
         return new AVoidCstFunctionDeclaration (
+            (PCstBuildOrWalk)CloneNode (_cst_build_or_walk_),
             (TVoid)CloneNode (_void_),
             (TIdentifier)CloneNode (_identifier_),
             (TLPar)CloneNode (_l_par_),
@@ -2143,6 +2190,30 @@ public sealed class AVoidCstFunctionDeclaration : PCstFunctionDeclaration
         ((Analysis) sw).CaseAVoidCstFunctionDeclaration(this);
     }
 
+    public PCstBuildOrWalk GetCstBuildOrWalk ()
+    {
+        return _cst_build_or_walk_;
+    }
+
+    public void SetCstBuildOrWalk (PCstBuildOrWalk node)
+    {
+        if(_cst_build_or_walk_ != null)
+        {
+            _cst_build_or_walk_.Parent(null);
+        }
+
+        if(node != null)
+        {
+            if(node.Parent() != null)
+            {
+                node.Parent().RemoveChild(node);
+            }
+
+            node.Parent(this);
+        }
+
+        _cst_build_or_walk_ = node;
+    }
     public TVoid GetVoid ()
     {
         return _void_;
@@ -2315,6 +2386,7 @@ public sealed class AVoidCstFunctionDeclaration : PCstFunctionDeclaration
     public override string ToString()
     {
         return ""
+            + ToString (_cst_build_or_walk_)
             + ToString (_void_)
             + ToString (_identifier_)
             + ToString (_l_par_)
@@ -2327,6 +2399,11 @@ public sealed class AVoidCstFunctionDeclaration : PCstFunctionDeclaration
 
     internal override void RemoveChild(Node child)
     {
+        if ( _cst_build_or_walk_ == child )
+        {
+            _cst_build_or_walk_ = null;
+            return;
+        }
         if ( _void_ == child )
         {
             _void_ = null;
@@ -2366,6 +2443,11 @@ public sealed class AVoidCstFunctionDeclaration : PCstFunctionDeclaration
 
     internal override void ReplaceChild(Node oldChild, Node newChild)
     {
+        if ( _cst_build_or_walk_ == oldChild )
+        {
+            SetCstBuildOrWalk ((PCstBuildOrWalk) newChild);
+            return;
+        }
         if ( _void_ == oldChild )
         {
             SetVoid ((TVoid) newChild);
@@ -6651,6 +6733,7 @@ public sealed class AAssignModCstAssignments : PCstAssignments
 }
 public sealed class ACstFunctionCall : PCstFunctionCall
 {
+    private PCstBuildOrWalk _cst_build_or_walk_;
     private TIdentifier _identifier_;
     private TLPar _l_par_;
     private PCstActualParamList _cst_actual_param_list_;
@@ -6661,12 +6744,14 @@ public sealed class ACstFunctionCall : PCstFunctionCall
     }
 
     public ACstFunctionCall (
+            PCstBuildOrWalk _cst_build_or_walk_,
             TIdentifier _identifier_,
             TLPar _l_par_,
             PCstActualParamList _cst_actual_param_list_,
             TRPar _r_par_
     )
     {
+        SetCstBuildOrWalk (_cst_build_or_walk_);
         SetIdentifier (_identifier_);
         SetLPar (_l_par_);
         SetCstActualParamList (_cst_actual_param_list_);
@@ -6676,6 +6761,7 @@ public sealed class ACstFunctionCall : PCstFunctionCall
     public override Object Clone()
     {
         return new ACstFunctionCall (
+            (PCstBuildOrWalk)CloneNode (_cst_build_or_walk_),
             (TIdentifier)CloneNode (_identifier_),
             (TLPar)CloneNode (_l_par_),
             (PCstActualParamList)CloneNode (_cst_actual_param_list_),
@@ -6688,6 +6774,30 @@ public sealed class ACstFunctionCall : PCstFunctionCall
         ((Analysis) sw).CaseACstFunctionCall(this);
     }
 
+    public PCstBuildOrWalk GetCstBuildOrWalk ()
+    {
+        return _cst_build_or_walk_;
+    }
+
+    public void SetCstBuildOrWalk (PCstBuildOrWalk node)
+    {
+        if(_cst_build_or_walk_ != null)
+        {
+            _cst_build_or_walk_.Parent(null);
+        }
+
+        if(node != null)
+        {
+            if(node.Parent() != null)
+            {
+                node.Parent().RemoveChild(node);
+            }
+
+            node.Parent(this);
+        }
+
+        _cst_build_or_walk_ = node;
+    }
     public TIdentifier GetIdentifier ()
     {
         return _identifier_;
@@ -6788,6 +6898,7 @@ public sealed class ACstFunctionCall : PCstFunctionCall
     public override string ToString()
     {
         return ""
+            + ToString (_cst_build_or_walk_)
             + ToString (_identifier_)
             + ToString (_l_par_)
             + ToString (_cst_actual_param_list_)
@@ -6797,6 +6908,11 @@ public sealed class ACstFunctionCall : PCstFunctionCall
 
     internal override void RemoveChild(Node child)
     {
+        if ( _cst_build_or_walk_ == child )
+        {
+            _cst_build_or_walk_ = null;
+            return;
+        }
         if ( _identifier_ == child )
         {
             _identifier_ = null;
@@ -6821,6 +6937,11 @@ public sealed class ACstFunctionCall : PCstFunctionCall
 
     internal override void ReplaceChild(Node oldChild, Node newChild)
     {
+        if ( _cst_build_or_walk_ == oldChild )
+        {
+            SetCstBuildOrWalk ((PCstBuildOrWalk) newChild);
+            return;
+        }
         if ( _identifier_ == oldChild )
         {
             SetIdentifier ((TIdentifier) newChild);
@@ -10154,6 +10275,162 @@ public sealed class AVectorCstLeafExp : PCstLeafExp
         if ( _cst_vector_values_ == oldChild )
         {
             SetCstVectorValues ((PCstVectorValues) newChild);
+            return;
+        }
+    }
+
+}
+public sealed class ABuildCstBuildOrWalk : PCstBuildOrWalk
+{
+    private TBuild _build_;
+
+    public ABuildCstBuildOrWalk ()
+    {
+    }
+
+    public ABuildCstBuildOrWalk (
+            TBuild _build_
+    )
+    {
+        SetBuild (_build_);
+    }
+
+    public override Object Clone()
+    {
+        return new ABuildCstBuildOrWalk (
+            (TBuild)CloneNode (_build_)
+        );
+    }
+
+    public override void Apply(Switch sw)
+    {
+        ((Analysis) sw).CaseABuildCstBuildOrWalk(this);
+    }
+
+    public TBuild GetBuild ()
+    {
+        return _build_;
+    }
+
+    public void SetBuild (TBuild node)
+    {
+        if(_build_ != null)
+        {
+            _build_.Parent(null);
+        }
+
+        if(node != null)
+        {
+            if(node.Parent() != null)
+            {
+                node.Parent().RemoveChild(node);
+            }
+
+            node.Parent(this);
+        }
+
+        _build_ = node;
+    }
+
+    public override string ToString()
+    {
+        return ""
+            + ToString (_build_)
+        ;
+    }
+
+    internal override void RemoveChild(Node child)
+    {
+        if ( _build_ == child )
+        {
+            _build_ = null;
+            return;
+        }
+    }
+
+    internal override void ReplaceChild(Node oldChild, Node newChild)
+    {
+        if ( _build_ == oldChild )
+        {
+            SetBuild ((TBuild) newChild);
+            return;
+        }
+    }
+
+}
+public sealed class AWalkCstBuildOrWalk : PCstBuildOrWalk
+{
+    private TWalk _walk_;
+
+    public AWalkCstBuildOrWalk ()
+    {
+    }
+
+    public AWalkCstBuildOrWalk (
+            TWalk _walk_
+    )
+    {
+        SetWalk (_walk_);
+    }
+
+    public override Object Clone()
+    {
+        return new AWalkCstBuildOrWalk (
+            (TWalk)CloneNode (_walk_)
+        );
+    }
+
+    public override void Apply(Switch sw)
+    {
+        ((Analysis) sw).CaseAWalkCstBuildOrWalk(this);
+    }
+
+    public TWalk GetWalk ()
+    {
+        return _walk_;
+    }
+
+    public void SetWalk (TWalk node)
+    {
+        if(_walk_ != null)
+        {
+            _walk_.Parent(null);
+        }
+
+        if(node != null)
+        {
+            if(node.Parent() != null)
+            {
+                node.Parent().RemoveChild(node);
+            }
+
+            node.Parent(this);
+        }
+
+        _walk_ = node;
+    }
+
+    public override string ToString()
+    {
+        return ""
+            + ToString (_walk_)
+        ;
+    }
+
+    internal override void RemoveChild(Node child)
+    {
+        if ( _walk_ == child )
+        {
+            _walk_ = null;
+            return;
+        }
+    }
+
+    internal override void ReplaceChild(Node oldChild, Node newChild)
+    {
+        if ( _walk_ == oldChild )
+        {
+            SetWalk ((TWalk) newChild);
             return;
         }
     }

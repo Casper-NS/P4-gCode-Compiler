@@ -84,6 +84,8 @@ public interface Analysis : Switch
     void CaseAIdCstLeafExp(AIdCstLeafExp node);
     void CaseAFuncCallCstLeafExp(AFuncCallCstLeafExp node);
     void CaseAVectorCstLeafExp(AVectorCstLeafExp node);
+    void CaseABuildCstBuildOrWalk(ABuildCstBuildOrWalk node);
+    void CaseAWalkCstBuildOrWalk(AWalkCstBuildOrWalk node);
 
     void CaseTEol(TEol node);
     void CaseTBlank(TBlank node);
@@ -466,6 +468,14 @@ public class AnalysisAdapter : Analysis
         DefaultCase(node);
     }
     public virtual void CaseAVectorCstLeafExp(AVectorCstLeafExp node)
+    {
+        DefaultCase(node);
+    }
+    public virtual void CaseABuildCstBuildOrWalk(ABuildCstBuildOrWalk node)
+    {
+        DefaultCase(node);
+    }
+    public virtual void CaseAWalkCstBuildOrWalk(AWalkCstBuildOrWalk node)
     {
         DefaultCase(node);
     }
@@ -1006,6 +1016,10 @@ public class DepthFirstAdapter : AnalysisAdapter
     public override void CaseANotvoidCstFunctionDeclaration(ANotvoidCstFunctionDeclaration node)
     {
         InANotvoidCstFunctionDeclaration(node);
+        if(node.GetCstBuildOrWalk() != null)
+        {
+            node.GetCstBuildOrWalk().Apply(this);
+        }
         if(node.GetCstTypes() != null)
         {
             node.GetCstTypes().Apply(this);
@@ -1049,6 +1063,10 @@ public class DepthFirstAdapter : AnalysisAdapter
     public override void CaseAVoidCstFunctionDeclaration(AVoidCstFunctionDeclaration node)
     {
         InAVoidCstFunctionDeclaration(node);
+        if(node.GetCstBuildOrWalk() != null)
+        {
+            node.GetCstBuildOrWalk().Apply(this);
+        }
         if(node.GetVoid() != null)
         {
             node.GetVoid().Apply(this);
@@ -1814,6 +1832,10 @@ public class DepthFirstAdapter : AnalysisAdapter
     public override void CaseACstFunctionCall(ACstFunctionCall node)
     {
         InACstFunctionCall(node);
+        if(node.GetCstBuildOrWalk() != null)
+        {
+            node.GetCstBuildOrWalk().Apply(this);
+        }
         if(node.GetIdentifier() != null)
         {
             node.GetIdentifier().Apply(this);
@@ -2468,6 +2490,44 @@ public class DepthFirstAdapter : AnalysisAdapter
             node.GetCstVectorValues().Apply(this);
         }
         OutAVectorCstLeafExp(node);
+    }
+    public virtual void InABuildCstBuildOrWalk(ABuildCstBuildOrWalk node)
+    {
+        DefaultIn(node);
+    }
+
+    public virtual void OutABuildCstBuildOrWalk(ABuildCstBuildOrWalk node)
+    {
+        DefaultOut(node);
+    }
+
+    public override void CaseABuildCstBuildOrWalk(ABuildCstBuildOrWalk node)
+    {
+        InABuildCstBuildOrWalk(node);
+        if(node.GetBuild() != null)
+        {
+            node.GetBuild().Apply(this);
+        }
+        OutABuildCstBuildOrWalk(node);
+    }
+    public virtual void InAWalkCstBuildOrWalk(AWalkCstBuildOrWalk node)
+    {
+        DefaultIn(node);
+    }
+
+    public virtual void OutAWalkCstBuildOrWalk(AWalkCstBuildOrWalk node)
+    {
+        DefaultOut(node);
+    }
+
+    public override void CaseAWalkCstBuildOrWalk(AWalkCstBuildOrWalk node)
+    {
+        InAWalkCstBuildOrWalk(node);
+        if(node.GetWalk() != null)
+        {
+            node.GetWalk().Apply(this);
+        }
+        OutAWalkCstBuildOrWalk(node);
     }
 }
 
@@ -2856,6 +2916,10 @@ public class ReversedDepthFirstAdapter : AnalysisAdapter
         {
             node.GetCstTypes().Apply(this);
         }
+        if(node.GetCstBuildOrWalk() != null)
+        {
+            node.GetCstBuildOrWalk().Apply(this);
+        }
         OutANotvoidCstFunctionDeclaration(node);
     }
     public virtual void InAVoidCstFunctionDeclaration(AVoidCstFunctionDeclaration node)
@@ -2898,6 +2962,10 @@ public class ReversedDepthFirstAdapter : AnalysisAdapter
         if(node.GetVoid() != null)
         {
             node.GetVoid().Apply(this);
+        }
+        if(node.GetCstBuildOrWalk() != null)
+        {
+            node.GetCstBuildOrWalk().Apply(this);
         }
         OutAVoidCstFunctionDeclaration(node);
     }
@@ -3652,6 +3720,10 @@ public class ReversedDepthFirstAdapter : AnalysisAdapter
         {
             node.GetIdentifier().Apply(this);
         }
+        if(node.GetCstBuildOrWalk() != null)
+        {
+            node.GetCstBuildOrWalk().Apply(this);
+        }
         OutACstFunctionCall(node);
     }
     public virtual void InAListCstActualParamList(AListCstActualParamList node)
@@ -4290,6 +4362,44 @@ public class ReversedDepthFirstAdapter : AnalysisAdapter
             node.GetCstVectorValues().Apply(this);
         }
         OutAVectorCstLeafExp(node);
+    }
+    public virtual void InABuildCstBuildOrWalk(ABuildCstBuildOrWalk node)
+    {
+        DefaultIn(node);
+    }
+
+    public virtual void OutABuildCstBuildOrWalk(ABuildCstBuildOrWalk node)
+    {
+        DefaultOut(node);
+    }
+
+    public override void CaseABuildCstBuildOrWalk(ABuildCstBuildOrWalk node)
+    {
+        InABuildCstBuildOrWalk(node);
+        if(node.GetBuild() != null)
+        {
+            node.GetBuild().Apply(this);
+        }
+        OutABuildCstBuildOrWalk(node);
+    }
+    public virtual void InAWalkCstBuildOrWalk(AWalkCstBuildOrWalk node)
+    {
+        DefaultIn(node);
+    }
+
+    public virtual void OutAWalkCstBuildOrWalk(AWalkCstBuildOrWalk node)
+    {
+        DefaultOut(node);
+    }
+
+    public override void CaseAWalkCstBuildOrWalk(AWalkCstBuildOrWalk node)
+    {
+        InAWalkCstBuildOrWalk(node);
+        if(node.GetWalk() != null)
+        {
+            node.GetWalk().Apply(this);
+        }
+        OutAWalkCstBuildOrWalk(node);
     }
 }
 } // namespace GGCodeParser.analysis
