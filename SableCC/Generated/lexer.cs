@@ -712,7 +712,7 @@ public class Lexer
     private Token New36(String text, int line, int pos) { return new TOr(text, line, pos); }
     private Token New37(String text, int line, int pos) { return new TNumber(text, line, pos); }
     private Token New38(String text, int line, int pos) { return new TId(text, line, pos); }
-    private Token New39(String text, int line, int pos) { return new TAllCharsExceptCurly(text, line, pos); }
+    private Token New39(String text, int line, int pos) { return new TGcodeLiteral(text, line, pos); }
     private Token New40(String text, int line, int pos) { return new TMultilineComment(text, line, pos); }
     private Token New41(String text, int line, int pos) { return new TSinglelineComment(text, line, pos); }
 

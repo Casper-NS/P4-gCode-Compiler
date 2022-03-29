@@ -984,14 +984,14 @@ public sealed class TId : Token
     }
 }
 
-public sealed class TAllCharsExceptCurly : Token
+public sealed class TGcodeLiteral : Token
 {
-    public TAllCharsExceptCurly(string text)
+    public TGcodeLiteral(string text)
     {
         Text = text;
     }
 
-    public TAllCharsExceptCurly(string text, int line, int pos)
+    public TGcodeLiteral(string text, int line, int pos)
     {
         Text = text;
         Line = line;
@@ -1000,12 +1000,12 @@ public sealed class TAllCharsExceptCurly : Token
 
     public override Object Clone()
     {
-      return new TAllCharsExceptCurly(Text, Line, Pos);
+      return new TGcodeLiteral(Text, Line, Pos);
     }
 
     public override void Apply(Switch sw)
     {
-        ((Analysis) sw).CaseTAllCharsExceptCurly(this);
+        ((Analysis) sw).CaseTGcodeLiteral(this);
     }
 }
 
