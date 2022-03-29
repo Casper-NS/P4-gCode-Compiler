@@ -1,7 +1,7 @@
 Package GOATCode;
 
 Helpers
-  all = [0 .. 127];
+  all = [0 .. 0xFFFF];
   not_curleys = [all - ['{' + '}']];
   tab   = 9;
   cr    = 13;
@@ -54,12 +54,12 @@ Tokens
   return = 'return';
   build = 'build';
   walk = 'walk';
-  gcode = 'GCODE';
+  gcode = 'gcode';
   and = '&&';
   or = '||';
   number  = '0'| [digit-'0'] digit* | digit* '.' digit*;
   id    = idletter idchar* | idletter idchar* '.' xyz;
-  gcode_literal = not_curleys;
+  gcode_literal = not_curleys*;
   multiline_comment = '/*' not_star * star + ( not_star_slash not_star * star+) * '/' eol_char;
   singleline_comment = '//' not_eol_char* eol_char;
 

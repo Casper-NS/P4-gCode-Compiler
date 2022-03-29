@@ -3177,7 +3177,7 @@ public class Parser
       "expecting: EOF",
       "expecting: eol, EOF",
       "expecting: '('",
-      "expecting: eol, '}', 'vector', 'int', 'const', 'float', 'bool', 'void', 'if', 'repeat', 'while', 'return', 'build', 'walk', 'GCODE', id, EOF",
+      "expecting: eol, '}', 'vector', 'int', 'const', 'float', 'bool', 'void', 'if', 'repeat', 'while', 'return', 'build', 'walk', 'gcode', id, EOF",
       "expecting: eol, 'vector', 'int', 'const', 'float', 'bool', 'void', EOF",
       "expecting: eol, '=', '(', EOF",
       "expecting: '='",
@@ -3195,7 +3195,7 @@ public class Parser
       "expecting: ')', ','",
       "expecting: '!', '(', ')', bool value, number, id",
       "expecting: '(', bool value, number, id",
-      "expecting: 'vector', 'int', 'const', 'float', 'bool', 'if', 'repeat', 'while', 'return', 'build', 'walk', 'GCODE', id",
+      "expecting: 'vector', 'int', 'const', 'float', 'bool', 'if', 'repeat', 'while', 'return', 'build', 'walk', 'gcode', id",
       "expecting: eol, ')', ',', EOF",
       "expecting: '=', '*', '%', '/', '+', '-', '('",
       "expecting: '}'",
@@ -3203,7 +3203,7 @@ public class Parser
       "expecting: gcode literal",
       "expecting: eol, '='",
       "expecting: eol, 'else', EOF",
-      "expecting: eol, '}', 'vector', 'int', 'const', 'float', 'bool', 'if', 'repeat', 'while', 'return', 'build', 'walk', 'GCODE', id",
+      "expecting: eol, '}', 'vector', 'int', 'const', 'float', 'bool', 'if', 'repeat', 'while', 'return', 'build', 'walk', 'gcode', id",
       "expecting: eol, 'else'",
     };
 
