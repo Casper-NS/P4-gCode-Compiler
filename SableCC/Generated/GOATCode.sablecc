@@ -1,7 +1,7 @@
 Package GOATCode;
 
 Helpers
-  all = [0 .. 0xFFFF];
+  all = [0 .. 127];
   not_curleys = [all - ['{' + '}']];
   tab   = 9;
   cr    = 13;
