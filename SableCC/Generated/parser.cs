@@ -1020,7 +1020,7 @@ public class Parser
         PTypes ptypesNode3 = (PTypes)nodeArrayList1[0];
         TId tidNode4 = (TId)nodeArrayList2[0];
         PExp pexpNode5 = (PExp)nodeArrayList4[0];
-        AVardeclDecl pdeclNode1 = new AVardeclDecl (
+        AVarDecl pdeclNode1 = new AVarDecl (
               null,
               ptypesNode3,
               tidNode4,
@@ -1041,7 +1041,7 @@ public class Parser
         PTypes ptypesNode3 = (PTypes)nodeArrayList2[0];
         TId tidNode4 = (TId)nodeArrayList3[0];
         PExp pexpNode5 = (PExp)nodeArrayList5[0];
-        AVardeclDecl pdeclNode1 = new AVardeclDecl (
+        AVarDecl pdeclNode1 = new AVarDecl (
               tconstNode2,
               ptypesNode3,
               tidNode4,
@@ -1065,7 +1065,7 @@ public class Parser
         ArrayList nodeArrayList1 = (ArrayList) Pop();
         PTypes ptypesNode3 = (PTypes)nodeArrayList1[0];
         TId tidNode4 = (TId)nodeArrayList2[0];
-        AVardeclDecl pdeclNode1 = new AVardeclDecl (
+        AVarDecl pdeclNode1 = new AVarDecl (
               null,
               ptypesNode3,
               tidNode4,
@@ -1083,7 +1083,7 @@ public class Parser
         TConst tconstNode2 = (TConst)nodeArrayList1[0];
         PTypes ptypesNode3 = (PTypes)nodeArrayList2[0];
         TId tidNode4 = (TId)nodeArrayList3[0];
-        AVardeclDecl pdeclNode1 = new AVardeclDecl (
+        AVarDecl pdeclNode1 = new AVarDecl (
               tconstNode2,
               ptypesNode3,
               tidNode4,
@@ -1161,7 +1161,7 @@ public class Parser
         PTypes ptypesNode2 = (PTypes)nodeArrayList1[0];
         TId tidNode3 = (TId)nodeArrayList2[0];
         PBlock pblockNode5 = (PBlock)nodeArrayList5[0];
-        AFuncdeclDecl pdeclNode1 = new AFuncdeclDecl (
+        AFuncDecl pdeclNode1 = new AFuncDecl (
               ptypesNode2,
               tidNode3,
               listNode4,
@@ -1188,7 +1188,7 @@ public class Parser
             listNode5.AddAll(listNode4);
         }
         PBlock pblockNode6 = (PBlock)nodeArrayList6[0];
-        AFuncdeclDecl pdeclNode1 = new AFuncdeclDecl (
+        AFuncDecl pdeclNode1 = new AFuncDecl (
               ptypesNode2,
               tidNode3,
               listNode5,
@@ -1210,7 +1210,7 @@ public class Parser
         PTypes ptypesNode2 = (PTypes)nodeArrayList1[0];
         TId tidNode3 = (TId)nodeArrayList2[0];
         PBlock pblockNode5 = (PBlock)nodeArrayList6[0];
-        AFuncdeclDecl pdeclNode1 = new AFuncdeclDecl (
+        AFuncDecl pdeclNode1 = new AFuncDecl (
               ptypesNode2,
               tidNode3,
               listNode4,
@@ -1238,7 +1238,7 @@ public class Parser
             listNode5.AddAll(listNode4);
         }
         PBlock pblockNode6 = (PBlock)nodeArrayList7[0];
-        AFuncdeclDecl pdeclNode1 = new AFuncdeclDecl (
+        AFuncDecl pdeclNode1 = new AFuncDecl (
               ptypesNode2,
               tidNode3,
               listNode5,
@@ -1258,7 +1258,7 @@ public class Parser
         TypedList listNode3 = new TypedList();
         TId tidNode2 = (TId)nodeArrayList2[0];
         PBlock pblockNode4 = (PBlock)nodeArrayList5[0];
-        AProcdeclDecl pdeclNode1 = new AProcdeclDecl (
+        AProcDecl pdeclNode1 = new AProcDecl (
               tidNode2,
               listNode3,
               pblockNode4
@@ -1283,7 +1283,7 @@ public class Parser
             listNode4.AddAll(listNode3);
         }
         PBlock pblockNode5 = (PBlock)nodeArrayList6[0];
-        AProcdeclDecl pdeclNode1 = new AProcdeclDecl (
+        AProcDecl pdeclNode1 = new AProcDecl (
               tidNode2,
               listNode4,
               pblockNode5
@@ -1303,7 +1303,7 @@ public class Parser
         TypedList listNode3 = new TypedList();
         TId tidNode2 = (TId)nodeArrayList2[0];
         PBlock pblockNode4 = (PBlock)nodeArrayList6[0];
-        AProcdeclDecl pdeclNode1 = new AProcdeclDecl (
+        AProcDecl pdeclNode1 = new AProcDecl (
               tidNode2,
               listNode3,
               pblockNode4
@@ -1329,7 +1329,7 @@ public class Parser
             listNode4.AddAll(listNode3);
         }
         PBlock pblockNode5 = (PBlock)nodeArrayList7[0];
-        AProcdeclDecl pdeclNode1 = new AProcdeclDecl (
+        AProcDecl pdeclNode1 = new AProcDecl (
               tidNode2,
               listNode4,
               pblockNode5

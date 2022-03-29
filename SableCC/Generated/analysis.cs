@@ -16,9 +16,9 @@ public interface Analysis : Switch
 
     void CaseStart(Start node);
     void CaseADeclProgram(ADeclProgram node);
-    void CaseAVardeclDecl(AVardeclDecl node);
-    void CaseAFuncdeclDecl(AFuncdeclDecl node);
-    void CaseAProcdeclDecl(AProcdeclDecl node);
+    void CaseAVarDecl(AVarDecl node);
+    void CaseAFuncDecl(AFuncDecl node);
+    void CaseAProcDecl(AProcDecl node);
     void CaseAIntTypes(AIntTypes node);
     void CaseAFloatTypes(AFloatTypes node);
     void CaseABoolTypes(ABoolTypes node);
@@ -171,15 +171,15 @@ public class AnalysisAdapter : Analysis
     {
         DefaultCase(node);
     }
-    public virtual void CaseAVardeclDecl(AVardeclDecl node)
+    public virtual void CaseAVarDecl(AVarDecl node)
     {
         DefaultCase(node);
     }
-    public virtual void CaseAFuncdeclDecl(AFuncdeclDecl node)
+    public virtual void CaseAFuncDecl(AFuncDecl node)
     {
         DefaultCase(node);
     }
-    public virtual void CaseAProcdeclDecl(AProcdeclDecl node)
+    public virtual void CaseAProcDecl(AProcDecl node)
     {
         DefaultCase(node);
     }
@@ -571,19 +571,19 @@ public class DepthFirstAdapter : AnalysisAdapter
         }
         OutADeclProgram(node);
     }
-    public virtual void InAVardeclDecl(AVardeclDecl node)
+    public virtual void InAVarDecl(AVarDecl node)
     {
         DefaultIn(node);
     }
 
-    public virtual void OutAVardeclDecl(AVardeclDecl node)
+    public virtual void OutAVarDecl(AVarDecl node)
     {
         DefaultOut(node);
     }
 
-    public override void CaseAVardeclDecl(AVardeclDecl node)
+    public override void CaseAVarDecl(AVarDecl node)
     {
-        InAVardeclDecl(node);
+        InAVarDecl(node);
         if(node.GetConst() != null)
         {
             node.GetConst().Apply(this);
@@ -600,21 +600,21 @@ public class DepthFirstAdapter : AnalysisAdapter
         {
             node.GetExp().Apply(this);
         }
-        OutAVardeclDecl(node);
+        OutAVarDecl(node);
     }
-    public virtual void InAFuncdeclDecl(AFuncdeclDecl node)
+    public virtual void InAFuncDecl(AFuncDecl node)
     {
         DefaultIn(node);
     }
 
-    public virtual void OutAFuncdeclDecl(AFuncdeclDecl node)
+    public virtual void OutAFuncDecl(AFuncDecl node)
     {
         DefaultOut(node);
     }
 
-    public override void CaseAFuncdeclDecl(AFuncdeclDecl node)
+    public override void CaseAFuncDecl(AFuncDecl node)
     {
-        InAFuncdeclDecl(node);
+        InAFuncDecl(node);
         if(node.GetTypes() != null)
         {
             node.GetTypes().Apply(this);
@@ -635,21 +635,21 @@ public class DepthFirstAdapter : AnalysisAdapter
         {
             node.GetBlock().Apply(this);
         }
-        OutAFuncdeclDecl(node);
+        OutAFuncDecl(node);
     }
-    public virtual void InAProcdeclDecl(AProcdeclDecl node)
+    public virtual void InAProcDecl(AProcDecl node)
     {
         DefaultIn(node);
     }
 
-    public virtual void OutAProcdeclDecl(AProcdeclDecl node)
+    public virtual void OutAProcDecl(AProcDecl node)
     {
         DefaultOut(node);
     }
 
-    public override void CaseAProcdeclDecl(AProcdeclDecl node)
+    public override void CaseAProcDecl(AProcDecl node)
     {
-        InAProcdeclDecl(node);
+        InAProcDecl(node);
         if(node.GetId() != null)
         {
             node.GetId().Apply(this);
@@ -666,7 +666,7 @@ public class DepthFirstAdapter : AnalysisAdapter
         {
             node.GetBlock().Apply(this);
         }
-        OutAProcdeclDecl(node);
+        OutAProcDecl(node);
     }
     public virtual void InAIntTypes(AIntTypes node)
     {
@@ -1559,19 +1559,19 @@ public class ReversedDepthFirstAdapter : AnalysisAdapter
         }
         OutADeclProgram(node);
     }
-    public virtual void InAVardeclDecl(AVardeclDecl node)
+    public virtual void InAVarDecl(AVarDecl node)
     {
         DefaultIn(node);
     }
 
-    public virtual void OutAVardeclDecl(AVardeclDecl node)
+    public virtual void OutAVarDecl(AVarDecl node)
     {
         DefaultOut(node);
     }
 
-    public override void CaseAVardeclDecl(AVardeclDecl node)
+    public override void CaseAVarDecl(AVarDecl node)
     {
-        InAVardeclDecl(node);
+        InAVarDecl(node);
         if(node.GetExp() != null)
         {
             node.GetExp().Apply(this);
@@ -1588,21 +1588,21 @@ public class ReversedDepthFirstAdapter : AnalysisAdapter
         {
             node.GetConst().Apply(this);
         }
-        OutAVardeclDecl(node);
+        OutAVarDecl(node);
     }
-    public virtual void InAFuncdeclDecl(AFuncdeclDecl node)
+    public virtual void InAFuncDecl(AFuncDecl node)
     {
         DefaultIn(node);
     }
 
-    public virtual void OutAFuncdeclDecl(AFuncdeclDecl node)
+    public virtual void OutAFuncDecl(AFuncDecl node)
     {
         DefaultOut(node);
     }
 
-    public override void CaseAFuncdeclDecl(AFuncdeclDecl node)
+    public override void CaseAFuncDecl(AFuncDecl node)
     {
-        InAFuncdeclDecl(node);
+        InAFuncDecl(node);
         if(node.GetBlock() != null)
         {
             node.GetBlock().Apply(this);
@@ -1623,21 +1623,21 @@ public class ReversedDepthFirstAdapter : AnalysisAdapter
         {
             node.GetTypes().Apply(this);
         }
-        OutAFuncdeclDecl(node);
+        OutAFuncDecl(node);
     }
-    public virtual void InAProcdeclDecl(AProcdeclDecl node)
+    public virtual void InAProcDecl(AProcDecl node)
     {
         DefaultIn(node);
     }
 
-    public virtual void OutAProcdeclDecl(AProcdeclDecl node)
+    public virtual void OutAProcDecl(AProcDecl node)
     {
         DefaultOut(node);
     }
 
-    public override void CaseAProcdeclDecl(AProcdeclDecl node)
+    public override void CaseAProcDecl(AProcDecl node)
     {
-        InAProcdeclDecl(node);
+        InAProcDecl(node);
         if(node.GetBlock() != null)
         {
             node.GetBlock().Apply(this);
@@ -1654,7 +1654,7 @@ public class ReversedDepthFirstAdapter : AnalysisAdapter
         {
             node.GetId().Apply(this);
         }
-        OutAProcdeclDecl(node);
+        OutAProcDecl(node);
     }
     public virtual void InAIntTypes(AIntTypes node)
     {

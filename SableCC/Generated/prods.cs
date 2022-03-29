@@ -147,18 +147,18 @@ public sealed class ADeclProgram : PProgram
         }
     }
 }
-public sealed class AVardeclDecl : PDecl
+public sealed class AVarDecl : PDecl
 {
     private TConst _const_;
     private PTypes _types_;
     private TId _id_;
     private PExp _exp_;
 
-    public AVardeclDecl ()
+    public AVarDecl ()
     {
     }
 
-    public AVardeclDecl (
+    public AVarDecl (
             TConst _const_,
             PTypes _types_,
             TId _id_,
@@ -173,7 +173,7 @@ public sealed class AVardeclDecl : PDecl
 
     public override Object Clone()
     {
-        return new AVardeclDecl (
+        return new AVarDecl (
             (TConst)CloneNode (_const_),
             (PTypes)CloneNode (_types_),
             (TId)CloneNode (_id_),
@@ -183,7 +183,7 @@ public sealed class AVardeclDecl : PDecl
 
     public override void Apply(Switch sw)
     {
-        ((Analysis) sw).CaseAVardeclDecl(this);
+        ((Analysis) sw).CaseAVarDecl(this);
     }
 
     public TConst GetConst ()
@@ -342,19 +342,19 @@ public sealed class AVardeclDecl : PDecl
     }
 
 }
-public sealed class AFuncdeclDecl : PDecl
+public sealed class AFuncDecl : PDecl
 {
     private PTypes _types_;
     private TId _id_;
     private TypedList _decl_;
     private PBlock _block_;
 
-    public AFuncdeclDecl ()
+    public AFuncDecl ()
     {
         this._decl_ = new TypedList(new Decl_Cast(this));
     }
 
-    public AFuncdeclDecl (
+    public AFuncDecl (
             PTypes _types_,
             TId _id_,
             IList _decl_,
@@ -371,7 +371,7 @@ public sealed class AFuncdeclDecl : PDecl
 
     public override Object Clone()
     {
-        return new AFuncdeclDecl (
+        return new AFuncDecl (
             (PTypes)CloneNode (_types_),
             (TId)CloneNode (_id_),
             CloneList (_decl_),
@@ -381,7 +381,7 @@ public sealed class AFuncdeclDecl : PDecl
 
     public override void Apply(Switch sw)
     {
-        ((Analysis) sw).CaseAFuncdeclDecl(this);
+        ((Analysis) sw).CaseAFuncDecl(this);
     }
 
     public PTypes GetTypes ()
@@ -539,9 +539,9 @@ public sealed class AFuncdeclDecl : PDecl
 
     private class Decl_Cast : Cast
     {
-        AFuncdeclDecl obj;
+        AFuncDecl obj;
 
-        internal Decl_Cast (AFuncdeclDecl obj)
+        internal Decl_Cast (AFuncDecl obj)
         {
           this.obj = obj;
         }
@@ -573,18 +573,18 @@ public sealed class AFuncdeclDecl : PDecl
         }
     }
 }
-public sealed class AProcdeclDecl : PDecl
+public sealed class AProcDecl : PDecl
 {
     private TId _id_;
     private TypedList _decl_;
     private PBlock _block_;
 
-    public AProcdeclDecl ()
+    public AProcDecl ()
     {
         this._decl_ = new TypedList(new Decl_Cast(this));
     }
 
-    public AProcdeclDecl (
+    public AProcDecl (
             TId _id_,
             IList _decl_,
             PBlock _block_
@@ -599,7 +599,7 @@ public sealed class AProcdeclDecl : PDecl
 
     public override Object Clone()
     {
-        return new AProcdeclDecl (
+        return new AProcDecl (
             (TId)CloneNode (_id_),
             CloneList (_decl_),
             (PBlock)CloneNode (_block_)
@@ -608,7 +608,7 @@ public sealed class AProcdeclDecl : PDecl
 
     public override void Apply(Switch sw)
     {
-        ((Analysis) sw).CaseAProcdeclDecl(this);
+        ((Analysis) sw).CaseAProcDecl(this);
     }
 
     public TId GetId ()
@@ -731,9 +731,9 @@ public sealed class AProcdeclDecl : PDecl
 
     private class Decl_Cast : Cast
     {
-        AProcdeclDecl obj;
+        AProcDecl obj;
 
-        internal Decl_Cast (AProcdeclDecl obj)
+        internal Decl_Cast (AProcDecl obj)
         {
           this.obj = obj;
         }

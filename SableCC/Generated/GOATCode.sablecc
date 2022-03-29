@@ -78,11 +78,11 @@ cst_declaration {-> decl} =
         {function}cst_function_declaration {-> cst_function_declaration.decl};
 
 cst_variable_declaration {-> decl} =
-        {initialised}const? cst_types id assignment_op cst_expression {-> New decl.vardecl(const, cst_types.types, id, cst_expression.exp)} | 
+        {initialised}const? cst_types id assignment_op cst_expression {-> New decl.var(const, cst_types.types, id, cst_expression.exp)} | 
         cst_uninitialised_variable {-> cst_uninitialised_variable.decl};
 
 cst_uninitialised_variable {-> decl} =
-        const? cst_types id {-> New decl.vardecl(const, cst_types.types, id, Null)};
+        const? cst_types id {-> New decl.var(const, cst_types.types, id, Null)};
 
 cst_types {-> types} = 
         {integer} int {-> New types.int()} | 
@@ -93,8 +93,8 @@ cst_types {-> types} =
 cst_vector_values {-> exp} = l_par [a]:cst_expression [q]:comma [b]:cst_expression [w]:comma [c]:cst_expression r_par {-> New exp.vector(a.exp, b.exp, c.exp)};
 
 cst_function_declaration {-> decl} =
-        {notvoid} cst_types id l_par cst_formal_param_list? r_par eol? cst_block {-> New decl.funcdecl(cst_types.types, id, [cst_formal_param_list.decl], cst_block.block)}|
-        {void} void         id l_par cst_formal_param_list? r_par eol? cst_block {-> New decl.procdecl(id, [cst_formal_param_list.decl], cst_block.block)};
+        {notvoid} cst_types id l_par cst_formal_param_list? r_par eol? cst_block {-> New decl.func(cst_types.types, id, [cst_formal_param_list.decl], cst_block.block)}|
+        {void} void         id l_par cst_formal_param_list? r_par eol? cst_block {-> New decl.proc(id, [cst_formal_param_list.decl], cst_block.block)};
 
 cst_formal_param_list {-> decl*} = 
         {list}cst_uninitialised_variable comma cst_formal_param_list {-> [cst_uninitialised_variable.decl, cst_formal_param_list.decl]} | 
@@ -184,9 +184,9 @@ Abstract Syntax Tree
 program = {decl} decl*;
 
 decl = 
-{vardecl} const? types id exp?
-| {funcdecl} types id decl* block 
-| {procdecl} id decl* block;
+{var} const? types id exp?
+| {func} types id decl* block 
+| {proc} id decl* block;
 
 types = 
 {int}
