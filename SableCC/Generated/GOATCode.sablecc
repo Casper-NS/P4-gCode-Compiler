@@ -1,5 +1,17 @@
 Package GOATCode;
 
+/*
+    This file describes the grammar accepted in our language.
+    Helpers and tokens can be seen below, which are used to identify the accepted words of the language.
+    
+    Productions for the concrete syntax tree can be seen below the tokens in the production section.
+    At the bottom of the file the productions for the AST transformations can be found.
+
+    The mapping from the CST to the AST happens in the curly brackets with the arrow {-> ...}
+    If there is the 'New' keyword in the mapping it generates a new node in the AST 
+    and everything in the () is passed to the AST productions.
+*/
+
 Helpers
   all = [0 .. 127];
   tab   = 9;
