@@ -1,4 +1,12 @@
 ﻿void main()
 {
-	a = 2
+	int ba = 2
+
+	gcode
+	{
+	rh
+	arkjg
+	naerjk
+	}
+
 }
