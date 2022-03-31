@@ -14,4 +14,6 @@
 	{
 		int b = 2
 	}
+
+	if (true) { int a }
 }
