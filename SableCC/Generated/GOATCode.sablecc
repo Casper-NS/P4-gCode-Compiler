@@ -158,7 +158,7 @@ cst_formal_param_list {-> decl*} =
 
 
 cst_block {-> block} = 
-        l_cur eol cst_statement_list r_cur
+        l_cur eol? cst_statement_list r_cur
             {-> New block.stmtlist([cst_statement_list.stmt])};
 
 
