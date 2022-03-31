@@ -67,7 +67,7 @@ Tokens
   return = 'return';
   build = 'build';
   walk = 'walk';
-  gcode_literal = 'gcode' spacing* '{' not_curleys+ '}';
+  gcode_literal = 'gcode' spacing* '{' not_curleys* '}';
   and = '&&';
   or = '||';
   number  = '0'| [digit-'0'] digit* | digit* '.' digit*;
