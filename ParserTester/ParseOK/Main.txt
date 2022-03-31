@@ -1,12 +1,4 @@
 ﻿void main()
 {
-	int ba = 2
-
-	gcode
-	{
-	rh
-	arkjg
-	naerjk
-	}
-
+	int ba
 }
