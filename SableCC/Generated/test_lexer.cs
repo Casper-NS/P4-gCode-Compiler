@@ -4,8 +4,8 @@ using System;
 using System.Collections;
 using System.Text;
 using System.IO;
-using GOATCode.lexer;
-using GOATCode.node;
+using GGCodeParser.lexer;
+using GGCodeParser.node;
 
 class TestLexer
 {

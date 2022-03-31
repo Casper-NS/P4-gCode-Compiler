@@ -4,7 +4,7 @@ using System;
 using System.Collections;
 using System.Text;
 
-namespace GOATCode.node {
+namespace GGCodeParser.node {
 
 public abstract class Node : Switchable, ICloneable
 {
@@ -268,4 +268,4 @@ public class TypedList : IList
       list.RemoveAt(index);
     }
 }
-} // namespace GOATCode.node
+} // namespace GGCodeParser.node

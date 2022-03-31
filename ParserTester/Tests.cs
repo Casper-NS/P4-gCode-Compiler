@@ -1,9 +1,9 @@
+using GGCodeParser.lexer;
+using GGCodeParser.parser;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
-using GOATCode.lexer;
-using GOATCode.parser;
 using Xunit;
 using Xunit.Sdk;
 
