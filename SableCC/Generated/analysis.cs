@@ -17,6 +17,7 @@ public interface Analysis : Switch
     void CaseStart(Start node);
     void CaseADeclProgram(ADeclProgram node);
     void CaseAVarDecl(AVarDecl node);
+    void CaseAParamDecl(AParamDecl node);
     void CaseAFuncDecl(AFuncDecl node);
     void CaseAProcDecl(AProcDecl node);
     void CaseAIntTypes(AIntTypes node);
@@ -93,12 +94,11 @@ public interface Analysis : Switch
     void CaseTReturn(TReturn node);
     void CaseTBuild(TBuild node);
     void CaseTWalk(TWalk node);
-    void CaseTGcode(TGcode node);
+    void CaseTGcodeLiteral(TGcodeLiteral node);
     void CaseTAnd(TAnd node);
     void CaseTOr(TOr node);
     void CaseTNumber(TNumber node);
     void CaseTId(TId node);
-    void CaseTAllCharsExceptCurly(TAllCharsExceptCurly node);
     void CaseTMultilineComment(TMultilineComment node);
     void CaseTSinglelineComment(TSinglelineComment node);
     void CaseEOF(EOF node);
@@ -172,6 +172,10 @@ public class AnalysisAdapter : Analysis
         DefaultCase(node);
     }
     public virtual void CaseAVarDecl(AVarDecl node)
+    {
+        DefaultCase(node);
+    }
+    public virtual void CaseAParamDecl(AParamDecl node)
     {
         DefaultCase(node);
     }
@@ -476,7 +480,7 @@ public class AnalysisAdapter : Analysis
     {
         DefaultCase(node);
     }
-    public virtual void CaseTGcode(TGcode node)
+    public virtual void CaseTGcodeLiteral(TGcodeLiteral node)
     {
         DefaultCase(node);
     }
@@ -493,10 +497,6 @@ public class AnalysisAdapter : Analysis
         DefaultCase(node);
     }
     public virtual void CaseTId(TId node)
-    {
-        DefaultCase(node);
-    }
-    public virtual void CaseTAllCharsExceptCurly(TAllCharsExceptCurly node)
     {
         DefaultCase(node);
     }
@@ -601,6 +601,29 @@ public class DepthFirstAdapter : AnalysisAdapter
             node.GetExp().Apply(this);
         }
         OutAVarDecl(node);
+    }
+    public virtual void InAParamDecl(AParamDecl node)
+    {
+        DefaultIn(node);
+    }
+
+    public virtual void OutAParamDecl(AParamDecl node)
+    {
+        DefaultOut(node);
+    }
+
+    public override void CaseAParamDecl(AParamDecl node)
+    {
+        InAParamDecl(node);
+        if(node.GetTypes() != null)
+        {
+            node.GetTypes().Apply(this);
+        }
+        if(node.GetId() != null)
+        {
+            node.GetId().Apply(this);
+        }
+        OutAParamDecl(node);
     }
     public virtual void InAFuncDecl(AFuncDecl node)
     {
@@ -856,9 +879,9 @@ public class DepthFirstAdapter : AnalysisAdapter
     public override void CaseAGcodeStmt(AGcodeStmt node)
     {
         InAGcodeStmt(node);
-        if(node.GetAllCharsExceptCurly() != null)
+        if(node.GetGcodeLiteral() != null)
         {
-            node.GetAllCharsExceptCurly().Apply(this);
+            node.GetGcodeLiteral().Apply(this);
         }
         OutAGcodeStmt(node);
     }
@@ -1590,6 +1613,29 @@ public class ReversedDepthFirstAdapter : AnalysisAdapter
         }
         OutAVarDecl(node);
     }
+    public virtual void InAParamDecl(AParamDecl node)
+    {
+        DefaultIn(node);
+    }
+
+    public virtual void OutAParamDecl(AParamDecl node)
+    {
+        DefaultOut(node);
+    }
+
+    public override void CaseAParamDecl(AParamDecl node)
+    {
+        InAParamDecl(node);
+        if(node.GetId() != null)
+        {
+            node.GetId().Apply(this);
+        }
+        if(node.GetTypes() != null)
+        {
+            node.GetTypes().Apply(this);
+        }
+        OutAParamDecl(node);
+    }
     public virtual void InAFuncDecl(AFuncDecl node)
     {
         DefaultIn(node);
@@ -1844,9 +1890,9 @@ public class ReversedDepthFirstAdapter : AnalysisAdapter
     public override void CaseAGcodeStmt(AGcodeStmt node)
     {
         InAGcodeStmt(node);
-        if(node.GetAllCharsExceptCurly() != null)
+        if(node.GetGcodeLiteral() != null)
         {
-            node.GetAllCharsExceptCurly().Apply(this);
+            node.GetGcodeLiteral().Apply(this);
         }
         OutAGcodeStmt(node);
     }

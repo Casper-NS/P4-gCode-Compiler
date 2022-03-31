@@ -12,7 +12,6 @@ using GOATCode.node;
 
 namespace PrettyPrintATestFile
 {
-    /*
     internal class TextPrinter : ReversedDepthFirstAdapter
     {
         private enum codes
@@ -86,13 +85,11 @@ namespace PrettyPrintATestFile
         public override void DefaultCase(Node node)
         {
             if (last) indent = indent.Substring(0, indent.Length - 1) + "`";
-            string nodeText = ((Token)node).Text;
-            if (((Token)node).Text == "\n")
-            {
-                nodeText = "EOL";
-            }
+            string nodeText = ((Token)node).Text.Replace("\n", " EOL");
+            nodeText = nodeText.Replace("\r", "");
+            nodeText = nodeText.Replace("\b", "");
             output = indent + "- " + SetColor(style.NORMAL, fg_color.FG_RED, bg_color.BG_BLACK) +
-                nodeText + TreeColor() + "\n" + output;
+                     nodeText + TreeColor() + "\n" + output;
 
             indent = indent.Substring(0, indent.Length - 1) + "|";
 
@@ -135,5 +132,4 @@ namespace PrettyPrintATestFile
         private bool last = false;
         private bool color = false;
     }
-    */
 }

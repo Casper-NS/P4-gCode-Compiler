@@ -9,7 +9,7 @@ using GOATCode.analysis;
 using GOATCode.lexer;
 using GOATCode.node;
 
-public class TextPrinter : ReversedDepthFirstAdapter {
+class TextPrinter : ReversedDepthFirstAdapter {
   enum codes {
     ESC = 27
   };

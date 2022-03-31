@@ -1,0 +1,11 @@
+﻿void Main(){
+	build{
+		int a
+	}
+
+	walk{
+		int a
+	}
+
+	walk{int a}
+}

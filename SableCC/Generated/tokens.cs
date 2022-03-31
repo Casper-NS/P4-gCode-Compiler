@@ -859,14 +859,14 @@ public sealed class TWalk : Token
     }
 }
 
-public sealed class TGcode : Token
+public sealed class TGcodeLiteral : Token
 {
-    public TGcode(string text)
+    public TGcodeLiteral(string text)
     {
         Text = text;
     }
 
-    public TGcode(string text, int line, int pos)
+    public TGcodeLiteral(string text, int line, int pos)
     {
         Text = text;
         Line = line;
@@ -875,12 +875,12 @@ public sealed class TGcode : Token
 
     public override Object Clone()
     {
-      return new TGcode(Text, Line, Pos);
+      return new TGcodeLiteral(Text, Line, Pos);
     }
 
     public override void Apply(Switch sw)
     {
-        ((Analysis) sw).CaseTGcode(this);
+        ((Analysis) sw).CaseTGcodeLiteral(this);
     }
 }
 
@@ -981,31 +981,6 @@ public sealed class TId : Token
     public override void Apply(Switch sw)
     {
         ((Analysis) sw).CaseTId(this);
-    }
-}
-
-public sealed class TAllCharsExceptCurly : Token
-{
-    public TAllCharsExceptCurly(string text)
-    {
-        Text = text;
-    }
-
-    public TAllCharsExceptCurly(string text, int line, int pos)
-    {
-        Text = text;
-        Line = line;
-        Pos = pos;
-    }
-
-    public override Object Clone()
-    {
-      return new TAllCharsExceptCurly(Text, Line, Pos);
-    }
-
-    public override void Apply(Switch sw)
-    {
-        ((Analysis) sw).CaseTAllCharsExceptCurly(this);
     }
 }
 

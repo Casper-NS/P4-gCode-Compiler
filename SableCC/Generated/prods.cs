@@ -342,6 +342,123 @@ public sealed class AVarDecl : PDecl
     }
 
 }
+public sealed class AParamDecl : PDecl
+{
+    private PTypes _types_;
+    private TId _id_;
+
+    public AParamDecl ()
+    {
+    }
+
+    public AParamDecl (
+            PTypes _types_,
+            TId _id_
+    )
+    {
+        SetTypes (_types_);
+        SetId (_id_);
+    }
+
+    public override Object Clone()
+    {
+        return new AParamDecl (
+            (PTypes)CloneNode (_types_),
+            (TId)CloneNode (_id_)
+        );
+    }
+
+    public override void Apply(Switch sw)
+    {
+        ((Analysis) sw).CaseAParamDecl(this);
+    }
+
+    public PTypes GetTypes ()
+    {
+        return _types_;
+    }
+
+    public void SetTypes (PTypes node)
+    {
+        if(_types_ != null)
+        {
+            _types_.Parent(null);
+        }
+
+        if(node != null)
+        {
+            if(node.Parent() != null)
+            {
+                node.Parent().RemoveChild(node);
+            }
+
+            node.Parent(this);
+        }
+
+        _types_ = node;
+    }
+    public TId GetId ()
+    {
+        return _id_;
+    }
+
+    public void SetId (TId node)
+    {
+        if(_id_ != null)
+        {
+            _id_.Parent(null);
+        }
+
+        if(node != null)
+        {
+            if(node.Parent() != null)
+            {
+                node.Parent().RemoveChild(node);
+            }
+
+            node.Parent(this);
+        }
+
+        _id_ = node;
+    }
+
+    public override string ToString()
+    {
+        return ""
+            + ToString (_types_)
+            + ToString (_id_)
+        ;
+    }
+
+    internal override void RemoveChild(Node child)
+    {
+        if ( _types_ == child )
+        {
+            _types_ = null;
+            return;
+        }
+        if ( _id_ == child )
+        {
+            _id_ = null;
+            return;
+        }
+    }
+
+    internal override void ReplaceChild(Node oldChild, Node newChild)
+    {
+        if ( _types_ == oldChild )
+        {
+            SetTypes ((PTypes) newChild);
+            return;
+        }
+        if ( _id_ == oldChild )
+        {
+            SetId ((TId) newChild);
+            return;
+        }
+    }
+
+}
 public sealed class AFuncDecl : PDecl
 {
     private PTypes _types_;
@@ -1493,23 +1610,23 @@ public sealed class AWhileStmt : PStmt
 }
 public sealed class AGcodeStmt : PStmt
 {
-    private TAllCharsExceptCurly _all_chars_except_curly_;
+    private TGcodeLiteral _gcode_literal_;
 
     public AGcodeStmt ()
     {
     }
 
     public AGcodeStmt (
-            TAllCharsExceptCurly _all_chars_except_curly_
+            TGcodeLiteral _gcode_literal_
     )
     {
-        SetAllCharsExceptCurly (_all_chars_except_curly_);
+        SetGcodeLiteral (_gcode_literal_);
     }
 
     public override Object Clone()
     {
         return new AGcodeStmt (
-            (TAllCharsExceptCurly)CloneNode (_all_chars_except_curly_)
+            (TGcodeLiteral)CloneNode (_gcode_literal_)
         );
     }
 
@@ -1518,16 +1635,16 @@ public sealed class AGcodeStmt : PStmt
         ((Analysis) sw).CaseAGcodeStmt(this);
     }
 
-    public TAllCharsExceptCurly GetAllCharsExceptCurly ()
+    public TGcodeLiteral GetGcodeLiteral ()
     {
-        return _all_chars_except_curly_;
+        return _gcode_literal_;
     }
 
-    public void SetAllCharsExceptCurly (TAllCharsExceptCurly node)
+    public void SetGcodeLiteral (TGcodeLiteral node)
     {
-        if(_all_chars_except_curly_ != null)
+        if(_gcode_literal_ != null)
         {
-            _all_chars_except_curly_.Parent(null);
+            _gcode_literal_.Parent(null);
         }
 
         if(node != null)
@@ -1540,30 +1657,30 @@ public sealed class AGcodeStmt : PStmt
             node.Parent(this);
         }
 
-        _all_chars_except_curly_ = node;
+        _gcode_literal_ = node;
     }
 
     public override string ToString()
     {
         return ""
-            + ToString (_all_chars_except_curly_)
+            + ToString (_gcode_literal_)
         ;
     }
 
     internal override void RemoveChild(Node child)
     {
-        if ( _all_chars_except_curly_ == child )
+        if ( _gcode_literal_ == child )
         {
-            _all_chars_except_curly_ = null;
+            _gcode_literal_ = null;
             return;
         }
     }
 
     internal override void ReplaceChild(Node oldChild, Node newChild)
     {
-        if ( _all_chars_except_curly_ == oldChild )
+        if ( _gcode_literal_ == oldChild )
         {
-            SetAllCharsExceptCurly ((TAllCharsExceptCurly) newChild);
+            SetGcodeLiteral ((TGcodeLiteral) newChild);
             return;
         }
     }
