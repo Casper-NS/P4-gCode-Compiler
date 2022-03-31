@@ -4,9 +4,9 @@ using System;
 using System.Collections;
 using System.Text;
 
-using  GOATCode.analysis;
+using  GGCodeParser.analysis;
 
-namespace GOATCode.node {
+namespace GGCodeParser.node {
 
 
 public sealed class TEol : Token
@@ -859,14 +859,14 @@ public sealed class TWalk : Token
     }
 }
 
-public sealed class TGcodeLiteral : Token
+public sealed class TGcode : Token
 {
-    public TGcodeLiteral(string text)
+    public TGcode(string text)
     {
         Text = text;
     }
 
-    public TGcodeLiteral(string text, int line, int pos)
+    public TGcode(string text, int line, int pos)
     {
         Text = text;
         Line = line;
@@ -875,12 +875,12 @@ public sealed class TGcodeLiteral : Token
 
     public override Object Clone()
     {
-      return new TGcodeLiteral(Text, Line, Pos);
+      return new TGcode(Text, Line, Pos);
     }
 
     public override void Apply(Switch sw)
     {
-        ((Analysis) sw).CaseTGcodeLiteral(this);
+        ((Analysis) sw).CaseTGcode(this);
     }
 }
 
@@ -959,14 +959,14 @@ public sealed class TNumber : Token
     }
 }
 
-public sealed class TId : Token
+public sealed class TIdentifier : Token
 {
-    public TId(string text)
+    public TIdentifier(string text)
     {
         Text = text;
     }
 
-    public TId(string text, int line, int pos)
+    public TIdentifier(string text, int line, int pos)
     {
         Text = text;
         Line = line;
@@ -975,12 +975,37 @@ public sealed class TId : Token
 
     public override Object Clone()
     {
-      return new TId(Text, Line, Pos);
+      return new TIdentifier(Text, Line, Pos);
     }
 
     public override void Apply(Switch sw)
     {
-        ((Analysis) sw).CaseTId(this);
+        ((Analysis) sw).CaseTIdentifier(this);
+    }
+}
+
+public sealed class TAllCharsExceptCurly : Token
+{
+    public TAllCharsExceptCurly(string text)
+    {
+        Text = text;
+    }
+
+    public TAllCharsExceptCurly(string text, int line, int pos)
+    {
+        Text = text;
+        Line = line;
+        Pos = pos;
+    }
+
+    public override Object Clone()
+    {
+      return new TAllCharsExceptCurly(Text, Line, Pos);
+    }
+
+    public override void Apply(Switch sw)
+    {
+        ((Analysis) sw).CaseTAllCharsExceptCurly(this);
     }
 }
 

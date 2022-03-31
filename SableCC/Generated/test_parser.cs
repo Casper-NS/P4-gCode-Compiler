@@ -4,10 +4,10 @@ using System;
 using System.Collections;
 using System.Text;
 using System.IO;
-using GOATCode.parser;
-using GOATCode.analysis;
-using GOATCode.lexer;
-using GOATCode.node;
+using GGCodeParser.parser;
+using GGCodeParser.analysis;
+using GGCodeParser.lexer;
+using GGCodeParser.node;
 
 class TextPrinter : ReversedDepthFirstAdapter {
   enum codes {
