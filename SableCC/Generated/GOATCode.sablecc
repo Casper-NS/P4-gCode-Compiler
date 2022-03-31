@@ -1,0 +1,415 @@
+Package GOATCode;
+
+/*
+    This file describes the grammar accepted in our language.
+    Helpers and tokens can be seen below, which are used to identify the accepted words of the language.
+    
+    Productions for the concrete syntax tree can be seen below the tokens in the production section.
+    At the bottom of the file the productions for the AST transformations can be found.
+
+    The mapping from the CST to the AST happens in the curly brackets with the arrow {-> ...}
+    If there is the 'New' keyword in the mapping it generates a new node in the AST 
+    and everything in the () is passed to the AST productions.
+*/
+
+Helpers
+  all = [0 .. 127];
+  tab   = 9;
+  cr    = 13;
+  lf    = 10;
+  digit = ['0'..'9'];
+  lowercase = ['a'..'z'];
+  uppercase = ['A'..'Z'];
+  letter  = lowercase | uppercase;
+  not_curleys = [all - ['{'+'}']];
+  idletter = letter | '_';
+  idchar  = letter | '_' | digit;
+  xyz = 'x' | 'y' | 'z';
+  star = '*';
+  not_star = [all - star];
+  not_star_slash = [not_star - '/'];
+  eol_char = cr | lf | cr lf;
+  not_eol_char = [all - [cr + lf]];
+  spacing = eol_char | ' ' | tab;
+  blank = ' ' | tab;
+
+Tokens
+  eol   = cr | lf | cr lf;
+  blank = blank;
+  assignment_op = '=';
+  multiplication_op  = '*';
+  modulo_op  = '%';
+  division_op = '/';
+  plus_op  = '+';
+  minus_op = '-';
+  equal = '==';
+  less_than = '<';
+  less_than_or_equal = '<=';
+  greater_than = '>';
+  greater_than_or_equal = '>=';
+  not = '!';
+  not_equal = '!=';
+  l_par = '(';
+  r_par = ')';
+  l_cur = '{';
+  r_cur = '}';
+  comma = ',';
+  vector = 'vector';
+  int = 'int';
+  const = 'const';
+  float = 'float';
+  bool = 'bool';
+  void = 'void';
+  bool_value = 'true' | 'false';
+  if = 'if';
+  else = 'else';
+  repeat = 'repeat';
+  while = 'while';
+  return = 'return';
+  build = 'build';
+  walk = 'walk';
+  gcode_literal = 'gcode' blank* eol_char? blank* '{' not_curleys* '}';
+  and = '&&';
+  or = '||';
+  number  = '0'| [digit-'0'] digit* | digit* '.' digit*;
+  id    = idletter idchar* | idletter idchar* '.' xyz;
+  multiline_comment = '/*' not_star * star + ( not_star_slash not_star * star+) * '/' eol_char;
+  singleline_comment = '//' not_eol_char* eol_char;
+
+Ignored Tokens
+  blank, multiline_comment, singleline_comment;
+
+Productions
+cst_program  {-> program} = 
+    cst_declaration_list
+        {-> New program.decl([cst_declaration_list.decl])};
+
+
+
+cst_declaration_list {-> decl*} =
+        {list}cst_declaration eol+ cst_declaration_list 
+            {-> [cst_declaration.decl, cst_declaration_list.decl]} 
+            
+      | cst_declaration eol* 
+            {-> [cst_declaration.decl]};
+
+
+
+cst_declaration  {-> decl} = 
+        {variable} cst_variable_declaration 
+            {-> cst_variable_declaration.decl}
+        
+      | {function} cst_function_declaration 
+            {-> cst_function_declaration.decl};
+
+
+
+cst_variable_declaration    {-> decl} =
+        {initialised}const? cst_types id assignment_op cst_expression 
+            {-> New decl.var(const, cst_types.types, id, cst_expression.exp)} 
+            
+      |  cst_uninitialised_variable 
+            {-> cst_uninitialised_variable.decl};
+
+
+
+cst_uninitialised_variable  {-> decl} =
+        cst_types id 
+            {-> New decl.var(Null, cst_types.types, id, Null)};
+
+
+
+cst_types {-> types} = 
+        {integer} int 
+            {-> New types.int()} 
+            
+      | {floatingpoint} float 
+            {-> New types.float()} 
+            
+      | {bool} bool 
+            {-> New types.bool()} 
+           
+      | {vector} vector 
+            {-> New types.vector()} ;
+
+
+
+cst_vector_values {-> exp} = 
+        l_par [a]:cst_expression [q]:comma [b]:cst_expression [w]:comma [c]:cst_expression r_par 
+            {-> New exp.vector(a.exp, b.exp, c.exp)};
+
+
+
+cst_function_declaration {-> decl} =
+        {notvoid} cst_types id l_par cst_formal_param_list? r_par eol? cst_block 
+            {-> New decl.func(cst_types.types, id, [cst_formal_param_list.decl], cst_block.block)}
+            
+      | {void} void id l_par cst_formal_param_list? r_par eol? cst_block 
+            {-> New decl.proc(id, [cst_formal_param_list.decl], cst_block.block)};
+
+
+
+cst_formal_param_list {-> decl*} = 
+        {list} cst_types id comma cst_formal_param_list 
+            {-> [New decl.param(cst_types.types, id), cst_formal_param_list.decl]} 
+        
+      | cst_types id 
+            {-> [New decl.param(cst_types.types, id)]};
+
+
+
+cst_block {-> block} = 
+        l_cur eol? cst_statement_list r_cur
+            {-> New block.stmtlist([cst_statement_list.stmt])};
+
+
+
+cst_statement_list {-> stmt*} = 
+        {list}cst_statement eol+ cst_statement_list 
+            {-> [cst_statement.stmt, cst_statement_list.stmt]}
+            
+      | cst_statement eol* 
+            {-> [cst_statement.stmt]};
+
+
+
+cst_statement {-> stmt} = 
+        {decl} cst_variable_declaration 
+            {-> New stmt.decl(cst_variable_declaration.decl)} 
+            
+      | {if} cst_if_statement 
+            {-> cst_if_statement.stmt}
+            
+      | {repeat}cst_repeat_statement 
+            {-> cst_repeat_statement.stmt}
+            
+      | {while}cst_while_statement 
+            {-> cst_while_statement.stmt}
+            
+      | {gcode}cst_gcode_literal 
+            {-> cst_gcode_literal.stmt} 
+            
+      | {assignment}cst_assignments 
+            {-> cst_assignments.stmt} 
+      
+      | {function} cst_function_call 
+            {-> New stmt.function(cst_function_call.exp)} 
+            
+      | {return} return cst_expression 
+            {-> New stmt.return(cst_expression.exp)} 
+            
+      | {build} build eol? cst_block 
+            {-> New stmt.build(cst_block.block)} 
+            
+      | {walk} walk eol? cst_block 
+            {-> New stmt.walk(cst_block.block)};
+
+
+
+cst_if_statement {-> stmt} = 
+        {noelse}  if l_par cst_expression r_par eol? cst_block 
+            {-> New stmt.if(cst_expression.exp, cst_block.block, Null)} 
+            
+      | {withelse} if l_par cst_expression r_par [c]:eol? [a]:cst_block else [d]:eol? [b]:cst_block 
+            {-> New stmt.if(cst_expression.exp, a.block, b.block)};
+
+
+
+cst_repeat_statement {-> stmt} = 
+        repeat l_par cst_expression r_par eol? cst_block 
+            {-> New stmt.repeat(cst_expression.exp, cst_block.block)};
+
+
+
+cst_while_statement {-> stmt} = 
+        while l_par cst_expression r_par eol? cst_block 
+            {-> New stmt.while(cst_expression.exp, cst_block.block)};
+
+
+
+cst_gcode_literal {-> stmt} = 
+        gcode_literal
+            {-> New stmt.gcode(gcode_literal)};
+
+
+
+cst_assignments {-> stmt} = 
+        {assign}id assignment_op cst_expression 
+            {-> New stmt.assign(id, cst_expression.exp)} 
+            
+      | {assign_plus} id plus_op assignment_op cst_expression 
+            {-> New stmt.assign_plus(id, cst_expression.exp)} 
+            
+      | {assign_minus}id minus_op assignment_op cst_expression 
+            {-> New stmt.assign_minus(id, cst_expression.exp)} 
+            
+      | {assign_mult}id multiplication_op assignment_op cst_expression 
+            {-> New stmt.assign_mult(id, cst_expression.exp)} 
+            
+      | {assign_division} id division_op assignment_op cst_expression 
+            {-> New stmt.assign_division(id, cst_expression.exp)} 
+            
+      | {assign_mod}id modulo_op assignment_op cst_expression 
+            {-> New stmt.assign_mod(id, cst_expression.exp)};
+
+
+
+cst_function_call {-> exp} = 
+        id l_par cst_actual_param_list? r_par 
+            {-> New exp.function(id, [cst_actual_param_list.exp])};
+
+cst_actual_param_list {-> exp* } =
+        {list}cst_expression comma cst_actual_param_list 
+            {-> [cst_expression.exp, cst_actual_param_list.exp]}
+            
+      | cst_expression 
+            {-> [cst_expression.exp]};
+
+
+
+cst_expression {-> exp} =
+        {and} cst_logic_or_exp and cst_expression 
+            {-> New exp.and(cst_logic_or_exp.exp, cst_expression.exp)} 
+      
+      | cst_logic_or_exp 
+            {-> cst_logic_or_exp.exp};
+
+
+
+cst_logic_or_exp {-> exp} =
+        {or} cst_bool_exp or cst_logic_or_exp 
+            {-> New exp.or(cst_bool_exp.exp, cst_logic_or_exp.exp)} 
+            
+      | cst_bool_exp 
+            {-> cst_bool_exp.exp};
+
+
+
+cst_bool_exp {-> exp} =
+        {not}not cst_bool_exp 
+            {-> New exp.not(cst_bool_exp.exp)} 
+            
+      | {equal}[a]:cst_associative_exp equal                 [b]:cst_associative_exp 
+            {-> New exp.eq(a.exp, b.exp)} 
+            
+      | {le}   [a]:cst_associative_exp less_than             [b]:cst_associative_exp 
+            {-> New exp.lt(a.exp, b.exp)} 
+            
+      | {leq}  [a]:cst_associative_exp less_than_or_equal    [b]:cst_associative_exp 
+            {-> New exp.leq(a.exp, b.exp)} 
+
+      | {ge}   [a]:cst_associative_exp greater_than          [b]:cst_associative_exp 
+            {-> New exp.gt(a.exp, b.exp)} 
+            
+      | {geq}  [a]:cst_associative_exp greater_than_or_equal [b]:cst_associative_exp 
+            {-> New exp.geq(a.exp, b.exp)} 
+            
+      | {neq}  [a]:cst_associative_exp not_equal             [b]:cst_associative_exp 
+            {-> New exp.neq(a.exp, b.exp)} 
+            
+      | cst_associative_exp 
+            {-> cst_associative_exp.exp};
+
+
+
+cst_associative_exp {-> exp} = 
+        {plus} cst_not_associative_exp plus_op  cst_associative_exp 
+            {-> New exp.plus(cst_not_associative_exp.exp, cst_associative_exp.exp)} 
+            
+      | {minus} cst_not_associative_exp minus_op cst_associative_exp 
+            {-> New exp.minus(cst_not_associative_exp.exp, cst_associative_exp.exp)}
+      
+      | cst_not_associative_exp 
+            {-> cst_not_associative_exp.exp};
+
+
+
+cst_not_associative_exp {-> exp} =
+        {mult}    cst_not_associative_exp multiplication_op cst_leaf_exp 
+            {-> New exp.mult(cst_not_associative_exp.exp, cst_leaf_exp.exp)} 
+            
+      | {division}cst_not_associative_exp division_op       cst_leaf_exp 
+            {-> New exp.divd(cst_not_associative_exp.exp, cst_leaf_exp.exp)} 
+            
+      | {modulo}  cst_not_associative_exp modulo_op         cst_leaf_exp 
+            {-> New exp.modulo(cst_not_associative_exp.exp, cst_leaf_exp.exp)} 
+            
+      | cst_leaf_exp 
+            {-> cst_leaf_exp.exp};
+
+
+
+cst_leaf_exp {-> exp} =
+        {paren} l_par cst_expression r_par 
+            {-> cst_expression.exp} 
+            
+      | {number} number 
+            {-> New exp.number(number)} 
+            
+      | {bool} bool_value 
+            {-> New exp.boolval(bool_value)}
+            
+      | {cst_id} id 
+            {-> New exp.id(id)} 
+            
+      | {func_call} cst_function_call 
+            {-> cst_function_call.exp} 
+      
+      | {vector} cst_vector_values 
+            {-> cst_vector_values.exp};
+
+
+Abstract Syntax Tree
+program = {decl} decl*;
+
+decl = 
+{var} const? types id exp?
+| {param} types id
+| {func} types id decl* block 
+| {proc} id decl* block;
+
+types = 
+{int}
+| {float}
+| {bool}
+| {vector};
+
+block = {stmtlist} stmt*;
+
+stmt = 
+{decl} decl
+| {if} exp [then]:block [else]:block?
+| {repeat} exp block
+| {while} exp block
+| {gcode} gcode_literal 
+| {assign} id exp 
+| {assign_plus} id exp
+| {assign_minus} id exp
+| {assign_mult} id exp
+| {assign_division} id exp
+| {assign_mod} id exp
+| {function} exp
+| {return} exp
+| {build} block 
+| {walk} block;
+
+exp = 
+{vector}  [x]:exp [y]:exp [z]:exp
+| {plus} [l]:exp [r]:exp
+| {minus} [l]:exp [r]:exp
+| {mult} [l]:exp [r]:exp
+| {divd} [l]:exp [r]:exp
+| {modulo} [l]:exp [r]:exp
+| {and} [l]:exp [r]:exp
+| {or} [l]:exp [r]:exp
+| {eq} [l]:exp [r]:exp
+| {lt} [l]:exp [r]:exp
+| {leq} [l]:exp [r]:exp
+| {gt} [l]:exp [r]:exp
+| {geq} [l]:exp [r]:exp
+| {neq} [l]:exp [r]:exp
+| {not} exp
+| {boolval}   bool_value
+| {number}  number
+| {function} [name]:id [args]:exp*
+| {id}  id;

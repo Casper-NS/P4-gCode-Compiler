@@ -5,10 +5,10 @@
  */
 
 
-using GGCodeParser.analysis;
-using GGCodeParser.node;
 using System;
 using System.Collections;
+using GOATCode.analysis;
+using GOATCode.node;
 
 namespace PrettyPrintATestFile
 {
@@ -85,13 +85,11 @@ namespace PrettyPrintATestFile
         public override void DefaultCase(Node node)
         {
             if (last) indent = indent.Substring(0, indent.Length - 1) + "`";
-            string nodeText = ((Token)node).Text;
-            if (((Token)node).Text == "\n")
-            {
-                nodeText = "EOL";
-            }
+            string nodeText = ((Token)node).Text.Replace("\n", " EOL");
+            nodeText = nodeText.Replace("\r", "");
+            nodeText = nodeText.Replace("\b", "");
             output = indent + "- " + SetColor(style.NORMAL, fg_color.FG_RED, bg_color.BG_BLACK) +
-                nodeText + TreeColor() + "\n" + output;
+                     nodeText + TreeColor() + "\n" + output;
 
             indent = indent.Substring(0, indent.Length - 1) + "|";
 
