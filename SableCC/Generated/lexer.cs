@@ -1334,9 +1334,7 @@ public class Lexer
           new int[] {9, 123, -125},
         },
         new int[][] {
-          new int[] {0, 124, -129},
           new int[] {125, 125, 133},
-          new int[] {126, 127, 132},
         },
         new int[][] {
         },
