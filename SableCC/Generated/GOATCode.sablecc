@@ -30,6 +30,7 @@ Helpers
   not_star_slash = [not_star - '/'];
   eol_char = cr | lf | cr lf;
   not_eol_char = [all - [cr + lf]];
+  spacing = eol_char | ' ' | tab;
 
 Tokens
   eol   = cr | lf | cr lf;
@@ -66,7 +67,7 @@ Tokens
   return = 'return';
   build = 'build';
   walk = 'walk';
-  gcode_literal = 'gcode' eol_char* '{' not_curleys+ '}';
+  gcode_literal = 'gcode' spacing* '{' not_curleys+ '}';
   and = '&&';
   or = '||';
   number  = '0'| [digit-'0'] digit* | digit* '.' digit*;
