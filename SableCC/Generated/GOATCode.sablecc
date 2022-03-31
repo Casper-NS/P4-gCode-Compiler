@@ -31,10 +31,11 @@ Helpers
   eol_char = cr | lf | cr lf;
   not_eol_char = [all - [cr + lf]];
   spacing = eol_char | ' ' | tab;
+  blank = ' ' | tab;
 
 Tokens
   eol   = cr | lf | cr lf;
-  blank = ' ' | tab;
+  blank = blank;
   assignment_op = '=';
   multiplication_op  = '*';
   modulo_op  = '%';
@@ -67,7 +68,7 @@ Tokens
   return = 'return';
   build = 'build';
   walk = 'walk';
-  gcode_literal = 'gcode' spacing* '{' not_curleys* '}';
+  gcode_literal = 'gcode' blank* eol_char? blank* '{' not_curleys* '}';
   and = '&&';
   or = '||';
   number  = '0'| [digit-'0'] digit* | digit* '.' digit*;
@@ -167,7 +168,7 @@ cst_statement_list {-> stmt*} =
         {list}cst_statement eol+ cst_statement_list 
             {-> [cst_statement.stmt, cst_statement_list.stmt]}
             
-      | cst_statement eol+ 
+      | cst_statement eol* 
             {-> [cst_statement.stmt]};
 
 
