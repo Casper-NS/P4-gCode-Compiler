@@ -141,10 +141,10 @@ cst_vector_values {-> exp} =
 
 
 cst_function_declaration {-> decl} =
-        {notvoid} cst_build_or_walk? cst_types id l_par cst_formal_param_list? r_par eol? cst_block 
+        {notvoid} cst_types id l_par cst_formal_param_list? r_par eol? cst_block 
             {-> New decl.func(cst_types.types, id, [cst_formal_param_list.decl], cst_block.block)}
             
-      | {void} cst_build_or_walk? void id l_par cst_formal_param_list? r_par eol? cst_block 
+      | {void} void id l_par cst_formal_param_list? r_par eol? cst_block 
             {-> New decl.proc(id, [cst_formal_param_list.decl], cst_block.block)};
 
 
@@ -255,7 +255,7 @@ cst_assignments {-> stmt} =
 
 
 cst_function_call {-> exp} = 
-        cst_build_or_walk? id l_par cst_actual_param_list? r_par 
+        id l_par cst_actual_param_list? r_par 
             {-> New exp.function(id, [cst_actual_param_list.exp])};
 
 cst_actual_param_list {-> exp* } =
@@ -265,9 +265,7 @@ cst_actual_param_list {-> exp* } =
       | cst_expression 
             {-> [cst_expression.exp]};
 
-cst_build_or_walk =
-        {build} build |
-        {walk} walk;
+
 
 cst_expression {-> exp} =
         {and} cst_logic_or_exp and cst_expression 
