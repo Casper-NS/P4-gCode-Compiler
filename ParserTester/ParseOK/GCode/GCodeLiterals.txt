@@ -1,27 +1,25 @@
 ﻿void fun(){
-	gcode{}
-	gcode { }
-	gcode{ G1 X0 G0 Y1 }
-	gcode {
-	}
+    gcode{}
+    gcode { }
+    gcode{ G1 X0 G0 Y1 }
+    gcode {
+    }
 
-	gcode
-	{
+    gcode   
+    {
+    }
 
+    gcode{
+        literally anything should be
+        allowed in here, so im just
+        writing some garbage to test it out.
+        It should even be able to contain stuff like
+        which is just obviously nonsense and
+        not even gcode but that is the risk
+        you take when using the gcode thing'
+        }
 
-}
-
-	gcode{
-		literally anything should be
-		allowed in here, so im just
-		writing some garbage to test it out.
-		It should even be able to contain stuff like
-		which is just obviously nonsense and
-		not even gcode but that is the risk
-		you take when using the gcode thing'
-		}
-
-		gcode{
+        gcode{
 (this code is copied from cura)
 ;FLAVOR:Marlin
 ;TIME:449
@@ -1756,6 +1754,6 @@ M82 ;absolute extrusion mode
 M104 S0
 ;End of Gcode
 
-		}
+        }
 
 }

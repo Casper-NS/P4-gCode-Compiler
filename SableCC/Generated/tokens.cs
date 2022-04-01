@@ -9,6 +9,56 @@ using  GOATCode.analysis;
 namespace GOATCode.node {
 
 
+public sealed class TGcode : Token
+{
+    public TGcode(string text)
+    {
+        Text = text;
+    }
+
+    public TGcode(string text, int line, int pos)
+    {
+        Text = text;
+        Line = line;
+        Pos = pos;
+    }
+
+    public override Object Clone()
+    {
+      return new TGcode(Text, Line, Pos);
+    }
+
+    public override void Apply(Switch sw)
+    {
+        ((Analysis) sw).CaseTGcode(this);
+    }
+}
+
+public sealed class TGcodeLiteral : Token
+{
+    public TGcodeLiteral(string text)
+    {
+        Text = text;
+    }
+
+    public TGcodeLiteral(string text, int line, int pos)
+    {
+        Text = text;
+        Line = line;
+        Pos = pos;
+    }
+
+    public override Object Clone()
+    {
+      return new TGcodeLiteral(Text, Line, Pos);
+    }
+
+    public override void Apply(Switch sw)
+    {
+        ((Analysis) sw).CaseTGcodeLiteral(this);
+    }
+}
+
 public sealed class TEol : Token
 {
     public TEol(string text)
@@ -856,31 +906,6 @@ public sealed class TWalk : Token
     public override void Apply(Switch sw)
     {
         ((Analysis) sw).CaseTWalk(this);
-    }
-}
-
-public sealed class TGcodeLiteral : Token
-{
-    public TGcodeLiteral(string text)
-    {
-        Text = text;
-    }
-
-    public TGcodeLiteral(string text, int line, int pos)
-    {
-        Text = text;
-        Line = line;
-        Pos = pos;
-    }
-
-    public override Object Clone()
-    {
-      return new TGcodeLiteral(Text, Line, Pos);
-    }
-
-    public override void Apply(Switch sw)
-    {
-        ((Analysis) sw).CaseTGcodeLiteral(this);
     }
 }
 

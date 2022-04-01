@@ -46,7 +46,7 @@ public class LexerException : ApplicationException
 public class Lexer
 {
     protected Token token;
-    protected State currentState = State.INITIAL;
+    protected State currentState = State.NORMAL;
 
     private PushbackReader input;
     private int line;
@@ -198,6 +198,10 @@ public class Lexer
                             PushBack(accept_length);
                             pos = accept_pos;
                             line = accept_line;
+                            switch (currentState.id())
+                            {
+                              case 0: currentState = State.GLITERAL; break;
+                            }
                             return token;
                         }
                     case 1:
@@ -418,6 +422,10 @@ public class Lexer
                             PushBack(accept_length);
                             pos = accept_pos;
                             line = accept_line;
+                            switch (currentState.id())
+                            {
+                              case 1: currentState = State.NORMAL; break;
+                            }
                             return token;
                         }
                     case 21:
@@ -640,6 +648,17 @@ public class Lexer
                             line = accept_line;
                             return token;
                         }
+                    case 41:
+                        {
+                            Token token = New41(
+                                GetText(accept_length),
+                                start_line + 1,
+                                start_pos + 1);
+                            PushBack(accept_length);
+                            pos = accept_pos;
+                            line = accept_line;
+                            return token;
+                        }
                     }
                 }
                 else
@@ -662,47 +681,48 @@ public class Lexer
         }
     }
 
-    private Token New0(String text, int line, int pos) { return new TEol(text, line, pos); }
-    private Token New1(String text, int line, int pos) { return new TBlank(text, line, pos); }
-    private Token New2(String text, int line, int pos) { return new TAssignmentOp(text, line, pos); }
-    private Token New3(String text, int line, int pos) { return new TMultiplicationOp(text, line, pos); }
-    private Token New4(String text, int line, int pos) { return new TModuloOp(text, line, pos); }
-    private Token New5(String text, int line, int pos) { return new TDivisionOp(text, line, pos); }
-    private Token New6(String text, int line, int pos) { return new TPlusOp(text, line, pos); }
-    private Token New7(String text, int line, int pos) { return new TMinusOp(text, line, pos); }
-    private Token New8(String text, int line, int pos) { return new TEqual(text, line, pos); }
-    private Token New9(String text, int line, int pos) { return new TLessThan(text, line, pos); }
-    private Token New10(String text, int line, int pos) { return new TLessThanOrEqual(text, line, pos); }
-    private Token New11(String text, int line, int pos) { return new TGreaterThan(text, line, pos); }
-    private Token New12(String text, int line, int pos) { return new TGreaterThanOrEqual(text, line, pos); }
-    private Token New13(String text, int line, int pos) { return new TNot(text, line, pos); }
-    private Token New14(String text, int line, int pos) { return new TNotEqual(text, line, pos); }
-    private Token New15(String text, int line, int pos) { return new TLPar(text, line, pos); }
-    private Token New16(String text, int line, int pos) { return new TRPar(text, line, pos); }
-    private Token New17(String text, int line, int pos) { return new TLCur(text, line, pos); }
-    private Token New18(String text, int line, int pos) { return new TRCur(text, line, pos); }
-    private Token New19(String text, int line, int pos) { return new TComma(text, line, pos); }
-    private Token New20(String text, int line, int pos) { return new TVector(text, line, pos); }
-    private Token New21(String text, int line, int pos) { return new TInt(text, line, pos); }
-    private Token New22(String text, int line, int pos) { return new TConst(text, line, pos); }
-    private Token New23(String text, int line, int pos) { return new TFloat(text, line, pos); }
-    private Token New24(String text, int line, int pos) { return new TBool(text, line, pos); }
-    private Token New25(String text, int line, int pos) { return new TVoid(text, line, pos); }
-    private Token New26(String text, int line, int pos) { return new TBoolValue(text, line, pos); }
-    private Token New27(String text, int line, int pos) { return new TIf(text, line, pos); }
-    private Token New28(String text, int line, int pos) { return new TElse(text, line, pos); }
-    private Token New29(String text, int line, int pos) { return new TRepeat(text, line, pos); }
-    private Token New30(String text, int line, int pos) { return new TWhile(text, line, pos); }
-    private Token New31(String text, int line, int pos) { return new TReturn(text, line, pos); }
-    private Token New32(String text, int line, int pos) { return new TBuild(text, line, pos); }
-    private Token New33(String text, int line, int pos) { return new TWalk(text, line, pos); }
-    private Token New34(String text, int line, int pos) { return new TGcodeLiteral(text, line, pos); }
-    private Token New35(String text, int line, int pos) { return new TAnd(text, line, pos); }
-    private Token New36(String text, int line, int pos) { return new TOr(text, line, pos); }
-    private Token New37(String text, int line, int pos) { return new TNumber(text, line, pos); }
-    private Token New38(String text, int line, int pos) { return new TId(text, line, pos); }
-    private Token New39(String text, int line, int pos) { return new TMultilineComment(text, line, pos); }
-    private Token New40(String text, int line, int pos) { return new TSinglelineComment(text, line, pos); }
+    private Token New0(String text, int line, int pos) { return new TGcode(text, line, pos); }
+    private Token New1(String text, int line, int pos) { return new TGcodeLiteral(text, line, pos); }
+    private Token New2(String text, int line, int pos) { return new TEol(text, line, pos); }
+    private Token New3(String text, int line, int pos) { return new TBlank(text, line, pos); }
+    private Token New4(String text, int line, int pos) { return new TAssignmentOp(text, line, pos); }
+    private Token New5(String text, int line, int pos) { return new TMultiplicationOp(text, line, pos); }
+    private Token New6(String text, int line, int pos) { return new TModuloOp(text, line, pos); }
+    private Token New7(String text, int line, int pos) { return new TDivisionOp(text, line, pos); }
+    private Token New8(String text, int line, int pos) { return new TPlusOp(text, line, pos); }
+    private Token New9(String text, int line, int pos) { return new TMinusOp(text, line, pos); }
+    private Token New10(String text, int line, int pos) { return new TEqual(text, line, pos); }
+    private Token New11(String text, int line, int pos) { return new TLessThan(text, line, pos); }
+    private Token New12(String text, int line, int pos) { return new TLessThanOrEqual(text, line, pos); }
+    private Token New13(String text, int line, int pos) { return new TGreaterThan(text, line, pos); }
+    private Token New14(String text, int line, int pos) { return new TGreaterThanOrEqual(text, line, pos); }
+    private Token New15(String text, int line, int pos) { return new TNot(text, line, pos); }
+    private Token New16(String text, int line, int pos) { return new TNotEqual(text, line, pos); }
+    private Token New17(String text, int line, int pos) { return new TLPar(text, line, pos); }
+    private Token New18(String text, int line, int pos) { return new TRPar(text, line, pos); }
+    private Token New19(String text, int line, int pos) { return new TLCur(text, line, pos); }
+    private Token New20(String text, int line, int pos) { return new TRCur(text, line, pos); }
+    private Token New21(String text, int line, int pos) { return new TComma(text, line, pos); }
+    private Token New22(String text, int line, int pos) { return new TVector(text, line, pos); }
+    private Token New23(String text, int line, int pos) { return new TInt(text, line, pos); }
+    private Token New24(String text, int line, int pos) { return new TConst(text, line, pos); }
+    private Token New25(String text, int line, int pos) { return new TFloat(text, line, pos); }
+    private Token New26(String text, int line, int pos) { return new TBool(text, line, pos); }
+    private Token New27(String text, int line, int pos) { return new TVoid(text, line, pos); }
+    private Token New28(String text, int line, int pos) { return new TBoolValue(text, line, pos); }
+    private Token New29(String text, int line, int pos) { return new TIf(text, line, pos); }
+    private Token New30(String text, int line, int pos) { return new TElse(text, line, pos); }
+    private Token New31(String text, int line, int pos) { return new TRepeat(text, line, pos); }
+    private Token New32(String text, int line, int pos) { return new TWhile(text, line, pos); }
+    private Token New33(String text, int line, int pos) { return new TReturn(text, line, pos); }
+    private Token New34(String text, int line, int pos) { return new TBuild(text, line, pos); }
+    private Token New35(String text, int line, int pos) { return new TWalk(text, line, pos); }
+    private Token New36(String text, int line, int pos) { return new TAnd(text, line, pos); }
+    private Token New37(String text, int line, int pos) { return new TOr(text, line, pos); }
+    private Token New38(String text, int line, int pos) { return new TNumber(text, line, pos); }
+    private Token New39(String text, int line, int pos) { return new TId(text, line, pos); }
+    private Token New40(String text, int line, int pos) { return new TMultilineComment(text, line, pos); }
+    private Token New41(String text, int line, int pos) { return new TSinglelineComment(text, line, pos); }
 
     private int GetChar()
     {
@@ -1279,21 +1299,20 @@ public class Lexer
           new int[] {13, 13, 125},
           new int[] {32, 32, 126},
           new int[] {46, 122, -23},
-          new int[] {123, 123, 127},
         },
         new int[][] {
           new int[] {46, 115, -63},
-          new int[] {116, 116, 128},
+          new int[] {116, 116, 127},
           new int[] {117, 122, 52},
         },
         new int[][] {
           new int[] {46, 109, -57},
-          new int[] {110, 110, 129},
+          new int[] {110, 110, 128},
           new int[] {111, 122, 52},
         },
         new int[][] {
           new int[] {46, 113, -33},
-          new int[] {114, 114, 130},
+          new int[] {114, 114, 129},
           new int[] {115, 122, 52},
         },
         new int[][] {
@@ -1303,26 +1322,18 @@ public class Lexer
         },
         new int[][] {
           new int[] {9, 32, -119},
-          new int[] {123, 123, 127},
         },
         new int[][] {
-          new int[] {9, 9, 131},
-          new int[] {32, 32, 132},
-          new int[] {123, 123, 127},
+          new int[] {9, 9, 130},
+          new int[] {32, 32, 131},
         },
         new int[][] {
-          new int[] {9, 9, 131},
-          new int[] {10, 10, 133},
-          new int[] {32, 123, -126},
+          new int[] {9, 9, 130},
+          new int[] {10, 10, 132},
+          new int[] {32, 32, 131},
         },
         new int[][] {
-          new int[] {9, 123, -125},
-        },
-        new int[][] {
-          new int[] {0, 122, 134},
-          new int[] {124, 124, 134},
-          new int[] {125, 125, 135},
-          new int[] {126, 127, 134},
+          new int[] {9, 32, -119},
         },
         new int[][] {
           new int[] {46, 122, -23},
@@ -1334,39 +1345,81 @@ public class Lexer
           new int[] {46, 122, -23},
         },
         new int[][] {
-          new int[] {9, 123, -126},
+          new int[] {9, 32, -126},
         },
         new int[][] {
-          new int[] {9, 123, -126},
+          new int[] {9, 32, -126},
         },
         new int[][] {
-          new int[] {9, 123, -126},
+          new int[] {9, 32, -126},
+        },
+      },
+      new int[][][] {
+        new int[][] {
+          new int[] {0, 8, 1},
+          new int[] {9, 9, 2},
+          new int[] {10, 10, 3},
+          new int[] {11, 12, 1},
+          new int[] {13, 13, 4},
+          new int[] {14, 31, 1},
+          new int[] {32, 32, 5},
+          new int[] {33, 122, 1},
+          new int[] {123, 123, 6},
+          new int[] {124, 124, 1},
+          new int[] {125, 125, 7},
+          new int[] {126, 127, 1},
         },
         new int[][] {
-          new int[] {0, 127, -129},
+          new int[] {0, 122, 1},
+          new int[] {124, 124, 1},
+          new int[] {126, 127, 1},
         },
         new int[][] {
+          new int[] {0, 127, -3},
+        },
+        new int[][] {
+          new int[] {0, 127, -3},
+        },
+        new int[][] {
+          new int[] {0, 9, 1},
+          new int[] {10, 10, 8},
+          new int[] {11, 122, 1},
+          new int[] {124, 127, -3},
+        },
+        new int[][] {
+          new int[] {0, 127, -3},
+        },
+        new int[][] {
+        },
+        new int[][] {
+        },
+        new int[][] {
+          new int[] {0, 127, -3},
         },
       },
     };
 
     private static int[][] accept = {
       new int[] {
-        -1, 1, 0, 0, 1, 13, 4, -1, 15, 16, 3, 6, 19, 7, 37, 5, 
-        37, 37, 9, 2, 11, 38, 38, 38, 38, 38, 38, 38, 38, 38, 38, 38, 
-        38, 38, 17, -1, 18, 0, 14, 35, 37, -1, -1, -1, 37, 10, 8, 12, 
-        -1, 38, 38, 38, 38, 38, 38, 38, 38, 38, 38, 38, 27, 38, 38, 38, 
-        38, 38, 38, 38, 36, -1, -1, -1, 40, 40, 38, 38, 38, 38, 38, 38, 
-        38, 38, 38, 38, 21, 38, 38, 38, 38, 38, 38, 38, -1, -1, 40, 24, 
-        38, 38, 28, 38, 38, 38, 38, 38, 26, 38, 25, 33, 38, -1, -1, 39, 
-        39, 32, 22, 26, 23, 38, 38, 38, 38, 30, 39, -1, -1, -1, -1, -1, 
-        29, 31, 20, -1, -1, -1, -1, 34, 
+        -1, 3, 2, 2, 3, 15, 6, -1, 17, 18, 5, 8, 21, 9, 38, 7, 
+        38, 38, 11, 4, 13, 39, 39, 39, 39, 39, 39, 39, 39, 39, 39, 39, 
+        39, 39, 19, -1, 20, 2, 16, 36, 38, -1, -1, -1, 38, 12, 10, 14, 
+        -1, 39, 39, 39, 39, 39, 39, 39, 39, 39, 39, 39, 29, 39, 39, 39, 
+        39, 39, 39, 39, 37, -1, -1, -1, 41, 41, 39, 39, 39, 39, 39, 39, 
+        39, 39, 39, 39, 23, 39, 39, 39, 39, 39, 39, 39, -1, -1, 41, 26, 
+        39, 39, 30, 39, 39, 39, 39, 39, 28, 39, 27, 35, 39, -1, -1, 40, 
+        40, 34, 24, 28, 25, 0, 39, 39, 39, 32, 40, 0, 0, 0, 0, 31, 
+        33, 22, 0, 0, 0, 
+      },
+      new int[] {
+        1, 1, 1, 1, 1, 1, 19, 20, 1, 
       },
     };
 
     public class State
     {
-        public static State INITIAL = new State(0);
+        public static State NORMAL = new State(0);
+        public static State GLITERAL = new State(1);
 
         private int _id;
 

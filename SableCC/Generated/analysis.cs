@@ -60,6 +60,8 @@ public interface Analysis : Switch
     void CaseAFunctionExp(AFunctionExp node);
     void CaseAIdExp(AIdExp node);
 
+    void CaseTGcode(TGcode node);
+    void CaseTGcodeLiteral(TGcodeLiteral node);
     void CaseTEol(TEol node);
     void CaseTBlank(TBlank node);
     void CaseTAssignmentOp(TAssignmentOp node);
@@ -94,7 +96,6 @@ public interface Analysis : Switch
     void CaseTReturn(TReturn node);
     void CaseTBuild(TBuild node);
     void CaseTWalk(TWalk node);
-    void CaseTGcodeLiteral(TGcodeLiteral node);
     void CaseTAnd(TAnd node);
     void CaseTOr(TOr node);
     void CaseTNumber(TNumber node);
@@ -344,6 +345,14 @@ public class AnalysisAdapter : Analysis
         DefaultCase(node);
     }
 
+    public virtual void CaseTGcode(TGcode node)
+    {
+        DefaultCase(node);
+    }
+    public virtual void CaseTGcodeLiteral(TGcodeLiteral node)
+    {
+        DefaultCase(node);
+    }
     public virtual void CaseTEol(TEol node)
     {
         DefaultCase(node);
@@ -477,10 +486,6 @@ public class AnalysisAdapter : Analysis
         DefaultCase(node);
     }
     public virtual void CaseTWalk(TWalk node)
-    {
-        DefaultCase(node);
-    }
-    public virtual void CaseTGcodeLiteral(TGcodeLiteral node)
     {
         DefaultCase(node);
     }

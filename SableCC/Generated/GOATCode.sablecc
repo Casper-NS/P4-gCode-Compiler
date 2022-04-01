@@ -33,48 +33,56 @@ Helpers
   spacing = eol_char | ' ' | tab;
   blank = ' ' | tab;
 
+States
+    normal,
+    gliteral;
+
 Tokens
+  {normal->gliteral} gcode = 'gcode' blank* eol_char? blank*;
+  {gliteral} gcode_literal = not_curleys*;
+  
   eol   = cr | lf | cr lf;
   blank = blank;
-  assignment_op = '=';
-  multiplication_op  = '*';
-  modulo_op  = '%';
-  division_op = '/';
-  plus_op  = '+';
-  minus_op = '-';
-  equal = '==';
-  less_than = '<';
-  less_than_or_equal = '<=';
-  greater_than = '>';
-  greater_than_or_equal = '>=';
-  not = '!';
-  not_equal = '!=';
-  l_par = '(';
-  r_par = ')';
-  l_cur = '{';
-  r_cur = '}';
-  comma = ',';
-  vector = 'vector';
-  int = 'int';
-  const = 'const';
-  float = 'float';
-  bool = 'bool';
-  void = 'void';
-  bool_value = 'true' | 'false';
-  if = 'if';
-  else = 'else';
-  repeat = 'repeat';
-  while = 'while';
-  return = 'return';
-  build = 'build';
-  walk = 'walk';
-  gcode_literal = 'gcode' blank* eol_char? blank* '{' not_curleys* '}';
-  and = '&&';
-  or = '||';
-  number  = '0'| [digit-'0'] digit* | digit* '.' digit*;
-  id    = idletter idchar* | idletter idchar* '.' xyz;
-  multiline_comment = '/*' not_star * star + ( not_star_slash not_star * star+) * '/' eol_char;
-  singleline_comment = '//' not_eol_char* eol_char;
+
+  {normal} assignment_op = '=';
+  {normal} multiplication_op  = '*';
+  {normal} modulo_op  = '%';
+  {normal} division_op = '/';
+  {normal} plus_op  = '+';
+  {normal} minus_op = '-';
+  {normal} equal = '==';
+  {normal} less_than = '<';
+  {normal} less_than_or_equal = '<=';
+  {normal} greater_than = '>';
+  {normal} greater_than_or_equal = '>=';
+  {normal} not = '!';
+  {normal} not_equal = '!=';
+  {normal} l_par = '(';
+  {normal} r_par = ')';
+  {normal, gliteral} l_cur = '{';
+  {normal, gliteral->normal} r_cur = '}';
+  {normal} comma = ',';
+  {normal} vector = 'vector';
+  {normal} int = 'int';
+  {normal} const = 'const';
+  {normal} float = 'float';
+  {normal} bool = 'bool';
+  {normal} void = 'void';
+  {normal} bool_value = 'true' | 'false';
+  {normal} if = 'if';
+  {normal} else = 'else';
+  {normal} repeat = 'repeat';
+  {normal} while = 'while';
+  {normal} return = 'return';
+  {normal} build = 'build';
+  {normal} walk = 'walk';
+  {normal} and = '&&';
+  {normal} or = '||';
+  {normal} number  = '0'| [digit-'0'] digit* | digit* '.' digit*;
+  {normal} id    = idletter idchar* | idletter idchar* '.' xyz;
+  
+  {normal} multiline_comment = '/*' not_star * star + ( not_star_slash not_star * star+) * '/' eol_char;
+  {normal} singleline_comment = '//' not_eol_char* eol_char;
 
 Ignored Tokens
   blank, multiline_comment, singleline_comment;
@@ -228,7 +236,7 @@ cst_while_statement {-> stmt} =
 
 
 cst_gcode_literal {-> stmt} = 
-        gcode_literal
+        gcode l_cur gcode_literal? r_cur
             {-> New stmt.gcode(gcode_literal)};
 
 
@@ -381,7 +389,7 @@ stmt =
 | {if} exp [then]:block [else]:block?
 | {repeat} exp block
 | {while} exp block
-| {gcode} gcode_literal 
+| {gcode} gcode_literal? 
 | {assign} id exp 
 | {assign_plus} id exp
 | {assign_minus} id exp
