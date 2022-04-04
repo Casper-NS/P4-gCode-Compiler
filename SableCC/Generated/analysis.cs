@@ -25,6 +25,8 @@ public interface Analysis : Switch
     void CaseABoolTypes(ABoolTypes node);
     void CaseAVectorTypes(AVectorTypes node);
     void CaseAStmtlistBlock(AStmtlistBlock node);
+    void CaseABuildBlock(ABuildBlock node);
+    void CaseAWalkBlock(AWalkBlock node);
     void CaseADeclStmt(ADeclStmt node);
     void CaseAIfStmt(AIfStmt node);
     void CaseARepeatStmt(ARepeatStmt node);
@@ -59,6 +61,8 @@ public interface Analysis : Switch
     void CaseANumberExp(ANumberExp node);
     void CaseAFunctionExp(AFunctionExp node);
     void CaseAIdExp(AIdExp node);
+    void CaseABuildExp(ABuildExp node);
+    void CaseAWalkExp(AWalkExp node);
 
     void CaseTGcode(TGcode node);
     void CaseTGcodeLiteral(TGcodeLiteral node);
@@ -208,6 +212,14 @@ public class AnalysisAdapter : Analysis
     {
         DefaultCase(node);
     }
+    public virtual void CaseABuildBlock(ABuildBlock node)
+    {
+        DefaultCase(node);
+    }
+    public virtual void CaseAWalkBlock(AWalkBlock node)
+    {
+        DefaultCase(node);
+    }
     public virtual void CaseADeclStmt(ADeclStmt node)
     {
         DefaultCase(node);
@@ -341,6 +353,14 @@ public class AnalysisAdapter : Analysis
         DefaultCase(node);
     }
     public virtual void CaseAIdExp(AIdExp node)
+    {
+        DefaultCase(node);
+    }
+    public virtual void CaseABuildExp(ABuildExp node)
+    {
+        DefaultCase(node);
+    }
+    public virtual void CaseAWalkExp(AWalkExp node)
     {
         DefaultCase(node);
     }
@@ -779,6 +799,44 @@ public class DepthFirstAdapter : AnalysisAdapter
         }
         OutAStmtlistBlock(node);
     }
+    public virtual void InABuildBlock(ABuildBlock node)
+    {
+        DefaultIn(node);
+    }
+
+    public virtual void OutABuildBlock(ABuildBlock node)
+    {
+        DefaultOut(node);
+    }
+
+    public override void CaseABuildBlock(ABuildBlock node)
+    {
+        InABuildBlock(node);
+        if(node.GetBlock() != null)
+        {
+            node.GetBlock().Apply(this);
+        }
+        OutABuildBlock(node);
+    }
+    public virtual void InAWalkBlock(AWalkBlock node)
+    {
+        DefaultIn(node);
+    }
+
+    public virtual void OutAWalkBlock(AWalkBlock node)
+    {
+        DefaultOut(node);
+    }
+
+    public override void CaseAWalkBlock(AWalkBlock node)
+    {
+        InAWalkBlock(node);
+        if(node.GetBlock() != null)
+        {
+            node.GetBlock().Apply(this);
+        }
+        OutAWalkBlock(node);
+    }
     public virtual void InADeclStmt(ADeclStmt node)
     {
         DefaultIn(node);
@@ -1533,6 +1591,44 @@ public class DepthFirstAdapter : AnalysisAdapter
         }
         OutAIdExp(node);
     }
+    public virtual void InABuildExp(ABuildExp node)
+    {
+        DefaultIn(node);
+    }
+
+    public virtual void OutABuildExp(ABuildExp node)
+    {
+        DefaultOut(node);
+    }
+
+    public override void CaseABuildExp(ABuildExp node)
+    {
+        InABuildExp(node);
+        if(node.GetExp() != null)
+        {
+            node.GetExp().Apply(this);
+        }
+        OutABuildExp(node);
+    }
+    public virtual void InAWalkExp(AWalkExp node)
+    {
+        DefaultIn(node);
+    }
+
+    public virtual void OutAWalkExp(AWalkExp node)
+    {
+        DefaultOut(node);
+    }
+
+    public override void CaseAWalkExp(AWalkExp node)
+    {
+        InAWalkExp(node);
+        if(node.GetExp() != null)
+        {
+            node.GetExp().Apply(this);
+        }
+        OutAWalkExp(node);
+    }
 }
 
 
@@ -1789,6 +1885,44 @@ public class ReversedDepthFirstAdapter : AnalysisAdapter
             }
         }
         OutAStmtlistBlock(node);
+    }
+    public virtual void InABuildBlock(ABuildBlock node)
+    {
+        DefaultIn(node);
+    }
+
+    public virtual void OutABuildBlock(ABuildBlock node)
+    {
+        DefaultOut(node);
+    }
+
+    public override void CaseABuildBlock(ABuildBlock node)
+    {
+        InABuildBlock(node);
+        if(node.GetBlock() != null)
+        {
+            node.GetBlock().Apply(this);
+        }
+        OutABuildBlock(node);
+    }
+    public virtual void InAWalkBlock(AWalkBlock node)
+    {
+        DefaultIn(node);
+    }
+
+    public virtual void OutAWalkBlock(AWalkBlock node)
+    {
+        DefaultOut(node);
+    }
+
+    public override void CaseAWalkBlock(AWalkBlock node)
+    {
+        InAWalkBlock(node);
+        if(node.GetBlock() != null)
+        {
+            node.GetBlock().Apply(this);
+        }
+        OutAWalkBlock(node);
     }
     public virtual void InADeclStmt(ADeclStmt node)
     {
@@ -2543,6 +2677,44 @@ public class ReversedDepthFirstAdapter : AnalysisAdapter
             node.GetId().Apply(this);
         }
         OutAIdExp(node);
+    }
+    public virtual void InABuildExp(ABuildExp node)
+    {
+        DefaultIn(node);
+    }
+
+    public virtual void OutABuildExp(ABuildExp node)
+    {
+        DefaultOut(node);
+    }
+
+    public override void CaseABuildExp(ABuildExp node)
+    {
+        InABuildExp(node);
+        if(node.GetExp() != null)
+        {
+            node.GetExp().Apply(this);
+        }
+        OutABuildExp(node);
+    }
+    public virtual void InAWalkExp(AWalkExp node)
+    {
+        DefaultIn(node);
+    }
+
+    public virtual void OutAWalkExp(AWalkExp node)
+    {
+        DefaultOut(node);
+    }
+
+    public override void CaseAWalkExp(AWalkExp node)
+    {
+        InAWalkExp(node);
+        if(node.GetExp() != null)
+        {
+            node.GetExp().Apply(this);
+        }
+        OutAWalkExp(node);
     }
 }
 } // namespace GOATCode.analysis

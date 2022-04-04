@@ -149,11 +149,24 @@ cst_vector_values {-> exp} =
 
 
 cst_function_declaration {-> decl} =
-        {notvoid} cst_types id l_par cst_formal_param_list? r_par eol? cst_block 
+        {notvoidbuild} build cst_types id l_par cst_formal_param_list? r_par eol? cst_block 
+            {-> New decl.func(cst_types.types, id, [cst_formal_param_list.decl], New block.build(cst_block.block))}
+        
+      | {notvoidwalk} walk cst_types id l_par cst_formal_param_list? r_par eol? cst_block 
+            {-> New decl.func(cst_types.types, id, [cst_formal_param_list.decl], New block.walk(cst_block.block))}
+                    
+      | {notvoidnone} cst_types id l_par cst_formal_param_list? r_par eol? cst_block 
             {-> New decl.func(cst_types.types, id, [cst_formal_param_list.decl], cst_block.block)}
-            
-      | {void} void id l_par cst_formal_param_list? r_par eol? cst_block 
+
+      | {voidbuild} build void id l_par cst_formal_param_list? r_par eol? cst_block 
+            {-> New decl.proc(id, [cst_formal_param_list.decl], New block.build(cst_block.block))}
+
+      | {voidwalk} walk void id l_par cst_formal_param_list? r_par eol? cst_block 
+            {-> New decl.proc(id, [cst_formal_param_list.decl], New block.walk(cst_block.block))}
+
+      | {voidnone} void id l_par cst_formal_param_list? r_par eol? cst_block 
             {-> New decl.proc(id, [cst_formal_param_list.decl], cst_block.block)};
+
 
 
 
@@ -163,8 +176,6 @@ cst_formal_param_list {-> decl*} =
         
       | cst_types id 
             {-> [New decl.param(cst_types.types, id)]};
-
-
 
 cst_block {-> block} = 
         l_cur eol? cst_statement_list r_cur
@@ -264,7 +275,12 @@ cst_assignments {-> stmt} =
 
 cst_function_call {-> exp} = 
         id l_par cst_actual_param_list? r_par 
-            {-> New exp.function(id, [cst_actual_param_list.exp])};
+            {-> New exp.function(id, [cst_actual_param_list.exp])}
+      | {build} build id l_par cst_actual_param_list? r_par 
+            {-> New exp.build(New exp.function(id, [cst_actual_param_list.exp]))}
+      | {walk} walk id l_par cst_actual_param_list? r_par 
+            {-> New exp.walk(New exp.function(id, [cst_actual_param_list.exp]))};
+
 
 cst_actual_param_list {-> exp* } =
         {list}cst_expression comma cst_actual_param_list 
@@ -382,7 +398,10 @@ types =
 | {bool}
 | {vector};
 
-block = {stmtlist} stmt*;
+block = 
+  {stmtlist} stmt*
+| {build} block 
+| {walk} block;
 
 stmt = 
 {decl} decl
@@ -420,4 +439,6 @@ exp =
 | {boolval}   bool_value
 | {number}  number
 | {function} [name]:id [args]:exp*
-| {id}  id;
+| {id}  id
+| {build} exp
+| {walk} exp;

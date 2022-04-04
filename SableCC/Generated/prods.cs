@@ -1140,6 +1140,162 @@ public sealed class AStmtlistBlock : PBlock
         }
     }
 }
+public sealed class ABuildBlock : PBlock
+{
+    private PBlock _block_;
+
+    public ABuildBlock ()
+    {
+    }
+
+    public ABuildBlock (
+            PBlock _block_
+    )
+    {
+        SetBlock (_block_);
+    }
+
+    public override Object Clone()
+    {
+        return new ABuildBlock (
+            (PBlock)CloneNode (_block_)
+        );
+    }
+
+    public override void Apply(Switch sw)
+    {
+        ((Analysis) sw).CaseABuildBlock(this);
+    }
+
+    public PBlock GetBlock ()
+    {
+        return _block_;
+    }
+
+    public void SetBlock (PBlock node)
+    {
+        if(_block_ != null)
+        {
+            _block_.Parent(null);
+        }
+
+        if(node != null)
+        {
+            if(node.Parent() != null)
+            {
+                node.Parent().RemoveChild(node);
+            }
+
+            node.Parent(this);
+        }
+
+        _block_ = node;
+    }
+
+    public override string ToString()
+    {
+        return ""
+            + ToString (_block_)
+        ;
+    }
+
+    internal override void RemoveChild(Node child)
+    {
+        if ( _block_ == child )
+        {
+            _block_ = null;
+            return;
+        }
+    }
+
+    internal override void ReplaceChild(Node oldChild, Node newChild)
+    {
+        if ( _block_ == oldChild )
+        {
+            SetBlock ((PBlock) newChild);
+            return;
+        }
+    }
+
+}
+public sealed class AWalkBlock : PBlock
+{
+    private PBlock _block_;
+
+    public AWalkBlock ()
+    {
+    }
+
+    public AWalkBlock (
+            PBlock _block_
+    )
+    {
+        SetBlock (_block_);
+    }
+
+    public override Object Clone()
+    {
+        return new AWalkBlock (
+            (PBlock)CloneNode (_block_)
+        );
+    }
+
+    public override void Apply(Switch sw)
+    {
+        ((Analysis) sw).CaseAWalkBlock(this);
+    }
+
+    public PBlock GetBlock ()
+    {
+        return _block_;
+    }
+
+    public void SetBlock (PBlock node)
+    {
+        if(_block_ != null)
+        {
+            _block_.Parent(null);
+        }
+
+        if(node != null)
+        {
+            if(node.Parent() != null)
+            {
+                node.Parent().RemoveChild(node);
+            }
+
+            node.Parent(this);
+        }
+
+        _block_ = node;
+    }
+
+    public override string ToString()
+    {
+        return ""
+            + ToString (_block_)
+        ;
+    }
+
+    internal override void RemoveChild(Node child)
+    {
+        if ( _block_ == child )
+        {
+            _block_ = null;
+            return;
+        }
+    }
+
+    internal override void ReplaceChild(Node oldChild, Node newChild)
+    {
+        if ( _block_ == oldChild )
+        {
+            SetBlock ((PBlock) newChild);
+            return;
+        }
+    }
+
+}
 public sealed class ADeclStmt : PStmt
 {
     private PDecl _decl_;
@@ -4837,6 +4993,162 @@ public sealed class AIdExp : PExp
         if ( _id_ == oldChild )
         {
             SetId ((TId) newChild);
+            return;
+        }
+    }
+
+}
+public sealed class ABuildExp : PExp
+{
+    private PExp _exp_;
+
+    public ABuildExp ()
+    {
+    }
+
+    public ABuildExp (
+            PExp _exp_
+    )
+    {
+        SetExp (_exp_);
+    }
+
+    public override Object Clone()
+    {
+        return new ABuildExp (
+            (PExp)CloneNode (_exp_)
+        );
+    }
+
+    public override void Apply(Switch sw)
+    {
+        ((Analysis) sw).CaseABuildExp(this);
+    }
+
+    public PExp GetExp ()
+    {
+        return _exp_;
+    }
+
+    public void SetExp (PExp node)
+    {
+        if(_exp_ != null)
+        {
+            _exp_.Parent(null);
+        }
+
+        if(node != null)
+        {
+            if(node.Parent() != null)
+            {
+                node.Parent().RemoveChild(node);
+            }
+
+            node.Parent(this);
+        }
+
+        _exp_ = node;
+    }
+
+    public override string ToString()
+    {
+        return ""
+            + ToString (_exp_)
+        ;
+    }
+
+    internal override void RemoveChild(Node child)
+    {
+        if ( _exp_ == child )
+        {
+            _exp_ = null;
+            return;
+        }
+    }
+
+    internal override void ReplaceChild(Node oldChild, Node newChild)
+    {
+        if ( _exp_ == oldChild )
+        {
+            SetExp ((PExp) newChild);
+            return;
+        }
+    }
+
+}
+public sealed class AWalkExp : PExp
+{
+    private PExp _exp_;
+
+    public AWalkExp ()
+    {
+    }
+
+    public AWalkExp (
+            PExp _exp_
+    )
+    {
+        SetExp (_exp_);
+    }
+
+    public override Object Clone()
+    {
+        return new AWalkExp (
+            (PExp)CloneNode (_exp_)
+        );
+    }
+
+    public override void Apply(Switch sw)
+    {
+        ((Analysis) sw).CaseAWalkExp(this);
+    }
+
+    public PExp GetExp ()
+    {
+        return _exp_;
+    }
+
+    public void SetExp (PExp node)
+    {
+        if(_exp_ != null)
+        {
+            _exp_.Parent(null);
+        }
+
+        if(node != null)
+        {
+            if(node.Parent() != null)
+            {
+                node.Parent().RemoveChild(node);
+            }
+
+            node.Parent(this);
+        }
+
+        _exp_ = node;
+    }
+
+    public override string ToString()
+    {
+        return ""
+            + ToString (_exp_)
+        ;
+    }
+
+    internal override void RemoveChild(Node child)
+    {
+        if ( _exp_ == child )
+        {
+            _exp_ = null;
+            return;
+        }
+    }
+
+    internal override void ReplaceChild(Node oldChild, Node newChild)
+    {
+        if ( _exp_ == oldChild )
+        {
+            SetExp ((PExp) newChild);
             return;
         }
     }
