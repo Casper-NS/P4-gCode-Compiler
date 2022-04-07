@@ -1,0 +1,9 @@
+﻿build walk b()
+{
+	forward(100)
+}
+
+void main()
+{
+	walk b()
+}

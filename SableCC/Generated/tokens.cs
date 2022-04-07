@@ -4,10 +4,60 @@ using System;
 using System.Collections;
 using System.Text;
 
-using  GGCodeParser.analysis;
+using  GOATCode.analysis;
 
-namespace GGCodeParser.node {
+namespace GOATCode.node {
 
+
+public sealed class TGcode : Token
+{
+    public TGcode(string text)
+    {
+        Text = text;
+    }
+
+    public TGcode(string text, int line, int pos)
+    {
+        Text = text;
+        Line = line;
+        Pos = pos;
+    }
+
+    public override Object Clone()
+    {
+      return new TGcode(Text, Line, Pos);
+    }
+
+    public override void Apply(Switch sw)
+    {
+        ((Analysis) sw).CaseTGcode(this);
+    }
+}
+
+public sealed class TGcodeLiteral : Token
+{
+    public TGcodeLiteral(string text)
+    {
+        Text = text;
+    }
+
+    public TGcodeLiteral(string text, int line, int pos)
+    {
+        Text = text;
+        Line = line;
+        Pos = pos;
+    }
+
+    public override Object Clone()
+    {
+      return new TGcodeLiteral(Text, Line, Pos);
+    }
+
+    public override void Apply(Switch sw)
+    {
+        ((Analysis) sw).CaseTGcodeLiteral(this);
+    }
+}
 
 public sealed class TEol : Token
 {
@@ -859,31 +909,6 @@ public sealed class TWalk : Token
     }
 }
 
-public sealed class TGcode : Token
-{
-    public TGcode(string text)
-    {
-        Text = text;
-    }
-
-    public TGcode(string text, int line, int pos)
-    {
-        Text = text;
-        Line = line;
-        Pos = pos;
-    }
-
-    public override Object Clone()
-    {
-      return new TGcode(Text, Line, Pos);
-    }
-
-    public override void Apply(Switch sw)
-    {
-        ((Analysis) sw).CaseTGcode(this);
-    }
-}
-
 public sealed class TAnd : Token
 {
     public TAnd(string text)
@@ -959,14 +984,14 @@ public sealed class TNumber : Token
     }
 }
 
-public sealed class TIdentifier : Token
+public sealed class TId : Token
 {
-    public TIdentifier(string text)
+    public TId(string text)
     {
         Text = text;
     }
 
-    public TIdentifier(string text, int line, int pos)
+    public TId(string text, int line, int pos)
     {
         Text = text;
         Line = line;
@@ -975,37 +1000,12 @@ public sealed class TIdentifier : Token
 
     public override Object Clone()
     {
-      return new TIdentifier(Text, Line, Pos);
+      return new TId(Text, Line, Pos);
     }
 
     public override void Apply(Switch sw)
     {
-        ((Analysis) sw).CaseTIdentifier(this);
-    }
-}
-
-public sealed class TAllCharsExceptCurly : Token
-{
-    public TAllCharsExceptCurly(string text)
-    {
-        Text = text;
-    }
-
-    public TAllCharsExceptCurly(string text, int line, int pos)
-    {
-        Text = text;
-        Line = line;
-        Pos = pos;
-    }
-
-    public override Object Clone()
-    {
-      return new TAllCharsExceptCurly(Text, Line, Pos);
-    }
-
-    public override void Apply(Switch sw)
-    {
-        ((Analysis) sw).CaseTAllCharsExceptCurly(this);
+        ((Analysis) sw).CaseTId(this);
     }
 }
 
