@@ -1,5 +1,5 @@
-using GGCodeParser.lexer;
-using GGCodeParser.parser;
+using GOATCode.lexer;
+using GOATCode.parser;
 using System;
 using System.Collections;
 using System.Collections.Generic;

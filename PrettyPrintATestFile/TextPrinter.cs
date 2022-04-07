@@ -5,8 +5,8 @@
  */
 
 
-using GGCodeParser.analysis;
-using GGCodeParser.node;
+using GOATCode.analysis;
+using GOATCode.node;
 using System;
 using System.Collections;
 

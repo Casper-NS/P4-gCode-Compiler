@@ -1,4 +1,4 @@
-Package GGCodeParser;
+Package GOATCode;
 
 Helpers
   all = [0 .. 127];
