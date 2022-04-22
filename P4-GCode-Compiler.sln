@@ -9,7 +9,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SableCC", "SableCC\SableCC.
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ParserTester", "ParserTester\ParserTester.csproj", "{EB097EAD-DF77-4E72-906D-51500F66F193}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PrettyPrintATestFile", "PrettyPrintATestFile\PrettyPrintATestFile.csproj", "{19CDEA2A-9A3F-4BAD-8729-FCB5CCDFEFDB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PrettyPrintATestFile", "PrettyPrintATestFile\PrettyPrintATestFile.csproj", "{19CDEA2A-9A3F-4BAD-8729-FCB5CCDFEFDB}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GOAT-Compiler", "GOAT-Compiler\GOAT-Compiler.csproj", "{E712681C-7379-44E7-8090-37A12F0A0166}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,6 +35,10 @@ Global
 		{19CDEA2A-9A3F-4BAD-8729-FCB5CCDFEFDB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{19CDEA2A-9A3F-4BAD-8729-FCB5CCDFEFDB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{19CDEA2A-9A3F-4BAD-8729-FCB5CCDFEFDB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E712681C-7379-44E7-8090-37A12F0A0166}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E712681C-7379-44E7-8090-37A12F0A0166}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E712681C-7379-44E7-8090-37A12F0A0166}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E712681C-7379-44E7-8090-37A12F0A0166}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
