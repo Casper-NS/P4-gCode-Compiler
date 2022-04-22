@@ -1,6 +1,6 @@
-﻿using GGCodeParser.lexer;
-using GGCodeParser.node;
-using GGCodeParser.parser;
+﻿using GOATCode.lexer;
+using GOATCode.node;
+using GOATCode.parser;
 using System.IO;
 
 namespace PrettyPrintATestFile
