@@ -7,7 +7,7 @@ using System.Linq;
 
 namespace GOAT_Compiler
 {
-    enum Types
+    public enum Types
     {
         integer,
         floatingPoint,
@@ -15,12 +15,12 @@ namespace GOAT_Compiler
         boolean
     };
 
-    /*
-    class SymbolTable
+
+    class SymbolTable : ISymbolTable
     {
         private int depth = 0;
-        private Dictionary<int, SymbolData> symbolTable = new Dictionary<int, SymbolData>();
-        private List<List<SymbolData>> ScopeDisplay = new List<List<SymbolData>>();
+        private Dictionary<string, Symbol> symbolTable = new Dictionary<string, Symbol>();
+        private List<Symbol> ScopeDisplay = new List<Symbol>();
 
         
         public SymbolTable()
@@ -28,58 +28,90 @@ namespace GOAT_Compiler
             ScopeDisplay.Add(null);
         }
 
-        void OpenScope()
+        /// <summary>
+        /// Opens a new scope and extends the scope display if neccesary.
+        /// </summary>
+        public void OpenScope()
         {
-            depth = depth++;
-            ScopeDisplay.Add(null);
-        }
-
-        void CloseScope()
-        {
-            SymbolData previousSymbol;
-            foreach (var symbol in ScopeDisplay[depth])
+            depth++;
+            if (ScopeDisplay.Count < depth)
             {
-                previousSymbol = symbol.previousSymbol;
+                ScopeDisplay.Add(null);
             }
         }
 
-        SymbolData GetSymbol(string Name)
+        /// <summary>
+        /// Closes the current scope and removes the scopes symbol from the table.
+        /// If the symbols contain references to outerscope symbols they're reinserted into the table.
+        /// </summary>
+        public void CloseScope()
         {
-            SymbolData symbol = ScopeDisplay[depth].Find(sym => sym.name == Name);
-            symbolTable.TryGetValue(symbol.GetHashCode(), out symbol);
-            return symbol;
+            Symbol symbol = ScopeDisplay[depth];
+            Symbol previousSymbol;
+            while (symbol.level != null)
+            {
+                previousSymbol = symbol.OuterSymbol;
+                symbolTable.Remove(symbol.name);
+                if (previousSymbol != null)
+                {
+                    symbolTable.Add(symbol.name, symbol);
+                }
+                symbol = symbol.level;
+            }
+            depth--;
         }
 
-
-        void AddSymbol(string Name, Types Type)
+        /// <summary>
+        /// Gets the closest (scopewise) symbol from the symboltable
+        /// </summary>
+        /// <param name="Name">The name of the symbol you are trying to get</param>
+        /// <returns></returns>
+        public Symbol GetSymbol(string Name)
         {
-            SymbolData oldSymbol = GetSymbol(Name);
+            if (symbolTable.TryGetValue(Name, out Symbol symbol))
+            {
+                return symbol;
+            }
+            else return null;
+        }
+
+        /// <summary>
+        /// Adds a symbol to the symbol table.
+        /// If the same symbol exists in an outer scope it is temporarily removed from the table and stored in the new symble.
+        /// In case of a duplecate symbol an exception is thrown.
+        /// </summary>
+        /// <param name="Name">The name of the symbol</param>
+        /// <param name="Type">The type of the symbol</param>
+        /// <exception cref="Exception">Exception that is thrown if there is a duplicate definition.</exception>
+        public void AddSymbol(string Name, Types Type)
+        {
+            Symbol oldSymbol = GetSymbol(Name);
             if (oldSymbol != null && oldSymbol.depth == depth)
             {
-                throw new Exception("Duplicate definition");
+                throw new Exception($"Duplicate definition of {Name}");
             }
 
-            SymbolData newSymbol = new SymbolData(Name, Type);
+            Symbol newSymbol = new Symbol(Name, Type);
 
-            ScopeDisplay[depth].Add(newSymbol);
-            //newSymbol.level = ScopeDisplay[depth];
+            newSymbol.level = ScopeDisplay[depth];
             newSymbol.depth = depth;
+            ScopeDisplay[depth] = (newSymbol);
 
             if (oldSymbol == null)
             {
-                symbolTable.Add(newSymbol.GetHashCode(), newSymbol);
+                symbolTable.Add(newSymbol.name, newSymbol);
             }
             else
             {
-                symbolTable.Remove(oldSymbol.GetHashCode());
-                symbolTable.Add(newSymbol.GetHashCode(), newSymbol);
+                symbolTable.Remove(oldSymbol.name);
+                symbolTable.Add(newSymbol.name, newSymbol);
             }
 
-            newSymbol.previousSymbol = oldSymbol;
+            newSymbol.OuterSymbol = oldSymbol;
         }
     }
-        */
 
+    /*
     class SymbolTableRecursive
     {
         private Table tables;
@@ -107,7 +139,7 @@ namespace GOAT_Compiler
             currentScope.visitCounter = 0;
         }
 
-        public SymbolData GetSymbol(string Name)
+        public Symbol GetSymbol(string Name)
         {
             return currentScope.GetSymbol(Name);
         }
@@ -123,7 +155,7 @@ namespace GOAT_Compiler
     {
         public Table ParentTable { get; private set; }
         public List<Table> ChildrenTables { get; set; }
-        private readonly Dictionary<string, SymbolData> Symbols;
+        private readonly Dictionary<string, Symbol> Symbols;
 
         public int visitCounter
         {
@@ -133,36 +165,50 @@ namespace GOAT_Compiler
 
         public Table(Table Parent)
         {
-            Symbols = new Dictionary<string, SymbolData>();
+            Symbols = new Dictionary<string, Symbol>();
             ParentTable = Parent;
             visitCounter = 0;
         }
 
-        public SymbolData GetSymbol(string Name)
+        public Symbol GetSymbol(string Name)
         {
             return Symbols[Name];
         }
 
         public void SetSymbol(string Name, Types type)
         {
-            Symbols.Add(Name, new SymbolData(Name, type));
+            Symbols.Add(Name, new Symbol(Name, type));
         }
 
     }
+    */
 
-
-    class SymbolData
+    internal class Symbol
     {
         public string name { get; private set; }
         public Types type { get; private set; }
-        //public List<SymbolData> level { get; set; }
-        //public int depth { get; set; }
-        //public SymbolData previousSymbol { get; set; }
 
-        public SymbolData(string Name, Types Type)
+        //level points to the previous symbol in the scope and is used for deleting symbols when exiting a scope.
+        public Symbol level { get; set; }
+
+
+        // depth is used for checking if a duplicate symbol exists in the scope
+        public int depth { get; set; }
+
+        // OuterSymbol refers to the symbol with the same name in the next outer scope. 
+        // This is used to reinsert symbols into the dictionary when symbols are deleted.
+        public Symbol OuterSymbol { get; set; }
+
+        //Used to retrieve symbols in cases where multiple symbols map to the same hashvalue.
+        //Seems unnecceary due to c# dictionaries handling collisions.
+        //May need to be implemented in the future when we can do some testing.
+        //public Symbol Hash { get;}
+
+        public Symbol(string Name, Types Type)
         {
             name = Name;
             type = Type;
+            level = null;
         }
 
     }
