@@ -20,14 +20,23 @@ namespace GOAT_Compiler
 
         public void OpenScope()
         {
-            currentScope = currentScope.ChildrenTables[tables.visitCounter];
-            currentScope.ChildrenTables.Add(new Table(tables));
+            int visitcount = currentScope.VisitCounter;
+            currentScope.VisitCounter++;
+
+            if (currentScope.ChildrenTables.Count <= visitcount)
+            {
+                currentScope = currentScope.ChildrenTables[tables.VisitCounter];
+            }
+            else
+            {
+                currentScope.ChildrenTables.Add(new Table(tables));
+            }
         }
 
         public void CloseScope()
         {
+            currentScope.VisitCounter = 0;
             currentScope = currentScope.ParentTable;
-            currentScope.visitCounter = 0;
         }
 
         public Symbol GetSymbol(string Name)
@@ -48,17 +57,13 @@ namespace GOAT_Compiler
         public List<Table> ChildrenTables { get; set; }
         private readonly Dictionary<string, Symbol> Symbols;
 
-        public int visitCounter
-        {
-            get => visitCounter++;
-            set { visitCounter = value; }
-        }
+        public int VisitCounter { get; set; }
 
         public Table(Table Parent)
         {
             Symbols = new Dictionary<string, Symbol>();
             ParentTable = Parent;
-            visitCounter = 0;
+            VisitCounter = 0;
         }
 
         public Symbol GetSymbol(string Name)
