@@ -1,9 +1,11 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <OutputType>Exe</OutputType>
+    <OutputType>Library</OutputType>
     <TargetFramework>net5.0</TargetFramework>
     <RootNamespace>GOAT_Compiler</RootNamespace>
+    <ApplicationIcon />
+    <StartupObject />
   </PropertyGroup>
 
 </Project>

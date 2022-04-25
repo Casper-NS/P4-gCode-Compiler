@@ -78,8 +78,12 @@ namespace GOAT_Compiler
         public void SetSymbol(string Name, Types type)
         {
 
+            if (Symbols.TryGetValue(Name, out Symbol symbol))
+            {
+                throw new Exception($"Duplicate definition of {Name}");
+            }
 
-            Symbols.Add(Name, new Symbol(Name, type));
+            Symbols.Add(Name, symbol);
         }
 
     }
