@@ -4,9 +4,15 @@ using System;
 
 namespace GOAT_Compiler
 {
-    public class Visitor : DepthFirstAdapter
+    internal class SymbolTableBuilder : DepthFirstAdapter
     {
+
         private ISymbolTable _table;
+
+        SymbolTableBuilder(ISymbolTable IST)
+        {
+            _table = IST;
+        }
 
         private Types _processNode(Node node)
         {
