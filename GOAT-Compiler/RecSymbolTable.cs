@@ -21,10 +21,6 @@ namespace GOAT_Compiler
         public void OpenScope()
         {
             currentScope = currentScope.ChildrenTables[tables.visitCounter];
-        }
-
-        public void CreateScope()
-        {
             currentScope.ChildrenTables.Add(new Table(tables));
         }
 
@@ -39,7 +35,7 @@ namespace GOAT_Compiler
             return currentScope.GetSymbol(Name);
         }
 
-        public void SetSymbol(string Name, Types type)
+        public void AddSymbol(string Name, Types type)
         {
             currentScope.SetSymbol(Name, type);
         }
@@ -67,11 +63,22 @@ namespace GOAT_Compiler
 
         public Symbol GetSymbol(string Name)
         {
-            return Symbols[Name];
+            if (Symbols.TryGetValue(Name, out Symbol symbol))
+            {
+                return symbol;
+            }
+            else if(ParentTable != null)
+            {
+                return ParentTable.GetSymbol(Name);
+            }
+
+            return null;
         }
 
         public void SetSymbol(string Name, Types type)
         {
+
+
             Symbols.Add(Name, new Symbol(Name, type));
         }
 
