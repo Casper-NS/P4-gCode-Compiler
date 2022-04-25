@@ -35,7 +35,7 @@ namespace GOAT_Compiler
         public void OpenScope()
         {
             depth++;
-            if (ScopeDisplay.Count < depth)
+            if (ScopeDisplay.Count <= depth)
             {
                 ScopeDisplay.Add(null);
             }
