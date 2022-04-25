@@ -77,8 +77,8 @@ namespace GOAT_Compiler
 
         /// <summary>
         /// Adds a symbol to the symbol table.
-        /// If the same symbol exists in an outer scope it is temporarily removed from the table and stored in the new symble.
-        /// In case of a duplecate symbol an exception is thrown.
+        /// If the same symbol exists in an outer scope it is temporarily removed from the table and stored in the new symbol.
+        /// In case of a duplicate symbol an exception is thrown.
         /// </summary>
         /// <param name="Name">The name of the symbol</param>
         /// <param name="Type">The type of the symbol</param>
@@ -110,78 +110,6 @@ namespace GOAT_Compiler
             newSymbol.OuterSymbol = oldSymbol;
         }
     }
-
-    /*
-    class SymbolTableRecursive
-    {
-        private Table tables;
-        private Table currentScope;
-
-        public SymbolTableRecursive()
-        {
-            tables = new Table(null);
-            currentScope = tables;
-        }
-
-        public void OpenScope()
-        {
-            currentScope = currentScope.ChildrenTables[tables.visitCounter];
-        }
-
-        public void CreateScope()
-        {
-            currentScope.ChildrenTables.Add(new Table(tables));
-        }
-
-        public void CloseScope()
-        {
-            currentScope = currentScope.ParentTable;
-            currentScope.visitCounter = 0;
-        }
-
-        public Symbol GetSymbol(string Name)
-        {
-            return currentScope.GetSymbol(Name);
-        }
-
-        public void SetSymbol(string Name, Types type)
-        {
-            currentScope.SetSymbol(Name, type);
-        }
-
-    }
-
-    class Table
-    {
-        public Table ParentTable { get; private set; }
-        public List<Table> ChildrenTables { get; set; }
-        private readonly Dictionary<string, Symbol> Symbols;
-
-        public int visitCounter
-        {
-            get => visitCounter++;
-            set { visitCounter = value; }
-        }
-
-        public Table(Table Parent)
-        {
-            Symbols = new Dictionary<string, Symbol>();
-            ParentTable = Parent;
-            visitCounter = 0;
-        }
-
-        public Symbol GetSymbol(string Name)
-        {
-            return Symbols[Name];
-        }
-
-        public void SetSymbol(string Name, Types type)
-        {
-            Symbols.Add(Name, new Symbol(Name, type));
-        }
-
-    }
-    */
 
     internal class Symbol
     {
