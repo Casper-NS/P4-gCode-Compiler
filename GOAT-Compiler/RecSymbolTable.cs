@@ -6,13 +6,13 @@ using System.Threading.Tasks;
 
 namespace GOAT_Compiler
 {
-    class RecSymbolTable
+    class RecSymbolTable : ISymbolTable
     {
 
         private Table tables;
         private Table currentScope;
 
-        public RecSymbolTable()
+        public RecSymbolTable() 
         {
             tables = new Table(null);
             currentScope = tables;
