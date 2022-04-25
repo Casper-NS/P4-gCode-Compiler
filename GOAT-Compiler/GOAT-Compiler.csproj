@@ -6,4 +6,8 @@
     <RootNamespace>GOAT_Compiler</RootNamespace>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\SableCC\SableCC.csproj" />
+  </ItemGroup>
+
 </Project>
