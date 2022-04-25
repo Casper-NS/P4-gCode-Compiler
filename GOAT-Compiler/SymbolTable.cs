@@ -9,10 +9,11 @@ namespace GOAT_Compiler
 {
     public enum Types
     {
-        integer,
-        floatingPoint,
-        vector,
-        boolean
+        Integer,
+        FloatingPoint,
+        Vector,
+        Boolean,
+        Void
     };
 
 
