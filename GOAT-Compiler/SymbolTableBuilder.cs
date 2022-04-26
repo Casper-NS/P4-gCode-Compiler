@@ -39,25 +39,21 @@ namespace GOAT_Compiler
         public override void OutAVarDecl(AVarDecl node)
         {
             _symboltable.AddSymbol(node.GetId().ToString(), _processTypeOfNode(node));
-            Console.WriteLine(_symboltable.GetSymbol(node.GetId().ToString()).name);
         }
 
         public override void OutAParamDecl(AParamDecl node)
         {
             _symboltable.AddSymbol(node.GetId().ToString(), _processTypeOfNode(node.GetTypes()));
-            Console.WriteLine(_symboltable.GetSymbol(node.GetId().ToString()).name);
         }
 
         public override void OutAFuncDecl(AFuncDecl node)
         {
-            _symboltable.AddSymbol(node.GetId().ToString(), _processTypeOfNode(node.GetTypes()));
-            Console.WriteLine(_symboltable.GetSymbol(node.GetId().ToString()).name);
+            _symboltable.AddSymbol(node.GetId().ToString(), _processTypeOfNode(node));
         }
 
         public override void OutAProcDecl(AProcDecl node)
         {
             _symboltable.AddSymbol(node.GetId().ToString(), Types.Void);
-            Console.WriteLine(_symboltable.GetSymbol(node.GetId().ToString()).name);
         }
 
         public override void InAStmtlistBlock(AStmtlistBlock node)
