@@ -8,17 +8,16 @@ namespace GOAT_Compiler
 {
     class RecSymbolTable : ISymbolTable
     {
-
         private Table tables;
-        private Table mainTable;
-        private bool buildFlag = false;
+        private Table globalScope;
+        private bool buildComplete = false;
         private Table currentScope;
 
         public RecSymbolTable() 
         {
             tables = new Table(null);
-            mainTable = new Table(tables);
-            tables.ChildrenTables.Add(mainTable);
+            globalScope = new Table(tables);
+            tables.ChildrenTables.Add(globalScope);
             currentScope = tables;
         }
 
@@ -33,7 +32,7 @@ namespace GOAT_Compiler
                 int visitcount = currentScope.VisitCounter;
                 currentScope.VisitCounter++;
 
-                if (buildFlag)
+                if (buildComplete)
                 {
                     currentScope = currentScope.ChildrenTables[visitcount];
                 }
@@ -50,7 +49,7 @@ namespace GOAT_Compiler
         {
             if (currentScope.ParentTable == null)
             {
-                buildFlag = true;
+                buildComplete = true;
             }
             currentScope.VisitCounter = 0;
             currentScope = currentScope.ParentTable;

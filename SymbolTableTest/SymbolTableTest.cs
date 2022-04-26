@@ -4,7 +4,7 @@ using GOAT_Compiler;
 
 namespace SymbolTableTest
 {
-    public class IntegrationTest
+    public class SymbolTableTest
     {
         [Theory]
         [InlineData("a", Types.Integer)]
@@ -94,7 +94,7 @@ namespace SymbolTableTest
         }
 
         [Fact]
-        public void Test()
+        public void Chekcs_The_Right_Symbol_Gets_Returned_When_In_A_Scope()
         {
             ISymbolTable symbolTable = new RecSymbolTable();
             symbolTable.OpenScope();
