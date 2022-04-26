@@ -59,11 +59,10 @@ namespace GOAT_Compiler
             _symboltable.AddSymbol(node.GetId().Text, _processTypeOfNode(node));
         }
 
-        public override void InAFunctionStmt(AFunctionStmt node)
+        public override void InAFuncDecl(AFuncDecl node)
         {
             _symboltable.OpenScope();
         }
-
         public override void OutAFuncDecl(AFuncDecl node)
         {
             _symboltable.CloseScope();
