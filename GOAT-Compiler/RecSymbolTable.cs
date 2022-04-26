@@ -10,8 +10,10 @@ namespace GOAT_Compiler
     {
         private Table tables;
         private Table globalScope;
-        private bool buildComplete = false;
         private Table currentScope;
+
+        //Flag to determine whether we are building or going through the symbol table.
+        private bool buildComplete = false;
 
         public RecSymbolTable() 
         {
@@ -23,6 +25,7 @@ namespace GOAT_Compiler
 
         public void OpenScope()
         {
+            //Handles the edge case of always opening the globalScope on the first open.
             if (currentScope.ParentTable == null)
             {
                 currentScope = currentScope.ChildrenTables[0];
