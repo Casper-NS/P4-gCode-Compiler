@@ -56,8 +56,7 @@ namespace GOAT_Compiler
 
         public override void OutAParamDecl(AParamDecl node)
         {
-            _symboltable.AddSymbol(node.GetId().Text, _processTypeOfNode(node.GetTypes()));
-            
+            _symboltable.AddSymbol(node.GetId().Text, _processTypeOfNode(node));
         }
 
         public override void InAFunctionStmt(AFunctionStmt node)
