@@ -10,6 +10,9 @@ namespace GOAT_Compiler
 
         internal ISymbolTable _symboltable;
 
+        /// <summary>
+        /// Dictionary 
+        /// </summary>
         internal Dictionary<Node, string> _typeTable = new Dictionary<Node, string>();
 
         internal SymbolTableBuilder(ISymbolTable IST)
@@ -38,22 +41,22 @@ namespace GOAT_Compiler
 
         public override void OutAVarDecl(AVarDecl node)
         {
-            _symboltable.AddSymbol(node.GetId().ToString(), _processTypeOfNode(node));
+            _symboltable.AddSymbol(node.GetId().Text, _processTypeOfNode(node));
         }
 
         public override void OutAParamDecl(AParamDecl node)
         {
-            _symboltable.AddSymbol(node.GetId().ToString(), _processTypeOfNode(node.GetTypes()));
+            _symboltable.AddSymbol(node.GetId().Text, _processTypeOfNode(node.GetTypes()));
         }
 
         public override void OutAFuncDecl(AFuncDecl node)
         {
-            _symboltable.AddSymbol(node.GetId().ToString(), _processTypeOfNode(node));
+            _symboltable.AddSymbol(node.GetId().Text, _processTypeOfNode(node));
         }
 
         public override void OutAProcDecl(AProcDecl node)
         {
-            _symboltable.AddSymbol(node.GetId().ToString(), Types.Void);
+            _symboltable.AddSymbol(node.GetId().Text, Types.Void);
         }
 
         public override void InAStmtlistBlock(AStmtlistBlock node)
