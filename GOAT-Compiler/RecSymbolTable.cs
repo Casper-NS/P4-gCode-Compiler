@@ -8,33 +8,49 @@ namespace GOAT_Compiler
 {
     class RecSymbolTable : ISymbolTable
     {
-
         private Table tables;
+        private Table globalScope;
+        private bool buildComplete = false;
         private Table currentScope;
 
         public RecSymbolTable() 
         {
             tables = new Table(null);
+            globalScope = new Table(tables);
+            tables.ChildrenTables.Add(globalScope);
             currentScope = tables;
         }
 
         public void OpenScope()
         {
-            int visitcount = currentScope.VisitCounter;
-            currentScope.VisitCounter++;
-
-            if (currentScope.ChildrenTables.Count <= visitcount)
+            if (currentScope.ParentTable == null)
             {
-                currentScope = currentScope.ChildrenTables[tables.VisitCounter];
+                currentScope = currentScope.ChildrenTables[0];
             }
             else
             {
-                currentScope.ChildrenTables.Add(new Table(tables));
+                int visitcount = currentScope.VisitCounter;
+                currentScope.VisitCounter++;
+
+                if (buildComplete)
+                {
+                    currentScope = currentScope.ChildrenTables[visitcount];
+                }
+                else
+                {
+                    currentScope.ChildrenTables.Add(new Table(currentScope));
+                    currentScope = currentScope.ChildrenTables[visitcount];
+
+                }
             }
         }
 
         public void CloseScope()
         {
+            if (currentScope.ParentTable == null)
+            {
+                buildComplete = true;
+            }
             currentScope.VisitCounter = 0;
             currentScope = currentScope.ParentTable;
         }
@@ -62,6 +78,7 @@ namespace GOAT_Compiler
         public Table(Table Parent)
         {
             Symbols = new Dictionary<string, Symbol>();
+            ChildrenTables = new List<Table>();
             ParentTable = Parent;
             VisitCounter = 0;
         }
@@ -82,13 +99,7 @@ namespace GOAT_Compiler
 
         public void SetSymbol(string Name, Types type)
         {
-
-            if (Symbols.TryGetValue(Name, out Symbol symbol))
-            {
-                throw new Exception($"Duplicate definition of {Name}");
-            }
-
-            Symbols.Add(Name, symbol);
+            Symbols.Add(Name, new Symbol(Name, type));
         }
 
     }
