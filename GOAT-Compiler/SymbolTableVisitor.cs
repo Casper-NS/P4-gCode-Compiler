@@ -84,7 +84,7 @@ namespace GOAT_Compiler
         public sealed override void InAStmtlistBlock(AStmtlistBlock node)
         {
             OutsideScopeInAStmtlistBlock(node);
-            if (GrandParentChecker(node))
+            if (IsGrandparentNotFuncOrProc(node))
             {
                 _symbolTable.OpenScope();
             }
@@ -97,7 +97,7 @@ namespace GOAT_Compiler
         public sealed override void OutAStmtlistBlock(AStmtlistBlock node)
         {
             InsideScopeOutAStmtlistBlock(node);
-            if (GrandParentChecker(node))
+            if (IsGrandparentNotFuncOrProc(node))
             {
                 _symbolTable.CloseScope();
             }
@@ -112,7 +112,7 @@ namespace GOAT_Compiler
         /// </summary>
         /// <param name="node">The node whose grandparent is checked</param>
         /// <returns>Returns true or false depending on if is a function or a procedure</returns>
-        private bool GrandParentChecker(Node node)
+        private bool IsGrandparentNotFuncOrProc(Node node)
         {
             Node GrandParent = node.Parent().Parent();
             if (GrandParent is AProcDecl || GrandParent is AFuncDecl)
