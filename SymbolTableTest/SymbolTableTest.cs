@@ -98,7 +98,7 @@ namespace SymbolTableTest
         }
 
         [Fact]
-        public void Chekcs_The_Right_Symbol_Gets_Returned_When_In_A_Scope()
+        public void Checks_The_Right_Symbol_Gets_Returned_When_In_A_Scope()
         {
             ISymbolTable symbolTable = new RecSymbolTable();
             symbolTable.OpenScope();
@@ -112,6 +112,7 @@ namespace SymbolTableTest
         }
 
         [Fact]
+        //Checks whether the symbol table is built probably given a test file.
         public void Symbol_Build_test()
         {
             ISymbolTable symTable = new RecSymbolTable();

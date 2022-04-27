@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -83,8 +84,15 @@ namespace GOAT_Compiler
         public List<Table> ChildrenTables { get; set; }
         private readonly Dictionary<string, Symbol> Symbols;
 
+        /// <summary>
+        /// Keeps track of which tables have been visited, to ensure they are visited in order.
+        /// </summary>
         public int VisitCounter { get; set; }
 
+        /// <summary>
+        /// Constructs a table and sets its parent to the given table
+        /// </summary>
+        /// <param name="Parent">Parent table</param>
         public Table(Table Parent)
         {
             Symbols = new Dictionary<string, Symbol>();
@@ -93,6 +101,11 @@ namespace GOAT_Compiler
             VisitCounter = 0;
         }
 
+        /// <summary>
+        /// Gets the given symbol from the current table if its not found it checks the parent tables.
+        /// </summary>
+        /// <param name="Name">Name of the symbol you want to get</param>
+        /// <returns>Returns the requested symbol</returns>
         public Symbol GetSymbol(string Name)
         {
             if (Symbols.TryGetValue(Name, out Symbol symbol))
