@@ -1823,7 +1823,10 @@ public class Parser
         ArrayList nodeArrayList1 = (ArrayList) Pop();
         TypedList listNode3 = new TypedList();
         TId tidNode2 = (TId)nodeArrayList2[0];
-        PBlock pblockNode4 = (PBlock)nodeArrayList5[0];
+        PBlock pblockNode5 = (PBlock)nodeArrayList5[0];
+        ANoneBlock pblockNode4 = new ANoneBlock (
+              pblockNode5
+        );
         AProcDecl pdeclNode1 = new AProcDecl (
               tidNode2,
               listNode3,
@@ -1848,7 +1851,10 @@ public class Parser
         {
             listNode4.AddAll(listNode3);
         }
-        PBlock pblockNode5 = (PBlock)nodeArrayList6[0];
+        PBlock pblockNode6 = (PBlock)nodeArrayList6[0];
+        ANoneBlock pblockNode5 = new ANoneBlock (
+              pblockNode6
+        );
         AProcDecl pdeclNode1 = new AProcDecl (
               tidNode2,
               listNode4,
@@ -1868,7 +1874,10 @@ public class Parser
         ArrayList nodeArrayList1 = (ArrayList) Pop();
         TypedList listNode3 = new TypedList();
         TId tidNode2 = (TId)nodeArrayList2[0];
-        PBlock pblockNode4 = (PBlock)nodeArrayList6[0];
+        PBlock pblockNode5 = (PBlock)nodeArrayList6[0];
+        ANoneBlock pblockNode4 = new ANoneBlock (
+              pblockNode5
+        );
         AProcDecl pdeclNode1 = new AProcDecl (
               tidNode2,
               listNode3,
@@ -1894,7 +1903,10 @@ public class Parser
         {
             listNode4.AddAll(listNode3);
         }
-        PBlock pblockNode5 = (PBlock)nodeArrayList7[0];
+        PBlock pblockNode6 = (PBlock)nodeArrayList7[0];
+        ANoneBlock pblockNode5 = new ANoneBlock (
+              pblockNode6
+        );
         AProcDecl pdeclNode1 = new AProcDecl (
               tidNode2,
               listNode4,

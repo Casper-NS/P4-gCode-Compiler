@@ -50,12 +50,14 @@ namespace GOAT_Compiler
 
         public void CloseScope()
         {
+            currentScope.VisitCounter = 0;
+            currentScope = currentScope.ParentTable;
+
             if (currentScope.ParentTable == null)
             {
                 buildComplete = true;
             }
-            currentScope.VisitCounter = 0;
-            currentScope = currentScope.ParentTable;
+
         }
 
         public Symbol GetSymbol(string Name)
@@ -66,6 +68,11 @@ namespace GOAT_Compiler
         public void AddSymbol(string Name, Types type)
         {
             currentScope.SetSymbol(Name, type);
+        }
+
+        public bool IsComplete()
+        {
+            return buildComplete;
         }
 
     }

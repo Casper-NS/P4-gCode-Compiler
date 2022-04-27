@@ -32,5 +32,7 @@ namespace GOAT_Compiler
         /// <param name="Type">The type of the symbol</param>
         /// <exception cref="ArgumentException">Exception that is thrown if there is a duplicate definition.</exception>
         public void AddSymbol(string Name, Types Type);
+
+        public bool IsComplete();
     }
 }

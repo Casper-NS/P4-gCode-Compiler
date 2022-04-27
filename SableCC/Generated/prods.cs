@@ -1140,6 +1140,84 @@ public sealed class AStmtlistBlock : PBlock
         }
     }
 }
+public sealed class ANoneBlock : PBlock
+{
+    private PBlock _block_;
+
+    public ANoneBlock ()
+    {
+    }
+
+    public ANoneBlock (
+            PBlock _block_
+    )
+    {
+        SetBlock (_block_);
+    }
+
+    public override Object Clone()
+    {
+        return new ANoneBlock (
+            (PBlock)CloneNode (_block_)
+        );
+    }
+
+    public override void Apply(Switch sw)
+    {
+        ((Analysis) sw).CaseANoneBlock(this);
+    }
+
+    public PBlock GetBlock ()
+    {
+        return _block_;
+    }
+
+    public void SetBlock (PBlock node)
+    {
+        if(_block_ != null)
+        {
+            _block_.Parent(null);
+        }
+
+        if(node != null)
+        {
+            if(node.Parent() != null)
+            {
+                node.Parent().RemoveChild(node);
+            }
+
+            node.Parent(this);
+        }
+
+        _block_ = node;
+    }
+
+    public override string ToString()
+    {
+        return ""
+            + ToString (_block_)
+        ;
+    }
+
+    internal override void RemoveChild(Node child)
+    {
+        if ( _block_ == child )
+        {
+            _block_ = null;
+            return;
+        }
+    }
+
+    internal override void ReplaceChild(Node oldChild, Node newChild)
+    {
+        if ( _block_ == oldChild )
+        {
+            SetBlock ((PBlock) newChild);
+            return;
+        }
+    }
+
+}
 public sealed class ABuildBlock : PBlock
 {
     private PBlock _block_;
