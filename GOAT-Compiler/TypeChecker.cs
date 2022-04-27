@@ -27,5 +27,24 @@ namespace GOAT_Compiler
         {
             _typeDictionary.Add(node, _symbolTable.GetSymbol(node.GetNumber().Text).type);
         }
+
+        public override void OutAMinusExp(AMinusExp node)
+        {
+            Types left = _typeDictionary[node.GetL()];
+            Types right = _typeDictionary[node.GetR()];
+            if (left != right)
+            {
+                throw new Exception("Type mismatch");
+            }
+        }
+
+        public override void OutABoolvalExp(ABoolvalExp node)
+        {
+            Types type = _symbolTable.GetSymbol(node.GetBoolValue().Text).type;
+            if (type != Types.Boolean)
+            {
+                throw new Exception("Type mismatch");
+            }
+        }
     }
 }
