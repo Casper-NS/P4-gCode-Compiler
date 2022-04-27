@@ -5,10 +5,9 @@ using System.Collections.Generic;
 
 namespace GOAT_Compiler
 {
-    internal class SymbolTableBuilder : DepthFirstAdapter
+    internal class SymbolTableBuilder : SymbolTableVisitor
     {
         
-        private ISymbolTable _symboltable;
 
         /// <summary>
         /// The dictionary that stores the name of the type, that a variable or function declaration, is stored.
@@ -19,9 +18,8 @@ namespace GOAT_Compiler
         /// The constructor for the SymbolTableBuilder
         /// </summary>
         /// <param name="IST">The instance of the symboltable</param>
-        internal SymbolTableBuilder(ISymbolTable IST)
+        internal SymbolTableBuilder(ISymbolTable IST) : base(IST)
         {
-            _symboltable = IST;
         }
 
         /// <summary>
@@ -51,75 +49,23 @@ namespace GOAT_Compiler
 
         public override void OutAVarDecl(AVarDecl node)
         {
-            _symboltable.AddSymbol(node.GetId().Text, _processTypeOfNode(node.GetTypes()));
+            _symbolTable.AddSymbol(node.GetId().Text, _processTypeOfNode(node.GetTypes()));
         }
 
         public override void OutAParamDecl(AParamDecl node)
         {
-            _symboltable.AddSymbol(node.GetId().Text, _processTypeOfNode(node.GetTypes()));
-        }
-
-        public override void InADeclProgram(ADeclProgram node)
-        {
-            _symboltable.OpenScope();
-        }
-
-        public override void OutADeclProgram(ADeclProgram node)
-        {
-            _symboltable.CloseScope();
-        }
-
-        public override void InAFuncDecl(AFuncDecl node)
-        {
-            _symboltable.OpenScope();
-        }
-        public override void OutAFuncDecl(AFuncDecl node)
-        {
-            _symboltable.CloseScope();
-            _symboltable.AddSymbol(node.GetId().Text, _processTypeOfNode(node.GetTypes()));
-        }
-
-        public override void InAProcDecl(AProcDecl node)
-        {
-            _symboltable.OpenScope();
-        }
-
-        public override void OutAProcDecl(AProcDecl node)
-        {
-            _symboltable.CloseScope();
-            _symboltable.AddSymbol(node.GetId().Text, Types.Void);
+            _symbolTable.AddSymbol(node.GetId().Text, _processTypeOfNode(node.GetTypes()));
         }
 
 
-        /// <summary>
-        /// Function to check whether the grandparent of the node is a function or a procedure.
-        /// </summary>
-        /// <param name="node">The node whose grandparent is checked</param>
-        /// <returns>Returns true or false depending on if is a function or a procedure</returns>
-        private bool GrandParentChecker(Node node)
+        public override void OutsideScopeOutAFuncDecl(AFuncDecl node)
         {
-            Node GrandParent = node.Parent().Parent();
-            if (GrandParent is AProcDecl || GrandParent is AFuncDecl)
-            {
-                return false;
-            }
-            return true;
+            _symbolTable.AddSymbol(node.GetId().Text, _processTypeOfNode(node.GetTypes()));
         }
 
-        public override void InAStmtlistBlock(AStmtlistBlock node)
+        public override void OutsideScopeOutAProcDecl(AProcDecl node)
         {
-            if (GrandParentChecker(node))
-            {
-                _symboltable.OpenScope();
-            }
-        }
-
-        public override void OutAStmtlistBlock(AStmtlistBlock node)
-        {
-            if (GrandParentChecker(node))
-            {
-                _symboltable.CloseScope();
-            }
+            _symbolTable.AddSymbol(node.GetId().Text, Types.Void);
         }
 
         /// <summary>

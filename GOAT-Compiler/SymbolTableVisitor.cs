@@ -84,7 +84,7 @@ namespace GOAT_Compiler
         public sealed override void InAStmtlistBlock(AStmtlistBlock node)
         {
             OutsideScopeInAStmtlistBlock(node);
-            if (!IsFunctionBodyStmtList(node))
+            if (GrandParentChecker(node))
             {
                 _symbolTable.OpenScope();
             }
@@ -97,9 +97,9 @@ namespace GOAT_Compiler
         public sealed override void OutAStmtlistBlock(AStmtlistBlock node)
         {
             InsideScopeOutAStmtlistBlock(node);
-            if (!IsFunctionBodyStmtList(node))
+            if (GrandParentChecker(node))
             {
-                _symbolTable.OpenScope();
+                _symbolTable.CloseScope();
             }
             OutsideScopeInAStmtlistBlock(node);
         }
@@ -107,21 +107,20 @@ namespace GOAT_Compiler
         public virtual void OutsideScopeOutAStmtlistBlock(AStmtlistBlock node) { }
 
 
-
-
-
-
-        private bool IsFunctionBodyStmtList(AStmtlistBlock stmtList)
+        /// <summary>
+        /// Function to check whether the grandparent of the node is a function or a procedure.
+        /// </summary>
+        /// <param name="node">The node whose grandparent is checked</param>
+        /// <returns>Returns true or false depending on if is a function or a procedure</returns>
+        private bool GrandParentChecker(Node node)
         {
-            Node grandParent = stmtList.Parent().Parent();
-            if (grandParent is not AProcDecl)
+            Node GrandParent = node.Parent().Parent();
+            if (GrandParent is AProcDecl || GrandParent is AFuncDecl)
             {
-                if (grandParent is not AFuncDecl)
-                {
-                    return false;
-                }
+                return false;
             }
             return true;
         }
+
     }
 }
