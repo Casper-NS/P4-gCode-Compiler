@@ -156,7 +156,7 @@ cst_function_declaration {-> decl} =
             {-> New decl.func(cst_types.types, id, [cst_formal_param_list.decl], New block.walk(cst_block.block))}
                     
       | {notvoidnone} cst_types id l_par cst_formal_param_list? r_par eol? cst_block 
-            {-> New decl.func(cst_types.types, id, [cst_formal_param_list.decl], cst_block.block)}
+            {-> New decl.func(cst_types.types, id, [cst_formal_param_list.decl], New block.none(cst_block.block))}
 
       | {voidbuild} build void id l_par cst_formal_param_list? r_par eol? cst_block 
             {-> New decl.proc(id, [cst_formal_param_list.decl], New block.build(cst_block.block))}
@@ -165,7 +165,7 @@ cst_function_declaration {-> decl} =
             {-> New decl.proc(id, [cst_formal_param_list.decl], New block.walk(cst_block.block))}
 
       | {voidnone} void id l_par cst_formal_param_list? r_par eol? cst_block 
-            {-> New decl.proc(id, [cst_formal_param_list.decl], cst_block.block)};
+            {-> New decl.proc(id, [cst_formal_param_list.decl], New block.none(cst_block.block))};
 
 
 
@@ -400,6 +400,7 @@ types =
 
 block = 
   {stmtlist} stmt*
+| {none} block
 | {build} block 
 | {walk} block;
 

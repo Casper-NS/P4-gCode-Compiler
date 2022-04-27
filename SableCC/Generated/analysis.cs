@@ -25,6 +25,7 @@ public interface Analysis : Switch
     void CaseABoolTypes(ABoolTypes node);
     void CaseAVectorTypes(AVectorTypes node);
     void CaseAStmtlistBlock(AStmtlistBlock node);
+    void CaseANoneBlock(ANoneBlock node);
     void CaseABuildBlock(ABuildBlock node);
     void CaseAWalkBlock(AWalkBlock node);
     void CaseADeclStmt(ADeclStmt node);
@@ -209,6 +210,10 @@ public class AnalysisAdapter : Analysis
         DefaultCase(node);
     }
     public virtual void CaseAStmtlistBlock(AStmtlistBlock node)
+    {
+        DefaultCase(node);
+    }
+    public virtual void CaseANoneBlock(ANoneBlock node)
     {
         DefaultCase(node);
     }
@@ -798,6 +803,25 @@ public class DepthFirstAdapter : AnalysisAdapter
             }
         }
         OutAStmtlistBlock(node);
+    }
+    public virtual void InANoneBlock(ANoneBlock node)
+    {
+        DefaultIn(node);
+    }
+
+    public virtual void OutANoneBlock(ANoneBlock node)
+    {
+        DefaultOut(node);
+    }
+
+    public override void CaseANoneBlock(ANoneBlock node)
+    {
+        InANoneBlock(node);
+        if(node.GetBlock() != null)
+        {
+            node.GetBlock().Apply(this);
+        }
+        OutANoneBlock(node);
     }
     public virtual void InABuildBlock(ABuildBlock node)
     {
@@ -1885,6 +1909,25 @@ public class ReversedDepthFirstAdapter : AnalysisAdapter
             }
         }
         OutAStmtlistBlock(node);
+    }
+    public virtual void InANoneBlock(ANoneBlock node)
+    {
+        DefaultIn(node);
+    }
+
+    public virtual void OutANoneBlock(ANoneBlock node)
+    {
+        DefaultOut(node);
+    }
+
+    public override void CaseANoneBlock(ANoneBlock node)
+    {
+        InANoneBlock(node);
+        if(node.GetBlock() != null)
+        {
+            node.GetBlock().Apply(this);
+        }
+        OutANoneBlock(node);
     }
     public virtual void InABuildBlock(ABuildBlock node)
     {
