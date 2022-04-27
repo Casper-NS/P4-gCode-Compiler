@@ -100,5 +100,32 @@ namespace GOAT_Compiler
         {
             ExpressionTypeChecker(node.GetL(), node.GetR(), node);
         }
+
+        public override void OutAOrExp(AOrExp node)
+        {
+            ExpressionTypeChecker(node.GetL(), node.GetR(), node);
+        }
+
+        public override void OutAGeqExp(AGeqExp node)
+        {
+            ExpressionTypeChecker(node.GetL(), node.GetR(), node);
+        }
+
+        public override void OutAGtExp(AGtExp node)
+        {
+            ExpressionTypeChecker(node.GetL(), node.GetR(), node);
+        }
+        public override void OutALtExp(ALtExp node)
+        {
+            ExpressionTypeChecker(node.GetL(), node.GetR(), node);
+        }
+        public override void OutALeqExp(ALeqExp node)
+        {
+            ExpressionTypeChecker(node.GetL(), node.GetR(), node);
+        }
+        public override void OutANeqExp(ANeqExp node)
+        {
+            ExpressionTypeChecker(node.GetL(), node.GetR(), node);
+        }
     }
 }
