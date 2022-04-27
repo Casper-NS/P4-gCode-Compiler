@@ -13,7 +13,16 @@ namespace GOAT_Compiler
         public TypeChecker(ISymbolTable symbolTable) : base(symbolTable)
         {
         }
-
+        private void ExpressionTypeChecker(Node left, Node right, Node current)
+        {
+            Types leftType = _typeDictionary[left];
+            Types rightType = _typeDictionary[right];
+            if (Convert(left, rightType) != Convert(right, leftType))
+            {
+                throw new Exception("Type mismatch");
+            }
+            _typeDictionary.Add(current, leftType);
+        }
         public Types numberType(string numberToken)
         {
             if (numberToken.Contains("."))
@@ -26,31 +35,21 @@ namespace GOAT_Compiler
             }
         }
 
-        public override void OutAPlusExp(APlusExp node)
-        {
-            Types left = _typeDictionary[node.GetL()];
-            Types right = _typeDictionary[node.GetR()];
-            if (left != right)
-            {
-                throw new Exception("Type mismatch");
-            }
-        }
         public override void OutANumberExp(ANumberExp node)
         {
             _typeDictionary.Add(node, numberType(node.GetNumber().Text));
         }
 
+        public override void OutAPlusExp(APlusExp node)
+        {
+            ExpressionTypeChecker(node.GetL(), node.GetR(), node);
+        }
+
         public override void OutAMinusExp(AMinusExp node)
         {
-            Types left = _typeDictionary[node.GetL()];
-            Types right = _typeDictionary[node.GetR()];
-            if (Convert(node.GetL(), right) != Convert(node.GetR(), left))
-            {
-                throw new Exception("Type mismatch");
-            }
-            _typeDictionary.Add(node, left);
+            ExpressionTypeChecker(node.GetL(), node.GetR(), node);
         }
-        
+
         private Types Convert(Node n, Types t)
         {
             if(_typeDictionary[n] == t)
@@ -75,6 +74,31 @@ namespace GOAT_Compiler
                 throw new Exception("Type mismatch");
             }
             _typeDictionary.Add(node, type);
+        }
+
+        public override void OutAAndExp(AAndExp node)
+        {
+            ExpressionTypeChecker(node.GetL(), node.GetR(), node);
+        }
+
+        public override void OutAEqExp(AEqExp node)
+        {
+            ExpressionTypeChecker(node.GetL(), node.GetR(), node);
+        }
+
+        public override void OutAModuloExp(AModuloExp node)
+        {
+            ExpressionTypeChecker(node.GetL(), node.GetR(), node);
+        }
+
+        public override void OutAMultExp(AMultExp node)
+        {
+            ExpressionTypeChecker(node.GetL(), node.GetR(), node);
+        }
+
+        public override void OutADivdExp(ADivdExp node)
+        {
+            ExpressionTypeChecker(node.GetL(), node.GetR(), node);
         }
     }
 }
