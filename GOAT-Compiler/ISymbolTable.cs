@@ -33,6 +33,10 @@ namespace GOAT_Compiler
         /// <exception cref="ArgumentException">Exception that is thrown if there is a duplicate definition.</exception>
         public void AddSymbol(string Name, Types Type);
 
+        /// <summary>
+        /// Checks whether the symbol table has been build.
+        /// </summary>
+        /// <returns>Returns a bool, true if the table has been build and false otherwise</returns>
         public bool IsComplete();
     }
 }
