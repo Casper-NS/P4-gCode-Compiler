@@ -8,12 +8,12 @@ namespace GOAT_Compiler
     internal class SymbolTableBuilder : DepthFirstAdapter
     {
         
-        internal ISymbolTable _symboltable;
+        private ISymbolTable _symboltable;
 
         /// <summary>
         /// The dictionary that stores the name of the type, that a variable or function declaration, is stored.
         /// </summary>
-        internal Dictionary<Node, string> _typeTable = new Dictionary<Node, string>();
+        private Dictionary<Node, string> _typeTable = new Dictionary<Node, string>();
 
         /// <summary>
         /// The constructor for the SymbolTableBuilder
@@ -49,19 +49,15 @@ namespace GOAT_Compiler
             }
         }
 
-        
-
         public override void OutAVarDecl(AVarDecl node)
         {
-            _symboltable.AddSymbol(node.GetId().Text, _processTypeOfNode(node));
+            _symboltable.AddSymbol(node.GetId().Text, _processTypeOfNode(node.GetTypes()));
         }
 
         public override void OutAParamDecl(AParamDecl node)
         {
-            _symboltable.AddSymbol(node.GetId().Text, _processTypeOfNode(node));
+            _symboltable.AddSymbol(node.GetId().Text, _processTypeOfNode(node.GetTypes()));
         }
-
-        
 
         public override void InADeclProgram(ADeclProgram node)
         {
@@ -80,7 +76,7 @@ namespace GOAT_Compiler
         public override void OutAFuncDecl(AFuncDecl node)
         {
             _symboltable.CloseScope();
-            _symboltable.AddSymbol(node.GetId().Text, _processTypeOfNode(node));
+            _symboltable.AddSymbol(node.GetId().Text, _processTypeOfNode(node.GetTypes()));
         }
 
         public override void InAProcDecl(AProcDecl node)
@@ -94,26 +90,35 @@ namespace GOAT_Compiler
             _symboltable.AddSymbol(node.GetId().Text, Types.Void);
         }
 
+
+        /// <summary>
+        /// Function to check whether the grandparent of the node is a function or a procedure.
+        /// </summary>
+        /// <param name="node">The node whose grandparent is checked</param>
+        /// <returns>Returns true or false depending on if is a function or a procedure</returns>
+        private bool GrandParentChecker(Node node)
+        {
+            Node GrandParent = node.Parent().Parent();
+            if (GrandParent is AProcDecl || GrandParent is AFuncDecl)
+            {
+                return false;
+            }
+            return true;
+        }
+
         public override void InAStmtlistBlock(AStmtlistBlock node)
         {
-            if (node.Parent().Parent() is not AProcDecl)
+            if (GrandParentChecker(node))
             {
-                if (node.Parent().Parent() is not AFuncDecl)
-                {
-                    _symboltable.OpenScope();
-                }
+                _symboltable.OpenScope();
             }
         }
 
         public override void OutAStmtlistBlock(AStmtlistBlock node)
         {
-            Node GrandParent = node.Parent().Parent();
-            if (GrandParent is not AProcDecl)
+            if (GrandParentChecker(node))
             {
-                if (GrandParent is not AFuncDecl)
-                {
-                    _symboltable.CloseScope();
-                }
+                _symboltable.CloseScope();
             }
         }
 
@@ -123,7 +128,7 @@ namespace GOAT_Compiler
         /// <param name="node">The given node being anlysed</param>
         public override void OutAIntTypes(AIntTypes node) 
         {
-            _typeTable.Add(node.Parent(), "int");
+            _typeTable.Add(node, "int");
         }
 
         /// <summary>
@@ -132,7 +137,7 @@ namespace GOAT_Compiler
         /// <param name="node">The given node being anlysed</param>
         public override void OutAFloatTypes(AFloatTypes node)
         {
-            _typeTable.Add(node.Parent(), "float");
+            _typeTable.Add(node, "float");
         }
 
         /// <summary>
@@ -141,7 +146,7 @@ namespace GOAT_Compiler
         /// <param name="node">The given node being anlysed</param>
         public override void OutABoolTypes(ABoolTypes node) 
         {
-            _typeTable.Add(node.Parent(), "bool");
+            _typeTable.Add(node, "bool");
         }
 
         /// <summary>
@@ -150,7 +155,7 @@ namespace GOAT_Compiler
         /// <param name="node">The given node being anlysed</param>
         public override void OutAVectorTypes(AVectorTypes node)
         {
-            _typeTable.Add(node.Parent(), "vector");
+            _typeTable.Add(node, "vector");
         }
     }
 }
