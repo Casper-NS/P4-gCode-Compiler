@@ -14,6 +14,18 @@ namespace GOAT_Compiler
         {
         }
 
+        public Types numberType(string numberToken)
+        {
+            if (numberToken.Contains("."))
+            {
+                return Types.FloatingPoint;
+            }
+            else
+            {
+                return Types.Integer;
+            }
+        }
+
         public override void OutAPlusExp(APlusExp node)
         {
             Types left = _typeDictionary[node.GetL()];
@@ -25,19 +37,36 @@ namespace GOAT_Compiler
         }
         public override void OutANumberExp(ANumberExp node)
         {
-            _typeDictionary.Add(node, _symbolTable.GetSymbol(node.GetNumber().Text).type);
+            _typeDictionary.Add(node, numberType(node.GetNumber().Text));
         }
 
         public override void OutAMinusExp(AMinusExp node)
         {
             Types left = _typeDictionary[node.GetL()];
             Types right = _typeDictionary[node.GetR()];
-            if (left != right)
+            if (Convert(node.GetL(), right) != Convert(node.GetR(), left))
+            {
+                throw new Exception("Type mismatch");
+            }
+            _typeDictionary.Add(node, left);
+        }
+        
+        private Types Convert(Node n, Types t)
+        {
+            if(_typeDictionary[n] == t)
+            {
+                return t;
+            }
+            else if (_typeDictionary[n] == Types.Integer && t == Types.FloatingPoint)
+            {
+                return Types.FloatingPoint;
+            }
+            else
             {
                 throw new Exception("Type mismatch");
             }
         }
-
+        
         public override void OutABoolvalExp(ABoolvalExp node)
         {
             Types type = _symbolTable.GetSymbol(node.GetBoolValue().Text).type;
@@ -45,6 +74,7 @@ namespace GOAT_Compiler
             {
                 throw new Exception("Type mismatch");
             }
+            _typeDictionary.Add(node, type);
         }
     }
 }
