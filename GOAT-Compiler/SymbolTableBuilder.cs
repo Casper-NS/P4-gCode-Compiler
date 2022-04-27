@@ -49,6 +49,8 @@ namespace GOAT_Compiler
             }
         }
 
+        
+
         public override void OutAVarDecl(AVarDecl node)
         {
             _symboltable.AddSymbol(node.GetId().Text, _processTypeOfNode(node));
@@ -57,6 +59,18 @@ namespace GOAT_Compiler
         public override void OutAParamDecl(AParamDecl node)
         {
             _symboltable.AddSymbol(node.GetId().Text, _processTypeOfNode(node));
+        }
+
+        
+
+        public override void InADeclProgram(ADeclProgram node)
+        {
+            _symboltable.OpenScope();
+        }
+
+        public override void OutADeclProgram(ADeclProgram node)
+        {
+            _symboltable.CloseScope();
         }
 
         public override void InAFuncDecl(AFuncDecl node)
@@ -82,32 +96,25 @@ namespace GOAT_Compiler
 
         public override void InAStmtlistBlock(AStmtlistBlock node)
         {
-            _symboltable.OpenScope();
+            if (node.Parent().Parent() is not AProcDecl)
+            {
+                if (node.Parent().Parent() is not AFuncDecl)
+                {
+                    _symboltable.OpenScope();
+                }
+            }
         }
 
         public override void OutAStmtlistBlock(AStmtlistBlock node)
         {
-            _symboltable.CloseScope();
-        }
-
-        public override void InABuildBlock(ABuildBlock node)
-        {
-            _symboltable.OpenScope();
-        }
-
-        public override void OutABuildBlock(ABuildBlock node)
-        {
-            _symboltable.CloseScope();
-        }
-
-        public override void InAWalkBlock(AWalkBlock node)
-        {
-            _symboltable.OpenScope();
-        }
-
-        public override void OutAWalkBlock(AWalkBlock node)
-        {
-            _symboltable.CloseScope();
+            Node GrandParent = node.Parent().Parent();
+            if (GrandParent is not AProcDecl)
+            {
+                if (GrandParent is not AFuncDecl)
+                {
+                    _symboltable.CloseScope();
+                }
+            }
         }
 
         /// <summary>
