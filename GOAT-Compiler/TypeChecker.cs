@@ -17,11 +17,42 @@ namespace GOAT_Compiler
         {
             Types leftType = _typeDictionary[left];
             Types rightType = _typeDictionary[right];
-            if (Convert(left, rightType) != Convert(right, leftType))
+            _typeDictionary.Add(current, TypePromoter(leftType, rightType));
+        }
+
+        private Types Convert(Node n, Types t)
+        {
+            if (_typeDictionary[n] == t)
+            {
+                return t;
+            }
+            else if (_typeDictionary[n] == Types.Integer && t == Types.FloatingPoint)
+            {
+                return Types.FloatingPoint;
+            }
+            else
             {
                 throw new Exception("Type mismatch");
             }
-            _typeDictionary.Add(current, leftType);
+        }
+        private Types TypePromoter(Types t1, Types t2)
+        {
+            if (t1 == Types.Integer && t2 == Types.FloatingPoint)
+            {
+                return Types.FloatingPoint;
+            }
+            else if (t1 == Types.FloatingPoint && t2 == Types.Integer)
+            {
+                return Types.FloatingPoint;
+            }
+            else if (t1 == t2)
+            {
+                return t1;
+            }
+            else
+            {
+                throw new Exception("Type mismatch");
+            }
         }
         public Types numberType(string numberToken)
         {
@@ -50,22 +81,6 @@ namespace GOAT_Compiler
             ExpressionTypeChecker(node.GetL(), node.GetR(), node);
         }
 
-        private Types Convert(Node n, Types t)
-        {
-            if(_typeDictionary[n] == t)
-            {
-                return t;
-            }
-            else if (_typeDictionary[n] == Types.Integer && t == Types.FloatingPoint)
-            {
-                return Types.FloatingPoint;
-            }
-            else
-            {
-                throw new Exception("Type mismatch");
-            }
-        }
-        
         public override void OutABoolvalExp(ABoolvalExp node)
         {
             _typeDictionary.Add(node, Types.Boolean);
