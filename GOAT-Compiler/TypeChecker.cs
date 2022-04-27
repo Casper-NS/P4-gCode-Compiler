@@ -68,12 +68,7 @@ namespace GOAT_Compiler
         
         public override void OutABoolvalExp(ABoolvalExp node)
         {
-            Types type = _symbolTable.GetSymbol(node.GetBoolValue().Text).type;
-            if (type != Types.Boolean)
-            {
-                throw new Exception("Type mismatch");
-            }
-            _typeDictionary.Add(node, type);
+            _typeDictionary.Add(node, Types.Boolean);
         }
 
         public override void OutAAndExp(AAndExp node)
