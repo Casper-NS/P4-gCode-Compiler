@@ -1,4 +1,6 @@
-﻿float f()
+﻿float a = f() + f() * f()
+
+float f()
 {
 	return 1
 }
