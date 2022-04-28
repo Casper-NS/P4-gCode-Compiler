@@ -11,9 +11,9 @@ namespace ExtruderCheckerTest
     public class ExtruderCheckerTest
     {
 
-        public Start MakeStartNode()
+        public Start MakeStartNode(string fileName)
         {
-            string filePath = "../../../ExtruderCheckerTests/PushErrorTest.txt";
+            string filePath = "../../../ExtruderCheckerTests/" + fileName;
             StreamReader reader = new StreamReader(filePath);
             Lexer l = new Lexer(reader);
             Parser p = new Parser(l);
@@ -26,10 +26,29 @@ namespace ExtruderCheckerTest
         [Fact]
         public void Test1()
         {
-            Start s = MakeStartNode();
+            Start s = MakeStartNode("PushErrorTest.txt");
             ExtruderChecker checker = MakeExtruderChecker();
 
             Assert.Throws<PushException>(()=> s.Apply(checker));
         }
+
+        [Fact]
+        public void Test2()
+        {
+            Start s = MakeStartNode("PushErrorTest.txt");
+            ExtruderChecker checker = MakeExtruderChecker();
+
+            Assert.Throws<PushException>(() => s.Apply(checker));
+        }
+
+        [Fact]
+        public void Test3()
+        {
+            Start s = MakeStartNode("AdvancedTest.txt");
+            ExtruderChecker checker = MakeExtruderChecker();
+
+            s.Apply(checker);
+        }
+
     }
 }

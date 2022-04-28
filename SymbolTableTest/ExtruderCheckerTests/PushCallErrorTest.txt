@@ -1,0 +1,9 @@
+﻿build void BuildFunction()
+{
+	build buildScope()
+}
+
+walk void WalkFunction()
+{
+	Buildfunction()
+}
