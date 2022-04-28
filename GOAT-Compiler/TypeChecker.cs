@@ -335,5 +335,16 @@ namespace GOAT_Compiler
             Symbol id = _symbolTable.GetSymbol(node.GetId().Text);
             _typeDictionary.Add(node, id.type);
         }
+
+        public override void OutAFunctionExp(AFunctionExp node)
+        {
+            Symbol id = _symbolTable.GetSymbol(node.GetName().Text);
+            _typeDictionary.Add(node, id.type);
+        }
+        public override void InsideScopeOutAFuncDecl(AFuncDecl node)
+        {
+            Symbol id = _symbolTable.GetSymbol(node.GetId().Text);
+            _typeDictionary.Add(node, id.type);
+        }
     }
 }
