@@ -1,8 +1,9 @@
 ﻿void main()
 {
-	bool a  = true
-
+	bool a = true
+	
 	a = (1 > 4)
+	
 	a = (1 < 4)
 	a = (1 >= 4)
 	a = (1 <= 4)
@@ -11,5 +12,4 @@
 	a = !true
 	a = true && false
 	a = false || true
-
 }

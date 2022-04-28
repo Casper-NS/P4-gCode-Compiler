@@ -44,12 +44,17 @@ namespace SymbolTableTest
         [Theory]
         [InlineData("int a = 3.0")]
         [InlineData("float a = true + 2.3")]
-        [InlineData("vector a = 1")]
         [InlineData("int a\n a += 1.2")]
         [InlineData("int a\n a += (1.0, 1.0, 1.0)")]
         [InlineData("int a\n a += true")]
         [InlineData("float a\n a *= (1.0, 1.0, 1.0)")]
-        [InlineData("float a\n a *= (1.0, 1.0, 1.0)")]
+        [InlineData("vector a = true")]
+        [InlineData("vector a = 1")]
+        [InlineData("vector a = 1.0")]
+        [InlineData("int a = (5, 1 * 3.4 * 2 / 21 + 5 % 2, 0)")]
+        [InlineData("int a = ((0,0,0))")]
+        [InlineData("float a = ((0,0,0))")]
+        [InlineData("int a = 2 > 3")]
 
         public void IsStatementTypedInCorrectly(string stmt)
         {
