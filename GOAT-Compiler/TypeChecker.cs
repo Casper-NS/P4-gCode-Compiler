@@ -114,7 +114,22 @@ namespace GOAT_Compiler
                 throw new TypeMismatchException("Type mismatch");
             }
         }
-
+        public override void OutAVectorExp(AVectorExp node)
+        {
+            Types x = _typeDictionary[node.GetX()];
+            Types y = _typeDictionary[node.GetY()];
+            Types z = _typeDictionary[node.GetZ()];
+            if (Convert(node.GetX(), Types.FloatingPoint) == Types.FloatingPoint 
+                && Convert(node.GetY(), Types.FloatingPoint) == Types.FloatingPoint 
+                && Convert(node.GetZ(), Types.FloatingPoint) == Types.FloatingPoint)
+            {
+                _typeDictionary.Add(node, Types.Vector);
+            }
+            else
+            {
+                throw new TypeMismatchException("Type mismatch");
+            }
+        }
 
 
         public override void OutANumberExp(ANumberExp node)
@@ -249,36 +264,52 @@ namespace GOAT_Compiler
                 _typeDictionary.Add(node, Types.Void);
             }
         }
-
+        
         public override void OutAAssignPlusStmt(AAssignPlusStmt node)
         {
             Symbol id = _symbolTable.GetSymbol(node.GetId().Text);
-            _typeDictionary.Add(node, TypePromoter(id.type, _typeDictionary[node.GetExp()]));
+            _typeDictionary.Add(node, Convert(node.GetExp(), id.type));
         }
         public override void OutAAssignMinusStmt(AAssignMinusStmt node)
         {
             Symbol id = _symbolTable.GetSymbol(node.GetId().Text);
-            _typeDictionary.Add(node, TypePromoter(id.type, _typeDictionary[node.GetExp()]));
+            _typeDictionary.Add(node, Convert(node.GetExp(), id.type));
         }
 
         public override void OutAAssignDivisionStmt(AAssignDivisionStmt node)
         {
             Symbol id = _symbolTable.GetSymbol(node.GetId().Text);
-            _typeDictionary.Add(node, TypePromoter(id.type, _typeDictionary[node.GetExp()]));
+            Types expType = _typeDictionary[node.GetExp()];
+            if (id.type == Types.Vector && (expType == Types.FloatingPoint || expType == Types.Integer))
+            {
+                _typeDictionary.Add(node, id.type);
+            }
+            else
+            {
+                _typeDictionary.Add(node, Convert(node.GetExp(), id.type));
+            }
         }
 
         public override void OutAAssignModStmt(AAssignModStmt node)
         {
             Symbol id = _symbolTable.GetSymbol(node.GetId().Text);
-            _typeDictionary.Add(node, TypePromoter(id.type, _typeDictionary[node.GetExp()]));
+            _typeDictionary.Add(node, Convert(node.GetExp(), id.type));
         }
-
+        
         public override void OutAAssignMultStmt(AAssignMultStmt node)
         {
             Symbol id = _symbolTable.GetSymbol(node.GetId().Text);
-            _typeDictionary.Add(node, TypePromoter(id.type, _typeDictionary[node.GetExp()]));
+            Types expType = _typeDictionary[node.GetExp()];
+            if (id.type == Types.Vector && (expType == Types.FloatingPoint || expType == Types.Integer))
+            {
+            _typeDictionary.Add(node, id.type);
+            }
+            else
+            {
+                _typeDictionary.Add(node, Convert(node.GetExp(), id.type));
+            }
         }
-
+        
         public override void OutANotExp(ANotExp node)
         {
             if (_typeDictionary[node.GetExp()] == Types.Boolean)
@@ -290,7 +321,30 @@ namespace GOAT_Compiler
                 throw new TypeMismatchException("Type mismatch");
             }
         }
+
+        public override void OutAVarDecl(AVarDecl node)
+        {
+            Symbol id = _symbolTable.GetSymbol(node.GetId().Text);
+            if(node.GetExp() != null)
+            {
+                if (Convert(node.GetExp(), id.type) == id.type)
+                {
+                    _typeDictionary.Add(node, id.type);
+                }
+                else
+                {
+                    throw new TypeMismatchException("Type mismatch");
+                }
+            }
+            else
+            {
+                _typeDictionary.Add(node, id.type);
+            }
+        }
+        public override void OutAIdExp(AIdExp node)
+        {
+            Symbol id = _symbolTable.GetSymbol(node.GetId().Text);
+            _typeDictionary.Add(node, id.type);
+        }
     }
 }
-
-        
