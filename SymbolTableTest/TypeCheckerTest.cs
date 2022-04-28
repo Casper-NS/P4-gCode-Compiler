@@ -66,7 +66,7 @@ namespace SymbolTableTest
                 throw new TestDependencyException(e);
             }
             TypeChecker typeChecker = new TypeChecker(symbolTable);
-            s.Apply(typeChecker);
+            Assert.Throws<TypeMismatchException>(() => s.Apply(typeChecker));
         }
 
         [Theory]
