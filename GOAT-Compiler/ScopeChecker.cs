@@ -25,23 +25,7 @@ namespace GOAT_Compiler
 
         public override void OutAIdExp(AIdExp node)
         {
-            Symbol symbol = _symbolTable.GetSymbol(node.GetId().Text);
-
-            if (symbol == null)
-            {
-                throw new RefNotFoundException(node.GetId().Text);
-            }
-
-            if (isDeclared.Contains(symbol) == false)
-            {
-                throw new RefUsedBeforeClosestDeclException(symbol.name);
-            }
-
-            if (isInitialized.Contains(symbol) == false)
-            {
-                throw new VarNotInitializedException(node.GetId().Text);
-            }
-
+            GetAndCheckSymbol(node.GetId().Text);
         }
 
         public override void OutAFunctionExp(AFunctionExp node)
@@ -76,92 +60,37 @@ namespace GOAT_Compiler
 
         public override void OutAAssignPlusStmt(AAssignPlusStmt node)
         {
-            Symbol symbol = _symbolTable.GetSymbol(node.GetId().Text);
-
-            if (symbol == null)
-            {
-                throw new RefNotFoundException(node.GetId().Text);
-            }
-
-            if (isDeclared.Contains(symbol) == false)
-            {
-                throw new RefUsedBeforeClosestDeclException(symbol.name);
-            }
-
-            if (isInitialized.Contains(symbol) == false)
-            {
-                throw new VarNotInitializedException(node.GetId().Text);
-            }
+            GetAndCheckSymbol(node.GetId().Text);
         }
 
 
         public override void OutAAssignMinusStmt(AAssignMinusStmt node)
         {
-            Symbol symbol = _symbolTable.GetSymbol(node.GetId().Text);
-
-            if (symbol == null)
-            {
-                throw new RefNotFoundException(node.GetId().Text);
-            }
-
-            if (isDeclared.Contains(symbol) == false)
-            {
-                throw new RefUsedBeforeClosestDeclException(symbol.name);
-            }
-
-            if (isInitialized.Contains(symbol) == false)
-            {
-                throw new VarNotInitializedException(node.GetId().Text);
-            }
+            GetAndCheckSymbol(node.GetId().Text);
         }
 
         public override void OutAAssignMultStmt(AAssignMultStmt node)
         {
-            Symbol symbol = _symbolTable.GetSymbol(node.GetId().Text);
-
-            if (symbol == null)
-            {
-                throw new RefNotFoundException(node.GetId().Text);
-            }
-
-            if (isDeclared.Contains(symbol) == false)
-            {
-                throw new RefUsedBeforeClosestDeclException(symbol.name);
-            }
-
-            if (isInitialized.Contains(symbol) == false)
-            {
-                throw new VarNotInitializedException(node.GetId().Text);
-            }
+            GetAndCheckSymbol(node.GetId().Text);
         }
 
         public override void OutAAssignModStmt(AAssignModStmt node)
         {
-            Symbol symbol = _symbolTable.GetSymbol(node.GetId().Text);
-
-            if (symbol == null)
-            {
-                throw new RefNotFoundException(node.GetId().Text);
-            }
-
-            if (isDeclared.Contains(symbol) == false)
-            {
-                throw new RefUsedBeforeClosestDeclException(symbol.name);
-            }
-
-            if (isInitialized.Contains(symbol) == false)
-            {
-                throw new VarNotInitializedException(node.GetId().Text);
-            }
+            GetAndCheckSymbol(node.GetId().Text);
         }
 
         public override void OutAAssignDivisionStmt(AAssignDivisionStmt node)
         {
-            Symbol symbol = _symbolTable.GetSymbol(node.GetId().Text);
+            GetAndCheckSymbol(node.GetId().Text);
+        }
+
+        private void GetAndCheckSymbol(string SymName)
+        {
+            Symbol symbol = _symbolTable.GetSymbol(SymName);
 
             if (symbol == null)
             {
-                throw new RefNotFoundException(node.GetId().Text);
+                throw new RefNotFoundException(SymName);
             }
 
             if (isDeclared.Contains(symbol) == false)
@@ -171,7 +100,7 @@ namespace GOAT_Compiler
 
             if (isInitialized.Contains(symbol) == false)
             {
-                throw new VarNotInitializedException(node.GetId().Text);
+                throw new VarNotInitializedException(SymName);
             }
         }
 
