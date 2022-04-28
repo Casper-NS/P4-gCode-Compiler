@@ -272,6 +272,7 @@ namespace GOAT_Compiler
         public override void OutAAssignMinusStmt(AAssignMinusStmt node)
         {
             Symbol id = _symbolTable.GetSymbol(node.GetId().Text);
+
             _typeDictionary.Add(node, Convert(node.GetExp(), id.type));
         }
 
