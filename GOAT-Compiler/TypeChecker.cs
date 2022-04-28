@@ -19,7 +19,7 @@ namespace GOAT_Compiler
             Types rightType = _typeDictionary[right];
             _typeDictionary.Add(current, TypePromoter(leftType, rightType));
         }
-        
+
         private void EqelNotEqel(Node left, Node right, Node current)
         {
             Types leftType = _typeDictionary[left];
@@ -42,7 +42,7 @@ namespace GOAT_Compiler
                 throw new TypeMismatchException("Type mismatch");
             }
         }
-        
+
         private void AndAndOr(Node nodeleft, Node nodeRight, Node current)
         {
             Types leftType = _typeDictionary[nodeleft];
@@ -237,7 +237,7 @@ namespace GOAT_Compiler
                 _typeDictionary.Add(node, Types.Void);
             }
         }
-        
+
         public override void OutAWhileStmt(AWhileStmt node)
         {
             if (_typeDictionary[node.GetExp()] != Types.Boolean)
@@ -278,4 +278,7 @@ namespace GOAT_Compiler
             Symbol id = _symbolTable.GetSymbol(node.GetId().Text);
             _typeDictionary.Add(node, TypePromoter(id.type, _typeDictionary[node.GetExp()]));
         }
+    }
+}
+
         
