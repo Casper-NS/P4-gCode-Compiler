@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 17
-VisualStudioVersion = 17.1.32328.378
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.31729.503
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "P4-GCode-Compiler", "P4-GCode-Compiler\P4-GCode-Compiler.csproj", "{23AA1954-60E9-4D2B-B278-993386F719DC}"
 EndProject
@@ -13,7 +13,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PrettyPrintATestFile", "Pre
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GOAT-Compiler", "GOAT-Compiler\GOAT-Compiler.csproj", "{E712681C-7379-44E7-8090-37A12F0A0166}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SymbolTableTest", "SymbolTableTest\SymbolTableTest.csproj", "{B81D6782-FD9B-4628-8472-5D6E17699A8B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SymbolTableTest", "SymbolTableTest\SymbolTableTest.csproj", "{B81D6782-FD9B-4628-8472-5D6E17699A8B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
