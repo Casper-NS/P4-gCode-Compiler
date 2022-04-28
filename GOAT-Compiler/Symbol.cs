@@ -18,13 +18,23 @@ namespace GOAT_Compiler
 
     internal class Symbol
     {
+        private List<Types> types = new List<Types>();
         public string name { get; private set; }
-        public Types type { get; private set; }
+        public Types type { get => types[0]; private set => types.Add(value); }
 
-        public Symbol(string Name, Types Type)
+        public Symbol(string Name, Types Type, params Types[] paramTypes)
         {
             name = Name;
             type = Type;
+            if (paramTypes.Length != 0)
+            {
+                types.AddRange(paramTypes);
+            }
+        }
+
+        public List<Types> GetParamTypes()
+        {
+            return types.GetRange(1, types.Count);
         }
 
     }

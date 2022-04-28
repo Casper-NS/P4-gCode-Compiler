@@ -30,8 +30,9 @@ namespace GOAT_Compiler
         /// </summary>
         /// <param name="Name">The name of the symbol</param>
         /// <param name="Type">The type of the symbol</param>
+        /// <param name="paramTypes">The type of the formal parameters in case it is a function being added</param>
         /// <exception cref="ArgumentException">Exception that is thrown if there is a duplicate definition.</exception>
-        public void AddSymbol(string Name, Types Type);
+        public void AddSymbol(string Name, Types Type, params Types[] paramTypes);
 
         /// <summary>
         /// Checks whether the symbol table has been build.
