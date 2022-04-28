@@ -19,12 +19,12 @@ namespace PrettyPrintATestFile
         public static void Print()
         {
             string filePath = PrettyPrintCorrectFile.GetFilePath();
-            StreamReader reader = new StreamReader(filePath);
+            StreamReader reader = new StreamReader("../../../../SymbolTableTest/ScopeTestFiles/RefNotFoundTest-var.txt");
             Lexer l = new Lexer(reader);
             Parser p = new Parser(l);
             Start s = p.Parse();
             TextPrinter printer = new TextPrinter();
-            printer.SetColor(true);
+            //printer.SetColor(true);
             s.Apply(printer);
         }
     }
