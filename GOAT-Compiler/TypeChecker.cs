@@ -254,10 +254,6 @@ namespace GOAT_Compiler
             {
                 throw new TypeMismatchException("Type mismatch");
             }
-            else
-            {
-                _typeDictionary.Add(node, Types.Void);
-            }
         }
 
         public override void OutARepeatStmt(ARepeatStmt node)
@@ -265,10 +261,6 @@ namespace GOAT_Compiler
             if (_typeDictionary[node.GetExp()] != Types.Integer)
             {
                 throw new TypeMismatchException("Type mismatch");
-            }
-            else
-            {
-                _typeDictionary.Add(node, Types.Void);
             }
         }
 
