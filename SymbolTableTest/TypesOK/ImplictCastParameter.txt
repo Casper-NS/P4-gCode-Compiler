@@ -1,0 +1,4 @@
+﻿void f(float f)
+{
+	f(2)
+}
