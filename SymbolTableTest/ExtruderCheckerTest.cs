@@ -10,16 +10,24 @@ namespace ExtruderCheckerTest
 {
     public class ExtruderCheckerTest
     {
-        [Fact]
-        public void Test1()
+
+        public Start MakeStartNode()
         {
             string filePath = "../../../ExtruderCheckerTests/PushErrorTest.txt";
             StreamReader reader = new StreamReader(filePath);
             Lexer l = new Lexer(reader);
             Parser p = new Parser(l);
             Start s = p.Parse();
-            ISymbolTable symbolTable = new RecSymbolTable();
-            ExtruderChecker checker = new ExtruderChecker(symbolTable);
+            return s;
+            
+        }
+        internal static ExtruderChecker MakeExtruderChecker() => new(new RecSymbolTable());
+
+        [Fact]
+        public void Test1()
+        {
+            Start s = MakeStartNode();
+            ExtruderChecker checker = MakeExtruderChecker();
 
             Assert.Throws<PushException>(()=> s.Apply(checker));
         }
