@@ -41,6 +41,34 @@ namespace SymbolTableTest
             TypeChecker typeChecker = new TypeChecker(symbolTable);
             s.Apply(typeChecker);
         }
+
+        [Theory]
+        [ClassData(typeof(WrongFilesEnumerator))]
+        public void IsTypedIncorrectly(string file)
+        {
+            Start s;
+            ISymbolTable symbolTable;
+            try
+            {
+                StreamReader reader = new StreamReader(file);
+                Lexer l = new Lexer(reader);
+                Parser p = new Parser(l);
+                s = p.Parse();
+
+                symbolTable = new RecSymbolTable();
+                SymbolTableBuilder symbolTableBuilder = new SymbolTableBuilder(symbolTable);
+
+                s.Apply(symbolTableBuilder);
+            }
+            catch (Exception e)
+            {
+
+                throw new TestDependencyException(e);
+            }
+            TypeChecker typeChecker = new TypeChecker(symbolTable);
+            s.Apply(typeChecker);
+        }
+
         [Theory]
         [InlineData("int a = 3.0")]
         [InlineData("float a = true + 2.3")]
@@ -53,7 +81,8 @@ namespace SymbolTableTest
         [InlineData("vector a = 1.0")]
         [InlineData("int a = (5, 1 * 3.4 * 2 / 21 + 5 % 2, 0)")]
         [InlineData("int a = ((0,0,0))")]
-        [InlineData("float a = ((0,0,0))")]
+        [InlineData("float a = (0,0,0)")]
+        [InlineData("int a = (0.0)")]
         [InlineData("int a = 2 > 3")]
 
         public void IsStatementTypedInCorrectly(string stmt)
