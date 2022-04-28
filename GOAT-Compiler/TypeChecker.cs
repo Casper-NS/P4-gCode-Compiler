@@ -278,6 +278,18 @@ namespace GOAT_Compiler
             Symbol id = _symbolTable.GetSymbol(node.GetId().Text);
             _typeDictionary.Add(node, TypePromoter(id.type, _typeDictionary[node.GetExp()]));
         }
+
+        public override void OutANotExp(ANotExp node)
+        {
+            if (_typeDictionary[node.GetExp()] == Types.Boolean)
+            {
+                _typeDictionary.Add(node, Types.Boolean);
+            }
+            else
+            {
+                throw new TypeMismatchException("Type mismatch");
+            }
+        }
     }
 }
 
