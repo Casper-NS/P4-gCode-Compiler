@@ -43,7 +43,7 @@ namespace SymbolTableTest
             ScopeChecker scopeChecker = new ScopeChecker(symTab);
             Start s = p.Parse();
             s.Apply(builder);
-            Assert.Throws<RefUsedBeforeClosestDecl>(() => s.Apply(scopeChecker));
+            Assert.Throws<RefUsedBeforeClosestDeclException>(() => s.Apply(scopeChecker));
         }
 
         [Theory]
@@ -59,6 +59,21 @@ namespace SymbolTableTest
             Start s = p.Parse();
             s.Apply(builder);
             Assert.Throws<RefNotFoundException>(() => s.Apply(scopeChecker));
+        }
+
+        [Theory]
+        [ClassData(typeof(NotInitializedFilesEnumerator))]
+        public void Test_VarNotInitialized_Exception(string filepath)
+        {
+            ISymbolTable symTab = new RecSymbolTable();
+            StreamReader reader = new StreamReader(filepath);
+            Lexer l = new Lexer(reader);
+            Parser p = new Parser(l);
+            SymbolTableBuilder builder = new SymbolTableBuilder(symTab);
+            ScopeChecker scopeChecker = new ScopeChecker(symTab);
+            Start s = p.Parse();
+            s.Apply(builder);
+            Assert.Throws<VarNotInitializedException>(() => s.Apply(scopeChecker));
         }
 
 
@@ -100,6 +115,18 @@ namespace SymbolTableTest
             public IEnumerator<object[]> GetEnumerator()
             {
                 foreach (var filePath in GetTestFilesRecursively("../../../../SymbolTableTest/ScopeTestFiles/RefNotFound"))
+                {
+                    yield return filePath;
+                }
+            }
+            IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
+        }
+
+        private class NotInitializedFilesEnumerator : IEnumerable<object[]>
+        {
+            public IEnumerator<object[]> GetEnumerator()
+            {
+                foreach (var filePath in GetTestFilesRecursively("../../../../SymbolTableTest/ScopeTestFiles/VarNotInitialized"))
                 {
                     yield return filePath;
                 }

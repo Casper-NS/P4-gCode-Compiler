@@ -7,6 +7,7 @@ namespace GOAT_Compiler
     class ScopeChecker : SymbolTableVisitor
     {
         private HashSet<Symbol> isDeclared = new HashSet<Symbol>();
+        private HashSet<Symbol> isInitialized = new HashSet<Symbol>();
 
         public ScopeChecker(ISymbolTable symbolTable) : base(symbolTable)
         {
@@ -16,6 +17,10 @@ namespace GOAT_Compiler
         {
             Symbol symbol = _symbolTable.GetSymbol(node.GetId().Text);
             isDeclared.Add(symbol);
+            if (node.GetExp() != null)
+            {
+                isInitialized.Add(symbol);
+            }
         }
 
         public override void OutAIdExp(AIdExp node)
@@ -29,8 +34,14 @@ namespace GOAT_Compiler
 
             if (isDeclared.Contains(symbol) == false)
             {
-                throw new RefUsedBeforeClosestDecl(symbol.name);
+                throw new RefUsedBeforeClosestDeclException(symbol.name);
             }
+
+            if (isInitialized.Contains(symbol) == false)
+            {
+                throw new VarNotInitializedException(node.GetId().Text);
+            }
+
         }
 
         public override void OutAFunctionExp(AFunctionExp node)
@@ -54,7 +65,12 @@ namespace GOAT_Compiler
 
             if (isDeclared.Contains(symbol) == false)
             {
-                throw new RefUsedBeforeClosestDecl(symbol.name);
+                throw new RefUsedBeforeClosestDeclException(symbol.name);
+            }
+
+            if (isInitialized.Contains(symbol) == false)
+            {
+                isInitialized.Add(symbol);
             }
         }
 
@@ -69,7 +85,12 @@ namespace GOAT_Compiler
 
             if (isDeclared.Contains(symbol) == false)
             {
-                throw new RefUsedBeforeClosestDecl(symbol.name);
+                throw new RefUsedBeforeClosestDeclException(symbol.name);
+            }
+
+            if (isInitialized.Contains(symbol) == false)
+            {
+                throw new VarNotInitializedException(node.GetId().Text);
             }
         }
 
@@ -85,7 +106,12 @@ namespace GOAT_Compiler
 
             if (isDeclared.Contains(symbol) == false)
             {
-                throw new RefUsedBeforeClosestDecl(symbol.name);
+                throw new RefUsedBeforeClosestDeclException(symbol.name);
+            }
+
+            if (isInitialized.Contains(symbol) == false)
+            {
+                throw new VarNotInitializedException(node.GetId().Text);
             }
         }
 
@@ -100,7 +126,12 @@ namespace GOAT_Compiler
 
             if (isDeclared.Contains(symbol) == false)
             {
-                throw new RefUsedBeforeClosestDecl(symbol.name);
+                throw new RefUsedBeforeClosestDeclException(symbol.name);
+            }
+
+            if (isInitialized.Contains(symbol) == false)
+            {
+                throw new VarNotInitializedException(node.GetId().Text);
             }
         }
 
@@ -115,7 +146,12 @@ namespace GOAT_Compiler
 
             if (isDeclared.Contains(symbol) == false)
             {
-                throw new RefUsedBeforeClosestDecl(symbol.name);
+                throw new RefUsedBeforeClosestDeclException(symbol.name);
+            }
+
+            if (isInitialized.Contains(symbol) == false)
+            {
+                throw new VarNotInitializedException(node.GetId().Text);
             }
         }
 
@@ -130,7 +166,12 @@ namespace GOAT_Compiler
 
             if (isDeclared.Contains(symbol) == false)
             {
-                throw new RefUsedBeforeClosestDecl(symbol.name);
+                throw new RefUsedBeforeClosestDeclException(symbol.name);
+            }
+
+            if (isInitialized.Contains(symbol) == false)
+            {
+                throw new VarNotInitializedException(node.GetId().Text);
             }
         }
 

@@ -9,8 +9,8 @@ void main()
 
 	build 
 	{
-		float a
-		float b
+		float a = 2
+		float b = 2
 		if(a==b)
 		{
 			int a = 2
