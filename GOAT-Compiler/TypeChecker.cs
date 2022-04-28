@@ -154,7 +154,7 @@ namespace GOAT_Compiler
         {
             Types left = _typeDictionary[node.GetL()];
             Types right = _typeDictionary[node.GetR()];
-            if (left != Types.Vector || left != Types.Boolean && right != Types.Vector || right != Types.Boolean)
+            if ((left == Types.Integer || left == Types.FloatingPoint) && (right == Types.Integer || right == Types.FloatingPoint))
             {
                 ExpressionTypeChecker(node.GetL(), node.GetR(), node);
             }
@@ -168,7 +168,7 @@ namespace GOAT_Compiler
         {
             Types left = _typeDictionary[node.GetL()];
             Types right = _typeDictionary[node.GetR()];
-            if ((left != Types.Vector || left != Types.Boolean) && (right != Types.Vector || right != Types.Boolean))
+            if ((left == Types.Integer || left == Types.FloatingPoint) && (right == Types.Integer || right == Types.FloatingPoint))
             {
                 ExpressionTypeChecker(node.GetL(), node.GetR(), node);
             }
@@ -178,11 +178,11 @@ namespace GOAT_Compiler
             }
         }
 
-        public override void OutADivdExp(ADivdExp node) //Fix so you cant use vectors
+        public override void OutADivdExp(ADivdExp node)
         {
             Types left = _typeDictionary[node.GetL()];
             Types right = _typeDictionary[node.GetR()];
-            if (left != Types.Vector || left != Types.Boolean && right != Types.Vector || right != Types.Boolean)
+            if ((left == Types.Integer || left == Types.FloatingPoint) && (right == Types.Integer || right == Types.FloatingPoint))
             {
                 ExpressionTypeChecker(node.GetL(), node.GetR(), node);
             }
@@ -213,7 +213,7 @@ namespace GOAT_Compiler
             EqelNotEqel(node.GetL(), node.GetR(), node);
         }
 
-        public override void OutAAssignStmt(AAssignStmt node) //Create a type checker that checks a AAsignStmt node's types
+        public override void OutAAssignStmt(AAssignStmt node)
         {
             Symbol id = _symbolTable.GetSymbol(node.GetId().Text);
             if (Convert(node.GetExp(), id.type) == id.type)
@@ -252,8 +252,30 @@ namespace GOAT_Compiler
 
         public override void OutAAssignPlusStmt(AAssignPlusStmt node)
         {
-            base.OutAAssignPlusStmt(node);
+            Symbol id = _symbolTable.GetSymbol(node.GetId().Text);
+            _typeDictionary.Add(node, TypePromoter(id.type, _typeDictionary[node.GetExp()]));
+        }
+        public override void OutAAssignMinusStmt(AAssignMinusStmt node)
+        {
+            Symbol id = _symbolTable.GetSymbol(node.GetId().Text);
+            _typeDictionary.Add(node, TypePromoter(id.type, _typeDictionary[node.GetExp()]));
         }
 
-    }
-}
+        public override void OutAAssignDivisionStmt(AAssignDivisionStmt node)
+        {
+            Symbol id = _symbolTable.GetSymbol(node.GetId().Text);
+            _typeDictionary.Add(node, TypePromoter(id.type, _typeDictionary[node.GetExp()]));
+        }
+
+        public override void OutAAssignModStmt(AAssignModStmt node)
+        {
+            Symbol id = _symbolTable.GetSymbol(node.GetId().Text);
+            _typeDictionary.Add(node, TypePromoter(id.type, _typeDictionary[node.GetExp()]));
+        }
+
+        public override void OutAAssignMultStmt(AAssignMultStmt node)
+        {
+            Symbol id = _symbolTable.GetSymbol(node.GetId().Text);
+            _typeDictionary.Add(node, TypePromoter(id.type, _typeDictionary[node.GetExp()]));
+        }
+        
