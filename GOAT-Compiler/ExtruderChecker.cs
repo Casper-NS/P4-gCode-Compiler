@@ -38,11 +38,11 @@ namespace GOAT_Compiler
 
         }
 
-        private void _popVerificationHelper(Extrude topOfStack, Extrude checker)
+        private void _popVerificationHelper(Extrude checker)
         {
-            if (topOfStack != checker)
+            if (_stack.Peek() != checker)
             {
-                throw new PopException(topOfStack);
+                throw new PopException(_stack.Peek());
             }
             else
             {
@@ -52,27 +52,19 @@ namespace GOAT_Compiler
 
         private void _pushVerificationHelper(Extrude candidate)
         {
-            if (_stack.Peek() == Extrude.Walk)
-            {
-                throw new PushException(candidate);
-            }
-            else
+            if (_stack.Count == 0)
             {
                 _stack.Push(candidate);
             }
+            else if (_stack.Peek() == Extrude.Build)
+            {
+                _stack.Push(candidate);
+            }
+            else
+            {
+                throw new PushException(candidate);
+            }
         }
-
-        public override void OutsideScopeInADeclProgram(ADeclProgram node) 
-        {
-            _stack.Push(Extrude.Build);
-        }
-
-        public override void OutsideScopeOutADeclProgram(ADeclProgram node) 
-        {
-            _popVerificationHelper(_stack.Peek(), Extrude.Build);
-        }
-
-
 
         public override void InABuildBlock(ABuildBlock node)
         {
@@ -81,7 +73,7 @@ namespace GOAT_Compiler
 
         public override void OutABuildBlock(ABuildBlock node)
         {
-            _popVerificationHelper(_stack.Peek(), Extrude.Build);
+            _popVerificationHelper(Extrude.Build);
         }
 
         public override void InABuildExp(ABuildExp node)
@@ -91,7 +83,7 @@ namespace GOAT_Compiler
 
         public override void OutABuildExp(ABuildExp node)
         {
-            _popVerificationHelper(_stack.Peek(), Extrude.Build);
+            _popVerificationHelper(Extrude.Build);
         }
 
         public override void InABuildStmt(ABuildStmt node)
@@ -101,7 +93,7 @@ namespace GOAT_Compiler
 
         public override void OutABuildStmt(ABuildStmt node)
         {
-            _popVerificationHelper(_stack.Peek(), Extrude.Build);
+            _popVerificationHelper(Extrude.Build);
         }
 
         public override void InAWalkBlock(AWalkBlock node)
@@ -111,7 +103,7 @@ namespace GOAT_Compiler
 
         public override void OutAWalkBlock(AWalkBlock node)
         {
-            _popVerificationHelper(_stack.Peek(), Extrude.Walk);
+            _popVerificationHelper(Extrude.Walk);
         }
 
         public override void InAWalkExp(AWalkExp node)
@@ -121,7 +113,7 @@ namespace GOAT_Compiler
 
         public override void OutAWalkExp(AWalkExp node)
         {
-            _popVerificationHelper(_stack.Peek(), Extrude.Walk);
+            _popVerificationHelper(Extrude.Walk);
 
         }
 
@@ -132,7 +124,7 @@ namespace GOAT_Compiler
 
         public override void OutAWalkStmt(AWalkStmt node)
         {
-            _popVerificationHelper(_stack.Peek(), Extrude.Walk);
+            _popVerificationHelper(Extrude.Walk);
         }
     }
 
