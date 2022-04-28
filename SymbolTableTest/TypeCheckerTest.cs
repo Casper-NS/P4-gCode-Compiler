@@ -84,6 +84,12 @@ namespace SymbolTableTest
         [InlineData("float a = (0,0,0)")]
         [InlineData("int a = (0.0)")]
         [InlineData("int a = 2 > 3")]
+        [InlineData("if (1) { int a }")]
+        [InlineData("if (233 + 2) { int a }")]
+        [InlineData("while (1) { int a }")]
+        [InlineData("repeat (true) { int a }")]
+        [InlineData("repeat (32 > 2) { int a }")]
+
 
         public void IsStatementTypedInCorrectly(string stmt)
         {
