@@ -12,6 +12,7 @@ namespace GOAT_Compiler
     /// </summary>
     internal class TypeChecker : SymbolTableVisitor
     {
+        private Types currentFunctionType;
         private Dictionary<Node, Types> _typeDictionary = new Dictionary<Node, Types>();
         
         /// <summary>
@@ -258,7 +259,19 @@ namespace GOAT_Compiler
                 _typeDictionary.Add(node, Types.Void);
             }
         }
-        
+
+        public override void OutARepeatStmt(ARepeatStmt node)
+        {
+            if (_typeDictionary[node.GetExp()] != Types.Integer)
+            {
+                throw new TypeMismatchException("Type mismatch");
+            }
+            else
+            {
+                _typeDictionary.Add(node, Types.Void);
+            }
+        }
+
         public override void OutAAssignPlusStmt(AAssignPlusStmt node)
         {
             Symbol id = _symbolTable.GetSymbol(node.GetId().Text);
@@ -338,10 +351,40 @@ namespace GOAT_Compiler
 
         public override void OutAFunctionExp(AFunctionExp node)
         {
+            System.Collections.IList list = node.GetArgs();
+
             Symbol id = _symbolTable.GetSymbol(node.GetName().Text);
             _typeDictionary.Add(node, id.type);
         }
+        public override void InsideScopeInAFuncDecl(AFuncDecl node)
+        {
+            System.Collections.IList list = node.GetDecl();
+            currentFunctionType = _symbolTable.GetSymbol(node.GetId().Text).type;
+
+        }
+        public override void OutAReturnStmt(AReturnStmt node)
+        {
+            if (currentFunctionType != Convert(node.GetExp(), currentFunctionType))
+            {
+                throw new TypeMismatchException("Type mismatch");
+            }
+            else
+            {
+                _typeDictionary.Add(node, currentFunctionType);
+            }
+        }
+
+
+
+
+
+
         public override void InsideScopeOutAFuncDecl(AFuncDecl node)
+        {
+            Symbol id = _symbolTable.GetSymbol(node.GetId().Text);
+            _typeDictionary.Add(node, id.type);
+        }
+        public override void InsideScopeOutAProcDecl(AProcDecl node)
         {
             Symbol id = _symbolTable.GetSymbol(node.GetId().Text);
             _typeDictionary.Add(node, id.type);
