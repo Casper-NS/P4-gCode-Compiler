@@ -19,24 +19,80 @@ namespace SymbolTableTest
         [ClassData(typeof(CorrectFilesEnumerator))]
         public void IsTypedCorrectly(string file)
         {
-            StreamReader reader = new StreamReader(file);
-            Lexer l = new Lexer(reader);
-            Parser p = new Parser(l);
-            Start s = p.Parse();
+            Start s;
+            ISymbolTable symbolTable;
+            try
+            {
+                StreamReader reader = new StreamReader(file);
+                Lexer l = new Lexer(reader);
+                Parser p = new Parser(l);
+                s = p.Parse();
 
-            ISymbolTable symbolTable = new RecSymbolTable();
-            SymbolTableBuilder symbolTableBuilder = new SymbolTableBuilder(symbolTable);
+                symbolTable = new RecSymbolTable();
+                SymbolTableBuilder symbolTableBuilder = new SymbolTableBuilder(symbolTable);
 
-            s.Apply(symbolTableBuilder);
+                s.Apply(symbolTableBuilder);
+            }
+            catch (Exception e)
+            {
 
+                throw new TestDependencyException(e);
+            }
             TypeChecker typeChecker = new TypeChecker(symbolTable);
             s.Apply(typeChecker);
         }
+        [Theory]
+        [InlineData("int a = 3.0")]
+        [InlineData("float a = true + 2.3")]
+        [InlineData("vector a = 1")]
+        [InlineData("int a\n a += 1.2")]
+        [InlineData("int a\n a += (1.0, 1.0, 1.0)")]
+        [InlineData("int a\n a += true")]
+        [InlineData("float a\n a *= (1.0, 1.0, 1.0)")]
+        [InlineData("float a\n a *= (1.0, 1.0, 1.0)")]
+
+        public void IsStatementTypedInCorrectly(string stmt)
+        {
+            string program = "void main() \n{ \n " + stmt + " \n}";
+            Start s;
+            ISymbolTable symbolTable;
+            try
+            {
+                StringReader reader = new StringReader(program);
+                Lexer l = new Lexer(reader);
+                Parser p = new Parser(l);
+                s = p.Parse();
+
+                symbolTable = new RecSymbolTable();
+                SymbolTableBuilder symbolTableBuilder = new SymbolTableBuilder(symbolTable);
+
+                s.Apply(symbolTableBuilder);
+            }
+            catch (Exception e)
+            {
+
+                throw new TestDependencyException(e);
+            }
+            TypeChecker typeChecker = new TypeChecker(symbolTable);
+            Assert.Throws<TypeMismatchException>(() => s.Apply(typeChecker));
+        }
+
         private class CorrectFilesEnumerator : IEnumerable<object[]>
         {
             public IEnumerator<object[]> GetEnumerator()
             {
                 foreach (var filePath in GetTestFilesRecursively("../../../TypesOK"))
+                {
+                    yield return filePath;
+                }
+            }
+            IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
+        }
+        private class WrongFilesEnumerator : IEnumerable<object[]>
+        {
+            public IEnumerator<object[]> GetEnumerator()
+            {
+                foreach (var filePath in GetTestFilesRecursively("../../../TypesWrong"))
                 {
                     yield return filePath;
                 }
