@@ -1,0 +1,4 @@
+﻿walk void walkFunction()
+{
+	build buildScope()
+}
