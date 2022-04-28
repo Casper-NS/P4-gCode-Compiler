@@ -13,6 +13,22 @@ namespace GOAT_Compiler
         Walk
     };
 
+    internal class PopException : Exception
+    {
+        internal PopException(Extrude e)
+        {
+            Console.WriteLine("Cannot pop " + e);
+        }
+    }
+
+    internal class PushException : Exception
+    {
+        internal PushException(Extrude e)
+        {
+            Console.WriteLine("Cannot push " + e);
+        }
+    }
+
     internal class ExtruderChecker : SymbolTableVisitor
     {
         private Stack<Extrude> _stack = new Stack<Extrude>();
@@ -22,68 +38,101 @@ namespace GOAT_Compiler
 
         }
 
-        public override void OutsideScopeInADeclProgram(ADeclProgram node) { }
-        public override void InsideScopeInADeclProgram(ADeclProgram node) { }
+        private void _popVerificationHelper(Extrude topOfStack, Extrude candidate)
+        {
+            if (topOfStack == candidate)
+            {
+                throw new PopException(topOfStack);
+            }
+            else
+            {
+                _stack.Pop();
+            }
+        }
+
+        private void _pushVerificationHelper(Extrude topOfStack, Extrude candidate)
+        {
+            if (topOfStack == candidate)
+            {
+                throw new PushException(candidate);
+            }
+            else
+            {
+                _stack.Push(candidate);
+            }
+        }
+
+        public override void InsideScopeInADeclProgram(ADeclProgram node) 
+        {
+            _stack.Push(Extrude.Build);
+        }
+
+
+        public override void OutsideScopeInADeclProgram(ADeclProgram node) 
+        {
+            _popVerificationHelper(_stack.Peek(), Extrude.Build);
+        }
 
 
         public override void InABuildBlock(ABuildBlock node)
         {
-            DefaultIn(node);
+            _pushVerificationHelper(_stack.Peek(), Extrude.Walk);
         }
 
         public override void OutABuildBlock(ABuildBlock node)
         {
-            DefaultOut(node);
+            _popVerificationHelper(_stack.Peek(), Extrude.Walk);
         }
 
         public override void InABuildExp(ABuildExp node)
         {
-            DefaultIn(node);
+            _pushVerificationHelper(_stack.Peek(), Extrude.Walk);
         }
 
         public override void OutABuildExp(ABuildExp node)
         {
-            DefaultOut(node);
+            _popVerificationHelper(_stack.Peek(), Extrude.Walk);
         }
 
         public override void InABuildStmt(ABuildStmt node)
         {
-            DefaultIn(node);
+            _pushVerificationHelper(_stack.Peek(), Extrude.Walk);
         }
 
         public override void OutABuildStmt(ABuildStmt node)
         {
-            DefaultOut(node);
+            _popVerificationHelper(_stack.Peek(), Extrude.Walk);
         }
 
         public override void InAWalkBlock(AWalkBlock node)
         {
-            DefaultIn(node);
+            _stack.Push(Extrude.Walk);
         }
 
         public override void OutAWalkBlock(AWalkBlock node)
         {
-            DefaultOut(node);
+            _popVerificationHelper(_stack.Peek(), Extrude.Build);
         }
 
         public override void InAWalkExp(AWalkExp node)
         {
-            DefaultIn(node);
+            _stack.Push(Extrude.Walk);
         }
 
         public override void OutAWalkExp(AWalkExp node)
         {
-            DefaultOut(node);
+            _popVerificationHelper(_stack.Peek(), Extrude.Build);
+
         }
 
         public override void InAWalkStmt(AWalkStmt node)
         {
-            DefaultIn(node);
+            _stack.Push(Extrude.Walk);
         }
 
         public override void OutAWalkStmt(AWalkStmt node)
         {
-            DefaultOut(node);
+            _popVerificationHelper(_stack.Peek(), Extrude.Build);
         }
     }
 
