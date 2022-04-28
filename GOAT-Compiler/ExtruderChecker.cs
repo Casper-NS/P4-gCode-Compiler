@@ -62,16 +62,16 @@ namespace GOAT_Compiler
             }
         }
 
-        public override void InsideScopeInADeclProgram(ADeclProgram node) 
+        public override void OutsideScopeInADeclProgram(ADeclProgram node) 
         {
             _stack.Push(Extrude.Build);
         }
 
-
-        public override void OutsideScopeInADeclProgram(ADeclProgram node) 
+        public override void OutsideScopeOutADeclProgram(ADeclProgram node) 
         {
             _popVerificationHelper(_stack.Peek(), Extrude.Build);
         }
+
 
 
         public override void InABuildBlock(ABuildBlock node)
