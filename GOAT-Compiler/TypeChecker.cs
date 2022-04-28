@@ -19,20 +19,54 @@ namespace GOAT_Compiler
             Types rightType = _typeDictionary[right];
             _typeDictionary.Add(current, TypePromoter(leftType, rightType));
         }
-
-        private Types Convert(Node n, Types t)
+        
+        private void EqelNotEqel(Node left, Node right, Node current)
         {
-            if (_typeDictionary[n] == t)
+            Types leftType = _typeDictionary[left];
+            Types rightType = _typeDictionary[right];
+
+            if (leftType == Types.Integer && rightType == Types.FloatingPoint)
             {
-                return t;
+                _typeDictionary.Add(current, Types.Boolean);
             }
-            else if (_typeDictionary[n] == Types.Integer && t == Types.FloatingPoint)
+            else if (leftType == Types.FloatingPoint && rightType == Types.Integer)
             {
-                return Types.FloatingPoint;
+                _typeDictionary.Add(current, Types.Boolean);
+            }
+            else if (leftType == rightType)
+            {
+                _typeDictionary.Add(current, Types.Boolean);
             }
             else
             {
-                throw new Exception("Type mismatch");
+                throw new TypeMismatchException("Type mismatch");
+            }
+        }
+        
+        private void AndAndOr(Node nodeleft, Node nodeRight, Node current)
+        {
+            Types leftType = _typeDictionary[nodeleft];
+            Types rightType = _typeDictionary[nodeRight];
+            if (leftType == Types.Boolean && rightType == Types.Boolean)
+            {
+                _typeDictionary.Add(current, Types.Boolean);
+            }
+            else
+            {
+                throw new TypeMismatchException("Type mismatch");
+            }
+        }
+        private void GreaterThanLessThan(Node nodeleft, Node nodeRight, Node current)
+        {
+            Types leftType = _typeDictionary[nodeleft];
+            Types rightType = _typeDictionary[nodeRight];
+            if ((leftType != Types.Boolean && rightType != Types.Boolean) && (leftType != Types.Vector && rightType != Types.Vector))
+            {
+                _typeDictionary.Add(current, Types.Boolean);
+            }
+            else
+            {
+                throw new TypeMismatchException("Type mismatch");
             }
         }
         private Types TypePromoter(Types t1, Types t2)
@@ -51,10 +85,10 @@ namespace GOAT_Compiler
             }
             else
             {
-                throw new Exception("Type mismatch");
+                throw new TypeMismatchException("Type mismatch");
             }
         }
-        public Types numberType(string numberToken)
+        private Types numberType(string numberToken)
         {
             if (numberToken.Contains("."))
             {
@@ -65,6 +99,23 @@ namespace GOAT_Compiler
                 return Types.Integer;
             }
         }
+        private Types Convert(Node n, Types t)
+        {
+            if (_typeDictionary[n] == t)
+            {
+                return t;
+            }
+            else if (_typeDictionary[n] == Types.Integer && t == Types.FloatingPoint)
+            {
+                return Types.FloatingPoint;
+            }
+            else
+            {
+                throw new TypeMismatchException("Type mismatch");
+            }
+        }
+
+
 
         public override void OutANumberExp(ANumberExp node)
         {
@@ -88,54 +139,121 @@ namespace GOAT_Compiler
 
         public override void OutAAndExp(AAndExp node)
         {
-            ExpressionTypeChecker(node.GetL(), node.GetR(), node);
+            AndAndOr(node.GetL(), node.GetR(), node);
         }
-
+        public override void OutAOrExp(AOrExp node)
+        {
+            AndAndOr(node.GetL(), node.GetR(), node);
+        }
         public override void OutAEqExp(AEqExp node)
         {
-            ExpressionTypeChecker(node.GetL(), node.GetR(), node);
+            EqelNotEqel(node.GetL(), node.GetR(), node);
         }
 
         public override void OutAModuloExp(AModuloExp node)
         {
-            ExpressionTypeChecker(node.GetL(), node.GetR(), node);
+            Types left = _typeDictionary[node.GetL()];
+            Types right = _typeDictionary[node.GetR()];
+            if (left != Types.Vector || left != Types.Boolean && right != Types.Vector || right != Types.Boolean)
+            {
+                ExpressionTypeChecker(node.GetL(), node.GetR(), node);
+            }
+            else
+            {
+                throw new TypeMismatchException("Type mismatch");
+            }
         }
 
         public override void OutAMultExp(AMultExp node)
         {
-            ExpressionTypeChecker(node.GetL(), node.GetR(), node);
+            Types left = _typeDictionary[node.GetL()];
+            Types right = _typeDictionary[node.GetR()];
+            if ((left != Types.Vector || left != Types.Boolean) && (right != Types.Vector || right != Types.Boolean))
+            {
+                ExpressionTypeChecker(node.GetL(), node.GetR(), node);
+            }
+            else
+            {
+                throw new TypeMismatchException("Type mismatch");
+            }
         }
 
-        public override void OutADivdExp(ADivdExp node)
+        public override void OutADivdExp(ADivdExp node) //Fix so you cant use vectors
         {
-            ExpressionTypeChecker(node.GetL(), node.GetR(), node);
+            Types left = _typeDictionary[node.GetL()];
+            Types right = _typeDictionary[node.GetR()];
+            if (left != Types.Vector || left != Types.Boolean && right != Types.Vector || right != Types.Boolean)
+            {
+                ExpressionTypeChecker(node.GetL(), node.GetR(), node);
+            }
+            else
+            {
+                throw new TypeMismatchException("Type mismatch");
+            }
         }
-
-        public override void OutAOrExp(AOrExp node)
-        {
-            ExpressionTypeChecker(node.GetL(), node.GetR(), node);
-        }
-
         public override void OutAGeqExp(AGeqExp node)
         {
-            ExpressionTypeChecker(node.GetL(), node.GetR(), node);
+            GreaterThanLessThan(node.GetL(), node.GetR(), node);
         }
 
         public override void OutAGtExp(AGtExp node)
         {
-            ExpressionTypeChecker(node.GetL(), node.GetR(), node);
+            GreaterThanLessThan(node.GetL(), node.GetR(), node);
         }
         public override void OutALtExp(ALtExp node)
         {
-            ExpressionTypeChecker(node.GetL(), node.GetR(), node);
+            GreaterThanLessThan(node.GetL(), node.GetR(), node);
         }
         public override void OutALeqExp(ALeqExp node)
         {
-            ExpressionTypeChecker(node.GetL(), node.GetR(), node);
+            GreaterThanLessThan(node.GetL(), node.GetR(), node);
         }
         public override void OutANeqExp(ANeqExp node)
         {
-            ExpressionTypeChecker(node.GetL(), node.GetR(), node);
+            EqelNotEqel(node.GetL(), node.GetR(), node);
         }
+
+        public override void OutAAssignStmt(AAssignStmt node) //Create a type checker that checks a AAsignStmt node's types
+        {
+            Symbol id = _symbolTable.GetSymbol(node.GetId().Text);
+            if (Convert(node.GetExp(), id.type) == id.type)
+            {
+                _typeDictionary.Add(node, id.type);
+            }
+            else
+            {
+                throw new TypeMismatchException("Type mismatch");
+            }
+        }
+
+        public override void OutAIfStmt(AIfStmt node)
+        {
+            if (_typeDictionary[node.GetExp()] != Types.Boolean)
+            {
+                throw new TypeMismatchException("Type mismatch");
+            }
+            else
+            {
+                _typeDictionary.Add(node, Types.Void);
+            }
+        }
+        
+        public override void OutAWhileStmt(AWhileStmt node)
+        {
+            if (_typeDictionary[node.GetExp()] != Types.Boolean)
+            {
+                throw new TypeMismatchException("Type mismatch");
+            }
+            else
+            {
+                _typeDictionary.Add(node, Types.Void);
+            }
+        }
+
+        public override void OutAAssignPlusStmt(AAssignPlusStmt node)
+        {
+            base.OutAAssignPlusStmt(node);
+        }
+
     }
 }
