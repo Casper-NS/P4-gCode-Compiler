@@ -1,9 +1,9 @@
 ﻿void main()
 {
-	int i;
-	float f;
-	vector v; 
-	bool b;
+	int i
+	float f
+	vector v 
+	bool b
 
 	i += i
 	i -= i
