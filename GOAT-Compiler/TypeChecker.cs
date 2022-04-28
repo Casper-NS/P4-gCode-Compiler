@@ -7,9 +7,17 @@ using System.Threading.Tasks;
 
 namespace GOAT_Compiler
 {
+    /// <summary>
+    /// The type checker class for the GOAT Code.
+    /// </summary>
     internal class TypeChecker : SymbolTableVisitor
     {
         private Dictionary<Node, Types> _typeDictionary = new Dictionary<Node, Types>();
+        
+        /// <summary>
+        /// The constructor for the type checker.
+        /// </summary>
+        /// <param name="symbolTable">The symbol table</param>
         public TypeChecker(ISymbolTable symbolTable) : base(symbolTable)
         {
         }
@@ -165,46 +173,32 @@ namespace GOAT_Compiler
             EqelNotEqel(node.GetL(), node.GetR(), node);
         }
 
-        public override void OutAModuloExp(AModuloExp node)
+        private void MultDivMod(Node left, Node right, Node current)
         {
-            Types left = _typeDictionary[node.GetL()];
-            Types right = _typeDictionary[node.GetR()];
-            if ((left == Types.Integer || left == Types.FloatingPoint) && (right == Types.Integer || right == Types.FloatingPoint))
+            Types leftType = _typeDictionary[left];
+            Types rightType = _typeDictionary[right];
+            if ((leftType == Types.Integer || leftType == Types.FloatingPoint) && (rightType == Types.Integer || rightType == Types.FloatingPoint))
             {
-                ExpressionTypeChecker(node.GetL(), node.GetR(), node);
+                ExpressionTypeChecker(left, right, current);
             }
             else
             {
                 throw new TypeMismatchException("Type mismatch");
             }
+        }
+        public override void OutAModuloExp(AModuloExp node)
+        {
+            MultDivMod(node.GetL(), node.GetL(), node);
         }
 
         public override void OutAMultExp(AMultExp node)
         {
-            Types left = _typeDictionary[node.GetL()];
-            Types right = _typeDictionary[node.GetR()];
-            if ((left == Types.Integer || left == Types.FloatingPoint) && (right == Types.Integer || right == Types.FloatingPoint))
-            {
-                ExpressionTypeChecker(node.GetL(), node.GetR(), node);
-            }
-            else
-            {
-                throw new TypeMismatchException("Type mismatch");
-            }
+            MultDivMod(node.GetL(), node.GetL(), node);
         }
 
         public override void OutADivdExp(ADivdExp node)
         {
-            Types left = _typeDictionary[node.GetL()];
-            Types right = _typeDictionary[node.GetR()];
-            if ((left == Types.Integer || left == Types.FloatingPoint) && (right == Types.Integer || right == Types.FloatingPoint))
-            {
-                ExpressionTypeChecker(node.GetL(), node.GetR(), node);
-            }
-            else
-            {
-                throw new TypeMismatchException("Type mismatch");
-            }
+            MultDivMod(node.GetL(), node.GetL(), node);
         }
         public override void OutAGeqExp(AGeqExp node)
         {
@@ -276,40 +270,35 @@ namespace GOAT_Compiler
             _typeDictionary.Add(node, Convert(node.GetExp(), id.type));
         }
 
-        public override void OutAAssignDivisionStmt(AAssignDivisionStmt node)
+        private void DivMult(Symbol id, Types type, Node node, Node expr)
         {
-            Symbol id = _symbolTable.GetSymbol(node.GetId().Text);
-            Types expType = _typeDictionary[node.GetExp()];
-            if (id.type == Types.Vector && (expType == Types.FloatingPoint || expType == Types.Integer))
+            if (id.type == Types.Vector && (type == Types.FloatingPoint || type == Types.Integer))
             {
                 _typeDictionary.Add(node, id.type);
             }
             else
             {
-                _typeDictionary.Add(node, Convert(node.GetExp(), id.type));
+                _typeDictionary.Add(node, Convert(expr, id.type));
             }
         }
-
+        public override void OutAAssignDivisionStmt(AAssignDivisionStmt node)
+        {
+            Symbol id = _symbolTable.GetSymbol(node.GetId().Text);
+            Types expType = _typeDictionary[node.GetExp()];
+            DivMult(id, expType, node, node.GetExp());
+        }
+        public override void OutAAssignMultStmt(AAssignMultStmt node)
+        {
+            Symbol id = _symbolTable.GetSymbol(node.GetId().Text);
+            Types expType = _typeDictionary[node.GetExp()];
+            DivMult(id, expType, node, node.GetExp());
+        }
         public override void OutAAssignModStmt(AAssignModStmt node)
         {
             Symbol id = _symbolTable.GetSymbol(node.GetId().Text);
             _typeDictionary.Add(node, Convert(node.GetExp(), id.type));
         }
-        
-        public override void OutAAssignMultStmt(AAssignMultStmt node)
-        {
-            Symbol id = _symbolTable.GetSymbol(node.GetId().Text);
-            Types expType = _typeDictionary[node.GetExp()];
-            if (id.type == Types.Vector && (expType == Types.FloatingPoint || expType == Types.Integer))
-            {
-            _typeDictionary.Add(node, id.type);
-            }
-            else
-            {
-                _typeDictionary.Add(node, Convert(node.GetExp(), id.type));
-            }
-        }
-        
+
         public override void OutANotExp(ANotExp node)
         {
             if (_typeDictionary[node.GetExp()] == Types.Boolean)
