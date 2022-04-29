@@ -16,7 +16,6 @@ namespace GOAT_Compiler
         {
             return "Compiler exception at node " + node.ToString() + "\n";
         }
-        private Node _node;
         public CompilerException(Node node) : this(node, ""){ }
         public CompilerException(Node node, string message) : this(node, message, null) { }
         public CompilerException(Node node, string message, Exception inner) : base(NodePrinter(node) + message, inner) { }
