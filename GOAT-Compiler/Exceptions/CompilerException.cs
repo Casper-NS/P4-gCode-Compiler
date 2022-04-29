@@ -7,8 +7,10 @@ using System.Threading.Tasks;
 
 namespace GOAT_Compiler
 {
-
-    public class CompilerException : Exception
+    /// <summary>
+    /// Base exception class for all compiler exceptions
+    /// </summary>
+    public abstract class CompilerException : Exception
     {
         private static string NodePrinter(Node node)
         {

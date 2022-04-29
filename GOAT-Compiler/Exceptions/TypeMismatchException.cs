@@ -7,6 +7,9 @@ using System.Threading.Tasks;
 
 namespace GOAT_Compiler
 {
+    /// <summary>
+    /// Exception inheriented from CompilerException to handle errors in the compiler
+    /// </summary>
     public class TypeMismatchException : CompilerException
     {
         public TypeMismatchException(Node node) : base(node) { }

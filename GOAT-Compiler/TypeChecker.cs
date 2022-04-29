@@ -27,9 +27,16 @@ namespace GOAT_Compiler
         {
             Types leftType = _typeDictionary[left];
             Types rightType = _typeDictionary[right];
-            _typeDictionary.Add(current, TypePromoter(leftType, rightType));
+            Types type = TypePromoter(leftType, rightType);
+            if (type == Types.Void) 
+            {
+                throw new TypeMismatchException(current);
+            }
+            else
+            {
+                _typeDictionary.Add(current, type);
+            }            
         }
-
         private void EqelNotEqel(Node left, Node right, Node current)
         {
             Types leftType = _typeDictionary[left];
@@ -49,7 +56,7 @@ namespace GOAT_Compiler
             }
             else
             {
-                throw new TypeMismatchException("Type mismatch");
+                throw new TypeMismatchException(current);
             }
         }
 
@@ -63,7 +70,7 @@ namespace GOAT_Compiler
             }
             else
             {
-                throw new TypeMismatchException("Type mismatch");
+                throw new TypeMismatchException(current);
             }
         }
         private void GreaterThanLessThan(Node nodeleft, Node nodeRight, Node current)
@@ -76,7 +83,7 @@ namespace GOAT_Compiler
             }
             else
             {
-                throw new TypeMismatchException("Type mismatch");
+                throw new TypeMismatchException(current);
             }
         }
         private Types TypePromoter(Types t1, Types t2)
@@ -95,7 +102,7 @@ namespace GOAT_Compiler
             }
             else
             {
-                throw new TypeMismatchException("Type mismatch");
+                return Types.Void;
             }
         }
         private Types numberType(string numberToken)
@@ -121,7 +128,7 @@ namespace GOAT_Compiler
             }
             else
             {
-                throw new TypeMismatchException("Type mismatch");
+                throw new TypeMismatchException(n);
             }
         }
         public override void OutAVectorExp(AVectorExp node)
@@ -137,7 +144,7 @@ namespace GOAT_Compiler
             }
             else
             {
-                throw new TypeMismatchException("Type mismatch");
+                throw new TypeMismatchException(node);
             }
         }
 
@@ -185,7 +192,7 @@ namespace GOAT_Compiler
             }
             else
             {
-                throw new TypeMismatchException("Type mismatch");
+                throw new TypeMismatchException(current);
             }
         }
         public override void OutAModuloExp(AModuloExp node)
@@ -233,7 +240,7 @@ namespace GOAT_Compiler
             }
             else
             {
-                throw new TypeMismatchException("Type mismatch");
+                throw new TypeMismatchException(node);
             }
         }
 
@@ -241,7 +248,7 @@ namespace GOAT_Compiler
         {
             if (_typeDictionary[node.GetExp()] != Types.Boolean)
             {
-                throw new TypeMismatchException("Type mismatch");
+                throw new TypeMismatchException(node);
             }
             else
             {
@@ -253,7 +260,7 @@ namespace GOAT_Compiler
         {
             if (_typeDictionary[node.GetExp()] != Types.Boolean)
             {
-                throw new TypeMismatchException("Type mismatch");
+                throw new TypeMismatchException(node);
             }
         }
 
@@ -261,7 +268,7 @@ namespace GOAT_Compiler
         {
             if (_typeDictionary[node.GetExp()] != Types.Integer)
             {
-                throw new TypeMismatchException("Type mismatch");
+                throw new TypeMismatchException(node);
             }
         }
 
@@ -314,7 +321,7 @@ namespace GOAT_Compiler
             }
             else
             {
-                throw new TypeMismatchException("Type mismatch");
+                throw new TypeMismatchException(node);
             }
         }
 
@@ -329,7 +336,7 @@ namespace GOAT_Compiler
                 }
                 else
                 {
-                    throw new TypeMismatchException("Type mismatch");
+                    throw new TypeMismatchException(node);
                 }
             }
             else
@@ -352,13 +359,13 @@ namespace GOAT_Compiler
             List<Types> formelList = id.GetParamTypes();
             if(list.Count != formelList.Count)
             {
-                    throw new TypeMismatchException("Type mismatch");
+                throw new TypeMismatchException(node, "Wrong number of arguments");
             }
             for (int i = 0; i < formelList.Count; i++)
             {
                 if(Convert((Node)list[i], formelList[i]) != formelList[i]) 
                 {
-                    throw new TypeMismatchException("Type mismatch");
+                    throw new TypeMismatchException(node);
                 }
             }
         }
@@ -372,7 +379,7 @@ namespace GOAT_Compiler
         {
             if (currentFunctionType != Convert(node.GetExp(), currentFunctionType))
             {
-                throw new TypeMismatchException("Type mismatch");
+                throw new TypeMismatchException(node);
             }
             else
             {
