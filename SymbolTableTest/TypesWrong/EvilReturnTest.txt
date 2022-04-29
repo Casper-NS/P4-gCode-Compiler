@@ -1,5 +1,5 @@
-﻿int func()
+﻿vector func()
 {
-	vector func
+	int func
 	return 1
 }
