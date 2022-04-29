@@ -1,5 +1,6 @@
 ﻿using GOATCode.node;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -344,10 +345,22 @@ namespace GOAT_Compiler
 
         public override void OutAFunctionExp(AFunctionExp node)
         {
-            System.Collections.IList list = node.GetArgs();
+            IList list = node.GetArgs();
 
             Symbol id = _symbolTable.GetSymbol(node.GetName().Text);
             _typeDictionary.Add(node, id.type);
+            List<Types> formelList = id.GetParamTypes();
+            if(list.Count != formelList.Count)
+            {
+                    throw new TypeMismatchException("Type mismatch");
+            }
+            for (int i = 0; i < formelList.Count; i++)
+            {
+                if(Convert((Node)list[i], formelList[i]) != formelList[i]) 
+                {
+                    throw new TypeMismatchException("Type mismatch");
+                }
+            }
         }
         public override void InsideScopeInAFuncDecl(AFuncDecl node)
         {
