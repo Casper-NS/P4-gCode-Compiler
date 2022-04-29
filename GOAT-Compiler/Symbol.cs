@@ -26,15 +26,12 @@ namespace GOAT_Compiler
         {
             name = Name;
             type = Type;
-            if (paramTypes.Length != 0)
-            {
-                types.AddRange(paramTypes);
-            }
+            types.AddRange(paramTypes);
         }
 
         public List<Types> GetParamTypes()
         {
-            return types.GetRange(1, types.Count);
+            return types.GetRange(1, types.Count-1);
         }
 
     }
