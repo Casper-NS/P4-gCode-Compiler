@@ -15,7 +15,7 @@ namespace GOAT_Compiler
 
         public override void OutAVarDecl(AVarDecl node)
         {
-            Symbol symbol = _symbolTable.GetSymbol(node.GetId().Text);
+            Symbol symbol = _symbolTable.GetVariableSymbol(node.GetId().Text);
             isDeclared.Add(symbol);
             if (node.GetExp() != null)
             {
@@ -30,7 +30,7 @@ namespace GOAT_Compiler
 
         public override void OutAFunctionExp(AFunctionExp node)
         {
-            Symbol symbol = _symbolTable.GetSymbol(node.GetName().Text);
+            Symbol symbol = _symbolTable.GetFunctionSymbol(node.GetName().Text);
 
             if (symbol == null)
             {
@@ -40,7 +40,7 @@ namespace GOAT_Compiler
 
         public override void OutAAssignStmt(AAssignStmt node)
         {
-            Symbol symbol = _symbolTable.GetSymbol(node.GetId().Text);
+            Symbol symbol = _symbolTable.GetVariableSymbol(node.GetId().Text);
 
             if (symbol == null)
             {
@@ -86,7 +86,7 @@ namespace GOAT_Compiler
 
         private void GetAndCheckSymbol(string SymName)
         {
-            Symbol symbol = _symbolTable.GetSymbol(SymName);
+            Symbol symbol = _symbolTable.GetVariableSymbol(SymName);
 
             if (symbol == null)
             {

@@ -13,6 +13,9 @@ namespace GOAT_Compiler
         private Table globalScope;
         private Table currentScope;
 
+
+        private readonly Dictionary<string, Symbol> functionSymbols = new();
+
         //Flag to determine whether we are building or going through the symbol table.
         private bool buildComplete = false;
 
@@ -61,14 +64,14 @@ namespace GOAT_Compiler
 
         }
 
-        public Symbol GetSymbol(string Name)
+        public Symbol GetVariableSymbol(string name)
         {
-            return currentScope.GetSymbol(Name);
+            return currentScope.GetSymbol(name);
         }
 
-        public void AddSymbol(string Name, Types type, params Types[] paramTypes)
+        public void AddVariableSymbol(string name, Types type)
         {
-            currentScope.SetSymbol(Name, type, paramTypes);
+            currentScope.SetSymbol(name, type);
         }
 
         public bool IsComplete()
@@ -76,6 +79,19 @@ namespace GOAT_Compiler
             return buildComplete;
         }
 
+        public Symbol GetFunctionSymbol(string name)
+        {
+            if (functionSymbols.TryGetValue(name, out Symbol symbol))
+            {
+                return symbol;
+            }
+            return null;
+        }
+
+        public void AddFunctionSymbol(string name, Types returnType, params Types[] paramTypes)
+        {
+            functionSymbols.Add(name, new Symbol(name, returnType, paramTypes));
+        }
     }
 
     class Table

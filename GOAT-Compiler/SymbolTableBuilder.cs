@@ -31,7 +31,7 @@ namespace GOAT_Compiler
         /// <param name="node">The Node used as key in typetable</param>
         /// <returns>Returns the right enum Type for the given node</returns>
         /// <exception cref="TypeAccessException">The exception that is thrown if an invalid string is inputted</exception>
-        private Types _processTypeOfNode(Node node)
+        private Types ProcessTypeOfNode(Node node)
         {
             switch (_typeTable[node])
             {
@@ -52,25 +52,26 @@ namespace GOAT_Compiler
 
         public override void OutAVarDecl(AVarDecl node)
         {
-            _symbolTable.AddSymbol(node.GetId().Text, _processTypeOfNode(node.GetTypes()));
+            _symbolTable.AddVariableSymbol(node.GetId().Text, ProcessTypeOfNode(node.GetTypes()));
         }
 
         public override void OutAParamDecl(AParamDecl node)
         {
-            _symbolTable.AddSymbol(node.GetId().Text, _processTypeOfNode(node.GetTypes()));
-            paramTypesList.Add(_symbolTable.GetSymbol(node.GetId().Text).type);
+            Types type = ProcessTypeOfNode(node.GetTypes());
+            _symbolTable.AddVariableSymbol(node.GetId().Text, type);
+            paramTypesList.Add(type);
         }
 
 
         public override void OutsideScopeOutAFuncDecl(AFuncDecl node)
         {
-            _symbolTable.AddSymbol(node.GetId().Text, _processTypeOfNode(node.GetTypes()), paramTypesList.ToArray());
+            _symbolTable.AddFunctionSymbol(node.GetId().Text, ProcessTypeOfNode(node.GetTypes()), paramTypesList.ToArray());
             paramTypesList.Clear();
         }
 
         public override void OutsideScopeOutAProcDecl(AProcDecl node)
         {
-            _symbolTable.AddSymbol(node.GetId().Text, Types.Void, paramTypesList.ToArray());
+            _symbolTable.AddFunctionSymbol(node.GetId().Text, Types.Void, paramTypesList.ToArray());
             paramTypesList.Clear();
         }
 

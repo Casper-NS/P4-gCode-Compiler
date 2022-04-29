@@ -240,7 +240,7 @@ namespace GOAT_Compiler
         }
         public override void OutAAssignStmt(AAssignStmt node)
         {
-            Symbol id = _symbolTable.GetSymbol(node.GetId().Text);
+            Symbol id = _symbolTable.GetVariableSymbol(node.GetId().Text);
             if (Convert(node.GetExp(), id.type) == id.type)
             {
                 _typeDictionary.Add(node, id.type);
@@ -273,30 +273,30 @@ namespace GOAT_Compiler
         }
         public override void OutAAssignPlusStmt(AAssignPlusStmt node)
         {
-            Symbol id = _symbolTable.GetSymbol(node.GetId().Text);
+            Symbol id = _symbolTable.GetVariableSymbol(node.GetId().Text);
             _typeDictionary.Add(node, Convert(node.GetExp(), id.type));
         }
         public override void OutAAssignMinusStmt(AAssignMinusStmt node)
         {
-            Symbol id = _symbolTable.GetSymbol(node.GetId().Text);
+            Symbol id = _symbolTable.GetVariableSymbol(node.GetId().Text);
 
             _typeDictionary.Add(node, Convert(node.GetExp(), id.type));
         }
         public override void OutAAssignDivisionStmt(AAssignDivisionStmt node)
         {
-            Symbol id = _symbolTable.GetSymbol(node.GetId().Text);
+            Symbol id = _symbolTable.GetVariableSymbol(node.GetId().Text);
             Types expType = _typeDictionary[node.GetExp()];
             DivMultTypeChecker(id, expType, node, node.GetExp());
         }
         public override void OutAAssignMultStmt(AAssignMultStmt node)
         {
-            Symbol id = _symbolTable.GetSymbol(node.GetId().Text);
+            Symbol id = _symbolTable.GetVariableSymbol(node.GetId().Text);
             Types expType = _typeDictionary[node.GetExp()];
             DivMultTypeChecker(id, expType, node, node.GetExp());
         }
         public override void OutAAssignModStmt(AAssignModStmt node)
         {
-            Symbol id = _symbolTable.GetSymbol(node.GetId().Text);
+            Symbol id = _symbolTable.GetVariableSymbol(node.GetId().Text);
             _typeDictionary.Add(node, Convert(node.GetExp(), id.type));
         }
         public override void OutANotExp(ANotExp node)
@@ -312,7 +312,7 @@ namespace GOAT_Compiler
         }
         public override void OutAVarDecl(AVarDecl node)
         {
-            Symbol id = _symbolTable.GetSymbol(node.GetId().Text);
+            Symbol id = _symbolTable.GetVariableSymbol(node.GetId().Text);
             if(node.GetExp() != null)
             {
                 if (Convert(node.GetExp(), id.type) == id.type)
@@ -327,14 +327,14 @@ namespace GOAT_Compiler
         }
         public override void OutAIdExp(AIdExp node)
         {
-            Symbol id = _symbolTable.GetSymbol(node.GetId().Text);
+            Symbol id = _symbolTable.GetVariableSymbol(node.GetId().Text);
             _typeDictionary.Add(node, id.type);
         }
         public override void OutAFunctionExp(AFunctionExp node)
         {
             IList list = node.GetArgs();
 
-            Symbol id = _symbolTable.GetSymbol(node.GetName().Text);
+            Symbol id = _symbolTable.GetFunctionSymbol(node.GetName().Text);
             _typeDictionary.Add(node, id.type);
             List<Types> formelList = id.GetParamTypes();
             if(list.Count != formelList.Count)
@@ -352,7 +352,7 @@ namespace GOAT_Compiler
         public override void InsideScopeInAFuncDecl(AFuncDecl node)
         {
             System.Collections.IList list = node.GetDecl();
-            currentFunctionType = _symbolTable.GetSymbol(node.GetId().Text).type;
+            currentFunctionType = _symbolTable.GetFunctionSymbol(node.GetId().Text).type;
 
         }
         public override void OutAReturnStmt(AReturnStmt node)
@@ -368,12 +368,12 @@ namespace GOAT_Compiler
         }
         public override void InsideScopeOutAFuncDecl(AFuncDecl node)
         {
-            Symbol id = _symbolTable.GetSymbol(node.GetId().Text);
+            Symbol id = _symbolTable.GetFunctionSymbol(node.GetId().Text);
             _typeDictionary.Add(node, id.type);
         }
         public override void InsideScopeOutAProcDecl(AProcDecl node)
         {
-            Symbol id = _symbolTable.GetSymbol(node.GetId().Text);
+            Symbol id = _symbolTable.GetFunctionSymbol(node.GetId().Text);
             _typeDictionary.Add(node, id.type);
         }
     }
