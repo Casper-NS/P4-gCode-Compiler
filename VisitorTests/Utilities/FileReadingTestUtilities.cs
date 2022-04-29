@@ -5,6 +5,7 @@ using System;
 using System.IO;
 using Xunit;
 using GOAT_Compiler;
+using VisitorTests.Utilities;
 
 namespace VisitorTests
 {
@@ -23,7 +24,7 @@ namespace VisitorTests
             }
             catch (Exception e)
             {
-                throw new SkipException("Test dependency parsing failed: \n" + e, e);
+                throw new TestDependencyException("Parsing", e);
             }
         }
         internal static ISymbolTable BuildSymbolTable(Start s)
@@ -37,9 +38,8 @@ namespace VisitorTests
             }
             catch (Exception e)
             {
-                throw new SkipException("Test dependency symbol table building failed: \n" + e, e);
+                throw new TestDependencyException("Parsing", e);
             }
         }
     }
-    //public class TestDependencyException : compiler
 }
