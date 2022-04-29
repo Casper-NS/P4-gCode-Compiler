@@ -20,11 +20,20 @@ namespace GOAT_Compiler
 
         private Symbol _currentSymbol;
 
-        private Dictionary<Symbol, (Extrude ext, List<Symbol> symList)> _functions = new();
+        private Dictionary<Symbol, (Extrude ExtType, List<Symbol> SymList)> _functions = new();
+
+        private Extrude _currentExtrude = Extrude.NotSet;
 
         internal ExtruderChecker(ISymbolTable symbolTable) : base(symbolTable)
         {
 
+        }
+
+        private void _updateExtrudeType(Symbol symbol)
+        {
+            _functions[_currentSymbol] = (
+                                        _overruleExtrudeType(_functions[_currentSymbol].ExtType, _currentExtrude), 
+                                        _functions[_currentSymbol].SymList);
         }
 
         private void _popVerificationHelper(Extrude checker)
@@ -60,15 +69,15 @@ namespace GOAT_Compiler
 
         public override void InsideScopeOutAFuncDecl(AFuncDecl node)
         {
-            
+            _updateExtrudeType(_currentSymbol);
         }
 
         public override void OutAFunctionExp(AFunctionExp node)
         {
-            _functions[_currentSymbol].Add(_symbolTable.GetSymbol(node.GetName().Text));
+            _functions[_currentSymbol].SymList.Add(_symbolTable.GetSymbol(node.GetName().Text));
         }
 
-
+        
 
         private Extrude _overruleExtrudeType(Extrude currentType, Extrude candidateType)
         {
@@ -95,7 +104,7 @@ namespace GOAT_Compiler
 
 
 
-        public override void OutsideScopeInADeclProgram(ADeclProgram node) 
+        /*public override void OutsideScopeInADeclProgram(ADeclProgram node) 
         {
             _stack.Push(Extrude.Build);
         }
@@ -103,9 +112,17 @@ namespace GOAT_Compiler
         public override void OutsideScopeOutADeclProgram(ADeclProgram node) 
         {
             _popVerificationHelper(Extrude.Build);
+        }*/
+
+        public override void InANoneBlock(ANoneBlock node)
+        {
+            _stack.Push(Extrude.None);
         }
 
-
+        public override void OutANoneBlock(ANoneBlock node)
+        {
+            _popVerificationHelper(Extrude.None);
+        }
 
         public override void InABuildBlock(ABuildBlock node)
         {
