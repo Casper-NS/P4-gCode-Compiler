@@ -1,0 +1,15 @@
+﻿void main()
+{
+	int i = 1
+	float f = 1.0
+	vector v = (1.0, 1.0, 1.0)
+	bool b = true
+
+	f = f
+	v = v
+	b = b
+	i = i
+	f = i
+
+
+}
