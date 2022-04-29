@@ -1,4 +1,0 @@
-﻿float f()
-{
-	return 1
-}
