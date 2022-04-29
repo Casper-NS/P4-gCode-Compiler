@@ -52,25 +52,26 @@ namespace GOAT_Compiler
 
         public override void OutAVarDecl(AVarDecl node)
         {
-            _symbolTable.AddSymbol(node.GetId().Text, _processTypeOfNode(node.GetTypes()));
+            _symbolTable.AddVariableSymbol(node.GetId().Text, _processTypeOfNode(node.GetTypes()));
         }
 
         public override void OutAParamDecl(AParamDecl node)
         {
-            _symbolTable.AddSymbol(node.GetId().Text, _processTypeOfNode(node.GetTypes()));
-            paramTypesList.Add(_symbolTable.GetSymbol(node.GetId().Text).type);
+            Types type = _processTypeOfNode(node.GetTypes());
+            _symbolTable.AddVariableSymbol(node.GetId().Text, type);
+            paramTypesList.Add(type);
         }
 
 
         public override void OutsideScopeOutAFuncDecl(AFuncDecl node)
         {
-            _symbolTable.AddSymbol(node.GetId().Text, _processTypeOfNode(node.GetTypes()), paramTypesList.ToArray());
+            _symbolTable.AddFunctionSymbol(node.GetId().Text, _processTypeOfNode(node.GetTypes()), paramTypesList.ToArray());
             paramTypesList.Clear();
         }
 
         public override void OutsideScopeOutAProcDecl(AProcDecl node)
         {
-            _symbolTable.AddSymbol(node.GetId().Text, Types.Void, paramTypesList.ToArray());
+            _symbolTable.AddFunctionSymbol(node.GetId().Text, Types.Void, paramTypesList.ToArray());
             paramTypesList.Clear();
         }
 
