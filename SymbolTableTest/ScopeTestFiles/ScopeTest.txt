@@ -1,0 +1,9 @@
+﻿void main()
+{
+	int a
+}
+
+void f(){
+   hej = 2
+}
+int hej
