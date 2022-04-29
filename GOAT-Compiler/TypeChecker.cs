@@ -37,7 +37,7 @@ namespace GOAT_Compiler
                 _typeDictionary.Add(current, type);
             }            
         }
-        private void EqelNotEqel(Node left, Node right, Node current)
+        private void EqlNotEqlTypeChecker(Node left, Node right, Node current)
         {
             Types leftType = _typeDictionary[left];
             Types rightType = _typeDictionary[right];
@@ -60,7 +60,7 @@ namespace GOAT_Compiler
             }
         }
 
-        private void AndAndOr(Node nodeleft, Node nodeRight, Node current)
+        private void AndAndOrTypeChecker(Node nodeleft, Node nodeRight, Node current)
         {
             Types leftType = _typeDictionary[nodeleft];
             Types rightType = _typeDictionary[nodeRight];
@@ -73,7 +73,7 @@ namespace GOAT_Compiler
                 throw new TypeMismatchException(current);
             }
         }
-        private void GreaterThanLessThan(Node nodeleft, Node nodeRight, Node current)
+        private void GreaterThanLessThanTypeChecker(Node nodeleft, Node nodeRight, Node current)
         {
             Types leftType = _typeDictionary[nodeleft];
             Types rightType = _typeDictionary[nodeRight];
@@ -84,6 +84,34 @@ namespace GOAT_Compiler
             else
             {
                 throw new TypeMismatchException(current);
+            }
+        }
+        private void MultDivModTypeChecker(Node left, Node right, Node current)
+        {
+            Types leftType = _typeDictionary[left];
+            Types rightType = _typeDictionary[right];
+            if ((leftType == Types.Integer || leftType == Types.FloatingPoint) && (rightType == Types.Integer || rightType == Types.FloatingPoint))
+            {
+                ExpressionTypeChecker(left, right, current);
+            }
+            else
+            {
+                throw new TypeMismatchException(current);
+            }
+        }
+        private void DivMultTypeChecker(Symbol id, Types type, Node node, Node expr)
+        {
+            if (id.type == Types.Vector && (type == Types.FloatingPoint || type == Types.Integer))
+            {
+                _typeDictionary.Add(node, id.type);
+            }
+            else if (id.type != Types.Vector)
+            {
+                _typeDictionary.Add(node, Convert(expr, id.type));
+            }
+            else
+            {
+                throw new TypeMismatchException(node);
             }
         }
         private Types TypePromoter(Types t1, Types t2)
@@ -105,7 +133,7 @@ namespace GOAT_Compiler
                 return Types.Void;
             }
         }
-        private Types numberType(string numberToken)
+        private Types NumberType(string numberToken)
         {
             if (numberToken.Contains("."))
             {
@@ -142,16 +170,10 @@ namespace GOAT_Compiler
             {
                 _typeDictionary.Add(node, Types.Vector);
             }
-            else
-            {
-                throw new TypeMismatchException(node);
-            }
         }
-
-
         public override void OutANumberExp(ANumberExp node)
         {
-            _typeDictionary.Add(node, numberType(node.GetNumber().Text));
+            _typeDictionary.Add(node, NumberType(node.GetNumber().Text));
         }
 
         public override void OutAPlusExp(APlusExp node)
@@ -171,66 +193,51 @@ namespace GOAT_Compiler
 
         public override void OutAAndExp(AAndExp node)
         {
-            AndAndOr(node.GetL(), node.GetR(), node);
+            AndAndOrTypeChecker(node.GetL(), node.GetR(), node);
         }
         public override void OutAOrExp(AOrExp node)
         {
-            AndAndOr(node.GetL(), node.GetR(), node);
+            AndAndOrTypeChecker(node.GetL(), node.GetR(), node);
         }
         public override void OutAEqExp(AEqExp node)
         {
-            EqelNotEqel(node.GetL(), node.GetR(), node);
-        }
-
-        private void MultDivMod(Node left, Node right, Node current)
-        {
-            Types leftType = _typeDictionary[left];
-            Types rightType = _typeDictionary[right];
-            if ((leftType == Types.Integer || leftType == Types.FloatingPoint) && (rightType == Types.Integer || rightType == Types.FloatingPoint))
-            {
-                ExpressionTypeChecker(left, right, current);
-            }
-            else
-            {
-                throw new TypeMismatchException(current);
-            }
+            EqlNotEqlTypeChecker(node.GetL(), node.GetR(), node);
         }
         public override void OutAModuloExp(AModuloExp node)
         {
-            MultDivMod(node.GetL(), node.GetL(), node);
+            MultDivModTypeChecker(node.GetL(), node.GetL(), node);
         }
 
         public override void OutAMultExp(AMultExp node)
         {
-            MultDivMod(node.GetL(), node.GetL(), node);
+            MultDivModTypeChecker(node.GetL(), node.GetL(), node);
         }
 
         public override void OutADivdExp(ADivdExp node)
         {
-            MultDivMod(node.GetL(), node.GetL(), node);
+            MultDivModTypeChecker(node.GetL(), node.GetL(), node);
         }
         public override void OutAGeqExp(AGeqExp node)
         {
-            GreaterThanLessThan(node.GetL(), node.GetR(), node);
+            GreaterThanLessThanTypeChecker(node.GetL(), node.GetR(), node);
         }
 
         public override void OutAGtExp(AGtExp node)
         {
-            GreaterThanLessThan(node.GetL(), node.GetR(), node);
+            GreaterThanLessThanTypeChecker(node.GetL(), node.GetR(), node);
         }
         public override void OutALtExp(ALtExp node)
         {
-            GreaterThanLessThan(node.GetL(), node.GetR(), node);
+            GreaterThanLessThanTypeChecker(node.GetL(), node.GetR(), node);
         }
         public override void OutALeqExp(ALeqExp node)
         {
-            GreaterThanLessThan(node.GetL(), node.GetR(), node);
+            GreaterThanLessThanTypeChecker(node.GetL(), node.GetR(), node);
         }
         public override void OutANeqExp(ANeqExp node)
         {
-            EqelNotEqel(node.GetL(), node.GetR(), node);
+            EqlNotEqlTypeChecker(node.GetL(), node.GetR(), node);
         }
-
         public override void OutAAssignStmt(AAssignStmt node)
         {
             Symbol id = _symbolTable.GetSymbol(node.GetId().Text);
@@ -238,12 +245,7 @@ namespace GOAT_Compiler
             {
                 _typeDictionary.Add(node, id.type);
             }
-            else
-            {
-                throw new TypeMismatchException(node);
-            }
         }
-
         public override void OutAIfStmt(AIfStmt node)
         {
             if (_typeDictionary[node.GetExp()] != Types.Boolean)
@@ -255,7 +257,6 @@ namespace GOAT_Compiler
                 _typeDictionary.Add(node, Types.Void);
             }
         }
-
         public override void OutAWhileStmt(AWhileStmt node)
         {
             if (_typeDictionary[node.GetExp()] != Types.Boolean)
@@ -263,7 +264,6 @@ namespace GOAT_Compiler
                 throw new TypeMismatchException(node);
             }
         }
-
         public override void OutARepeatStmt(ARepeatStmt node)
         {
             if (_typeDictionary[node.GetExp()] != Types.Integer)
@@ -271,7 +271,6 @@ namespace GOAT_Compiler
                 throw new TypeMismatchException(node);
             }
         }
-
         public override void OutAAssignPlusStmt(AAssignPlusStmt node)
         {
             Symbol id = _symbolTable.GetSymbol(node.GetId().Text);
@@ -283,36 +282,23 @@ namespace GOAT_Compiler
 
             _typeDictionary.Add(node, Convert(node.GetExp(), id.type));
         }
-
-        private void DivMult(Symbol id, Types type, Node node, Node expr)
-        {
-            if (id.type == Types.Vector && (type == Types.FloatingPoint || type == Types.Integer))
-            {
-                _typeDictionary.Add(node, id.type);
-            }
-            else
-            {
-                _typeDictionary.Add(node, Convert(expr, id.type));
-            }
-        }
         public override void OutAAssignDivisionStmt(AAssignDivisionStmt node)
         {
             Symbol id = _symbolTable.GetSymbol(node.GetId().Text);
             Types expType = _typeDictionary[node.GetExp()];
-            DivMult(id, expType, node, node.GetExp());
+            DivMultTypeChecker(id, expType, node, node.GetExp());
         }
         public override void OutAAssignMultStmt(AAssignMultStmt node)
         {
             Symbol id = _symbolTable.GetSymbol(node.GetId().Text);
             Types expType = _typeDictionary[node.GetExp()];
-            DivMult(id, expType, node, node.GetExp());
+            DivMultTypeChecker(id, expType, node, node.GetExp());
         }
         public override void OutAAssignModStmt(AAssignModStmt node)
         {
             Symbol id = _symbolTable.GetSymbol(node.GetId().Text);
             _typeDictionary.Add(node, Convert(node.GetExp(), id.type));
         }
-
         public override void OutANotExp(ANotExp node)
         {
             if (_typeDictionary[node.GetExp()] == Types.Boolean)
@@ -324,7 +310,6 @@ namespace GOAT_Compiler
                 throw new TypeMismatchException(node);
             }
         }
-
         public override void OutAVarDecl(AVarDecl node)
         {
             Symbol id = _symbolTable.GetSymbol(node.GetId().Text);
@@ -333,10 +318,6 @@ namespace GOAT_Compiler
                 if (Convert(node.GetExp(), id.type) == id.type)
                 {
                     _typeDictionary.Add(node, id.type);
-                }
-                else
-                {
-                    throw new TypeMismatchException(node);
                 }
             }
             else
@@ -349,7 +330,6 @@ namespace GOAT_Compiler
             Symbol id = _symbolTable.GetSymbol(node.GetId().Text);
             _typeDictionary.Add(node, id.type);
         }
-
         public override void OutAFunctionExp(AFunctionExp node)
         {
             IList list = node.GetArgs();
@@ -386,12 +366,6 @@ namespace GOAT_Compiler
                 _typeDictionary.Add(node, currentFunctionType);
             }
         }
-
-
-
-
-
-
         public override void InsideScopeOutAFuncDecl(AFuncDecl node)
         {
             Symbol id = _symbolTable.GetSymbol(node.GetId().Text);
