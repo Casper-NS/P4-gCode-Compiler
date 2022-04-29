@@ -1,5 +1,4 @@
 ﻿using GOATCode.node;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -9,29 +8,19 @@ namespace GOAT_Compiler
 {
     internal enum Extrude
     {
+        NotSet,
+        None,
         Build,
         Walk
     };
 
-    internal class PopException : Exception
-    {
-        internal PopException(Extrude e)
-        {
-            Console.WriteLine("Cannot pop " + e);
-        }
-    }
-
-    internal class PushException : Exception
-    {
-        internal PushException(Extrude e)
-        {
-            Console.WriteLine("Cannot push " + e);
-        }
-    }
-
     internal class ExtruderChecker : SymbolTableVisitor
     {
         private Stack<Extrude> _stack = new Stack<Extrude>();
+
+        private Symbol _currentSymbol;
+
+        private Dictionary<Symbol, (Extrude ext, List<Symbol> symList)> _functions = new();
 
         internal ExtruderChecker(ISymbolTable symbolTable) : base(symbolTable)
         {
@@ -52,19 +41,71 @@ namespace GOAT_Compiler
 
         private void _pushVerificationHelper(Extrude candidate)
         {
-            if (_stack.Count == 0)
-            {
-                _stack.Push(candidate);
-            }
-            else if (_stack.Peek() == Extrude.Build)
-            {
-                _stack.Push(candidate);
-            }
-            else
+            if (_stack.Peek() == Extrude.Walk)
             {
                 throw new PushException(candidate);
             }
+            else
+            {
+                _stack.Push(candidate);
+            }
         }
+
+
+        public override void InsideScopeInAFuncDecl(AFuncDecl node)
+        {
+            _currentSymbol = _symbolTable.GetSymbol(node.GetId().Text);
+            _functions.Add(_currentSymbol, (Extrude.NotSet ,new List<Symbol>()));
+        }
+
+        public override void InsideScopeOutAFuncDecl(AFuncDecl node)
+        {
+            
+        }
+
+        public override void OutAFunctionExp(AFunctionExp node)
+        {
+            _functions[_currentSymbol].Add(_symbolTable.GetSymbol(node.GetName().Text));
+        }
+
+
+
+        private Extrude _overruleExtrudeType(Extrude currentType, Extrude candidateType)
+        {
+            if (candidateType > currentType)
+            {
+                return candidateType;
+            }
+            else return currentType;
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        public override void OutsideScopeInADeclProgram(ADeclProgram node) 
+        {
+            _stack.Push(Extrude.Build);
+        }
+
+        public override void OutsideScopeOutADeclProgram(ADeclProgram node) 
+        {
+            _popVerificationHelper(Extrude.Build);
+        }
+
+
 
         public override void InABuildBlock(ABuildBlock node)
         {
@@ -127,5 +168,4 @@ namespace GOAT_Compiler
             _popVerificationHelper(Extrude.Walk);
         }
     }
-
 }
