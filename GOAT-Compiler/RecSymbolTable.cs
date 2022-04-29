@@ -66,9 +66,9 @@ namespace GOAT_Compiler
             return currentScope.GetSymbol(Name);
         }
 
-        public void AddSymbol(string Name, Types type)
+        public void AddSymbol(string Name, Types type, params Types[] paramTypes)
         {
-            currentScope.SetSymbol(Name, type);
+            currentScope.SetSymbol(Name, type, paramTypes);
         }
 
         public bool IsComplete()
@@ -120,9 +120,9 @@ namespace GOAT_Compiler
             return null;
         }
 
-        public void SetSymbol(string Name, Types type)
+        public void SetSymbol(string Name, Types type, params Types[] paramTypeArray)
         {
-            Symbols.Add(Name, new Symbol(Name, type));
+            Symbols.Add(Name, new Symbol(Name, type, paramTypeArray));
         }
 
     }

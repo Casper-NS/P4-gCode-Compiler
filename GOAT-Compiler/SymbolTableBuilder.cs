@@ -14,6 +14,9 @@ namespace GOAT_Compiler
         /// </summary>
         private Dictionary<Node, string> _typeTable = new Dictionary<Node, string>();
 
+
+        private List<Types> paramTypesList = new List<Types>();
+
         /// <summary>
         /// The constructor for the SymbolTableBuilder
         /// </summary>
@@ -55,17 +58,20 @@ namespace GOAT_Compiler
         public override void OutAParamDecl(AParamDecl node)
         {
             _symbolTable.AddSymbol(node.GetId().Text, _processTypeOfNode(node.GetTypes()));
+            paramTypesList.Add(_symbolTable.GetSymbol(node.GetId().Text).type);
         }
 
 
         public override void OutsideScopeOutAFuncDecl(AFuncDecl node)
         {
-            _symbolTable.AddSymbol(node.GetId().Text, _processTypeOfNode(node.GetTypes()));
+            _symbolTable.AddSymbol(node.GetId().Text, _processTypeOfNode(node.GetTypes()), paramTypesList.ToArray());
+            paramTypesList.Clear();
         }
 
         public override void OutsideScopeOutAProcDecl(AProcDecl node)
         {
-            _symbolTable.AddSymbol(node.GetId().Text, Types.Void);
+            _symbolTable.AddSymbol(node.GetId().Text, Types.Void, paramTypesList.ToArray());
+            paramTypesList.Clear();
         }
 
         /// <summary>

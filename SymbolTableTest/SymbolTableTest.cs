@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
 using Xunit;
 using GOAT_Compiler;
@@ -70,6 +71,20 @@ namespace SymbolTableTest
             ISymbolTable symbolTable = new RecSymbolTable();
             symbolTable.OpenScope();
             Assert.Null(symbolTable.GetSymbol("a"));
+            symbolTable.CloseScope();
+        }
+
+        [Fact]
+        public void Check_Parameters_Types_in_func()
+        {
+            ISymbolTable symbolTable = new RecSymbolTable();
+            symbolTable.OpenScope();
+            symbolTable.AddSymbol("testfunc", Types.Void, Types.Boolean, Types.FloatingPoint, Types.Integer, Types.Vector);
+            List<Types> paramTypes = symbolTable.GetSymbol("testfunc").GetParamTypes();
+            Assert.Equal(Types.Boolean, paramTypes[0]);
+            Assert.Equal(Types.FloatingPoint, paramTypes[1]);
+            Assert.Equal(Types.Integer, paramTypes[2]);
+            Assert.Equal(Types.Vector, paramTypes[3]);
             symbolTable.CloseScope();
         }
 
