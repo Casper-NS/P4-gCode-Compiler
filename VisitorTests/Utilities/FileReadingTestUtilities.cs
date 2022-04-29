@@ -38,7 +38,7 @@ namespace VisitorTests
             }
             catch (Exception e)
             {
-                throw new TestDependencyException("Parsing", e);
+                throw new TestDependencyException("Symbol table building", e);
             }
         }
     }
