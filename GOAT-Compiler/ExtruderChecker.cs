@@ -1,8 +1,5 @@
 ﻿using GOATCode.node;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace GOAT_Compiler
 {
@@ -10,33 +7,22 @@ namespace GOAT_Compiler
     {
         NotSet,
         None,
-        Build,
-        Walk
+        Walk,
+        Build
     };
 
     internal class ExtruderChecker : SymbolTableVisitor
     {
         private Stack<Extrude> _stack = new Stack<Extrude>();
-
+        private Dictionary<Symbol, DijkstraNode> _functions = new();
         private Symbol _currentSymbol;
-
-        private Dictionary<Symbol, (Extrude ExtType, List<Symbol> SymList)> _functions = new();
-
         private Extrude _currentExtrude = Extrude.NotSet;
 
         internal ExtruderChecker(ISymbolTable symbolTable) : base(symbolTable)
         {
-
         }
 
-        private void _updateExtrudeType(Symbol symbol)
-        {
-            _functions[_currentSymbol] = (
-                                        _overruleExtrudeType(_functions[_currentSymbol].ExtType, _currentExtrude), 
-                                        _functions[_currentSymbol].SymList);
-        }
-
-        private void _popVerificationHelper(Extrude checker)
+        private void PopVerification(Extrude checker)
         {
             if (_stack.Peek() != checker)
             {
@@ -48,7 +34,7 @@ namespace GOAT_Compiler
             }
         }
 
-        private void _pushVerificationHelper(Extrude candidate)
+        private void PushVerification(Extrude candidate)
         {
             if (_stack.Peek() == Extrude.Walk)
             {
@@ -59,130 +45,154 @@ namespace GOAT_Compiler
                 _stack.Push(candidate);
             }
         }
+        
+        private bool DoesntContainKey(AFuncDecl node)
+        {
+            return _functions.ContainsKey(_symbolTable.GetSymbol(node.GetId().Text));
+        }
+        private bool DoesntContainKey(AFunctionExp node)
+        {
+            return _functions.ContainsKey(_symbolTable.GetSymbol(node.GetName().Text));
+        }
+        private bool DoesntContainKey(AProcDecl node)
+        {
+            return _functions.ContainsKey(_symbolTable.GetSymbol(node.GetId().Text));
+        }
 
-
+        /*
+            Check if the function is aldready in the function Dictionary,
+            if not, create a new DijkstraNode and add it to the dictionary
+        */
         public override void InsideScopeInAFuncDecl(AFuncDecl node)
         {
             _currentSymbol = _symbolTable.GetSymbol(node.GetId().Text);
-            _functions.Add(_currentSymbol, (Extrude.NotSet ,new List<Symbol>()));
+
+            if (DoesntContainKey(node))
+            {
+                _functions.Add(_currentSymbol, new DijkstraNode(Extrude.NotSet));
+            }
         }
 
         public override void InsideScopeOutAFuncDecl(AFuncDecl node)
         {
-            _updateExtrudeType(_currentSymbol);
+            _functions[_currentSymbol].SetExtrudeType(_currentExtrude);
+        }
+
+        public override void InsideScopeInAProcDecl(AProcDecl node)
+        {
+            _currentSymbol = _symbolTable.GetSymbol(node.GetId().Text);
+
+            if (DoesntContainKey(node))
+            {
+                _functions.Add(_currentSymbol, new DijkstraNode(Extrude.NotSet));
+            }
+        }
+
+        public override void InsideScopeOutAProcDecl(AProcDecl node)
+        {
+            _functions[_currentSymbol].SetExtrudeType(_currentExtrude);
         }
 
         public override void OutAFunctionExp(AFunctionExp node)
         {
-            _functions[_currentSymbol].SymList.Add(_symbolTable.GetSymbol(node.GetName().Text));
-        }
-
-        
-
-        private Extrude _overruleExtrudeType(Extrude currentType, Extrude candidateType)
-        {
-            if (candidateType > currentType)
+            if (DoesntContainKey(node)) 
             {
-                return candidateType;
+                _functions.Add(_symbolTable.GetSymbol(node.GetName().Text), new DijkstraNode(Extrude.NotSet));
             }
-            else return currentType;
+            else
+            {
+                _functions[_currentSymbol].AddFunctionCall(_functions[_symbolTable.GetSymbol(node.GetName().Text)]);
+            }
         }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        /*public override void OutsideScopeInADeclProgram(ADeclProgram node) 
-        {
-            _stack.Push(Extrude.Build);
-        }
-
-        public override void OutsideScopeOutADeclProgram(ADeclProgram node) 
-        {
-            _popVerificationHelper(Extrude.Build);
-        }*/
 
         public override void InANoneBlock(ANoneBlock node)
         {
+            _functions[_currentSymbol].SetExtrudeType(Extrude.None);
+
             _stack.Push(Extrude.None);
+            _currentExtrude = Extrude.None;
         }
 
         public override void OutANoneBlock(ANoneBlock node)
         {
-            _popVerificationHelper(Extrude.None);
+            PopVerification(Extrude.None);
+            _currentExtrude = _stack.Peek();
         }
 
         public override void InABuildBlock(ABuildBlock node)
         {
-            _pushVerificationHelper(Extrude.Build);
-        }
+            _functions[_currentSymbol].SetExtrudeType(Extrude.Build);
 
+            PushVerification(Extrude.Build);
+            _currentExtrude = Extrude.Build;
+        }
+         
         public override void OutABuildBlock(ABuildBlock node)
         {
-            _popVerificationHelper(Extrude.Build);
-        }
-
-        public override void InABuildExp(ABuildExp node)
-        {
-            _pushVerificationHelper(Extrude.Build);
-        }
-
-        public override void OutABuildExp(ABuildExp node)
-        {
-            _popVerificationHelper(Extrude.Build);
-        }
-
-        public override void InABuildStmt(ABuildStmt node)
-        {
-            _pushVerificationHelper(Extrude.Build);
-        }
-
-        public override void OutABuildStmt(ABuildStmt node)
-        {
-            _popVerificationHelper(Extrude.Build);
+            PopVerification(Extrude.Build);
+            _currentExtrude = _stack.Peek();
         }
 
         public override void InAWalkBlock(AWalkBlock node)
         {
+            _functions[_currentSymbol].SetExtrudeType(Extrude.Walk);
+
             _stack.Push(Extrude.Walk);
+            _currentExtrude = Extrude.Walk;
         }
 
         public override void OutAWalkBlock(AWalkBlock node)
         {
-            _popVerificationHelper(Extrude.Walk);
+            PopVerification(Extrude.Walk);
+            _currentExtrude = _stack.Peek();
+        }
+
+        public override void InABuildExp(ABuildExp node)
+        {
+            PushVerification(Extrude.Build);
+            _currentExtrude = Extrude.Build;
+        }
+
+        public override void OutABuildExp(ABuildExp node)
+        {
+            PopVerification(Extrude.Build);
+            _currentExtrude = _stack.Peek();
         }
 
         public override void InAWalkExp(AWalkExp node)
         {
             _stack.Push(Extrude.Walk);
+            _currentExtrude = Extrude.Walk;
         }
 
         public override void OutAWalkExp(AWalkExp node)
         {
-            _popVerificationHelper(Extrude.Walk);
+            PopVerification(Extrude.Walk);
+            _currentExtrude = _stack.Peek();
+        }
 
+        public override void InABuildStmt(ABuildStmt node)
+        {
+            PushVerification(Extrude.Build);
+            _currentExtrude = Extrude.Build;
+        }
+
+        public override void OutABuildStmt(ABuildStmt node)
+        {
+            PopVerification(Extrude.Build);
+            _currentExtrude = _stack.Peek();
         }
 
         public override void InAWalkStmt(AWalkStmt node)
         {
             _stack.Push(Extrude.Walk);
+            _currentExtrude = Extrude.Walk;
         }
 
         public override void OutAWalkStmt(AWalkStmt node)
         {
-            _popVerificationHelper(Extrude.Walk);
+            PopVerification(Extrude.Walk);
+            _currentExtrude = _stack.Peek();
         }
     }
 }
