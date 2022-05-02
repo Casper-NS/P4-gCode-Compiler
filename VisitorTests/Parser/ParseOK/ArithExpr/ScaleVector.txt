@@ -1,0 +1,5 @@
+vector ScaleVector(vector vec, float scale)
+{
+	vec.x *= scale
+	return vec
+}

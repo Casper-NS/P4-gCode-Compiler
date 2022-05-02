@@ -12,6 +12,7 @@ namespace VisitorTests
     public class FileReadingTestUtilities
     {
         internal static string ProjectBaseDirectory => "../../../";
+
         internal static Start ParseFile(string filePath)
         {
             try
@@ -27,6 +28,23 @@ namespace VisitorTests
                 throw new TestDependencyException("Parsing", e);
             }
         }
+
+        internal static Start ParseString(string file)
+        {
+            try
+            {
+                ISymbolTable symTab = new RecSymbolTable();
+                StringReader reader = new StringReader(file);
+                Lexer l = new Lexer(reader);
+                Parser p = new Parser(l);
+                return p.Parse();
+            }
+            catch (Exception e)
+            {
+                throw new TestDependencyException("Parsing", e);
+            }
+        }
+
         internal static ISymbolTable BuildSymbolTable(Start s)
         {
             try

@@ -1,0 +1,23 @@
+﻿void MovementExamples()
+{
+	vector position = (2, 2, 2)
+	float offset = 5
+
+	AbsMove(position)
+	RelMove(position)
+	AbsArc(position, offset)
+	RelArc(position, offset)
+	
+	build
+	{
+		AbsMove(position)
+		RelMove(position)
+		AbsArc(position, offset)
+		RelArc(position, offset)
+	}
+}
+
+int main()
+{
+	int a = 1
+}

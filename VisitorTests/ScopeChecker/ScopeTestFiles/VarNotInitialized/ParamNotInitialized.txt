@@ -1,0 +1,11 @@
+﻿void main()
+{
+	int a
+	f(a)
+}
+
+
+void f(int b)
+{
+	b += 1
+}

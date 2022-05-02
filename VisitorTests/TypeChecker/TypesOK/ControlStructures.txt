@@ -1,0 +1,15 @@
+﻿void main()
+{
+	if (true)
+	{
+		int a
+	}
+	while (true)
+	{
+		int a
+	}
+	repeat (1)
+	{
+		int a
+	}
+}

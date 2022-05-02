@@ -1,0 +1,7 @@
+﻿void main(){
+vector v = (1,2,3)
+vector v2 = (1,2,3)
+v = v*v2
+v = v/v2
+v = v%v2
+}
