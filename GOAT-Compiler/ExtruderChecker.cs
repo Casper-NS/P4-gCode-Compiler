@@ -48,15 +48,15 @@ namespace GOAT_Compiler
         
         private bool DoesntContainKey(AFuncDecl node)
         {
-            return _functions.ContainsKey(_symbolTable.GetSymbol(node.GetId().Text));
+            return _functions.ContainsKey(_symbolTable.GetFunctionSymbol(node.GetId().Text));
         }
         private bool DoesntContainKey(AFunctionExp node)
         {
-            return _functions.ContainsKey(_symbolTable.GetSymbol(node.GetName().Text));
+            return _functions.ContainsKey(_symbolTable.GetFunctionSymbol(node.GetName().Text));
         }
         private bool DoesntContainKey(AProcDecl node)
         {
-            return _functions.ContainsKey(_symbolTable.GetSymbol(node.GetId().Text));
+            return _functions.ContainsKey(_symbolTable.GetFunctionSymbol(node.GetId().Text));
         }
 
         /*
@@ -65,7 +65,7 @@ namespace GOAT_Compiler
         */
         public override void InsideScopeInAFuncDecl(AFuncDecl node)
         {
-            _currentSymbol = _symbolTable.GetSymbol(node.GetId().Text);
+            _currentSymbol = _symbolTable.GetFunctionSymbol(node.GetId().Text);
 
             if (DoesntContainKey(node))
             {
@@ -80,7 +80,7 @@ namespace GOAT_Compiler
 
         public override void InsideScopeInAProcDecl(AProcDecl node)
         {
-            _currentSymbol = _symbolTable.GetSymbol(node.GetId().Text);
+            _currentSymbol = _symbolTable.GetFunctionSymbol(node.GetId().Text);
 
             if (DoesntContainKey(node))
             {
@@ -97,11 +97,11 @@ namespace GOAT_Compiler
         {
             if (DoesntContainKey(node)) 
             {
-                _functions.Add(_symbolTable.GetSymbol(node.GetName().Text), new DijkstraNode(Extrude.NotSet));
+                _functions.Add(_symbolTable.GetFunctionSymbol(node.GetName().Text), new DijkstraNode(Extrude.NotSet));
             }
             else
             {
-                _functions[_currentSymbol].AddFunctionCall(_functions[_symbolTable.GetSymbol(node.GetName().Text)]);
+                _functions[_currentSymbol].AddFunctionCall(_functions[_symbolTable.GetFunctionSymbol(node.GetName().Text)]);
             }
         }
 
