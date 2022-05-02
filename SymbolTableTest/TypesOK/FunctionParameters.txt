@@ -1,0 +1,4 @@
+﻿float fFunc(float fVar)
+{
+	return fFunc(fVar)
+}

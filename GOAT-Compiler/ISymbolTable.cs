@@ -16,22 +16,43 @@ namespace GOAT_Compiler
         public void CloseScope();
 
         /// <summary>
-        /// Gets the closest (scopewise) symbol from the symboltable
+        /// Gets the closest (scopewise) variable symbol from the symboltable
         /// </summary>
-        /// <param name="Name">The name of the symbol you are trying to get</param>
-        /// <returns>The symbol requested from the closest scope that contains the symbol.
+        /// <param name="Name">The name of the variable symbol you are trying to get</param>
+        /// <returns>The symbol requested from the closest scope that contains the variable symbol.
         /// If the symbol is not found, null is returned</returns>
-        public Symbol GetSymbol(string Name);
+        public Symbol GetVariableSymbol(string name);
 
         /// <summary>
-        /// Adds a symbol to the symbol table.
-        /// If the same symbol exists in an outer scope it is temporarily removed from the table and stored in the new symbol.
+        /// Gets the closest (scopewise) function symbol from the symboltable
+        /// </summary>
+        /// <param name="Name">The name of the function symbol you are trying to get</param>
+        /// <returns>The symbol requested from the closest scope that contains the function symbol.
+        /// If the symbol is not found, null is returned</returns>
+        public Symbol GetFunctionSymbol(string name);
+
+
+        /// <summary>
+        /// Adds a variable symbol to the symbol table.
+        /// If the same variable symbol exists in an outer scope it is temporarily removed from the table and stored in the new variable symbol.
+        /// In case of a duplicate variable symbol an exception is thrown.
+        /// </summary>
+        /// <param name="Name">The name of the variable symbol</param>
+        /// <param name="Type">The type of the variable symbol</param>
+        /// <exception cref="ArgumentException">Exception that is thrown if there is a duplicate definition.</exception>
+        public void AddVariableSymbol(string name, Types type);
+
+        /// <summary>
+        /// Adds a function symbol to the symbol table.
+        /// If the same function symbol exists in an outer scope it is temporarily removed from the table and stored in the new function symbol.
         /// In case of a duplicate symbol an exception is thrown.
         /// </summary>
-        /// <param name="Name">The name of the symbol</param>
-        /// <param name="Type">The type of the symbol</param>
+        /// <param name="Name">The name of the function symbol</param>
+        /// <param name="Type">The type of the function symbol</param>
+        /// <param name="paramTypes">The type of the formal parameters in case it is a function being added</param>
         /// <exception cref="ArgumentException">Exception that is thrown if there is a duplicate definition.</exception>
-        public void AddSymbol(string Name, Types Type);
+        public void AddFunctionSymbol(string name, Types type, params Types[] paramTypes);
+
 
         /// <summary>
         /// Checks whether the symbol table has been build.

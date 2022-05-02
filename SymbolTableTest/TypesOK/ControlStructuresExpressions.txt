@@ -1,0 +1,15 @@
+﻿void main()
+{
+	if (3 < 2)
+	{
+		int a
+	}
+	while (5 < 2)
+	{
+		int a
+	}
+	repeat ((2 + 5))
+	{
+		int a
+	}
+}
