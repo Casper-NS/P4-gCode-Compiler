@@ -194,5 +194,18 @@ namespace GOAT_Compiler
             PopVerification(Extrude.Walk);
             _currentExtrude = _stack.Peek();
         }
+
+        
+    }
+
+    internal static class BTSExtrude
+    {
+        static void Search(DijkstraNode node, List<DijkstraNode> nodes)
+        {
+            foreach (var dn in node.GetFunctionCalls())
+            {
+
+            }
+        }
     }
 }
