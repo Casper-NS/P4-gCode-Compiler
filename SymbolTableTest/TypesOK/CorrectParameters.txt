@@ -1,5 +1,0 @@
-﻿void func(int i, float f, vector v, bool b)
-{
-	func(i, f, v, b)
-	func(i, i, v, b)
-}

@@ -1,4 +1,0 @@
-﻿vector f()
-{
-	return 1.2
-}

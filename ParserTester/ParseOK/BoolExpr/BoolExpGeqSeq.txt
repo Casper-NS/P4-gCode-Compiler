@@ -1,2 +1,0 @@
-﻿bool c = a <= a
-bool b = a >= a

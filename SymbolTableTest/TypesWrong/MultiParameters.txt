@@ -1,4 +1,0 @@
-﻿void f(int i, int b, float f, vector v)
-{
-	f(1, 1, 1.0, 3)
-}

@@ -1,4 +1,0 @@
-﻿void f(float x)
-{
-	f(2)
-}

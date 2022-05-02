@@ -1,5 +1,0 @@
-﻿int func()
-{
-	vector func
-	return 1
-}
