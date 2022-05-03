@@ -1,0 +1,14 @@
+﻿walk void walkFunction()
+{
+	build buildScope()
+}
+
+void buildScope()
+{
+	int a = 1
+}
+
+void main()
+{
+	int a  = 1
+}
