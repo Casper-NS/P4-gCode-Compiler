@@ -15,7 +15,12 @@ namespace GOAT_Compiler
     {
         private Types currentFunctionType;
         private Dictionary<Node, Types> _typeDictionary = new Dictionary<Node, Types>();
-        
+
+        public Dictionary<Node, Types> GetTypeDictionary()
+        {
+            return _typeDictionary;
+        }
+
         /// <summary>
         /// The constructor for the type checker.
         /// </summary>
