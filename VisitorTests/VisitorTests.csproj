@@ -28,8 +28,6 @@
   <ItemGroup>
     <Folder Include="ExtruderChecker\" />
     <Folder Include="CodeGenerator\" />
-    <Folder Include="ScopeChecker\" />
-    <Folder Include="TypeChecker\" />
   </ItemGroup>
 
 </Project>

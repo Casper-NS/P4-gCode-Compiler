@@ -6,6 +6,7 @@ using GOAT_Compiler;
 using GOATCode.lexer;
 using GOATCode.node;
 using GOATCode.parser;
+using VisitorTests;
 
 namespace SymbolTableTest
 {
@@ -126,16 +127,14 @@ namespace SymbolTableTest
             symbolTable.CloseScope();
         }
 
-        [Fact]
+        [SkippableFact]
         //Checks whether the symbol table is built probably given a test file.
         public void Symbol_Build_test()
         {
+            Start s = FileReadingTestUtilities.ParseFile(FileReadingTestUtilities.ProjectBaseDirectory + "ScopeChecker/SymbolBuildTest.txt");
+
             ISymbolTable symTable = new RecSymbolTable();
-            StreamReader reader = new StreamReader("../../../../SymbolTableTest/SymbolBuildTest.txt");
-            Lexer l = new Lexer(reader);
-            Parser p = new Parser(l);
             SymbolTableBuilder builder = new SymbolTableBuilder(symTable);
-            Start s = p.Parse();
             s.Apply(builder);
 
             Assert.True(symTable.IsComplete());
@@ -177,8 +176,6 @@ namespace SymbolTableTest
             symTable.CloseScope();
             Assert.Null(symTable.GetVariableSymbol("x"));
             symTable.CloseScope();
-
         }
-
     }
 }
