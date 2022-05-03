@@ -1,0 +1,26 @@
+﻿void main()
+{
+	b()
+	w()
+}
+
+
+build void b()
+{
+	end()
+}
+
+walk void w()
+{
+	end()
+}
+
+build void end()
+{
+	move()
+}
+
+void move()
+{
+	int a
+}
