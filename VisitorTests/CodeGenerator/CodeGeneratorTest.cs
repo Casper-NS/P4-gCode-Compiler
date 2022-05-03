@@ -8,7 +8,6 @@ using System.Text;
 using System.Threading.Tasks;
 using VisitorTests.Utilities;
 using Xunit;
-using static GOAT_Compiler.CodeGenerator;
 
 namespace VisitorTests
 {

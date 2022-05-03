@@ -40,27 +40,27 @@ namespace GOAT_Compiler
             _symbolTable = symbolTable;
         }
 
-        void Put(Symbol sym, int value)
+        public void Put(Symbol sym, int value)
         {
             IntMap.Add(sym, value);
         }
 
-        void Put(Symbol sym, bool value)
+        public void Put(Symbol sym, bool value)
         {
             BoolMap.Add(sym, value);
         }
 
-        void Put(Symbol sym, float value)
+        public void Put(Symbol sym, float value)
         {  
             FloatMap.Add(sym, value);
         }
 
-        void Put(Symbol sym, float x, float y, float z)
+        public void Put(Symbol sym, Vector vector)
         {
-            VecMap.Add(sym, new Vector(x, y, z));
+            VecMap.Add(sym, vector);
         }
 
-        dynamic Get(Symbol sym)
+        public dynamic Get(Symbol sym)
         {
             switch (sym.type)
             {
@@ -77,7 +77,7 @@ namespace GOAT_Compiler
             }
         }
 
-        private class Vector
+        public class Vector
         {
             public float X { get; set; }
             public float Y { get; set; }
