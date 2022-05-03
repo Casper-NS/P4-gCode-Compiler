@@ -74,6 +74,100 @@ namespace GOAT_Compiler
                 }
             }
         }
+        public override void OutAAssignStmt(AAssignStmt node)
+        {
+            Symbol idSymbol = _symbolTable.GetVariableSymbol(node.GetId().ToString());
+            Symbol expSymbol = _symbolTable.GetVariableSymbol(node.GetExp().ToString());
+            if(idSymbol != null && expSymbol != null)
+            {
+                RT.Put(idSymbol, RT.Get(expSymbol));
+            }
+            else
+            {
+                throw new Exception("AssignStmt didnt not work");
+            }
+        }
+
+        public override void OutAAndExp(AAndExp node)
+        {
+            Symbol symbol = _symbolTable.GetVariableSymbol(node.ToString());
+            bool l = Boolean.Parse(node.GetL().ToString()); 
+            bool r = Boolean.Parse(node.GetR().ToString());
+            if (node != null)
+                if (l && r)
+                {
+                    RT.Put(symbol, true);
+                }
+                else
+                {
+                    RT.Put(symbol, false);
+                }
+            else
+            {
+                throw new Exception("AndExp didnt not work");
+            }
+        }
+
+        public override void OutAEqExp(AEqExp node)
+        {
+            Symbol symbol = _symbolTable.GetVariableSymbol(node.ToString());
+            bool l = Boolean.Parse(node.GetL().ToString());
+            bool r = Boolean.Parse(node.GetR().ToString());
+            if (node != null)
+                if (node.GetL().ToString() == node.GetR().ToString())
+                {
+                    RT.Put(symbol, true);
+                }
+                else
+                {
+                    RT.Put(symbol, false);
+                }
+            else
+            {
+                throw new Exception("EqExp didnt not work");
+            }
+        }
+        if(true && true)
+
+        public override void OutAGtExp(AGtExp node)
+        {
+            Symbol symbol = _symbolTable.GetVariableSymbol(node.ToString());
+            float l = float.Parse(node.GetL().ToString(), CultureInfo.InvariantCulture);
+            float r = float.Parse(node.GetR().ToString(), CultureInfo.InvariantCulture);
+            if (node != null)
+                if (l>r)
+                {
+                    RT.Put(symbol, true);
+                }
+                else
+                {
+                    RT.Put(symbol, false);
+                }
+            else
+            {
+                throw new Exception("GtExp didnt not work");
+            }
+        }
+        public override void OutALtExp(ALtExp node)
+        {
+            Symbol symbol = _symbolTable.GetVariableSymbol(node.ToString());
+            float l = float.Parse(node.GetL().ToString(), CultureInfo.InvariantCulture);
+            float r = float.Parse(node.GetR().ToString(), CultureInfo.InvariantCulture);
+            if (node != null)
+                if (l < r)
+                {
+                    RT.Put(symbol, true);
+                }
+                else
+                {
+                    RT.Put(symbol, false);
+                }
+            else
+            {
+                throw new Exception("LtExp didnt not work");
+            }
+        }
+
 
         public void CloseFile()
         {
