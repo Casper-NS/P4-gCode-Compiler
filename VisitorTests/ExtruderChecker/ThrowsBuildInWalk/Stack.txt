@@ -1,0 +1,27 @@
+﻿void main()
+{
+	build
+	{
+		build
+		{
+			build
+			{
+				f()
+			}
+		}
+		walk
+		{
+			f()
+		}
+	}
+}
+
+build void f()
+{
+	move()
+}
+
+void move()
+{
+	int a
+}

@@ -1,0 +1,19 @@
+﻿build void main()
+{
+	a1()
+}
+
+void a1()
+{
+	a2()
+}
+
+void a2()
+{
+	a3()
+}
+
+void a3()
+{
+	walk a1()
+}
