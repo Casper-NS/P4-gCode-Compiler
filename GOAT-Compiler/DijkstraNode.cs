@@ -16,17 +16,19 @@ namespace GOAT_Compiler
 
     internal class DijkstraNode
     {
+        internal string Name { get; private set; }
+
         private List<Edge> _functionCalls = new();
 
         private Extrude _callStackExtrudeType = Extrude.NotSet;
 
         private Extrude _extrudeType;
 
-        
         private DijkstraNode _cameFrom;
         
-        internal DijkstraNode(Extrude extrude)
+        internal DijkstraNode(string n, Extrude extrude)
         {
+            Name = n;
             _extrudeType = extrude;
         }
 
@@ -58,6 +60,16 @@ namespace GOAT_Compiler
         internal void SetCallStackType(Extrude e)
         {
             _callStackExtrudeType = e;
+        }
+
+        internal void SetTheNodeItCameFrom(DijkstraNode node)
+        {
+            _cameFrom = node;
+        }
+
+        internal DijkstraNode GetWhereItWasCalled()
+        {
+            return _cameFrom;
         }
     }
 }

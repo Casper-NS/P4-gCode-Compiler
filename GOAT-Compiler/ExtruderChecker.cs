@@ -76,7 +76,7 @@ namespace GOAT_Compiler
 
             if (DoesntContainKey(node))
             {
-                _functions.Add(_currentSymbol, new DijkstraNode(Extrude.NotSet));
+                _functions.Add(_currentSymbol, new DijkstraNode(_currentSymbol.name, Extrude.NotSet));
             }
         }
 
@@ -86,7 +86,7 @@ namespace GOAT_Compiler
 
             if (DoesntContainKey(node))
             {
-                _functions.Add(_currentSymbol, new DijkstraNode(Extrude.NotSet));
+                _functions.Add(_currentSymbol, new DijkstraNode(_currentSymbol.name, Extrude.NotSet));
             }
         }
 
@@ -94,7 +94,7 @@ namespace GOAT_Compiler
         {
             if (DoesntContainKey(node)) 
             {
-                _functions.Add(_symbolTable.GetFunctionSymbol(node.GetName().Text), new DijkstraNode(Extrude.NotSet));
+                _functions.Add(_symbolTable.GetFunctionSymbol(node.GetName().Text), new DijkstraNode(node.GetName().Text, Extrude.NotSet));
             }
             _functions[_currentSymbol].AddFunctionCall(_functions[_symbolTable.GetFunctionSymbol(node.GetName().Text)], _stack.Peek());
         }
@@ -210,6 +210,7 @@ namespace GOAT_Compiler
                     if (currentExtrude > edge.dijkstraNode.GetCallStackType())
                     {
                         edge.dijkstraNode.SetCallStackType(currentExtrude);
+                        edge.dijkstraNode.SetTheNodeItCameFrom(curNode);
                         frontier.Add(edge.dijkstraNode);
                     }
                 }
@@ -221,7 +222,7 @@ namespace GOAT_Compiler
         {
             if (node.GetCallStackType() == Extrude.Walk && edge.extrudeType == Extrude.Build)
             {
-                throw new CallBuildInWalkException(node);
+                throw new CallBuildInWalkException(edge.dijkstraNode);
             }
             else
             {

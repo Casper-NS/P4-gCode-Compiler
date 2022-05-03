@@ -6,7 +6,13 @@ namespace GOAT_Compiler
     {
         internal CallBuildInWalkException(DijkstraNode node)
         {
-            Console.WriteLine("e");
+            string message = "";
+
+            while (node.GetWhereItWasCalled() is not null)
+            {
+               message = $"{node.Name} -> {message}";
+            }
+            Console.WriteLine(message);
         }
 
         internal CallBuildInWalkException(Extrude e) 
