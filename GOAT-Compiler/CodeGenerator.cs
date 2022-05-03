@@ -24,6 +24,11 @@ namespace GOAT_Compiler
                 gcodeFile = File.Create(outputName + ".gcode");
             }
         }
+
+        public void CreateGCodeLine(string gCommand, Vector vector)
+        {
+            string line = gCommand + " X" + vector.X + " Y" + vector.Y + " Z" + vector.Z;
+        }
     }
 
     internal class RuntimeTable
@@ -75,21 +80,6 @@ namespace GOAT_Compiler
                 default:
                     return null;
             }
-        }
-
-        public class Vector
-        {
-            public float X { get; set; }
-            public float Y { get; set; }
-            public float Z { get; set; }
-
-            public Vector(float x, float y, float z)
-            {
-                X = x;
-                Y = y;
-                Z = z;
-            }
-
         }
     }
 }
