@@ -21,8 +21,10 @@ namespace VisitorTests
             string OutputFilePath = FileReadingTestUtilities.ProjectBaseDirectory + "CodeGenerator/TestFiles/OutputFolder/" + outPutFileName;
             Start s = FileReadingTestUtilities.ParseFile(TestFilePath);
             ISymbolTable symbolTable = FileReadingTestUtilities.BuildSymbolTable(s);
+            TypeChecker typeChecker = new TypeChecker(symbolTable);
+            s.Apply(typeChecker);
 
-            _ = new CodeGenerator(symbolTable, OutputFilePath);
+            _ = new CodeGenerator(symbolTable, typeChecker.GetTypeDictionary(), OutputFilePath);
 
             Assert.True(File.Exists(OutputFilePath+".gcode"));
             if (File.Exists(OutputFilePath + ".gcode"))
@@ -39,8 +41,10 @@ namespace VisitorTests
             string OutputFilePath = FileReadingTestUtilities.ProjectBaseDirectory + "CodeGenerator/TestFiles/OutputFolder/" + outPutFileName;
             Start s = FileReadingTestUtilities.ParseFile(TestFilePath);
             ISymbolTable symbolTable = FileReadingTestUtilities.BuildSymbolTable(s);
+            TypeChecker typeChecker = new TypeChecker(symbolTable);
+            s.Apply(typeChecker);
 
-            _ = new CodeGenerator(symbolTable, OutputFilePath);
+            _ = new CodeGenerator(symbolTable, typeChecker.GetTypeDictionary(), OutputFilePath);
 
             Assert.True(File.Exists(OutputFilePath + ".gcode"));
             

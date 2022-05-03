@@ -1,6 +1,7 @@
 ﻿int a
 int b
 int c
+bool q = true && true
 
 void main()
 {

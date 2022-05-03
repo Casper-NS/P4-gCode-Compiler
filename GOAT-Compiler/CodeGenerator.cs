@@ -127,7 +127,6 @@ namespace GOAT_Compiler
                 throw new Exception("EqExp didnt not work");
             }
         }
-        if(true && true)
 
         public override void OutAGtExp(AGtExp node)
         {
