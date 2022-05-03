@@ -1,4 +1,5 @@
 ﻿using GOATCode.node;
+using System;
 using System.Collections.Generic;
 
 namespace GOAT_Compiler
@@ -7,8 +8,8 @@ namespace GOAT_Compiler
     {
         NotSet,
         None,
-        Walk,
-        Build
+        Build,
+        Walk
     };
 
     internal class ExtruderChecker : SymbolTableVisitor
@@ -75,6 +76,7 @@ namespace GOAT_Compiler
 
         public override void InsideScopeOutAFuncDecl(AFuncDecl node)
         {
+            //_CURRENTEXTRUDE DOESN'T WORK, WILL HAVE TO CALL .PARENT()
             _functions[_currentSymbol].SetExtrudeType(_currentExtrude);
         }
 
@@ -101,7 +103,7 @@ namespace GOAT_Compiler
             }
             else
             {
-                _functions[_currentSymbol].AddFunctionCall(_functions[_symbolTable.GetFunctionSymbol(node.GetName().Text)]);
+                _functions[_currentSymbol].AddFunctionCall(_functions[_symbolTable.GetFunctionSymbol(node.GetName().Text)], _stack.Peek());
             }
         }
 
@@ -195,16 +197,44 @@ namespace GOAT_Compiler
             _currentExtrude = _stack.Peek();
         }
 
-        
-    }
-
-    internal static class BTSExtrude
-    {
-        static void Search(DijkstraNode node, List<DijkstraNode> nodes)
+        public override void OutsideScopeOutADeclProgram(ADeclProgram node)
         {
-            foreach (var dn in node.GetFunctionCalls())
-            {
+            DijkstraSearch(_functions[_symbolTable.GetFunctionSymbol("main")]);
+        }
 
+        private void DijkstraSearch(DijkstraNode node)
+        {
+            List<DijkstraNode> frontier = new List<DijkstraNode>();
+            frontier.Add(node);
+            node.SetCallStackType(Extrude.None);
+
+            while(frontier.Count > 0)
+            {
+                DijkstraNode currentNode = frontier[0];
+
+                foreach (var edge in currentNode.GetFunctionCalls())
+                {
+                    Extrude currentExtrude = UpdateExtrudeType(edge, currentNode);
+                    if (currentExtrude > edge.dijkstraNode.GetCallStackType())
+                    {
+                        edge.dijkstraNode.SetCallStackType(currentExtrude);
+                        frontier.Add(edge.dijkstraNode);
+                    }
+                }
+                frontier.Remove(currentNode);
+            }
+        }
+
+        private Extrude UpdateExtrudeType(Edge edge, DijkstraNode node)
+        {
+            if (node.GetCallStackType() == Extrude.Walk && edge.extrudeType == Extrude.Build)
+            {
+                throw new Exception();
+            }
+            else
+            {
+                //Returns the nodes extrudetype if its value is higher, else return the edges extrudetype.
+                return node.GetCallStackType() > edge.extrudeType ? node.GetCallStackType() : edge.extrudeType;
             }
         }
     }

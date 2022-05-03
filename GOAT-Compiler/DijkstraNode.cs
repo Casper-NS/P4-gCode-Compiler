@@ -2,11 +2,26 @@
 
 namespace GOAT_Compiler
 {
+    internal struct Edge
+    {
+        internal Edge(DijkstraNode dn, Extrude e)
+        {
+            dijkstraNode = dn;
+            extrudeType = e;
+        }
+        internal DijkstraNode dijkstraNode;
+        internal Extrude extrudeType;
+    }
+
+
     internal class DijkstraNode
     {
-        private List<DijkstraNode> _functionCalls = new();
+        private List<Edge> _functionCalls = new();
+
+        private Extrude _callStackExtrudeType = Extrude.NotSet;
 
         private Extrude _extrudeType;
+
         
         private DijkstraNode _cameFrom;
         
@@ -15,12 +30,12 @@ namespace GOAT_Compiler
             _extrudeType = extrude;
         }
 
-        internal void AddFunctionCall(DijkstraNode dn)
+        internal void AddFunctionCall(DijkstraNode dn, Extrude e)
         {
-            _functionCalls.Add(dn);
+            _functionCalls.Add(new Edge(dn, e));
         }
         
-        internal List<DijkstraNode> GetFunctionCalls()
+        internal List<Edge> GetFunctionCalls()
         {
             return _functionCalls;
         }
@@ -33,6 +48,16 @@ namespace GOAT_Compiler
         internal Extrude GetExtrudeType()
         {
             return _extrudeType;
+        }
+
+        internal Extrude GetCallStackType()
+        {
+            return _callStackExtrudeType;
+        }
+
+        internal void SetCallStackType(Extrude e)
+        {
+            _callStackExtrudeType = e;
         }
     }
 }
