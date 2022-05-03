@@ -9,10 +9,12 @@ namespace GOAT_Compiler
     {
         FileStream gcodeFile;
         private ISymbolTable _symbolTable;
+        private RuntimeTable RT;
 
         public CodeGenerator(ISymbolTable symbolTable, string outputName) : base(symbolTable)
         {
             _symbolTable = symbolTable;
+            RT = new RuntimeTable(_symbolTable);
             if (outputName.Length == 0)
             {
                 gcodeFile = File.Create("GOAT.gcode");
