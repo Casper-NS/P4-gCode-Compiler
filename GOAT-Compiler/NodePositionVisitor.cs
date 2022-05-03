@@ -33,6 +33,10 @@ namespace GOAT_Compiler
         {
             return positions[node];
         }
+        public bool HasNode(Node node)
+        {
+            return positions.ContainsKey(node);
+        }
 
         private Dictionary<Node, NodePosition> positions = new Dictionary<Node, NodePosition>();
         List<Node> notSet = new();
