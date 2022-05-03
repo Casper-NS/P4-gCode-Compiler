@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Xml;
 using GOATCode.node;
 
 namespace GOAT_Compiler
@@ -10,15 +11,16 @@ namespace GOAT_Compiler
     internal class CodeGenerator : SymbolTableVisitor
     {
         FileStream gcodeFile;
-        private ISymbolTable _symbolTable;
         private Dictionary<Node, Types> typeMap;
-        private RuntimeTable RT;
+        private RuntimeTable<Node> nodeMap;
+        private RuntimeTable<Symbol> RT;
 
         public CodeGenerator(ISymbolTable symbolTable, Dictionary<Node, Types> typesDictionary, string outputName) : base(symbolTable)
         {
             _symbolTable = symbolTable;
             typeMap = typesDictionary;
-            RT = new RuntimeTable(_symbolTable);
+            RT = new RuntimeTable<Symbol>();
+            nodeMap = new RuntimeTable<Node>();
             if (outputName.Length == 0)
             {
                 gcodeFile = File.Create("GOAT.gcode");
@@ -34,16 +36,14 @@ namespace GOAT_Compiler
             string line = gCommand + " X" + vector.X + " Y" + vector.Y + " Z" + vector.Z;
         }
 
-        private Vector ToVector(string input)
+        dynamic GetValue(Symbol symbol)
         {
-            float x, y, z;
-            string[] variables = input.Split(" ");
+            return RT.Get(symbol, symbol.type);
+        }
 
-            x = float.Parse(variables[0], CultureInfo.InvariantCulture);
-            y = float.Parse(variables[1], CultureInfo.InvariantCulture);
-            z = float.Parse(variables[2], CultureInfo.InvariantCulture);
-
-            return new Vector(x, y, z);
+        dynamic GetValue(Node node)
+        {
+            return nodeMap.Get(node, typeMap[node]);
         }
 
         public override void OutAVarDecl(AVarDecl node)
@@ -52,79 +52,126 @@ namespace GOAT_Compiler
             Symbol symbol = _symbolTable.GetVariableSymbol(node.GetId().Text);
             if (node.GetExp() != null)
             {
-                string nodeExpr = node.GetExp().ToString();
-                Console.WriteLine(nodeExpr);
+                var nodeExpr = node.GetExp();
                 switch (typeMap[node])
                 {
                     case Types.Integer:
-                        RT.Put(symbol, int.Parse(nodeExpr!));
+                        RT.Put(symbol, nodeMap.Get(nodeExpr, typeMap[nodeExpr]));
                         break;
                     case Types.FloatingPoint:
-                        RT.Put(symbol, float.Parse(nodeExpr!, CultureInfo.InvariantCulture));
+                        RT.Put(symbol, nodeMap.Get(nodeExpr, typeMap[nodeExpr]));
                         break;
                     case Types.Boolean:
-                        RT.Put(symbol, bool.Parse(nodeExpr!));
+                        RT.Put(symbol, nodeMap.Get(nodeExpr, typeMap[nodeExpr]));
                         break;
                     case Types.Vector:
-                        RT.Put(symbol, ToVector(nodeExpr!));
+                        RT.Put(symbol, nodeMap.Get(nodeExpr, typeMap[nodeExpr]));
                         break;
                     default:
                         throw new Exception("Everything is on fire!!!!!!!!!! \n Typechecker is broken");
-                        break;
                 }
             }
         }
+
+        public override void OutAIdExp(AIdExp node)
+        {
+            Symbol VarSymbol = _symbolTable.GetVariableSymbol(node.GetId().Text);
+            nodeMap.Put(node, RT.Get(VarSymbol, VarSymbol.type));
+        }
+
+        public override void OutABoolvalExp(ABoolvalExp node)
+        {
+            nodeMap.Put(node, bool.Parse(node.GetBoolValue().Text));
+        }
+
+        public override void OutAVectorExp(AVectorExp node)
+        {
+            float x = GetValue(node.GetX());
+            float y = GetValue(node.GetY());
+            float z = GetValue(node.GetZ());
+            nodeMap.Put(node, new Vector(x, y, z));
+        }
+
+        public override void OutANumberExp(ANumberExp node)
+        {
+            switch (typeMap[node])
+            {
+                case Types.Integer:
+                    nodeMap.Put(node, int.Parse(node.GetNumber().Text));
+                    break;
+                case Types.FloatingPoint:
+                    nodeMap.Put(node, float.Parse(node.GetNumber().Text, CultureInfo.InvariantCulture));
+                    break;
+                default:
+                    throw new Exception("im litteraly crying right now");
+            }
+        }
+
         public override void OutAAssignStmt(AAssignStmt node)
         {
-            Symbol idSymbol = _symbolTable.GetVariableSymbol(node.GetId().ToString());
-            Symbol expSymbol = _symbolTable.GetVariableSymbol(node.GetExp().ToString());
-            if(idSymbol != null && expSymbol != null)
+            Symbol idSymbol = _symbolTable.GetVariableSymbol(node.GetId().Text);
+
+            if(idSymbol != null)
             {
-                RT.Put(idSymbol, RT.Get(expSymbol));
+                RT.Put(idSymbol, GetValue(node.GetExp()));
             }
             else
             {
-                throw new Exception("AssignStmt didnt not work");
+                throw new Exception("AssignStmt did not work");
+            }
+        }
+
+        public override void OutAAssignPlusStmt(AAssignPlusStmt node)
+        {
+            Symbol idSymbol = _symbolTable.GetVariableSymbol(node.GetId().Text);
+            if (idSymbol != null)
+            {
+                if (idSymbol.type == Types.Vector)
+                {
+                    Vector Vec1 = ((Vector) GetValue(node.GetExp()));
+                    Vector Vec2 = ((Vector) GetValue(idSymbol));
+
+                    Vector resultVec = new Vector(Vec1.X + Vec2.X, Vec1.Y + Vec2.Y, Vec1.Z + Vec2.Z);
+                }
+                RT.Put(idSymbol, GetValue(node.GetExp()) + GetValue(idSymbol));
+            }
+            else
+            {
+                throw new Exception("AssignStmt did not work");
             }
         }
 
         public override void OutAAndExp(AAndExp node)
         {
-            Symbol symbol = _symbolTable.GetVariableSymbol(node.ToString());
-            bool l = Boolean.Parse(node.GetL().ToString()); 
-            bool r = Boolean.Parse(node.GetR().ToString());
-            if (node != null)
-                if (l && r)
-                {
-                    RT.Put(symbol, true);
-                }
-                else
-                {
-                    RT.Put(symbol, false);
-                }
+            bool l = nodeMap.Get(node.GetL(), typeMap[node.GetL()]);
+            bool r = nodeMap.Get(node.GetR(), typeMap[node.GetR()]);
+            if (node.GetL() != null && node.GetR() != null)
+            {
+                nodeMap.Put(node, l && r);
+            }
             else
             {
                 throw new Exception("AndExp didnt not work");
             }
         }
 
+
         public override void OutAEqExp(AEqExp node)
         {
-            Symbol symbol = _symbolTable.GetVariableSymbol(node.ToString());
-            bool l = Boolean.Parse(node.GetL().ToString());
-            bool r = Boolean.Parse(node.GetR().ToString());
-            if (node != null)
-                if (node.GetL().ToString() == node.GetR().ToString())
+            string l = node.GetL().ToString();
+            string r = node.GetR().ToString();
+            if (node.GetL() != null && node.GetR() != null)
+                if (l == r)
                 {
-                    RT.Put(symbol, true);
+                    //nodeMap.Put(node, "true");
                 }
                 else
                 {
-                    RT.Put(symbol, false);
+                    //nodeMap.Put(node, "false");
                 }
             else
             {
-                throw new Exception("EqExp didnt not work");
+                throw new Exception("EqExp did not work");
             }
         }
 
@@ -174,52 +221,45 @@ namespace GOAT_Compiler
         }
     }
 
-    internal class RuntimeTable
+    internal class RuntimeTable<TKey>
     {
-        private Dictionary<Symbol, int> IntMap = new Dictionary<Symbol, int>();
-        private Dictionary<Symbol, float> FloatMap = new Dictionary<Symbol, float>();
-        private Dictionary<Symbol, bool> BoolMap = new Dictionary<Symbol, bool>();
-        private Dictionary<Symbol, Vector> VecMap = new Dictionary<Symbol, Vector>();
+        private Dictionary<TKey, int> IntMap = new Dictionary<TKey, int>();
+        private Dictionary<TKey, float> FloatMap = new Dictionary<TKey, float>();
+        private Dictionary<TKey, bool> BoolMap = new Dictionary<TKey, bool>();
+        private Dictionary<TKey, Vector> VecMap = new Dictionary<TKey, Vector>();
 
-        private ISymbolTable _symbolTable;
-
-        public RuntimeTable(ISymbolTable symbolTable)
+        public void Put(TKey key, int value)
         {
-            _symbolTable = symbolTable;
+            IntMap.Add(key, value);
         }
 
-        public void Put(Symbol sym, int value)
+        public void Put(TKey key, bool value)
         {
-            IntMap.Add(sym, value);
+            BoolMap.Add(key, value);
         }
 
-        public void Put(Symbol sym, bool value)
-        {
-            BoolMap.Add(sym, value);
-        }
-
-        public void Put(Symbol sym, float value)
+        public void Put(TKey key, float value)
         {  
-            FloatMap.Add(sym, value);
+            FloatMap.Add(key, value);
         }
 
-        public void Put(Symbol sym, Vector vector)
+        public void Put(TKey key, Vector vector)
         {
-            VecMap.Add(sym, vector);
+            VecMap.Add(key, vector);
         }
 
-        public dynamic Get(Symbol sym)
+        public dynamic Get(TKey key, Types type)
         {
-            switch (sym.type)
+            switch (type)
             {
                 case Types.Integer:
-                    return IntMap[sym];
+                    return IntMap[key];
                 case Types.FloatingPoint:
-                    return FloatMap[sym];
+                    return FloatMap[key];
                 case Types.Boolean:
-                    return BoolMap[sym];
+                    return BoolMap[key];
                 case Types.Vector:
-                    return VecMap[sym];
+                    return VecMap[key];
                 default:
                     return null;
             }
