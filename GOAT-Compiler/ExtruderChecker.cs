@@ -222,6 +222,7 @@ namespace GOAT_Compiler
         {
             if (node.GetCallStackType() == Extrude.Walk && edge.extrudeType == Extrude.Build)
             {
+                edge.dijkstraNode.SetTheNodeItCameFrom(node);
                 throw new CallBuildInWalkException(edge.dijkstraNode);
             }
             else
