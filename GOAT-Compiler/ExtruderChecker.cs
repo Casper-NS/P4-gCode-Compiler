@@ -39,7 +39,7 @@ namespace GOAT_Compiler
         {
             if (_stack.Peek() == Extrude.Walk)
             {
-                throw new PushException(candidate);
+                throw new CallBuildInWalkException(candidate);
             }
             else
             {
@@ -224,7 +224,7 @@ namespace GOAT_Compiler
         {
             if (node.GetCallStackType() == Extrude.Walk && edge.extrudeType == Extrude.Build)
             {
-                throw new Exception();
+                throw new CallBuildInWalkException();
             }
             else
             {
