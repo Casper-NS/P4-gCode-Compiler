@@ -4,10 +4,15 @@ namespace GOAT_Compiler
 {
     internal class CallBuildInWalkException : Exception
     {
-        internal CallBuildInWalkException()
+        internal CallBuildInWalkException(DijkstraNode node)
         {
-            Console.WriteLine("Cannot call Walk in Build");
+            Console.WriteLine("e");
         }
-    }
 
+        internal CallBuildInWalkException(Extrude e) 
+        {
+            Console.WriteLine("Tried to call a Build in a Walk");
+        }
+        
+    }
 }
