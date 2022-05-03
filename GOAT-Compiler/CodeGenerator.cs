@@ -132,14 +132,67 @@ namespace GOAT_Compiler
                     Vector Vec2 = ((Vector) GetValue(idSymbol));
 
                     Vector resultVec = new Vector(Vec1.X + Vec2.X, Vec1.Y + Vec2.Y, Vec1.Z + Vec2.Z);
+                    RT.Put(idSymbol, resultVec);
                 }
-                RT.Put(idSymbol, GetValue(node.GetExp()) + GetValue(idSymbol));
+                else
+                {
+                    RT.Put(idSymbol, GetValue(node.GetExp()) + GetValue(idSymbol));
+                }
             }
             else
             {
                 throw new Exception("AssignStmt did not work");
             }
         }
+        public override void OutAAssignMinusStmt(AAssignMinusStmt node)
+        {
+            Symbol idSymbol = _symbolTable.GetVariableSymbol(node.GetId().Text);
+            if (idSymbol != null)
+            {
+                if (idSymbol.type == Types.Vector)
+                {
+                    Vector Vec1 = ((Vector)GetValue(node.GetExp()));
+                    Vector Vec2 = ((Vector)GetValue(idSymbol));
+
+                    Vector resultVec = new Vector(Vec1.X - Vec2.X, Vec1.Y - Vec2.Y, Vec1.Z - Vec2.Z);
+                    RT.Put(idSymbol, resultVec);
+                }
+                else
+                {
+                    RT.Put(idSymbol, GetValue(node.GetExp()) - GetValue(idSymbol));
+                }
+            }
+            else
+            {
+                throw new Exception("AssignStmt did not work");
+            }
+        }
+        public override void OutAAssignMultStmt(AAssignMultStmt node)
+        {
+            Symbol idSymbol = _symbolTable.GetVariableSymbol(node.GetId().Text);
+            var type = node.GetExp();
+            if (idSymbol != null)
+            {
+                if (idSymbol.type == Types.Vector)
+                {
+                    Vector Vec = ((Vector)GetValue(idSymbol));
+                    dynamic scale = GetValue(node.GetExp());
+
+                    Vector resultVec = new Vector(Vec.X * scale, Vec.Y * scale, Vec.Z * scale);
+                    RT.Put(idSymbol, resultVec);
+                }
+                else
+                {
+                    RT.Put(idSymbol, GetValue(node.GetExp()) * GetValue(idSymbol));
+                }
+            }
+            else
+            {
+                throw new Exception("AssignStmt did not work");
+            }
+        }
+
+
 
         public override void OutAAndExp(AAndExp node)
         {
