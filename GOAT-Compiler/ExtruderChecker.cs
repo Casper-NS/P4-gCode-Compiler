@@ -49,15 +49,15 @@ namespace GOAT_Compiler
         
         private bool DoesntContainKey(AFuncDecl node)
         {
-            return _functions.ContainsKey(_symbolTable.GetFunctionSymbol(node.GetId().Text));
+            return !_functions.ContainsKey(_symbolTable.GetFunctionSymbol(node.GetId().Text));
         }
         private bool DoesntContainKey(AFunctionExp node)
         {
-            return _functions.ContainsKey(_symbolTable.GetFunctionSymbol(node.GetName().Text));
+            return !_functions.ContainsKey(_symbolTable.GetFunctionSymbol(node.GetName().Text));
         }
         private bool DoesntContainKey(AProcDecl node)
         {
-            return _functions.ContainsKey(_symbolTable.GetFunctionSymbol(node.GetId().Text));
+            return !_functions.ContainsKey(_symbolTable.GetFunctionSymbol(node.GetId().Text));
         }
 
         /*
@@ -74,12 +74,6 @@ namespace GOAT_Compiler
             }
         }
 
-        public override void InsideScopeOutAFuncDecl(AFuncDecl node)
-        {
-            //_CURRENTEXTRUDE DOESN'T WORK, WILL HAVE TO CALL .PARENT()
-            _functions[_currentSymbol].SetExtrudeType(_currentExtrude);
-        }
-
         public override void InsideScopeInAProcDecl(AProcDecl node)
         {
             _currentSymbol = _symbolTable.GetFunctionSymbol(node.GetId().Text);
@@ -88,11 +82,6 @@ namespace GOAT_Compiler
             {
                 _functions.Add(_currentSymbol, new DijkstraNode(Extrude.NotSet));
             }
-        }
-
-        public override void InsideScopeOutAProcDecl(AProcDecl node)
-        {
-            _functions[_currentSymbol].SetExtrudeType(_currentExtrude);
         }
 
         public override void OutAFunctionExp(AFunctionExp node)
@@ -210,18 +199,18 @@ namespace GOAT_Compiler
 
             while(frontier.Count > 0)
             {
-                DijkstraNode currentNode = frontier[0];
+                DijkstraNode curNode = frontier[0];
 
-                foreach (var edge in currentNode.GetFunctionCalls())
+                foreach (var edge in curNode.GetFunctionCalls())
                 {
-                    Extrude currentExtrude = UpdateExtrudeType(edge, currentNode);
+                    Extrude currentExtrude = UpdateExtrudeType(edge, curNode);
                     if (currentExtrude > edge.dijkstraNode.GetCallStackType())
                     {
                         edge.dijkstraNode.SetCallStackType(currentExtrude);
                         frontier.Add(edge.dijkstraNode);
                     }
                 }
-                frontier.Remove(currentNode);
+                frontier.Remove(curNode);
             }
         }
 
