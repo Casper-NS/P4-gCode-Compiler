@@ -1,0 +1,14 @@
+﻿void main()
+{
+	building()
+}
+
+build void building()
+{
+	walking()
+}
+
+walk void walking()
+{
+	building()
+}
