@@ -2,6 +2,7 @@
 using GOATCode.node;
 using System;
 using System.Collections.Generic;
+using GOAT_Compiler.Exceptions;
 
 namespace GOAT_Compiler
 {
@@ -52,27 +53,50 @@ namespace GOAT_Compiler
 
         public override void OutAVarDecl(AVarDecl node)
         {
-            _symbolTable.AddVariableSymbol(node.GetId().Text, ProcessTypeOfNode(node.GetTypes()));
+            AddVariableSymbol(node, node.GetId().Text, ProcessTypeOfNode(node.GetTypes()));
         }
 
         public override void OutAParamDecl(AParamDecl node)
         {
             Types type = ProcessTypeOfNode(node.GetTypes());
-            _symbolTable.AddVariableSymbol(node.GetId().Text, type);
+            AddVariableSymbol(node, node.GetId().Text, type);
             paramTypesList.Add(type);
+        }
+        private void AddVariableSymbol(Node node, string name, Types type)
+        {
+            try
+            {
+                _symbolTable.AddVariableSymbol(name, type);
+            }
+            catch (ArgumentException)
+            {
+                throw new VariableAlreadyDefinedException(node, name);
+            }
         }
 
 
         public override void OutsideScopeOutAFuncDecl(AFuncDecl node)
         {
-            _symbolTable.AddFunctionSymbol(node.GetId().Text, ProcessTypeOfNode(node.GetTypes()), paramTypesList.ToArray());
+            AddFunctionSymbol(node, node.GetId().Text, ProcessTypeOfNode(node.GetTypes()), paramTypesList.ToArray());
             paramTypesList.Clear();
         }
 
         public override void OutsideScopeOutAProcDecl(AProcDecl node)
         {
-            _symbolTable.AddFunctionSymbol(node.GetId().Text, Types.Void, paramTypesList.ToArray());
+            AddFunctionSymbol(node, node.GetId().Text, Types.Void, paramTypesList.ToArray());
             paramTypesList.Clear();
+        }
+
+        private void AddFunctionSymbol(Node node, string name, Types type, params Types[] types)
+        {
+            try
+            {
+                _symbolTable.AddFunctionSymbol(name, type, types);
+            }
+            catch (ArgumentException)
+            {
+                throw new FunctionAlreadyDefinedException(node, name);
+            }
         }
 
         /// <summary>

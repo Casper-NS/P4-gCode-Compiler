@@ -25,7 +25,7 @@ namespace GOAT_Compiler
 
         public override void OutAIdExp(AIdExp node)
         {
-            GetAndCheckSymbol(node.GetId().Text);
+            GetAndCheckSymbol(node, node.GetId().Text);
         }
 
         public override void OutAFunctionExp(AFunctionExp node)
@@ -34,7 +34,7 @@ namespace GOAT_Compiler
 
             if (symbol == null)
             {
-                throw new RefNotFoundException(node.GetName().Text);
+                throw new RefNotFoundException(node, node.GetName().Text);
             }
         }
 
@@ -44,12 +44,12 @@ namespace GOAT_Compiler
 
             if (symbol == null)
             {
-                throw new RefNotFoundException(node.GetId().Text);
+                throw new RefNotFoundException(node, node.GetId().Text);
             }
 
             if (isDeclared.Contains(symbol) == false)
             {
-                throw new RefUsedBeforeClosestDeclException(symbol.name);
+                throw new RefUsedBeforeClosestDeclException(node, symbol.name);
             }
 
             if (isInitialized.Contains(symbol) == false)
@@ -60,47 +60,47 @@ namespace GOAT_Compiler
 
         public override void OutAAssignPlusStmt(AAssignPlusStmt node)
         {
-            GetAndCheckSymbol(node.GetId().Text);
+            GetAndCheckSymbol(node, node.GetId().Text);
         }
 
 
         public override void OutAAssignMinusStmt(AAssignMinusStmt node)
         {
-            GetAndCheckSymbol(node.GetId().Text);
+            GetAndCheckSymbol(node, node.GetId().Text);
         }
 
         public override void OutAAssignMultStmt(AAssignMultStmt node)
         {
-            GetAndCheckSymbol(node.GetId().Text);
+            GetAndCheckSymbol(node, node.GetId().Text);
         }
 
         public override void OutAAssignModStmt(AAssignModStmt node)
         {
-            GetAndCheckSymbol(node.GetId().Text);
+            GetAndCheckSymbol(node, node.GetId().Text);
         }
 
         public override void OutAAssignDivisionStmt(AAssignDivisionStmt node)
         {
-            GetAndCheckSymbol(node.GetId().Text);
+            GetAndCheckSymbol(node, node.GetId().Text);
         }
 
-        private void GetAndCheckSymbol(string SymName)
+        private void GetAndCheckSymbol(Node node, string SymName)
         {
             Symbol symbol = _symbolTable.GetVariableSymbol(SymName);
 
             if (symbol == null)
             {
-                throw new RefNotFoundException(SymName);
+                throw new RefNotFoundException(node, SymName);
             }
 
             if (isDeclared.Contains(symbol) == false)
             {
-                throw new RefUsedBeforeClosestDeclException(symbol.name);
+                throw new RefUsedBeforeClosestDeclException(node, symbol.name);
             }
 
             if (isInitialized.Contains(symbol) == false)
             {
-                throw new VarNotInitializedException(SymName);
+                throw new VarNotInitializedException(node, SymName);
             }
         }
 
