@@ -11,20 +11,20 @@ namespace GOAT_Compiler
     public class NodePosition
     {
         public int Line { get; }
-        public int Column { get; }
+        public int Character { get; }
 
-        public NodePosition(int line, int column)
+        public NodePosition(int line, int character)
         {
             Line = line;
-            Column = column;
+            Character = character;
         }
         public override string ToString()
         {
-            if (!(Line >= 0 && Column >= 0))
+            if (!(Line >= 0 && Character >= 0))
             {
                 return "(?, ?)";
             }
-            return $"({Line}, {Column})";
+            return $"({Line}, {Character})";
         }
     }
     public class NodePositionVisitor : DepthFirstAdapter
