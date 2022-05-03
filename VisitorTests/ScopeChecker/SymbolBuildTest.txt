@@ -11,12 +11,13 @@ void main()
 	{
 		float a = 2
 		float b = 2
+		vector v = (2,3,4.5)
 		if(a==b)
 		{
 			int a = 2
 			if(a==2)
 			{
-				bool b
+				bool b = true
 				repeat(5)
 				{
 					a = a+1

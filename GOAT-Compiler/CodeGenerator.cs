@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using GOATCode.node;
@@ -9,11 +11,13 @@ namespace GOAT_Compiler
     {
         FileStream gcodeFile;
         private ISymbolTable _symbolTable;
+        private Dictionary<Node, Types> typeMap;
         private RuntimeTable RT;
 
-        public CodeGenerator(ISymbolTable symbolTable, string outputName) : base(symbolTable)
+        public CodeGenerator(ISymbolTable symbolTable, Dictionary<Node, Types> typesDictionary, string outputName) : base(symbolTable)
         {
             _symbolTable = symbolTable;
+            typeMap = typesDictionary;
             RT = new RuntimeTable(_symbolTable);
             if (outputName.Length == 0)
             {
@@ -28,6 +32,52 @@ namespace GOAT_Compiler
         public void CreateGCodeLine(string gCommand, Vector vector)
         {
             string line = gCommand + " X" + vector.X + " Y" + vector.Y + " Z" + vector.Z;
+        }
+
+        private Vector ToVector(string input)
+        {
+            float x, y, z;
+            string[] variables = input.Split(" ");
+
+            x = float.Parse(variables[0], CultureInfo.InvariantCulture);
+            y = float.Parse(variables[1], CultureInfo.InvariantCulture);
+            z = float.Parse(variables[2], CultureInfo.InvariantCulture);
+
+            return new Vector(x, y, z);
+        }
+
+        public override void OutAVarDecl(AVarDecl node)
+        {
+            //Console.WriteLine(node.GetExp());
+            Symbol symbol = _symbolTable.GetVariableSymbol(node.GetId().Text);
+            if (node.GetExp() != null)
+            {
+                string nodeExpr = node.GetExp().ToString();
+                Console.WriteLine(nodeExpr);
+                switch (typeMap[node])
+                {
+                    case Types.Integer:
+                        RT.Put(symbol, int.Parse(nodeExpr!));
+                        break;
+                    case Types.FloatingPoint:
+                        RT.Put(symbol, float.Parse(nodeExpr!, CultureInfo.InvariantCulture));
+                        break;
+                    case Types.Boolean:
+                        RT.Put(symbol, bool.Parse(nodeExpr!));
+                        break;
+                    case Types.Vector:
+                        RT.Put(symbol, ToVector(nodeExpr!));
+                        break;
+                    default:
+                        throw new Exception("Everything is on fire!!!!!!!!!! \n Typechecker is broken");
+                        break;
+                }
+            }
+        }
+
+        public void CloseFile()
+        {
+            gcodeFile.Close();
         }
     }
 
