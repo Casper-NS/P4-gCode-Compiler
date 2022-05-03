@@ -60,6 +60,12 @@ namespace GOAT_Compiler
             return !_functions.ContainsKey(_symbolTable.GetFunctionSymbol(node.GetId().Text));
         }
 
+
+        public override void InsideScopeInADeclProgram(ADeclProgram node)
+        {
+            _stack.Push(Extrude.NotSet);
+        }
+
         /*
             Check if the function is aldready in the function Dictionary,
             if not, create a new DijkstraNode and add it to the dictionary
