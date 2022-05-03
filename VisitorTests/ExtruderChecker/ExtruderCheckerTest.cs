@@ -21,7 +21,7 @@ namespace ExtruderCheckerTest
             ISymbolTable symbolTable = FileReadingTestUtilities.BuildSymbolTable(s);
             ExtruderChecker checker = new ExtruderChecker(symbolTable);
 
-            Assert.Throws<PushException>(()=> s.Apply(checker));
+            Assert.Throws<CallBuildInWalkException>(()=> s.Apply(checker));
         }
         class PushErrorThrownFilesEnumerator : BaseFilesEnumerator
         {
@@ -42,6 +42,21 @@ namespace ExtruderCheckerTest
         {
             public override string RelativeFolderPath() => "ExtruderChecker/RunsCorrectly";
         }
+        [SkippableTheory(typeof(TestDependencyException))]
+        [ClassData(typeof(ExtruderCheckerThrowsExtruderExceptionFilesEnumerator))]
+        public void ExtruderCheckerThrowsBuildInWalk(string filePath)
+        {
+            Start s = FileReadingTestUtilities.ParseFile(filePath);
+            ISymbolTable symbolTable = FileReadingTestUtilities.BuildSymbolTable(s);
+            ExtruderChecker checker = new ExtruderChecker(symbolTable);
+
+            Assert.Throws<CallBuildInWalkException>(() => s.Apply(checker));
+        }
+        class ExtruderCheckerThrowsExtruderExceptionFilesEnumerator : BaseFilesEnumerator
+        {
+            public override string RelativeFolderPath() => "ExtruderChecker/ThrowsBuildInWalk";
+        }
+
 
     }
 }

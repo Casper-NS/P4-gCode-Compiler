@@ -96,10 +96,7 @@ namespace GOAT_Compiler
             {
                 _functions.Add(_symbolTable.GetFunctionSymbol(node.GetName().Text), new DijkstraNode(Extrude.NotSet));
             }
-            else
-            {
-                _functions[_currentSymbol].AddFunctionCall(_functions[_symbolTable.GetFunctionSymbol(node.GetName().Text)], _stack.Peek());
-            }
+            _functions[_currentSymbol].AddFunctionCall(_functions[_symbolTable.GetFunctionSymbol(node.GetName().Text)], _stack.Peek());
         }
 
         public override void InANoneBlock(ANoneBlock node)
@@ -224,7 +221,7 @@ namespace GOAT_Compiler
         {
             if (node.GetCallStackType() == Extrude.Walk && edge.extrudeType == Extrude.Build)
             {
-                throw new CallBuildInWalkException();
+                throw new CallBuildInWalkException(node);
             }
             else
             {

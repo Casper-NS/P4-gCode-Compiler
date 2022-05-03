@@ -1,0 +1,14 @@
+﻿build void main()
+{
+	w()
+}
+
+void n()
+{
+	w()
+}
+
+walk void w()
+{
+	int a
+}

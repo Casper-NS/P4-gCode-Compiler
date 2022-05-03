@@ -1,0 +1,9 @@
+﻿build void main()
+{
+	w()
+}
+
+walk void w()
+{
+	int a
+}
