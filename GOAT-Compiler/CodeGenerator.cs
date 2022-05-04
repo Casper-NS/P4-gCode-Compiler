@@ -43,7 +43,7 @@ namespace GOAT_Compiler
             typeMap = typesDictionary;
             RT = new RuntimeTable<Symbol>();
             nodeMap = new RuntimeTable<Node>();
-            _outputFileStream = outputStream;            
+            _outputFileStream = outputStream;
         }
 
         public void CreateGCodeLine(GCommands gCommand, Vector vector)
@@ -124,7 +124,7 @@ namespace GOAT_Compiler
         {
             Symbol idSymbol = _symbolTable.GetVariableSymbol(node.GetId().Text);
 
-            if(idSymbol != null)
+            if (idSymbol != null)
             {
                 RT.Put(idSymbol, GetValue(node.GetExp()));
             }
@@ -140,8 +140,8 @@ namespace GOAT_Compiler
             {
                 if (idSymbol.type == Types.Vector)
                 {
-                    Vector Vec1 = ((Vector) GetValue(node.GetExp()));
-                    Vector Vec2 = ((Vector) GetValue(idSymbol));
+                    Vector Vec1 = ((Vector)GetValue(node.GetExp()));
+                    Vector Vec2 = ((Vector)GetValue(idSymbol));
 
                     Vector resultVec = new Vector(Vec1.X + Vec2.X, Vec1.Y + Vec2.Y, Vec1.Z + Vec2.Z);
                     RT.Put(idSymbol, resultVec);
@@ -444,7 +444,7 @@ namespace GOAT_Compiler
         public override void OutANotExp(ANotExp node)
         {
             bool value = GetValue(node.GetExp());
-            if(node != null)
+            if (node != null)
             {
                 nodeMap.Put(node, !value);
             }
@@ -484,75 +484,76 @@ namespace GOAT_Compiler
         */
 
 
-    internal class RuntimeTable<TKey>
-    {
-        private Dictionary<TKey, int> IntMap = new Dictionary<TKey, int>();
-        private Dictionary<TKey, float> FloatMap = new Dictionary<TKey, float>();
-        private Dictionary<TKey, bool> BoolMap = new Dictionary<TKey, bool>();
-        private Dictionary<TKey, Vector> VecMap = new Dictionary<TKey, Vector>();
-
-        public void Put(TKey key, int value)
+        internal class RuntimeTable<TKey>
         {
-            if (IntMap.ContainsKey(key))
-            {
-                IntMap[key] = value;
-            }
-            else
-            {
-                IntMap.Add(key, value);
-            }
-        }
+            private Dictionary<TKey, int> IntMap = new Dictionary<TKey, int>();
+            private Dictionary<TKey, float> FloatMap = new Dictionary<TKey, float>();
+            private Dictionary<TKey, bool> BoolMap = new Dictionary<TKey, bool>();
+            private Dictionary<TKey, Vector> VecMap = new Dictionary<TKey, Vector>();
 
-        public void Put(TKey key, bool value)
-        {
-            if (BoolMap.ContainsKey(key))
+            public void Put(TKey key, int value)
             {
-                BoolMap[key] = value;
+                if (IntMap.ContainsKey(key))
+                {
+                    IntMap[key] = value;
+                }
+                else
+                {
+                    IntMap.Add(key, value);
+                }
             }
-            else
-            {
-                BoolMap.Add(key, value);
-            }
-        }
 
-        public void Put(TKey key, float value)
-        {
-            if (FloatMap.ContainsKey(key))
+            public void Put(TKey key, bool value)
             {
-                FloatMap[key] = value;
+                if (BoolMap.ContainsKey(key))
+                {
+                    BoolMap[key] = value;
+                }
+                else
+                {
+                    BoolMap.Add(key, value);
+                }
             }
-            else
-            {
-                FloatMap.Add(key, value);
-            }
-        }
 
-        public void Put(TKey key, Vector vector)
-        {
-            if (VecMap.ContainsKey(key))
+            public void Put(TKey key, float value)
             {
-                VecMap[key] = vector;
+                if (FloatMap.ContainsKey(key))
+                {
+                    FloatMap[key] = value;
+                }
+                else
+                {
+                    FloatMap.Add(key, value);
+                }
             }
-            else
-            {
-                VecMap.Add(key, vector);
-            }
-        }
 
-        public dynamic Get(TKey key, Types type)
-        {
-            switch (type)
+            public void Put(TKey key, Vector vector)
             {
-                case Types.Integer:
-                    return IntMap[key];
-                case Types.FloatingPoint:
-                    return FloatMap[key];
-                case Types.Boolean:
-                    return BoolMap[key];
-                case Types.Vector:
-                    return VecMap[key];
-                default:
-                    return null;
+                if (VecMap.ContainsKey(key))
+                {
+                    VecMap[key] = vector;
+                }
+                else
+                {
+                    VecMap.Add(key, vector);
+                }
+            }
+
+            public dynamic Get(TKey key, Types type)
+            {
+                switch (type)
+                {
+                    case Types.Integer:
+                        return IntMap[key];
+                    case Types.FloatingPoint:
+                        return FloatMap[key];
+                    case Types.Boolean:
+                        return BoolMap[key];
+                    case Types.Vector:
+                        return VecMap[key];
+                    default:
+                        return null;
+                }
             }
         }
     }

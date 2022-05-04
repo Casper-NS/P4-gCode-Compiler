@@ -23,8 +23,12 @@ namespace VisitorTests
             ISymbolTable symbolTable = FileReadingTestUtilities.BuildSymbolTable(s);
             TypeChecker typeChecker = new TypeChecker(symbolTable);
             s.Apply(typeChecker);
+            
 
-            _ = new CodeGenerator(symbolTable, typeChecker.GetTypeDictionary(), OutputFilePath);
+            using (Stream stream = new FileStream(OutputFilePath, FileMode.Open))
+            {
+                _ = new CodeGenerator(symbolTable, typeChecker.GetTypeDictionary(), stream);
+            }
 
             Assert.True(File.Exists(OutputFilePath+".gcode"));
             if (File.Exists(OutputFilePath + ".gcode"))
@@ -43,9 +47,11 @@ namespace VisitorTests
             ISymbolTable symbolTable = FileReadingTestUtilities.BuildSymbolTable(s);
             TypeChecker typeChecker = new TypeChecker(symbolTable);
             s.Apply(typeChecker);
-
-            _ = new CodeGenerator(symbolTable, typeChecker.GetTypeDictionary(), OutputFilePath);
-
+            
+            using (Stream stream = new FileStream(OutputFilePath, FileMode.Open))
+            {
+                _ = new CodeGenerator(symbolTable, typeChecker.GetTypeDictionary(), stream);
+            }
             Assert.True(File.Exists(OutputFilePath + ".gcode"));
             
             Assert.True(File.ReadAllText(OutputFilePath + ".gcode").Length > 0);

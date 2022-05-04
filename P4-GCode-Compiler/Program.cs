@@ -22,9 +22,12 @@ namespace P4_GCode_Compiler
             S.Apply(Tchecker);
             ScopeChecker scopeChecker = new ScopeChecker(symTab);
             S.Apply(scopeChecker);
-            CodeGenerator codeGenerator = new CodeGenerator(symTab, Tchecker.GetTypeDictionary(), "test");
-            S.Apply(codeGenerator);
-            codeGenerator.CloseFile();
+            CodeGenerator codeGenerator;
+            using (Stream stream = new FileStream("", FileMode.Open))
+            {
+                codeGenerator = new CodeGenerator(symTab, Tchecker.GetTypeDictionary(), stream);
+                S.Apply(codeGenerator);
+            }
         }
     }
 }
