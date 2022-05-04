@@ -7,6 +7,9 @@ using System.Threading.Tasks;
 
 namespace GOAT_Compiler
 {
+    /// <summary>
+    /// Contains the built in functions in the program, the move functions and nonmove functions.
+    /// </summary>
     internal static class BuiltInFunctions
     {
         internal static IReadOnlyDictionary<string, Symbol> FunctionsList => _functionsList;
