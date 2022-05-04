@@ -45,7 +45,6 @@ namespace GOAT_Compiler
             nodeMap = new RuntimeTable<Node>();
             _outputFileStream = outputStream;
         }
-
         public void CreateGCodeLine(GCommands gCommand, Vector vector)
         {
             string line = gCommand.ToString() + " X" + vector.X + " Y" + vector.Y + " Z" + vector.Z;
@@ -453,7 +452,7 @@ namespace GOAT_Compiler
                 throw new Exception("NotExp did not work");
             }
         }
-        public override void OutAIfStmt(AIfStmt node)
+        public override void OutAIfStmt(AIfStmt node) //Needs fixing
         {
             bool value = GetValue(node.GetExp());
             if (value)
@@ -482,8 +481,6 @@ namespace GOAT_Compiler
         {
         }
         */
-
-
         internal class RuntimeTable<TKey>
         {
             private Dictionary<TKey, int> IntMap = new Dictionary<TKey, int>();
