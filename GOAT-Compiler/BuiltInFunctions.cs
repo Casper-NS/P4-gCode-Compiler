@@ -12,7 +12,11 @@ namespace GOAT_Compiler
     /// </summary>
     internal static class BuiltInFunctions
     {
+        /// <summary>
+        /// The Dictionary for built in functions, maps from a string to a Symbol
+        /// </summary>
         internal static IReadOnlyDictionary<string, Symbol> FunctionsList => _functionsList;
+        
         private static Dictionary<string, Symbol> _functionsList = new Dictionary<string, Symbol>() 
         {
             { "RelMove", new Symbol("RelMove", Types.Void, Types.Vector) },
