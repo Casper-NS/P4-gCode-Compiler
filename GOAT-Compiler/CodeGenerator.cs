@@ -427,22 +427,50 @@ namespace GOAT_Compiler
 
         public void Put(TKey key, int value)
         {
-            IntMap.Add(key, value);
+            if (IntMap.ContainsKey(key))
+            {
+                IntMap[key] = value;
+            }
+            else
+            {
+                IntMap.Add(key, value);
+            }
         }
 
         public void Put(TKey key, bool value)
         {
-            BoolMap.Add(key, value);
+            if (BoolMap.ContainsKey(key))
+            {
+                BoolMap[key] = value;
+            }
+            else
+            {
+                BoolMap.Add(key, value);
+            }
         }
 
         public void Put(TKey key, float value)
-        {  
-            FloatMap.Add(key, value);
+        {
+            if (FloatMap.ContainsKey(key))
+            {
+                FloatMap[key] = value;
+            }
+            else
+            {
+                FloatMap.Add(key, value);
+            }
         }
 
         public void Put(TKey key, Vector vector)
         {
-            VecMap.Add(key, vector);
+            if (VecMap.ContainsKey(key))
+            {
+                VecMap[key] = vector;
+            }
+            else
+            {
+                VecMap.Add(key, vector);
+            }
         }
 
         public dynamic Get(TKey key, Types type)
