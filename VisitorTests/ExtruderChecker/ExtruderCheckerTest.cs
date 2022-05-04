@@ -21,7 +21,7 @@ namespace ExtruderCheckerTest
             ISymbolTable symbolTable = FileReadingTestUtilities.BuildSymbolTable(s);
             ExtruderChecker checker = new ExtruderChecker(symbolTable);
 
-            Assert.Throws<CallBuildInWalkException>(()=> s.Apply(checker));
+            Assert.Throws<StaticCallBuildInWalkException>(()=> s.Apply(checker));
         }
         class PushErrorThrownFilesEnumerator : BaseFilesEnumerator
         {

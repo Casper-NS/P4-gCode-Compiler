@@ -2,6 +2,9 @@
 
 namespace GOAT_Compiler
 {
+    /// <summary>
+    /// This class represents a functioncall from a dijkstranode.
+    /// </summary>
     internal struct FunctionCall
     {
         internal FunctionCall(DijkstraNode dn, Extrude e)
@@ -13,7 +16,9 @@ namespace GOAT_Compiler
         internal Extrude extrudeType;
     }
 
-
+    /// <summary>
+    /// DijkstraNode represents a function with a name, a list of function calls, and what node it came from.
+    /// </summary>
     internal class DijkstraNode
     {
         internal string Name { get; private set; }

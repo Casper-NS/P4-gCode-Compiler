@@ -3,6 +3,7 @@ using System.Collections.Generic;
 
 namespace GOAT_Compiler
 {
+
     internal class CallBuildInWalkException : Exception
     {
         internal CallBuildInWalkException(DijkstraNode node) : base(stringMessage(node))
@@ -34,11 +35,6 @@ namespace GOAT_Compiler
                 } 
             }
             return message;
-        }
-
-        internal CallBuildInWalkException(Extrude e) : base("Tried to call a Build in a Walk") 
-        {
-        }
-        
+        } 
     }
 }
