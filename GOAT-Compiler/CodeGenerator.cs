@@ -351,21 +351,12 @@ namespace GOAT_Compiler
                 throw new Exception("AndExp didnt not work");
             }
         }
-
-
         public override void OutAEqExp(AEqExp node)
         {
-            string l = node.GetL().ToString();
-            string r = node.GetR().ToString();
+            dynamic l = GetValue(node.GetL());
+            dynamic r = GetValue(node.GetR());
             if (node.GetL() != null && node.GetR() != null)
-                if (l == r)
-                {
-                    //nodeMap.Put(node, "true");
-                }
-                else
-                {
-                    //nodeMap.Put(node, "false");
-                }
+                nodeMap.Put(node, l == r);
             else
             {
                 throw new Exception("EqExp did not work");
@@ -374,40 +365,57 @@ namespace GOAT_Compiler
 
         public override void OutAGtExp(AGtExp node)
         {
-            Symbol symbol = _symbolTable.GetVariableSymbol(node.ToString());
-            float l = float.Parse(node.GetL().ToString(), CultureInfo.InvariantCulture);
-            float r = float.Parse(node.GetR().ToString(), CultureInfo.InvariantCulture);
-            if (node != null)
-                if (l>r)
-                {
-                    RT.Put(symbol, true);
-                }
-                else
-                {
-                    RT.Put(symbol, false);
-                }
+            dynamic l = GetValue(node.GetL());
+            dynamic r = GetValue(node.GetR());
+            if (node.GetL() != null && node.GetR() != null)
+                nodeMap.Put(node, l > r);
             else
             {
-                throw new Exception("GtExp didnt not work");
+                throw new Exception("GtExp did not work");
             }
         }
         public override void OutALtExp(ALtExp node)
         {
-            Symbol symbol = _symbolTable.GetVariableSymbol(node.ToString());
-            float l = float.Parse(node.GetL().ToString(), CultureInfo.InvariantCulture);
-            float r = float.Parse(node.GetR().ToString(), CultureInfo.InvariantCulture);
-            if (node != null)
-                if (l < r)
-                {
-                    RT.Put(symbol, true);
-                }
-                else
-                {
-                    RT.Put(symbol, false);
-                }
+            dynamic l = GetValue(node.GetL());
+            dynamic r = GetValue(node.GetR());
+            if (node.GetL() != null && node.GetR() != null)
+                nodeMap.Put(node, l < r);
             else
             {
-                throw new Exception("LtExp didnt not work");
+                throw new Exception("LtExp did not work");
+            }
+        }
+        public override void OutANeqExp(ANeqExp node)
+        {
+            dynamic l = GetValue(node.GetL());
+            dynamic r = GetValue(node.GetR());
+            if (node.GetL() != null && node.GetR() != null)
+                nodeMap.Put(node, l != r);
+            else
+            {
+                throw new Exception("NeqExp did not work");
+            }
+        }
+        public override void OutALeqExp(ALeqExp node)
+        {
+            dynamic l = GetValue(node.GetL());
+            dynamic r = GetValue(node.GetR());
+            if (node.GetL() != null && node.GetR() != null)
+                nodeMap.Put(node, l <= r);
+            else
+            {
+                throw new Exception("LeqExp did not work");
+            }
+        }
+        public override void OutAGeqExp(AGeqExp node)
+        {
+            dynamic l = GetValue(node.GetL());
+            dynamic r = GetValue(node.GetR());
+            if (node.GetL() != null && node.GetR() != null)
+                nodeMap.Put(node, l >= r);
+            else
+            {
+                throw new Exception("GeqExp did not work");
             }
         }
 
