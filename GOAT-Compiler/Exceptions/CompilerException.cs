@@ -41,7 +41,6 @@ namespace GOAT_Compiler
             return "Compiler exception at " + pos;
         }
 
-
         private static string GenerateFullMessage(Node node, string message)
         {
             if (string.IsNullOrEmpty(message))

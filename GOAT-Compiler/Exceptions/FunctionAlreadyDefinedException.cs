@@ -5,9 +5,6 @@ namespace GOAT_Compiler.Exceptions
 {
     public class FunctionAlreadyDefinedException : CompilerException
     {
-        public FunctionAlreadyDefinedException(Node n, string Name) : base(n, $"The function named {Name} is already defined.")
-        {
-            
-        }
+        public FunctionAlreadyDefinedException(Node n, string Name) : base(n, $"The function named {Name} is already defined.") { }
     }
 }
