@@ -1,0 +1,4 @@
+﻿void main(){
+	RelMove(1)
+	AbsMove()
+}

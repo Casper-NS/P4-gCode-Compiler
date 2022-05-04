@@ -13,8 +13,7 @@ namespace GOAT_Compiler
         private Table globalScope;
         private Table currentScope;
 
-
-        private readonly Dictionary<string, Symbol> functionSymbols = new();
+        private readonly Dictionary<string, Symbol> functionSymbols;
 
         //Flag to determine whether we are building or going through the symbol table.
         private bool buildComplete = false;
@@ -25,6 +24,7 @@ namespace GOAT_Compiler
             globalScope = new Table(tables);
             tables.ChildrenTables.Add(globalScope);
             currentScope = tables;
+            functionSymbols = new Dictionary<string, Symbol>(BuiltInFunctions.FunctionsList);
         }
 
         public void OpenScope()
