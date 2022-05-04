@@ -2,9 +2,9 @@
 
 namespace GOAT_Compiler
 {
-    internal struct Edge
+    internal struct FunctionCall
     {
-        internal Edge(DijkstraNode dn, Extrude e)
+        internal FunctionCall(DijkstraNode dn, Extrude e)
         {
             dijkstraNode = dn;
             extrudeType = e;
@@ -18,11 +18,11 @@ namespace GOAT_Compiler
     {
         internal string Name { get; private set; }
 
-        private List<Edge> _functionCalls = new();
-
-        private Extrude _callStackExtrudeType = Extrude.NotSet;
+        private List<FunctionCall> _functionCalls = new();
 
         private Extrude _extrudeType;
+
+        private Extrude _callStackExtrudeType = Extrude.NotSet;
 
         private DijkstraNode _cameFrom;
         
@@ -34,10 +34,10 @@ namespace GOAT_Compiler
 
         internal void AddFunctionCall(DijkstraNode dn, Extrude e)
         {
-            _functionCalls.Add(new Edge(dn, e));
+            _functionCalls.Add(new FunctionCall(dn, e));
         }
         
-        internal List<Edge> GetFunctionCalls()
+        internal List<FunctionCall> GetFunctionCalls()
         {
             return _functionCalls;
         }
