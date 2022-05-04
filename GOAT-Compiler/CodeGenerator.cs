@@ -10,59 +10,45 @@ namespace GOAT_Compiler
 {
     public enum GCommands
     {
-        G00, //	Fast move
-        G01, // Linear interpolation
-        G02, // Circular Interpolation CW
-        G03, // Circular interpolation CCW
-        G04, // Dwell
-        G20, // Set English units
-        G21, // Set metric units
-        G28, // Machine zero return (point 1)
-        G80, // Fixed cycle cancel
-        G90,
-        G91,
-        G92,
-        M00,
-        M01,
-        M80,
-        M81,
-        M104,
-        M140,
-        F
+        G00,  // Fast move
+        G01,  // Linear interpolation
+        G02,  // Circular Interpolation CW
+        G03,  // Circular interpolation CCW
+        G04,  // Dwell
+        G20,  // Set English units
+        G21,  // Set metric units
+        G28,  // Machine zero return (point 1)
+        G80,  // Fixed cycle cancel
+        G90,  // Set the interpreter to absolute positions
+        G91,  // Set the interpreter to relative positions
+        G92,  // Set the current position of one or more axes.
+        M00,  // Stop and wait for user
+        M01,  // Is a deprecated alias for M0
+        M80,  // Turn on the high-voltage power supply.
+        M81,  // Turn off the high-voltage power supply.
+        M104, // Set a new target hot end temperature and continue without waiting.
+        M140, // Set a new target temperature for the heated bed and continue without waiting.
+        F     // The speed of the 3D-printer
     }
     internal class CodeGenerator : SymbolTableVisitor
     {
-        FileStream gcodeFile;
         private Dictionary<Node, Types> typeMap;
         private RuntimeTable<Node> nodeMap;
         private RuntimeTable<Symbol> RT;
-        private string _outputFileName;
+        private Stream _outputFileStream;
 
-        public CodeGenerator(ISymbolTable symbolTable, Dictionary<Node, Types> typesDictionary, string outputName) : base(symbolTable)
+        public CodeGenerator(ISymbolTable symbolTable, Dictionary<Node, Types> typesDictionary, Stream outputStream) : base(symbolTable)
         {
             _symbolTable = symbolTable;
             typeMap = typesDictionary;
             RT = new RuntimeTable<Symbol>();
             nodeMap = new RuntimeTable<Node>();
-            
-            if (outputName.Length == 0)
-            {
-                _outputFileName = "GOAT.gcode";
-            }
-            else
-            {
-                _outputFileName = outputName + ".gcode";
-            }
+            _outputFileStream = outputStream;            
         }
 
-        public override void OutsideScopeInADeclProgram(ADeclProgram node)
+        public void CreateGCodeLine(GCommands gCommand, Vector vector)
         {
-            gcodeFile = File.Create(_outputFileName);
-        }
-
-        public void CreateGCodeLine(string gCommand, Vector vector)
-        {
-            string line = gCommand + " X" + vector.X + " Y" + vector.Y + " Z" + vector.Z;
+            string line = gCommand.ToString() + " X" + vector.X + " Y" + vector.Y + " Z" + vector.Z;
         }
 
         dynamic GetValue(Symbol symbol)
@@ -497,11 +483,6 @@ namespace GOAT_Compiler
         }
         */
 
-        public void CloseFile()
-        {
-            gcodeFile.Close();
-        }
-    }
 
     internal class RuntimeTable<TKey>
     {
