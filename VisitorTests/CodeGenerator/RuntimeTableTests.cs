@@ -5,7 +5,6 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Xunit;
-using static GOAT_Compiler.RuntimeTable;
 
 namespace VisitorTests
 {
@@ -18,9 +17,9 @@ namespace VisitorTests
             ISymbolTable symbolTable = new RecSymbolTable();
             symbolTable.AddVariableSymbol(name, types);
             Symbol symbol = symbolTable.GetVariableSymbol(name);
-            RuntimeTable table = new RuntimeTable(symbolTable);
+            RuntimeTable<Symbol> table = new RuntimeTable<Symbol>();
             table.Put(symbol, value);
-            Assert.Equal(value, table.Get(symbol));
+            Assert.Equal(value, table.Get(symbol, symbol.type));
         }
         
         [Theory]
@@ -30,9 +29,9 @@ namespace VisitorTests
             ISymbolTable symbolTable = new RecSymbolTable();
             symbolTable.AddVariableSymbol(name, types);
             Symbol symbol = symbolTable.GetVariableSymbol(name);
-            RuntimeTable table = new RuntimeTable(symbolTable);
+            RuntimeTable<Symbol> table = new RuntimeTable<Symbol>();
             table.Put(symbol, value);
-            Assert.Equal(value, table.Get(symbol));
+            Assert.Equal(value, table.Get(symbol, symbol.type)); ;
         }
         
         [Theory]
@@ -42,10 +41,10 @@ namespace VisitorTests
             ISymbolTable symbolTable = new RecSymbolTable();
             symbolTable.AddVariableSymbol(name, types);
             Symbol symbol = symbolTable.GetVariableSymbol(name);
-            RuntimeTable table = new RuntimeTable(symbolTable);
+            RuntimeTable<Symbol> table = new RuntimeTable<Symbol>();
             Vector value = new Vector(x, y, z);
             table.Put(symbol, value);
-            Assert.Equal(value, table.Get(symbol));
+            Assert.Equal(value, table.Get(symbol, symbol.type));
         }
 
         [Theory]
@@ -55,9 +54,9 @@ namespace VisitorTests
             ISymbolTable symbolTable = new RecSymbolTable();
             symbolTable.AddVariableSymbol(name, types);
             Symbol symbol = symbolTable.GetVariableSymbol(name);
-            RuntimeTable table = new RuntimeTable(symbolTable);
+            RuntimeTable<Symbol> table = new RuntimeTable<Symbol>();
             table.Put(symbol, value);
-            Assert.Equal(value, table.Get(symbol));
+            Assert.Equal(value, table.Get(symbol, symbol.type));
         }
     }
 }

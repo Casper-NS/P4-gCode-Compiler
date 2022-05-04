@@ -48,7 +48,6 @@ namespace GOAT_Compiler
 
         public override void OutAVarDecl(AVarDecl node)
         {
-            //Console.WriteLine(node.GetExp());
             Symbol symbol = _symbolTable.GetVariableSymbol(node.GetId().Text);
             if (node.GetExp() != null)
             {
@@ -170,7 +169,6 @@ namespace GOAT_Compiler
         public override void OutAAssignMultStmt(AAssignMultStmt node)
         {
             Symbol idSymbol = _symbolTable.GetVariableSymbol(node.GetId().Text);
-            var type = node.GetExp();
             if (idSymbol != null)
             {
                 if (idSymbol.type == Types.Vector)
@@ -188,10 +186,156 @@ namespace GOAT_Compiler
             }
             else
             {
-                throw new Exception("AssignStmt did not work");
+                throw new Exception("MultStmt did not work");
+            }
+        }
+        //Check the modulo statements
+        public override void OutAAssignModStmt(AAssignModStmt node)
+        {
+            Symbol idSymbol = _symbolTable.GetVariableSymbol(node.GetId().Text);
+            if (idSymbol != null)
+            {
+                RT.Put(idSymbol, GetValue(node.GetExp()) % GetValue(idSymbol));
+            }
+            else
+            {
+                throw new Exception("ModStmt did not work");
+            }
+        }
+        public override void OutAAssignDivisionStmt(AAssignDivisionStmt node)
+        {
+            Symbol idSymbol = _symbolTable.GetVariableSymbol(node.GetId().Text);
+            if (idSymbol != null)
+            {
+                if (idSymbol.type == Types.Vector)
+                {
+                    Vector Vec1 = ((Vector)GetValue(idSymbol));
+                    dynamic value = GetValue(node.GetExp());
+
+                    Vector resultVec = new Vector(Vec1.X / value, Vec1.Y / value, Vec1.Z / value);
+                    RT.Put(idSymbol, resultVec);
+                }
+                else
+                {
+                    RT.Put(idSymbol, GetValue(node.GetExp()) / GetValue(idSymbol));
+                }
+            }
+            else
+            {
+                throw new Exception("DivStmt did not work");
+            }
+        }
+        public override void OutAPlusExp(APlusExp node)
+        {
+            Node left = node.GetL();
+            Node right = node.GetR();
+            if (left != null && right != null)
+            {
+                if (typeMap[left] == Types.Vector && typeMap[right] == Types.Vector)
+                {
+                    Vector Vec1 = ((Vector)GetValue(left));
+                    Vector Vec2 = ((Vector)GetValue(right));
+
+                    Vector resultVec = new Vector(Vec1.X + Vec2.X, Vec1.Y + Vec2.Y, Vec1.Z + Vec2.Z);
+                    nodeMap.Put(node, resultVec);
+                }
+                else
+                {
+                    nodeMap.Put(node, GetValue(left) + GetValue(right));
+                }
+            }
+            else
+            {
+                throw new Exception("PlusExp did not work");
+            }
+        }
+        public override void OutAMinusExp(AMinusExp node)
+        {
+            Node left = node.GetL();
+            Node right = node.GetR();
+            if (left != null && right != null)
+            {
+                if (typeMap[left] == Types.Vector && typeMap[right] == Types.Vector)
+                {
+                    Vector Vec1 = ((Vector)GetValue(left));
+                    Vector Vec2 = ((Vector)GetValue(right));
+
+                    Vector resultVec = new Vector(Vec1.X - Vec2.X, Vec1.Y - Vec2.Y, Vec1.Z - Vec2.Z);
+                    nodeMap.Put(node, resultVec);
+                }
+                else
+                {
+                    nodeMap.Put(node, GetValue(left) - GetValue(right));
+                }
+            }
+            else
+            {
+                throw new Exception("MinusExp did not work");
+            }
+        }
+        public override void OutADivdExp(ADivdExp node)
+        {
+            Node left = node.GetL();
+            Node right = node.GetR();
+            if (left != null && right != null)
+            {
+                if (typeMap[left] == Types.Vector && (typeMap[right] == Types.FloatingPoint || typeMap[right] == Types.Integer))
+                {
+                    Vector Vec1 = ((Vector)GetValue(left));
+                    dynamic value = GetValue(right);
+
+                    Vector resultVec = new Vector(Vec1.X / value, Vec1.Y / value, Vec1.Z / value);
+                    nodeMap.Put(node, resultVec);
+                }
+                else
+                {
+                    nodeMap.Put(node, GetValue(left) / GetValue(right));
+                }
+            }
+            else
+            {
+                throw new Exception("MinusExp did not work");
             }
         }
 
+        //C# should handel the modulo expression
+        public override void OutAModuloExp(AModuloExp node)
+        {
+            Node left = node.GetL();
+            Node right = node.GetR();
+            if (left != null && right != null)
+            {
+                nodeMap.Put(node, GetValue(left) % GetValue(right));
+            }
+            else
+            {
+                throw new Exception("ModuloExp did not work");
+            }
+        }
+        public override void OutAMultExp(AMultExp node)
+        {
+            Node left = node.GetL();
+            Node right = node.GetR();
+            if (left != null && right != null)
+            {
+                if (typeMap[left] == Types.Vector && (typeMap[right] == Types.FloatingPoint || typeMap[right] == Types.Integer))
+                {
+                    Vector Vec1 = ((Vector)GetValue(left));
+                    dynamic value = GetValue(right);
+
+                    Vector resultVec = new Vector(Vec1.X * value, Vec1.Y * value, Vec1.Z * value);
+                    nodeMap.Put(node, resultVec);
+                }
+                else
+                {
+                    nodeMap.Put(node, GetValue(left) * GetValue(right));
+                }
+            }
+            else
+            {
+                throw new Exception("MultExp did not work");
+            }
+        }
 
 
         public override void OutAAndExp(AAndExp node)
