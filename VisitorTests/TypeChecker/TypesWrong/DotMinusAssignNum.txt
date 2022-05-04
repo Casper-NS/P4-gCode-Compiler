@@ -1,0 +1,6 @@
+﻿vector vec = (2, 2, 2)
+
+void main()
+{
+	vec -= 2
+}

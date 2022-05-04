@@ -1,0 +1,26 @@
+﻿vector vec = (2, 2, 2)
+
+void main()
+{
+	vec.x = 3
+	vec.y = 3
+	vec.z = 3
+
+	vec.x += 3
+	vec.x -= 3
+	vec.x *= 3
+	vec.x /= 3
+	vec.x %= 3
+
+	vec *= vec.z
+	vec /= vec.x
+
+	float a = vec.x * vec.z + vec.y - vec.z % vec.x + vec.y
+
+	testfunc(vec.x)
+}
+
+void testfunc(float x)
+{
+	x += 1
+}

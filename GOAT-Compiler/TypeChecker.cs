@@ -99,9 +99,24 @@ namespace GOAT_Compiler
                 throw new TypeMismatchException(current);
             }
         }
-        private void DivMultTypeChecker(Symbol id, Types type, Node node, Node expr)
+        private void DivMultTypeChecker(Symbol id, Types type, Node node, Node expr, TDot dot)
         {
-            if (id.type == Types.Vector && (type == Types.FloatingPoint || type == Types.Integer))
+            if (dot != null)
+            {
+                if (id.type != Types.Vector)
+                {
+                    throw new TypeMismatchException(node, "symbols with.extensions have to be vectors");
+                }
+                if (type == Types.FloatingPoint || type == Types.Integer)
+                {
+                    _typeDictionary.Add(node, Types.FloatingPoint);
+                }
+                else
+                {
+                    throw new TypeMismatchException(node, "Types not compatible with multiply or divide expression");
+                }
+            }
+            else if (id.type == Types.Vector && (type == Types.FloatingPoint || type == Types.Integer))
             {
                 _typeDictionary.Add(node, id.type);
             }
@@ -238,13 +253,30 @@ namespace GOAT_Compiler
         {
             EqlNotEqlTypeChecker(node.GetL(), node.GetR(), node);
         }
+
+        private void CheckDot(Node node, PExp expr, Symbol symbol, TDot dot)
+        {
+            if (dot != null)
+            {
+                if (symbol.type == Types.Vector)
+                {
+                    _typeDictionary.Add(node, Convert(expr, Types.FloatingPoint));
+                }
+                else
+                {
+                    throw new TypeMismatchException(node, "symbols with . extensions have to be vectors");
+                }
+            }
+            else
+            {
+                _typeDictionary.Add(node, Convert(expr, symbol.type));
+            }
+        }
+
         public override void OutAAssignStmt(AAssignStmt node)
         {
             Symbol id = _symbolTable.GetVariableSymbol(node.GetId().Text);
-            if (Convert(node.GetExp(), id.type) == id.type)
-            {
-                _typeDictionary.Add(node, id.type);
-            }
+            CheckDot(node, node.GetExp(), id, node.GetDot());
         }
         public override void OutAIfStmt(AIfStmt node)
         {
@@ -274,30 +306,29 @@ namespace GOAT_Compiler
         public override void OutAAssignPlusStmt(AAssignPlusStmt node)
         {
             Symbol id = _symbolTable.GetVariableSymbol(node.GetId().Text);
-            _typeDictionary.Add(node, Convert(node.GetExp(), id.type));
+            CheckDot(node, node.GetExp(), id, node.GetDot());
         }
         public override void OutAAssignMinusStmt(AAssignMinusStmt node)
         {
             Symbol id = _symbolTable.GetVariableSymbol(node.GetId().Text);
-
-            _typeDictionary.Add(node, Convert(node.GetExp(), id.type));
+            CheckDot(node, node.GetExp(), id, node.GetDot());
         }
         public override void OutAAssignDivisionStmt(AAssignDivisionStmt node)
         {
             Symbol id = _symbolTable.GetVariableSymbol(node.GetId().Text);
             Types expType = _typeDictionary[node.GetExp()];
-            DivMultTypeChecker(id, expType, node, node.GetExp());
+            DivMultTypeChecker(id, expType, node, node.GetExp(), node.GetDot());
         }
         public override void OutAAssignMultStmt(AAssignMultStmt node)
         {
             Symbol id = _symbolTable.GetVariableSymbol(node.GetId().Text);
             Types expType = _typeDictionary[node.GetExp()];
-            DivMultTypeChecker(id, expType, node, node.GetExp());
+            DivMultTypeChecker(id, expType, node, node.GetExp(), node.GetDot());
         }
         public override void OutAAssignModStmt(AAssignModStmt node)
         {
             Symbol id = _symbolTable.GetVariableSymbol(node.GetId().Text);
-            _typeDictionary.Add(node, Convert(node.GetExp(), id.type));
+            CheckDot(node, node.GetExp(), id, node.GetDot());
         }
         public override void OutANotExp(ANotExp node)
         {
@@ -328,8 +359,23 @@ namespace GOAT_Compiler
         public override void OutAIdExp(AIdExp node)
         {
             Symbol id = _symbolTable.GetVariableSymbol(node.GetId().Text);
-            _typeDictionary.Add(node, id.type);
+            if (node.GetDot() != null)
+            {
+                if (id.type == Types.Vector)
+                {
+                    _typeDictionary.Add(node, Types.FloatingPoint);
+                }
+                else
+                {
+                    throw new TypeMismatchException(node, "symbols with . extensions have to be vectors");
+                }
+            }
+            else
+            {
+                _typeDictionary.Add(node, id.type);
+            }
         }
+
         public override void OutAFunctionExp(AFunctionExp node)
         {
             IList list = node.GetArgs();

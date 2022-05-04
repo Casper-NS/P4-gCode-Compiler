@@ -1,0 +1,7 @@
+﻿vector vec = (2, 2, 2)
+vector vec2 = (3, 3, 3)
+
+void main()
+{
+	vec.x = vec2
+}
