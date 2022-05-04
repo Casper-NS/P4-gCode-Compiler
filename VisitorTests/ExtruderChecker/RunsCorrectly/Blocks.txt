@@ -1,0 +1,26 @@
+﻿void main()
+{
+	build
+	{
+		walk
+		{
+			none()
+			w()
+		}
+	}
+}
+
+void none()
+{
+	move()
+}
+
+walk void w()
+{
+	move()
+}
+
+void move()
+{
+	int a
+}

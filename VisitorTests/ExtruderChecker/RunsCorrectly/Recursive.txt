@@ -1,0 +1,16 @@
+﻿build void main()
+{
+	main()
+	none()
+}
+
+walk void wRec()
+{
+	wRec()
+	none()
+}
+
+void none()
+{
+	int a
+}

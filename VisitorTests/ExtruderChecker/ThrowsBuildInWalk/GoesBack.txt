@@ -1,0 +1,10 @@
+﻿void main()
+{
+	walk f()
+	build f()
+}
+
+void f()
+{
+	main()
+}

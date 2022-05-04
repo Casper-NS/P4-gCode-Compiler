@@ -1,0 +1,14 @@
+﻿build void BuildFunction()
+{
+	build main()
+}
+
+walk void WalkFunction()
+{
+	build BuildFunction()
+}
+
+void main()
+{
+	int a = 1
+}
