@@ -55,7 +55,5 @@ namespace ExtruderCheckerTest
         {
             public override string RelativeFolderPath() => "ExtruderChecker/ThrowsBuildInWalk";
         }
-
-
     }
 }

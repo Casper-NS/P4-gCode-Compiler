@@ -94,6 +94,8 @@ namespace GOAT_Compiler
         /// <param name="node">AFuncDecl</param>
         public override void InsideScopeInAFuncDecl(AFuncDecl node)
         {
+            _currentSymbol = _symbolTable.GetFunctionSymbol(node.GetId().Text);
+
             if (DoesntContainKey(node))
             {
                 _functions.Add(_currentSymbol, new DijkstraNode(_currentSymbol.name, Extrude.NotSet));
@@ -101,6 +103,8 @@ namespace GOAT_Compiler
         }
         public override void InsideScopeInAProcDecl(AProcDecl node)
         {
+            _currentSymbol = _symbolTable.GetFunctionSymbol(node.GetId().Text);
+
             if (DoesntContainKey(node))
             {
                 _functions.Add(_currentSymbol, new DijkstraNode(_currentSymbol.name, Extrude.NotSet));
