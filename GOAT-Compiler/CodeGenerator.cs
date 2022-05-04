@@ -8,6 +8,28 @@ using GOATCode.node;
 
 namespace GOAT_Compiler
 {
+    public enum GCommands
+    {
+        G00, //	Fast move
+        G01, // Linear interpolation
+        G02, // Circular Interpolation CW
+        G03, // Circular interpolation CCW
+        G04, // Dwell
+        G20, // Set English units
+        G21, // Set metric units
+        G28, // Machine zero return (point 1)
+        G80, // Fixed cycle cancel
+        G90,
+        G91,
+        G92,
+        M00,
+        M01,
+        M80,
+        M81,
+        M104,
+        M140,
+        F
+    }
     internal class CodeGenerator : SymbolTableVisitor
     {
         FileStream gcodeFile;
@@ -62,16 +84,16 @@ namespace GOAT_Compiler
                 switch (typeMap[node])
                 {
                     case Types.Integer:
-                        RT.Put(symbol, nodeMap.Get(nodeExpr, typeMap[nodeExpr]));
+                        RT.Put(symbol, nodeMap.Get(nodeExpr, typeMap[node]));
                         break;
                     case Types.FloatingPoint:
-                        RT.Put(symbol, nodeMap.Get(nodeExpr, typeMap[nodeExpr]));
+                        RT.Put(symbol, nodeMap.Get(nodeExpr, typeMap[node]));
                         break;
                     case Types.Boolean:
-                        RT.Put(symbol, nodeMap.Get(nodeExpr, typeMap[nodeExpr]));
+                        RT.Put(symbol, nodeMap.Get(nodeExpr, typeMap[node]));
                         break;
                     case Types.Vector:
-                        RT.Put(symbol, nodeMap.Get(nodeExpr, typeMap[nodeExpr]));
+                        RT.Put(symbol, nodeMap.Get(nodeExpr, typeMap[node]));
                         break;
                     default:
                         throw new Exception("This should never happen.");
