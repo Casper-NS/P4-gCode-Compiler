@@ -1,10 +1,11 @@
-﻿using System;
+﻿using GOATCode.node;
+using System;
 
 namespace GOAT_Compiler.Exceptions
 {
-    public class VarNotInitializedException : Exception
+    public class VarNotInitializedException : CompilerException
     {
-        public VarNotInitializedException(string Name) : base($"The variable named {Name} has not been initialized.")
+        public VarNotInitializedException(Node n, string Name) : base(n, $"The variable named {Name} has not been initialized.")
         {
             
         }

@@ -1,13 +1,11 @@
-﻿using System;
+﻿using GOATCode.node;
+using System;
 using System.ComponentModel;
 
 namespace GOAT_Compiler.Exceptions
 {
-    public class RefNotFoundException : Exception
+    public class RefNotFoundException : CompilerException
     {
-        public RefNotFoundException(string SymbolName) : base($"Symbol named: {SymbolName} not found")
-        {
-
-        }
+        public RefNotFoundException(Node n, string SymbolName) : base(n, $"Symbol named: {SymbolName} not found") { }
     }
 }
