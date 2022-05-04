@@ -79,8 +79,9 @@ Tokens
   {normal} and = '&&';
   {normal} or = '||';
   {normal} number  = '0'| [digit-'0'] digit* | digit* '.' digit*;
-  {normal} id    = idletter idchar* | idletter idchar* '.' xyz;
-  
+  {normal} id    = idletter idchar*;
+  {normal} dot = '.' xyz;
+
   {normal} multiline_comment = '/*' not_star * star + ( not_star_slash not_star * star+) * '/' eol_char;
   {normal} singleline_comment = '//' not_eol_char* eol_char;
 
@@ -253,23 +254,23 @@ cst_gcode_literal {-> stmt} =
 
 
 cst_assignments {-> stmt} = 
-        {assign}id assignment_op cst_expression 
-            {-> New stmt.assign(id, cst_expression.exp)} 
+        {assign}id dot? assignment_op cst_expression 
+            {-> New stmt.assign(id, dot, cst_expression.exp)} 
             
-      | {assign_plus} id plus_op assignment_op cst_expression 
-            {-> New stmt.assign_plus(id, cst_expression.exp)} 
+      | {assign_plus} id dot? plus_op assignment_op cst_expression 
+            {-> New stmt.assign_plus(id, dot, cst_expression.exp)} 
             
-      | {assign_minus}id minus_op assignment_op cst_expression 
-            {-> New stmt.assign_minus(id, cst_expression.exp)} 
+      | {assign_minus}id dot? minus_op assignment_op cst_expression 
+            {-> New stmt.assign_minus(id, dot, cst_expression.exp)} 
             
-      | {assign_mult}id multiplication_op assignment_op cst_expression 
-            {-> New stmt.assign_mult(id, cst_expression.exp)} 
+      | {assign_mult}id dot? multiplication_op assignment_op cst_expression 
+            {-> New stmt.assign_mult(id, dot, cst_expression.exp)} 
             
-      | {assign_division} id division_op assignment_op cst_expression 
-            {-> New stmt.assign_division(id, cst_expression.exp)} 
+      | {assign_division} id dot? division_op assignment_op cst_expression 
+            {-> New stmt.assign_division(id, dot, cst_expression.exp)} 
             
-      | {assign_mod}id modulo_op assignment_op cst_expression 
-            {-> New stmt.assign_mod(id, cst_expression.exp)};
+      | {assign_mod}id dot? modulo_op assignment_op cst_expression 
+            {-> New stmt.assign_mod(id, dot, cst_expression.exp)};
 
 
 
@@ -373,8 +374,8 @@ cst_leaf_exp {-> exp} =
       | {bool} bool_value 
             {-> New exp.boolval(bool_value)}
             
-      | {cst_id} id 
-            {-> New exp.id(id)} 
+      | {cst_id} id dot?
+            {-> New exp.id(id, dot)} 
             
       | {func_call} cst_function_call 
             {-> cst_function_call.exp} 
@@ -410,12 +411,12 @@ stmt =
 | {repeat} exp block
 | {while} exp block
 | {gcode} gcode_literal? 
-| {assign} id exp 
-| {assign_plus} id exp
-| {assign_minus} id exp
-| {assign_mult} id exp
-| {assign_division} id exp
-| {assign_mod} id exp
+| {assign} id dot? exp 
+| {assign_plus} id dot? exp
+| {assign_minus} id dot? exp
+| {assign_mult} id dot? exp
+| {assign_division} id dot? exp
+| {assign_mod} id dot? exp
 | {function} exp
 | {return} exp
 | {build} block 
@@ -440,6 +441,6 @@ exp =
 | {boolval}   bool_value
 | {number}  number
 | {function} [name]:id [args]:exp*
-| {id}  id
+| {id}  id dot?
 | {build} exp
 | {walk} exp;

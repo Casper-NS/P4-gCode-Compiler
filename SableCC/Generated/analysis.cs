@@ -105,6 +105,7 @@ public interface Analysis : Switch
     void CaseTOr(TOr node);
     void CaseTNumber(TNumber node);
     void CaseTId(TId node);
+    void CaseTDot(TDot node);
     void CaseTMultilineComment(TMultilineComment node);
     void CaseTSinglelineComment(TSinglelineComment node);
     void CaseEOF(EOF node);
@@ -527,6 +528,10 @@ public class AnalysisAdapter : Analysis
         DefaultCase(node);
     }
     public virtual void CaseTId(TId node)
+    {
+        DefaultCase(node);
+    }
+    public virtual void CaseTDot(TDot node)
     {
         DefaultCase(node);
     }
@@ -989,6 +994,10 @@ public class DepthFirstAdapter : AnalysisAdapter
         {
             node.GetId().Apply(this);
         }
+        if(node.GetDot() != null)
+        {
+            node.GetDot().Apply(this);
+        }
         if(node.GetExp() != null)
         {
             node.GetExp().Apply(this);
@@ -1011,6 +1020,10 @@ public class DepthFirstAdapter : AnalysisAdapter
         if(node.GetId() != null)
         {
             node.GetId().Apply(this);
+        }
+        if(node.GetDot() != null)
+        {
+            node.GetDot().Apply(this);
         }
         if(node.GetExp() != null)
         {
@@ -1035,6 +1048,10 @@ public class DepthFirstAdapter : AnalysisAdapter
         {
             node.GetId().Apply(this);
         }
+        if(node.GetDot() != null)
+        {
+            node.GetDot().Apply(this);
+        }
         if(node.GetExp() != null)
         {
             node.GetExp().Apply(this);
@@ -1057,6 +1074,10 @@ public class DepthFirstAdapter : AnalysisAdapter
         if(node.GetId() != null)
         {
             node.GetId().Apply(this);
+        }
+        if(node.GetDot() != null)
+        {
+            node.GetDot().Apply(this);
         }
         if(node.GetExp() != null)
         {
@@ -1081,6 +1102,10 @@ public class DepthFirstAdapter : AnalysisAdapter
         {
             node.GetId().Apply(this);
         }
+        if(node.GetDot() != null)
+        {
+            node.GetDot().Apply(this);
+        }
         if(node.GetExp() != null)
         {
             node.GetExp().Apply(this);
@@ -1103,6 +1128,10 @@ public class DepthFirstAdapter : AnalysisAdapter
         if(node.GetId() != null)
         {
             node.GetId().Apply(this);
+        }
+        if(node.GetDot() != null)
+        {
+            node.GetDot().Apply(this);
         }
         if(node.GetExp() != null)
         {
@@ -1612,6 +1641,10 @@ public class DepthFirstAdapter : AnalysisAdapter
         if(node.GetId() != null)
         {
             node.GetId().Apply(this);
+        }
+        if(node.GetDot() != null)
+        {
+            node.GetDot().Apply(this);
         }
         OutAIdExp(node);
     }
@@ -2095,6 +2128,10 @@ public class ReversedDepthFirstAdapter : AnalysisAdapter
         {
             node.GetExp().Apply(this);
         }
+        if(node.GetDot() != null)
+        {
+            node.GetDot().Apply(this);
+        }
         if(node.GetId() != null)
         {
             node.GetId().Apply(this);
@@ -2117,6 +2154,10 @@ public class ReversedDepthFirstAdapter : AnalysisAdapter
         if(node.GetExp() != null)
         {
             node.GetExp().Apply(this);
+        }
+        if(node.GetDot() != null)
+        {
+            node.GetDot().Apply(this);
         }
         if(node.GetId() != null)
         {
@@ -2141,6 +2182,10 @@ public class ReversedDepthFirstAdapter : AnalysisAdapter
         {
             node.GetExp().Apply(this);
         }
+        if(node.GetDot() != null)
+        {
+            node.GetDot().Apply(this);
+        }
         if(node.GetId() != null)
         {
             node.GetId().Apply(this);
@@ -2163,6 +2208,10 @@ public class ReversedDepthFirstAdapter : AnalysisAdapter
         if(node.GetExp() != null)
         {
             node.GetExp().Apply(this);
+        }
+        if(node.GetDot() != null)
+        {
+            node.GetDot().Apply(this);
         }
         if(node.GetId() != null)
         {
@@ -2187,6 +2236,10 @@ public class ReversedDepthFirstAdapter : AnalysisAdapter
         {
             node.GetExp().Apply(this);
         }
+        if(node.GetDot() != null)
+        {
+            node.GetDot().Apply(this);
+        }
         if(node.GetId() != null)
         {
             node.GetId().Apply(this);
@@ -2209,6 +2262,10 @@ public class ReversedDepthFirstAdapter : AnalysisAdapter
         if(node.GetExp() != null)
         {
             node.GetExp().Apply(this);
+        }
+        if(node.GetDot() != null)
+        {
+            node.GetDot().Apply(this);
         }
         if(node.GetId() != null)
         {
@@ -2715,6 +2772,10 @@ public class ReversedDepthFirstAdapter : AnalysisAdapter
     public override void CaseAIdExp(AIdExp node)
     {
         InAIdExp(node);
+        if(node.GetDot() != null)
+        {
+            node.GetDot().Apply(this);
+        }
         if(node.GetId() != null)
         {
             node.GetId().Apply(this);

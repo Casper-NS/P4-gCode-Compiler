@@ -1009,6 +1009,31 @@ public sealed class TId : Token
     }
 }
 
+public sealed class TDot : Token
+{
+    public TDot(string text)
+    {
+        Text = text;
+    }
+
+    public TDot(string text, int line, int pos)
+    {
+        Text = text;
+        Line = line;
+        Pos = pos;
+    }
+
+    public override Object Clone()
+    {
+      return new TDot(Text, Line, Pos);
+    }
+
+    public override void Apply(Switch sw)
+    {
+        ((Analysis) sw).CaseTDot(this);
+    }
+}
+
 public sealed class TMultilineComment : Token
 {
     public TMultilineComment(string text)
