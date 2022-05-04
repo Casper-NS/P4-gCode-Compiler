@@ -1923,6 +1923,7 @@ public sealed class AGcodeStmt : PStmt
 public sealed class AAssignStmt : PStmt
 {
     private TId _id_;
+    private TDot _dot_;
     private PExp _exp_;
 
     public AAssignStmt ()
@@ -1931,10 +1932,12 @@ public sealed class AAssignStmt : PStmt
 
     public AAssignStmt (
             TId _id_,
+            TDot _dot_,
             PExp _exp_
     )
     {
         SetId (_id_);
+        SetDot (_dot_);
         SetExp (_exp_);
     }
 
@@ -1942,6 +1945,7 @@ public sealed class AAssignStmt : PStmt
     {
         return new AAssignStmt (
             (TId)CloneNode (_id_),
+            (TDot)CloneNode (_dot_),
             (PExp)CloneNode (_exp_)
         );
     }
@@ -1975,6 +1979,30 @@ public sealed class AAssignStmt : PStmt
 
         _id_ = node;
     }
+    public TDot GetDot ()
+    {
+        return _dot_;
+    }
+
+    public void SetDot (TDot node)
+    {
+        if(_dot_ != null)
+        {
+            _dot_.Parent(null);
+        }
+
+        if(node != null)
+        {
+            if(node.Parent() != null)
+            {
+                node.Parent().RemoveChild(node);
+            }
+
+            node.Parent(this);
+        }
+
+        _dot_ = node;
+    }
     public PExp GetExp ()
     {
         return _exp_;
@@ -2004,6 +2032,7 @@ public sealed class AAssignStmt : PStmt
     {
         return ""
             + ToString (_id_)
+            + ToString (_dot_)
             + ToString (_exp_)
         ;
     }
@@ -2013,6 +2042,11 @@ public sealed class AAssignStmt : PStmt
         if ( _id_ == child )
         {
             _id_ = null;
+            return;
+        }
+        if ( _dot_ == child )
+        {
+            _dot_ = null;
             return;
         }
         if ( _exp_ == child )
@@ -2029,6 +2063,11 @@ public sealed class AAssignStmt : PStmt
             SetId ((TId) newChild);
             return;
         }
+        if ( _dot_ == oldChild )
+        {
+            SetDot ((TDot) newChild);
+            return;
+        }
         if ( _exp_ == oldChild )
         {
             SetExp ((PExp) newChild);
@@ -2040,6 +2079,7 @@ public sealed class AAssignStmt : PStmt
 public sealed class AAssignPlusStmt : PStmt
 {
     private TId _id_;
+    private TDot _dot_;
     private PExp _exp_;
 
     public AAssignPlusStmt ()
@@ -2048,10 +2088,12 @@ public sealed class AAssignPlusStmt : PStmt
 
     public AAssignPlusStmt (
             TId _id_,
+            TDot _dot_,
             PExp _exp_
     )
     {
         SetId (_id_);
+        SetDot (_dot_);
         SetExp (_exp_);
     }
 
@@ -2059,6 +2101,7 @@ public sealed class AAssignPlusStmt : PStmt
     {
         return new AAssignPlusStmt (
             (TId)CloneNode (_id_),
+            (TDot)CloneNode (_dot_),
             (PExp)CloneNode (_exp_)
         );
     }
@@ -2092,6 +2135,30 @@ public sealed class AAssignPlusStmt : PStmt
 
         _id_ = node;
     }
+    public TDot GetDot ()
+    {
+        return _dot_;
+    }
+
+    public void SetDot (TDot node)
+    {
+        if(_dot_ != null)
+        {
+            _dot_.Parent(null);
+        }
+
+        if(node != null)
+        {
+            if(node.Parent() != null)
+            {
+                node.Parent().RemoveChild(node);
+            }
+
+            node.Parent(this);
+        }
+
+        _dot_ = node;
+    }
     public PExp GetExp ()
     {
         return _exp_;
@@ -2121,6 +2188,7 @@ public sealed class AAssignPlusStmt : PStmt
     {
         return ""
             + ToString (_id_)
+            + ToString (_dot_)
             + ToString (_exp_)
         ;
     }
@@ -2130,6 +2198,11 @@ public sealed class AAssignPlusStmt : PStmt
         if ( _id_ == child )
         {
             _id_ = null;
+            return;
+        }
+        if ( _dot_ == child )
+        {
+            _dot_ = null;
             return;
         }
         if ( _exp_ == child )
@@ -2146,6 +2219,11 @@ public sealed class AAssignPlusStmt : PStmt
             SetId ((TId) newChild);
             return;
         }
+        if ( _dot_ == oldChild )
+        {
+            SetDot ((TDot) newChild);
+            return;
+        }
         if ( _exp_ == oldChild )
         {
             SetExp ((PExp) newChild);
@@ -2157,6 +2235,7 @@ public sealed class AAssignPlusStmt : PStmt
 public sealed class AAssignMinusStmt : PStmt
 {
     private TId _id_;
+    private TDot _dot_;
     private PExp _exp_;
 
     public AAssignMinusStmt ()
@@ -2165,10 +2244,12 @@ public sealed class AAssignMinusStmt : PStmt
 
     public AAssignMinusStmt (
             TId _id_,
+            TDot _dot_,
             PExp _exp_
     )
     {
         SetId (_id_);
+        SetDot (_dot_);
         SetExp (_exp_);
     }
 
@@ -2176,6 +2257,7 @@ public sealed class AAssignMinusStmt : PStmt
     {
         return new AAssignMinusStmt (
             (TId)CloneNode (_id_),
+            (TDot)CloneNode (_dot_),
             (PExp)CloneNode (_exp_)
         );
     }
@@ -2209,6 +2291,30 @@ public sealed class AAssignMinusStmt : PStmt
 
         _id_ = node;
     }
+    public TDot GetDot ()
+    {
+        return _dot_;
+    }
+
+    public void SetDot (TDot node)
+    {
+        if(_dot_ != null)
+        {
+            _dot_.Parent(null);
+        }
+
+        if(node != null)
+        {
+            if(node.Parent() != null)
+            {
+                node.Parent().RemoveChild(node);
+            }
+
+            node.Parent(this);
+        }
+
+        _dot_ = node;
+    }
     public PExp GetExp ()
     {
         return _exp_;
@@ -2238,6 +2344,7 @@ public sealed class AAssignMinusStmt : PStmt
     {
         return ""
             + ToString (_id_)
+            + ToString (_dot_)
             + ToString (_exp_)
         ;
     }
@@ -2247,6 +2354,11 @@ public sealed class AAssignMinusStmt : PStmt
         if ( _id_ == child )
         {
             _id_ = null;
+            return;
+        }
+        if ( _dot_ == child )
+        {
+            _dot_ = null;
             return;
         }
         if ( _exp_ == child )
@@ -2263,6 +2375,11 @@ public sealed class AAssignMinusStmt : PStmt
             SetId ((TId) newChild);
             return;
         }
+        if ( _dot_ == oldChild )
+        {
+            SetDot ((TDot) newChild);
+            return;
+        }
         if ( _exp_ == oldChild )
         {
             SetExp ((PExp) newChild);
@@ -2274,6 +2391,7 @@ public sealed class AAssignMinusStmt : PStmt
 public sealed class AAssignMultStmt : PStmt
 {
     private TId _id_;
+    private TDot _dot_;
     private PExp _exp_;
 
     public AAssignMultStmt ()
@@ -2282,10 +2400,12 @@ public sealed class AAssignMultStmt : PStmt
 
     public AAssignMultStmt (
             TId _id_,
+            TDot _dot_,
             PExp _exp_
     )
     {
         SetId (_id_);
+        SetDot (_dot_);
         SetExp (_exp_);
     }
 
@@ -2293,6 +2413,7 @@ public sealed class AAssignMultStmt : PStmt
     {
         return new AAssignMultStmt (
             (TId)CloneNode (_id_),
+            (TDot)CloneNode (_dot_),
             (PExp)CloneNode (_exp_)
         );
     }
@@ -2326,6 +2447,30 @@ public sealed class AAssignMultStmt : PStmt
 
         _id_ = node;
     }
+    public TDot GetDot ()
+    {
+        return _dot_;
+    }
+
+    public void SetDot (TDot node)
+    {
+        if(_dot_ != null)
+        {
+            _dot_.Parent(null);
+        }
+
+        if(node != null)
+        {
+            if(node.Parent() != null)
+            {
+                node.Parent().RemoveChild(node);
+            }
+
+            node.Parent(this);
+        }
+
+        _dot_ = node;
+    }
     public PExp GetExp ()
     {
         return _exp_;
@@ -2355,6 +2500,7 @@ public sealed class AAssignMultStmt : PStmt
     {
         return ""
             + ToString (_id_)
+            + ToString (_dot_)
             + ToString (_exp_)
         ;
     }
@@ -2364,6 +2510,11 @@ public sealed class AAssignMultStmt : PStmt
         if ( _id_ == child )
         {
             _id_ = null;
+            return;
+        }
+        if ( _dot_ == child )
+        {
+            _dot_ = null;
             return;
         }
         if ( _exp_ == child )
@@ -2380,6 +2531,11 @@ public sealed class AAssignMultStmt : PStmt
             SetId ((TId) newChild);
             return;
         }
+        if ( _dot_ == oldChild )
+        {
+            SetDot ((TDot) newChild);
+            return;
+        }
         if ( _exp_ == oldChild )
         {
             SetExp ((PExp) newChild);
@@ -2391,6 +2547,7 @@ public sealed class AAssignMultStmt : PStmt
 public sealed class AAssignDivisionStmt : PStmt
 {
     private TId _id_;
+    private TDot _dot_;
     private PExp _exp_;
 
     public AAssignDivisionStmt ()
@@ -2399,10 +2556,12 @@ public sealed class AAssignDivisionStmt : PStmt
 
     public AAssignDivisionStmt (
             TId _id_,
+            TDot _dot_,
             PExp _exp_
     )
     {
         SetId (_id_);
+        SetDot (_dot_);
         SetExp (_exp_);
     }
 
@@ -2410,6 +2569,7 @@ public sealed class AAssignDivisionStmt : PStmt
     {
         return new AAssignDivisionStmt (
             (TId)CloneNode (_id_),
+            (TDot)CloneNode (_dot_),
             (PExp)CloneNode (_exp_)
         );
     }
@@ -2443,6 +2603,30 @@ public sealed class AAssignDivisionStmt : PStmt
 
         _id_ = node;
     }
+    public TDot GetDot ()
+    {
+        return _dot_;
+    }
+
+    public void SetDot (TDot node)
+    {
+        if(_dot_ != null)
+        {
+            _dot_.Parent(null);
+        }
+
+        if(node != null)
+        {
+            if(node.Parent() != null)
+            {
+                node.Parent().RemoveChild(node);
+            }
+
+            node.Parent(this);
+        }
+
+        _dot_ = node;
+    }
     public PExp GetExp ()
     {
         return _exp_;
@@ -2472,6 +2656,7 @@ public sealed class AAssignDivisionStmt : PStmt
     {
         return ""
             + ToString (_id_)
+            + ToString (_dot_)
             + ToString (_exp_)
         ;
     }
@@ -2481,6 +2666,11 @@ public sealed class AAssignDivisionStmt : PStmt
         if ( _id_ == child )
         {
             _id_ = null;
+            return;
+        }
+        if ( _dot_ == child )
+        {
+            _dot_ = null;
             return;
         }
         if ( _exp_ == child )
@@ -2497,6 +2687,11 @@ public sealed class AAssignDivisionStmt : PStmt
             SetId ((TId) newChild);
             return;
         }
+        if ( _dot_ == oldChild )
+        {
+            SetDot ((TDot) newChild);
+            return;
+        }
         if ( _exp_ == oldChild )
         {
             SetExp ((PExp) newChild);
@@ -2508,6 +2703,7 @@ public sealed class AAssignDivisionStmt : PStmt
 public sealed class AAssignModStmt : PStmt
 {
     private TId _id_;
+    private TDot _dot_;
     private PExp _exp_;
 
     public AAssignModStmt ()
@@ -2516,10 +2712,12 @@ public sealed class AAssignModStmt : PStmt
 
     public AAssignModStmt (
             TId _id_,
+            TDot _dot_,
             PExp _exp_
     )
     {
         SetId (_id_);
+        SetDot (_dot_);
         SetExp (_exp_);
     }
 
@@ -2527,6 +2725,7 @@ public sealed class AAssignModStmt : PStmt
     {
         return new AAssignModStmt (
             (TId)CloneNode (_id_),
+            (TDot)CloneNode (_dot_),
             (PExp)CloneNode (_exp_)
         );
     }
@@ -2560,6 +2759,30 @@ public sealed class AAssignModStmt : PStmt
 
         _id_ = node;
     }
+    public TDot GetDot ()
+    {
+        return _dot_;
+    }
+
+    public void SetDot (TDot node)
+    {
+        if(_dot_ != null)
+        {
+            _dot_.Parent(null);
+        }
+
+        if(node != null)
+        {
+            if(node.Parent() != null)
+            {
+                node.Parent().RemoveChild(node);
+            }
+
+            node.Parent(this);
+        }
+
+        _dot_ = node;
+    }
     public PExp GetExp ()
     {
         return _exp_;
@@ -2589,6 +2812,7 @@ public sealed class AAssignModStmt : PStmt
     {
         return ""
             + ToString (_id_)
+            + ToString (_dot_)
             + ToString (_exp_)
         ;
     }
@@ -2598,6 +2822,11 @@ public sealed class AAssignModStmt : PStmt
         if ( _id_ == child )
         {
             _id_ = null;
+            return;
+        }
+        if ( _dot_ == child )
+        {
+            _dot_ = null;
             return;
         }
         if ( _exp_ == child )
@@ -2612,6 +2841,11 @@ public sealed class AAssignModStmt : PStmt
         if ( _id_ == oldChild )
         {
             SetId ((TId) newChild);
+            return;
+        }
+        if ( _dot_ == oldChild )
+        {
+            SetDot ((TDot) newChild);
             return;
         }
         if ( _exp_ == oldChild )
@@ -5001,22 +5235,26 @@ public sealed class AFunctionExp : PExp
 public sealed class AIdExp : PExp
 {
     private TId _id_;
+    private TDot _dot_;
 
     public AIdExp ()
     {
     }
 
     public AIdExp (
-            TId _id_
+            TId _id_,
+            TDot _dot_
     )
     {
         SetId (_id_);
+        SetDot (_dot_);
     }
 
     public override Object Clone()
     {
         return new AIdExp (
-            (TId)CloneNode (_id_)
+            (TId)CloneNode (_id_),
+            (TDot)CloneNode (_dot_)
         );
     }
 
@@ -5049,11 +5287,36 @@ public sealed class AIdExp : PExp
 
         _id_ = node;
     }
+    public TDot GetDot ()
+    {
+        return _dot_;
+    }
+
+    public void SetDot (TDot node)
+    {
+        if(_dot_ != null)
+        {
+            _dot_.Parent(null);
+        }
+
+        if(node != null)
+        {
+            if(node.Parent() != null)
+            {
+                node.Parent().RemoveChild(node);
+            }
+
+            node.Parent(this);
+        }
+
+        _dot_ = node;
+    }
 
     public override string ToString()
     {
         return ""
             + ToString (_id_)
+            + ToString (_dot_)
         ;
     }
 
@@ -5064,6 +5327,11 @@ public sealed class AIdExp : PExp
             _id_ = null;
             return;
         }
+        if ( _dot_ == child )
+        {
+            _dot_ = null;
+            return;
+        }
     }
 
     internal override void ReplaceChild(Node oldChild, Node newChild)
@@ -5071,6 +5339,11 @@ public sealed class AIdExp : PExp
         if ( _id_ == oldChild )
         {
             SetId ((TId) newChild);
+            return;
+        }
+        if ( _dot_ == oldChild )
+        {
+            SetDot ((TDot) newChild);
             return;
         }
     }
