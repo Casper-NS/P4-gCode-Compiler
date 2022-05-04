@@ -14,6 +14,7 @@ namespace GOAT_Compiler
         private Dictionary<Node, Types> typeMap;
         private RuntimeTable<Node> nodeMap;
         private RuntimeTable<Symbol> RT;
+        private string _outputFileName;
 
         public CodeGenerator(ISymbolTable symbolTable, Dictionary<Node, Types> typesDictionary, string outputName) : base(symbolTable)
         {
@@ -21,14 +22,20 @@ namespace GOAT_Compiler
             typeMap = typesDictionary;
             RT = new RuntimeTable<Symbol>();
             nodeMap = new RuntimeTable<Node>();
+            
             if (outputName.Length == 0)
             {
-                gcodeFile = File.Create("GOAT.gcode");
+                _outputFileName = "GOAT.gcode";
             }
             else
             {
-                gcodeFile = File.Create(outputName + ".gcode");
+                _outputFileName = outputName + ".gcode";
             }
+        }
+
+        public override void OutsideScopeInADeclProgram(ADeclProgram node)
+        {
+            gcodeFile = File.Create(_outputFileName);
         }
 
         public void CreateGCodeLine(string gCommand, Vector vector)
