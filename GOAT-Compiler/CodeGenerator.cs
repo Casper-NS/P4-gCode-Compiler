@@ -34,7 +34,7 @@ namespace GOAT_Compiler
     {
         private Dictionary<Node, Types> typeMap;
         private RuntimeTable<Node> nodeMap;
-        private RuntimeTable<Symbol> RT;
+        internal RuntimeTable<Symbol> RT;
         private Stream _outputFileStream;
 
         public CodeGenerator(ISymbolTable symbolTable, Dictionary<Node, Types> typesDictionary, Stream outputStream) : base(symbolTable)
@@ -73,7 +73,7 @@ namespace GOAT_Compiler
                         RT.Put(symbol, nodeMap.Get(nodeExpr, typeMap[node]));
                         break;
                     case Types.FloatingPoint:
-                        RT.Put(symbol, nodeMap.Get(nodeExpr, typeMap[node]));
+                        RT.Put(symbol, (float)nodeMap.Get(nodeExpr, typeMap[nodeExpr]));
                         break;
                     case Types.Boolean:
                         RT.Put(symbol, nodeMap.Get(nodeExpr, typeMap[node]));
