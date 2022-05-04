@@ -74,7 +74,7 @@ namespace GOAT_Compiler
                         RT.Put(symbol, nodeMap.Get(nodeExpr, typeMap[nodeExpr]));
                         break;
                     default:
-                        throw new Exception("Everything is on fire!!!!!!!!!! \n Typechecker is broken");
+                        throw new Exception("This should never happen.");
                 }
             }
         }
@@ -109,10 +109,9 @@ namespace GOAT_Compiler
                     nodeMap.Put(node, float.Parse(node.GetNumber().Text, CultureInfo.InvariantCulture));
                     break;
                 default:
-                    throw new Exception("im litteraly crying right now");
+                    throw new Exception("Im litteraly crying right now");
             }
         }
-
         public override void OutAAssignStmt(AAssignStmt node)
         {
             Symbol idSymbol = _symbolTable.GetVariableSymbol(node.GetId().Text);
@@ -126,7 +125,6 @@ namespace GOAT_Compiler
                 throw new Exception("AssignStmt did not work");
             }
         }
-
         public override void OutAAssignPlusStmt(AAssignPlusStmt node)
         {
             Symbol idSymbol = _symbolTable.GetVariableSymbol(node.GetId().Text);
@@ -147,7 +145,7 @@ namespace GOAT_Compiler
             }
             else
             {
-                throw new Exception("AssignStmt did not work");
+                throw new Exception("AssignPlusStmt did not work");
             }
         }
         public override void OutAAssignMinusStmt(AAssignMinusStmt node)
@@ -170,7 +168,7 @@ namespace GOAT_Compiler
             }
             else
             {
-                throw new Exception("AssignStmt did not work");
+                throw new Exception("AssignMinusStmt did not work");
             }
         }
         public override void OutAAssignMultStmt(AAssignMultStmt node)
@@ -193,7 +191,7 @@ namespace GOAT_Compiler
             }
             else
             {
-                throw new Exception("MultStmt did not work");
+                throw new Exception("AssignMultStmt did not work");
             }
         }
         //Check the modulo statements
@@ -206,7 +204,7 @@ namespace GOAT_Compiler
             }
             else
             {
-                throw new Exception("ModStmt did not work");
+                throw new Exception("AssignModStmt did not work");
             }
         }
         public override void OutAAssignDivisionStmt(AAssignDivisionStmt node)
@@ -229,7 +227,7 @@ namespace GOAT_Compiler
             }
             else
             {
-                throw new Exception("DivStmt did not work");
+                throw new Exception("AssignDivStmt did not work");
             }
         }
         public override void OutAPlusExp(APlusExp node)
@@ -343,8 +341,6 @@ namespace GOAT_Compiler
                 throw new Exception("MultExp did not work");
             }
         }
-
-
         public override void OutAAndExp(AAndExp node)
         {
             bool l = nodeMap.Get(node.GetL(), typeMap[node.GetL()]);
@@ -352,6 +348,19 @@ namespace GOAT_Compiler
             if (node.GetL() != null && node.GetR() != null)
             {
                 nodeMap.Put(node, l && r);
+            }
+            else
+            {
+                throw new Exception("AndExp didnt not work");
+            }
+        }
+        public override void OutAOrExp(AOrExp node)
+        {
+            bool l = nodeMap.Get(node.GetL(), typeMap[node.GetL()]);
+            bool r = nodeMap.Get(node.GetR(), typeMap[node.GetR()]);
+            if (node.GetL() != null && node.GetR() != null)
+            {
+                nodeMap.Put(node, l || r);
             }
             else
             {
@@ -369,7 +378,6 @@ namespace GOAT_Compiler
                 throw new Exception("EqExp did not work");
             }
         }
-
         public override void OutAGtExp(AGtExp node)
         {
             dynamic l = GetValue(node.GetL());
@@ -425,7 +433,47 @@ namespace GOAT_Compiler
                 throw new Exception("GeqExp did not work");
             }
         }
+        public override void OutANotExp(ANotExp node)
+        {
+            bool value = GetValue(node.GetExp());
+            if(node != null)
+            {
+                nodeMap.Put(node, !value);
+            }
+            else
+            {
+                throw new Exception("NotExp did not work");
+            }
+        }
+        public override void OutAIfStmt(AIfStmt node)
+        {
+            bool value = GetValue(node.GetExp());
+            if (value)
+            {
+                nodeMap.Put(node.GetThen(), GetValue(node.GetThen()));
+            }
+            else
+            {
+                nodeMap.Put(node.GetElse(), GetValue(node.GetElse()));
+            }
+        }
 
+        /*public override void CaseAWhileStmt(AWhileStmt node)
+        {
+        }
+        public override void OutARepeatStmt(ARepeatStmt node)
+        {
+        }
+        public override void OutAFunctionExp(AFunctionExp node)
+        {
+        }
+        public override void InsideScopeOutAFuncDecl(AFuncDecl node)
+        {
+        }
+        public override void CaseAFunctionExp(AFunctionExp node)
+        {
+        }
+        */
 
         public void CloseFile()
         {
