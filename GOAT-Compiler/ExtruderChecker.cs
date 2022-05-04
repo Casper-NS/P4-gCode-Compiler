@@ -47,11 +47,11 @@ namespace GOAT_Compiler
         /// </summary>
         /// <param name="candidate"></param>
         /// <exception cref="CallBuildInWalkException"></exception>
-        private void PushVerification(Extrude candidate)
+        private void PushVerification(Node node, Extrude candidate)
         {
             if (_stack.Peek() == Extrude.Walk)
             {
-                throw new CallBuildInWalkException(candidate);
+                throw new StaticCallBuildInWalkException(node, "Tried to build in a walk scope");
             }
             else
             {
@@ -141,7 +141,7 @@ namespace GOAT_Compiler
         {
             _functions[_currentSymbol].SetExtrudeType(Extrude.Build);
 
-            PushVerification(Extrude.Build);
+            PushVerification(node, Extrude.Build);
         }
         public override void OutABuildBlock(ABuildBlock node)
         {
@@ -161,7 +161,7 @@ namespace GOAT_Compiler
         //All of the In and Out below pushes and pops the right extrude type.
         public override void InABuildExp(ABuildExp node)
         {
-            PushVerification(Extrude.Build);
+            PushVerification(node, Extrude.Build);
         }
         public override void OutABuildExp(ABuildExp node)
         {
@@ -177,7 +177,7 @@ namespace GOAT_Compiler
         }
         public override void InABuildStmt(ABuildStmt node)
         {
-            PushVerification(Extrude.Build);
+            PushVerification(node, Extrude.Build);
         }
         public override void OutABuildStmt(ABuildStmt node)
         {
