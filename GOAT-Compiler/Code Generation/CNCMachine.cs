@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 
 namespace GOAT_Compiler.Code_Generation
 {
+    /// <summary>
+    /// The class that holds information about the CNC machine.
+    /// </summary>
     internal class CNCMachine
     {
         private Vector _position = new Vector(0, 0, 0);
