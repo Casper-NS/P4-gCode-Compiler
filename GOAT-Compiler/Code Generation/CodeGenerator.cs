@@ -465,9 +465,25 @@ namespace GOAT_Compiler
             }
         }
 
-        /*public override void CaseAWhileStmt(AWhileStmt node)
+        //Todo: Make sure the compiler stops even if the while true is written.
+        public override void CaseAWhileStmt(AWhileStmt node)
         {
+            InAWhileStmt(node);
+            if (node.GetExp() != null && node.GetBlock() != null)
+            {
+                node.GetExp().Apply(this);
+
+                while (GetValue(node.GetExp()))
+                {
+                    node.GetBlock().Apply(this);
+                    node.GetExp().Apply(this);
+                }
+
+            }
+            OutAWhileStmt(node);
         }
+
+        /*
         public override void OutARepeatStmt(ARepeatStmt node)
         {
         }
