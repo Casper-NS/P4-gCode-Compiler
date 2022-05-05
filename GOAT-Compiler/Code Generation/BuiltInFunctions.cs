@@ -21,8 +21,8 @@ namespace GOAT_Compiler
         {
             { "RelMove", new Symbol("RelMove", Types.Void, Types.Vector) },
             { "AbsMove", new Symbol("AbsMove", Types.Void, Types.Vector) },
-            { "RelArc", new Symbol("RelArc", Types.Void, Types.FloatingPoint) },
-            { "AbsArc", new Symbol("AbsArc", Types.Void, Types.FloatingPoint) },
+            { "RelArc", new Symbol("RelArc", Types.Void, Types.Vector) },
+            { "AbsArc", new Symbol("AbsArc", Types.Void, Types.Vector) },
             { "Position", new Symbol("Position", Types.Vector) },
             { "Steps", new Symbol("Steps", Types.Void, Types.FloatingPoint) },
             { "Lift", new Symbol("Lift", Types.Void, Types.FloatingPoint) },
