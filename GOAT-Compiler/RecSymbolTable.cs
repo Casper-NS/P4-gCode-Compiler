@@ -1,4 +1,5 @@
-﻿using System;
+﻿using GOATCode.node;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
@@ -10,10 +11,15 @@ namespace GOAT_Compiler
     class RecSymbolTable : ISymbolTable
     {
         private Table tables;
-        private Table globalScope;
         private Table currentScope;
 
+        private Stack<Table> scopeStack = new();
+        
+        private readonly Dictionary<Node, Table> scopeMap = new ();
+
         private readonly Dictionary<string, Symbol> functionSymbols;
+
+        private readonly Dictionary<Symbol, Node> funcDeclMap = new();
 
         //Flag to determine whether we are building or going through the symbol table.
         private bool buildComplete = false;
@@ -21,42 +27,28 @@ namespace GOAT_Compiler
         public RecSymbolTable() 
         {
             tables = new Table(null);
-            globalScope = new Table(tables);
-            tables.ChildrenTables.Add(globalScope);
             currentScope = tables;
             functionSymbols = new Dictionary<string, Symbol>(BuiltInFunctions.FunctionsList);
         }
 
-        public void OpenScope()
+        public void OpenScope(Node node)
         {
-            //Handles the edge case of always opening the globalScope on the first open.
-            if (currentScope.ParentTable == null)
+            scopeStack.Push(currentScope);
+            if (buildComplete)
             {
-                currentScope = currentScope.ChildrenTables[0];
+                currentScope = scopeMap[node];
             }
             else
             {
-                int visitcount = currentScope.VisitCounter;
-                currentScope.VisitCounter++;
-
-                if (buildComplete)
-                {
-                    currentScope = currentScope.ChildrenTables[visitcount];
-                }
-                else
-                {
-                    currentScope.ChildrenTables.Add(new Table(currentScope));
-                    currentScope = currentScope.ChildrenTables[visitcount];
-
-                }
+                Table scope = new Table(currentScope);
+                scopeMap.Add(node, scope);
+                currentScope = scope;
             }
         }
 
         public void CloseScope()
         {
-            currentScope.VisitCounter = 0;
-            currentScope = currentScope.ParentTable;
-
+            currentScope = scopeStack.Pop();
             if (currentScope.ParentTable == null)
             {
                 buildComplete = true;
@@ -88,9 +80,16 @@ namespace GOAT_Compiler
             return null;
         }
 
-        public void AddFunctionSymbol(string name, Types returnType, params Types[] paramTypes)
+        public void AddFunctionSymbol(Node node, string name, Types returnType, params Types[] paramTypes)
         {
-            functionSymbols.Add(name, new Symbol(name, returnType, paramTypes));
+            Symbol sym = new Symbol(name, returnType, paramTypes);
+            functionSymbols.Add(name, sym);
+            funcDeclMap.Add(sym, node);
+        }
+
+        public Node GetFunctionNode(Symbol symbol)
+        {
+            return funcDeclMap.TryGetValue(symbol, out Node node) ? node : null;
         }
     }
 

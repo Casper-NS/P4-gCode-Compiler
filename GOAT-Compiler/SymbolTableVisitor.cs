@@ -26,7 +26,7 @@ namespace GOAT_Compiler
         public sealed override void InADeclProgram(ADeclProgram node)
         {
             OutsideScopeInADeclProgram(node);
-            _symbolTable.OpenScope();
+            _symbolTable.OpenScope(node);
             InsideScopeInADeclProgram(node);
         }
         public virtual void OutsideScopeInADeclProgram(ADeclProgram node) { }
@@ -46,7 +46,7 @@ namespace GOAT_Compiler
         public sealed override void InAFuncDecl(AFuncDecl node)
         {
             OutsideScopeInAFuncDecl(node);
-            _symbolTable.OpenScope();
+            _symbolTable.OpenScope(node);
             InsideScopeInAFuncDecl(node);
         }
         public virtual void OutsideScopeInAFuncDecl(AFuncDecl node) { }
@@ -65,7 +65,7 @@ namespace GOAT_Compiler
         public sealed override void InAProcDecl(AProcDecl node)
         {
             OutsideScopeInAProcDecl(node);
-            _symbolTable.OpenScope();
+            _symbolTable.OpenScope(node);
             InsideScopeInAProcDecl(node);
         }
         public virtual void OutsideScopeInAProcDecl(AProcDecl node) { }
@@ -86,7 +86,7 @@ namespace GOAT_Compiler
             OutsideScopeInAStmtlistBlock(node);
             if (IsGrandparentNotFuncOrProc(node))
             {
-                _symbolTable.OpenScope();
+                _symbolTable.OpenScope(node);
             }
             InsideScopeInAStmtlistBlock(node);
         }
