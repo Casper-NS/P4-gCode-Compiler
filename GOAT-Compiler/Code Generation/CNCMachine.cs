@@ -12,6 +12,8 @@ namespace GOAT_Compiler.Code_Generation
     internal class CNCMachine
     {
         private Vector _position = new Vector(0, 0, 0);
+        private float _rotation = 0;
+        private float _currentExtrusion = 0;
         private float _extruderRate = 0;
         private float _bedTemp = 0;
         private float _extruderTemp = 0;
@@ -40,6 +42,24 @@ namespace GOAT_Compiler.Code_Generation
         public Vector ReturnPosition()
         {
             return _position;
+        }
+
+        /// <summary>
+        /// Updates the current rotation of the machine.
+        /// </summary>
+        /// <param name="r">Takes a float.</param>
+        public void UpdateRotation(float r)
+        {
+            _rotation = r;
+        }
+
+        /// <summary>
+        /// Returns the current rotation of the machine.
+        /// </summary>
+        /// <returns>Returns a float.</returns>
+        public float ReturnRotation()
+        {
+            return _rotation;
         }
 
         /// <summary>

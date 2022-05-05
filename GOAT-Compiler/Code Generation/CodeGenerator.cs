@@ -46,9 +46,9 @@ namespace GOAT_Compiler
             nodeMap = new RuntimeTable<Node>();
             _outputFileStream = outputStream;
         }
-        public void CreateGCodeLine(GCommands gCommand, Vector vector)
+        public string CreateGCodeLine(GCommands gCommand, Vector vector)
         {
-            string line = gCommand.ToString() + " X" + vector.X + " Y" + vector.Y + " Z" + vector.Z;
+            return gCommand.ToString() + " X" + vector.X + " Y" + vector.Y + " Z" + vector.Z;
         }
 
         dynamic GetValue(Symbol symbol)
