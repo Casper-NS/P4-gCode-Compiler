@@ -1,4 +1,5 @@
-﻿using System;
+﻿using GOATCode.node;
+using System;
 
 namespace GOAT_Compiler
 {
@@ -7,7 +8,7 @@ namespace GOAT_Compiler
         /// <summary>
         /// Opens a new scope and extends the scope display if neccesary.
         /// </summary>
-        public void OpenScope();
+        public void OpenScope(Node node);
 
         /// <summary>
         /// Closes the current scope and removes the scopes symbol from the table.
@@ -47,11 +48,20 @@ namespace GOAT_Compiler
         /// If the same function symbol exists in an outer scope it is temporarily removed from the table and stored in the new function symbol.
         /// In case of a duplicate symbol an exception is thrown.
         /// </summary>
+        /// <param name="Node">The node representing the decleration</param>
         /// <param name="Name">The name of the function symbol</param>
         /// <param name="Type">The type of the function symbol</param>
         /// <param name="paramTypes">The type of the formal parameters in case it is a function being added</param>
         /// <exception cref="ArgumentException">Exception that is thrown if there is a duplicate definition.</exception>
-        public void AddFunctionSymbol(string name, Types type, params Types[] paramTypes);
+        public void AddFunctionSymbol(Node node, string name, Types type, params Types[] paramTypes);
+
+        /// <summary>
+        /// Get the function node with the given symbol from the AST.
+        /// </summary>
+        /// <param name="symbol">The symbol representing the node</param>
+        /// <returns> the function node with the given symbol.
+        /// If the symbol is not found, null is returned</returns>
+        public Node GetFunctionNode(Symbol symbol);
 
 
         /// <summary>

@@ -91,7 +91,7 @@ namespace GOAT_Compiler
         {
             try
             {
-                _symbolTable.AddFunctionSymbol(name, type, types);
+                _symbolTable.AddFunctionSymbol(node, name, type, types);
             }
             catch (ArgumentException)
             {
