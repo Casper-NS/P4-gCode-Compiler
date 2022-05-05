@@ -18,6 +18,7 @@ namespace GOAT_Compiler.Code_Generation
         private float _bedTemp = 0;
         private float _extruderTemp = 0;
         private float _fanPower = 0;
+        private bool _build = false;
 
         /// <summary>
         /// The constructor of the CNCMachine class.
@@ -133,5 +134,51 @@ namespace GOAT_Compiler.Code_Generation
         {
             return _fanPower;
         }
+
+        public void AddToExtrusion(float e)
+        {
+            _currentExtrusion += e;
+        }
+
+        public bool GetMode()
+        {
+            return _build;
+        }
+        public void SetMode(bool b)
+        {
+            _build = b;
+        }
+
+        #region BuildInMethods
+        public void RelMove(Vector v)
+        {
+            string gLine = "";
+            Vector v1 = ReturnPosition();
+            UpdatePosition(new Vector(v1.X + v.X, v1.Y + v.Y, v1.Z + v.Z));
+            if (GetMode())
+            {
+                AddToExtrusion(ReturnExtruderRate());
+                gLine = "G1 X" + ReturnPosition().X + " Y" + ReturnPosition().Y + " Z" + ReturnPosition().Z + " E" + ReturnExtruderRate();
+            }
+            else
+            {
+                gLine = "G1 X" + ReturnPosition().X + " Y" + ReturnPosition().Y + " Z" + ReturnPosition().Z;
+            }
+        }
+        public void AbsMove(Vector v)
+        {
+            string gLine = "";
+            UpdatePosition(v);
+            if (GetMode())
+            {
+                AddToExtrusion(ReturnExtruderRate());
+                gLine = "G1 X" + ReturnPosition().X + " Y" + ReturnPosition().Y + " Z" + ReturnPosition().Z + " E" + ReturnExtruderRate();
+            }
+            else
+            {
+                gLine = "G1 X" + ReturnPosition().X + " Y" + ReturnPosition().Y + " Z" + ReturnPosition().Z;
+            }
+        }
+        #endregion
     }
 }
