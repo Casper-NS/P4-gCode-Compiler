@@ -71,6 +71,7 @@ void MovementExamples(){
 
 build float LookMomICanDoTrig(float in){
 	in = sin(in) * cos(in) / tan(in)
+	return in
 }
 
 walk void Turtling(){

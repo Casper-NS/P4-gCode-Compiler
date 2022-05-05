@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Text;
 using System.Xml;
 using GOATCode.node;
 
@@ -483,6 +484,30 @@ namespace GOAT_Compiler
             OutAWhileStmt(node);
         }
 
+        public override void OutAReturnStmt(AReturnStmt node)
+        {
+            nodeMap.Put(node, GetValue(node.GetExp()));
+        }
+
+        public override void CaseAStmtlistBlock(AStmtlistBlock node)
+        {
+            InAStmtlistBlock(node);
+            {
+                Object[] temp = new Object[node.GetStmt().Count];
+                node.GetStmt().CopyTo(temp, 0);
+                for (int i = temp.Length - 1; i >= 0; i--)
+                {
+                    ((PStmt)temp[i]).Apply(this);
+
+                    if (nodeMap.Contains((PStmt)temp[i]))
+                    {
+                        break;
+                    }
+                }
+            }
+            OutAStmtlistBlock(node);
+        }
+
         /*
         public override void OutARepeatStmt(ARepeatStmt node)
         {
@@ -567,6 +592,19 @@ namespace GOAT_Compiler
                     default:
                         return null;
                 }
+            }
+
+            public bool Contains(TKey key)
+            {
+                if (IntMap.ContainsKey(key)   || 
+                    FloatMap.ContainsKey(key) || 
+                    BoolMap.ContainsKey(key)  ||
+                    VecMap.ContainsKey(key))
+                {
+                    return true;
+                }
+
+                return false;
             }
         }
     }
