@@ -232,10 +232,7 @@ namespace GOAT_Compiler.Code_Generation
         }
         private void SetExtruderRate(float rate)
         {
-            string gLine = "";
             _machine.ExtruderRate = rate;
-            gLine = "M220 S" + rate.ToString();
-            _stream.Write(Encoding.UTF8.GetBytes(gLine), 0, gLine.Length);
         }
         private void SetBedTemp(float temp)
         {
