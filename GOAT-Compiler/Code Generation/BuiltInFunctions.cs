@@ -36,7 +36,8 @@ namespace GOAT_Compiler
             { "WaitForExtruderTemp", new Symbol("WaitForExtruderTemp", Types.Void) },
             { "WaitForCurrentMove", new Symbol("WaitForCurrentMove", Types.Void) },
             { "WaitForMillis", new Symbol("WaitForMillis", Types.Void, Types.FloatingPoint)},
-            { "SetFanPower", new Symbol("SetFanPower", Types.Void, Types.FloatingPoint)}
+            { "SetFanPower", new Symbol("SetFanPower", Types.Void, Types.FloatingPoint)},
+            { "Home", new Symbol("Home", Types.Void) }
         };
     }
 }
