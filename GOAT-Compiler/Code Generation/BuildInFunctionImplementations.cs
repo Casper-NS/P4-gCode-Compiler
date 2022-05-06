@@ -7,6 +7,12 @@ namespace GOAT_Compiler.Code_Generation
     {
         CNCMachine machine = new CNCMachine();
 
+        /// <summary>
+        /// Calls the specified built in function with the right params.
+        /// </summary>
+        /// <param name="functionName">The name of the built in function.</param>
+        /// <param name="actuelParams">The params for the built in function.</param>
+        /// <returns></returns>
         public dynamic CallBuildInFunctions(string functionName, List<dynamic> actuelParams)
         {
             switch (functionName)
@@ -193,6 +199,7 @@ namespace GOAT_Compiler.Code_Generation
         }
         public void SetFanPower(float power)
         {
+            
             string gLine = "";
             machine.FanPower = power;
             gLine = "M106 S" + power.ToString();
