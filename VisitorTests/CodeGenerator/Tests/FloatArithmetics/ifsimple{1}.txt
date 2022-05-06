@@ -1,0 +1,12 @@
+﻿float f = 0
+
+void main(){
+	if (true)
+	{
+		f = 1
+	}
+	if (false)
+	{
+		f = 2
+	}
+}

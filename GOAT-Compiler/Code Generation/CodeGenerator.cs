@@ -35,14 +35,24 @@ namespace GOAT_Compiler
     {
         private Dictionary<Node, Types> typeMap;
         private RuntimeTable<Node> nodeMap;
-        internal RuntimeTable<Symbol> RT;
+
+        internal RuntimeTable<Symbol> RT
+        {
+            get => CallStackRT.TryPeek(out RuntimeTable<Symbol> rt) ? rt : GlobalRT;
+        }
+
+        private List<dynamic> CurrentParams = new();
+
+        internal RuntimeTable<Symbol> GlobalRT;
+        internal Stack<RuntimeTable<Symbol>> CallStackRT;
         private Stream _outputFileStream;
 
         public CodeGenerator(ISymbolTable symbolTable, Dictionary<Node, Types> typesDictionary, Stream outputStream) : base(symbolTable)
         {
             _symbolTable = symbolTable;
             typeMap = typesDictionary;
-            RT = new RuntimeTable<Symbol>();
+            GlobalRT = new();
+            CallStackRT = new();
             nodeMap = new RuntimeTable<Node>();
             _outputFileStream = outputStream;
         }
@@ -51,15 +61,55 @@ namespace GOAT_Compiler
             return gCommand.ToString() + " X" + vector.X + " Y" + vector.Y + " Z" + vector.Z;
         }
 
+
+        void RTPutValue(Symbol symbol, dynamic value)
+        {
+            if (_symbolTable.IsGlobal(symbol))
+            {
+                GlobalRT.Put(symbol, value);
+            }
+            else
+            {
+                RT.Put(symbol, value);
+            }
+        }
+
         dynamic GetValue(Symbol symbol)
         {
-            return RT.Get(symbol, symbol.type);
+            if (RT.Contains(symbol))
+            {
+                return RT.Get(symbol, symbol.type);
+            }
+            else
+            {
+                return GlobalRT.Get(symbol, symbol.type);
+            }
         }
 
         dynamic GetValue(Node node)
         {
             return nodeMap.Get(node, typeMap[node]);
         }
+
+
+        public override void CaseADeclProgram(ADeclProgram node)
+        {
+            InADeclProgram(node);
+            {
+                Object[] temp = new Object[node.GetDecl().Count];
+                node.GetDecl().CopyTo(temp, 0);
+                for (int i = 0; i < temp.Length; i++)
+                {
+                    if (temp[i] is AVarDecl vardecl)
+                    {
+                        vardecl.Apply(this);
+                    }
+                }
+                _symbolTable.GetFunctionNode(_symbolTable.GetFunctionSymbol("main")).Apply(this);
+            }
+            OutADeclProgram(node);
+        }
+
 
         public override void OutAVarDecl(AVarDecl node)
         {
@@ -70,16 +120,16 @@ namespace GOAT_Compiler
                 switch (typeMap[node])
                 {
                     case Types.Integer:
-                        RT.Put(symbol, nodeMap.Get(nodeExpr, typeMap[node]));
+                        RT.Put(symbol, GetValue(nodeExpr));
                         break;
                     case Types.FloatingPoint:
-                        RT.Put(symbol, (float)nodeMap.Get(nodeExpr, typeMap[nodeExpr]));
+                        RT.Put(symbol, (float)GetValue(nodeExpr));
                         break;
                     case Types.Boolean:
-                        RT.Put(symbol, nodeMap.Get(nodeExpr, typeMap[node]));
+                        RT.Put(symbol, GetValue(nodeExpr));
                         break;
                     case Types.Vector:
-                        RT.Put(symbol, nodeMap.Get(nodeExpr, typeMap[node]));
+                        RT.Put(symbol, GetValue(nodeExpr));
                         break;
                     default:
                         throw new Exception("This should never happen.");
@@ -90,7 +140,7 @@ namespace GOAT_Compiler
         public override void OutAIdExp(AIdExp node)
         {
             Symbol VarSymbol = _symbolTable.GetVariableSymbol(node.GetId().Text);
-            nodeMap.Put(node, RT.Get(VarSymbol, VarSymbol.type));
+            nodeMap.Put(node, GetValue(VarSymbol));
         }
 
         public override void OutABoolvalExp(ABoolvalExp node)
@@ -126,7 +176,7 @@ namespace GOAT_Compiler
 
             if (idSymbol != null)
             {
-                RT.Put(idSymbol, GetValue(node.GetExp()));
+                RTPutValue(idSymbol, GetValue(node.GetExp()));
             }
             else
             {
@@ -144,11 +194,11 @@ namespace GOAT_Compiler
                     Vector Vec2 = ((Vector)GetValue(idSymbol));
 
                     Vector resultVec = new Vector(Vec1.X + Vec2.X, Vec1.Y + Vec2.Y, Vec1.Z + Vec2.Z);
-                    RT.Put(idSymbol, resultVec);
+                    RTPutValue(idSymbol, resultVec);
                 }
                 else
                 {
-                    RT.Put(idSymbol, GetValue(node.GetExp()) + GetValue(idSymbol));
+                    RTPutValue(idSymbol, GetValue(idSymbol) + GetValue(node.GetExp()));
                 }
             }
             else
@@ -167,11 +217,11 @@ namespace GOAT_Compiler
                     Vector Vec2 = ((Vector)GetValue(idSymbol));
 
                     Vector resultVec = new Vector(Vec1.X - Vec2.X, Vec1.Y - Vec2.Y, Vec1.Z - Vec2.Z);
-                    RT.Put(idSymbol, resultVec);
+                    RTPutValue(idSymbol, resultVec);
                 }
                 else
                 {
-                    RT.Put(idSymbol, GetValue(node.GetExp()) - GetValue(idSymbol));
+                    RTPutValue(idSymbol, GetValue(idSymbol) - GetValue(node.GetExp()));
                 }
             }
             else
@@ -190,11 +240,11 @@ namespace GOAT_Compiler
                     dynamic scale = GetValue(node.GetExp());
 
                     Vector resultVec = new Vector(Vec.X * scale, Vec.Y * scale, Vec.Z * scale);
-                    RT.Put(idSymbol, resultVec);
+                    RTPutValue(idSymbol, resultVec);
                 }
                 else
                 {
-                    RT.Put(idSymbol, GetValue(node.GetExp()) * GetValue(idSymbol));
+                    RTPutValue(idSymbol, GetValue(idSymbol) * GetValue(node.GetExp()));
                 }
             }
             else
@@ -208,7 +258,7 @@ namespace GOAT_Compiler
             Symbol idSymbol = _symbolTable.GetVariableSymbol(node.GetId().Text);
             if (idSymbol != null)
             {
-                RT.Put(idSymbol, GetValue(node.GetExp()) % GetValue(idSymbol));
+                RTPutValue(idSymbol, GetValue(idSymbol) % GetValue(node.GetExp()));
             }
             else
             {
@@ -226,11 +276,11 @@ namespace GOAT_Compiler
                     dynamic value = GetValue(node.GetExp());
 
                     Vector resultVec = new Vector(Vec1.X / value, Vec1.Y / value, Vec1.Z / value);
-                    RT.Put(idSymbol, resultVec);
+                    RTPutValue(idSymbol, resultVec);
                 }
                 else
                 {
-                    RT.Put(idSymbol, GetValue(node.GetExp()) / GetValue(idSymbol));
+                    RTPutValue(idSymbol, GetValue(idSymbol) / GetValue(node.GetExp()));
                 }
             }
             else
@@ -495,7 +545,7 @@ namespace GOAT_Compiler
             {
                 Object[] temp = new Object[node.GetStmt().Count];
                 node.GetStmt().CopyTo(temp, 0);
-                for (int i = temp.Length - 1; i >= 0; i--)
+                for (int i = 0; i < temp.Length; i++)
                 {
                     ((PStmt)temp[i]).Apply(this);
 
@@ -507,6 +557,105 @@ namespace GOAT_Compiler
             }
             OutAStmtlistBlock(node);
         }
+
+        public override void OutAFunctionStmt(AFunctionStmt node)
+        {
+
+        }
+
+        public override void OutAFunctionExp(AFunctionExp node)
+        {
+            Symbol funcSymbol = _symbolTable.GetFunctionSymbol(node.GetName().Text);
+            if (funcSymbol == null)
+            {
+                throw null;
+            }
+            Node[] args = new Node[node.GetArgs().Count];
+            node.GetArgs().CopyTo(args, 0);
+
+            foreach (var arg in args)
+            {
+                CurrentParams.Add(GetValue(arg));
+
+            }
+
+            _symbolTable.GetFunctionNode(_symbolTable.GetFunctionSymbol(node.GetName().Text)).Apply(this);
+        }
+
+
+        public override void OutAParamDecl(AParamDecl node)
+        {
+            Symbol paramSymbol = _symbolTable.GetVariableSymbol(node.GetId().Text);
+            RTPutValue(paramSymbol, CurrentParams[0]);
+            CurrentParams.RemoveAt(0);
+        }
+
+
+        public override void CaseAFuncDecl(AFuncDecl node)
+        {
+            InAFuncDecl(node);
+            CallStackRT.Push(new RuntimeTable<Symbol>());
+            if (node.GetTypes() != null)
+            {
+                node.GetTypes().Apply(this);
+            }
+            if (node.GetId() != null)
+            {
+                node.GetId().Apply(this);
+            }
+            {
+                Object[] temp = new Object[node.GetDecl().Count];
+                node.GetDecl().CopyTo(temp, 0);
+                for (int i = 0; i < temp.Length; i++)
+                {
+                    ((PDecl)temp[i]).Apply(this);
+                }
+            }
+            if (node.GetBlock() != null)
+            {
+                node.GetBlock().Apply(this);
+            }
+            OutAFuncDecl(node);
+        }
+
+        public override void InsideScopeOutAFuncDecl(AFuncDecl node)
+        {
+            CallStackRT.Pop();
+        }
+
+
+        public override void CaseAProcDecl(AProcDecl node)
+        {
+            InAProcDecl(node);
+            CallStackRT.Push(new RuntimeTable<Symbol>());
+            if (node.GetId() != null)
+            {
+                node.GetId().Apply(this);
+            }
+            {
+                Object[] temp = new Object[node.GetDecl().Count];
+                node.GetDecl().CopyTo(temp, 0);
+                for (int i = 0; i < temp.Length; i++)
+                {
+                    ((PDecl)temp[i]).Apply(this);
+                }
+            }
+            if (node.GetBlock() != null)
+            {
+                node.GetBlock().Apply(this);
+            }
+            OutAProcDecl(node);
+        }
+
+
+        public override void InsideScopeOutAProcDecl(AProcDecl node)
+        {
+            CallStackRT.Pop();
+        }
+
+
+
+
 
         /*
         public override void OutARepeatStmt(ARepeatStmt node)
@@ -596,9 +745,9 @@ namespace GOAT_Compiler
 
             public bool Contains(TKey key)
             {
-                if (IntMap.ContainsKey(key)   || 
-                    FloatMap.ContainsKey(key) || 
-                    BoolMap.ContainsKey(key)  ||
+                if (IntMap.ContainsKey(key) ||
+                    FloatMap.ContainsKey(key) ||
+                    BoolMap.ContainsKey(key) ||
                     VecMap.ContainsKey(key))
                 {
                     return true;

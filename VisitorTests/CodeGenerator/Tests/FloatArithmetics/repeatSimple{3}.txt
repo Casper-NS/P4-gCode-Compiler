@@ -1,0 +1,9 @@
+﻿float f = 0
+int iterate = 0
+
+void main(){
+	repeat(3)
+	{
+		f = f + 1
+	}
+}
