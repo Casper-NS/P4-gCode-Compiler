@@ -1,0 +1,13 @@
+﻿float f = 0
+int iterate = 100
+
+void main(){
+	repeat(iterate)
+	{
+		f = f + 1
+		if (f > 49){
+			iterate = 5
+		}
+
+	}
+}
