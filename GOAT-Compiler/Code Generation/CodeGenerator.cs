@@ -13,6 +13,7 @@ namespace GOAT_Compiler
     {
         private Dictionary<Node, Types> typeMap;
         private RuntimeTable<Node> nodeMap;
+        private dynamic CurrentReturnValue = null;
 
         internal RuntimeTable<Symbol> RT
         {
@@ -592,7 +593,7 @@ namespace GOAT_Compiler
 
         public override void OutAReturnStmt(AReturnStmt node)
         {
-            nodeMap.Put(node, GetValue(node.GetExp()));
+            CurrentReturnValue = GetValue(node.GetExp());
         }
 
         public override void CaseAStmtlistBlock(AStmtlistBlock node)
@@ -616,7 +617,7 @@ namespace GOAT_Compiler
 
         public override void OutAFunctionStmt(AFunctionStmt node)
         {
-
+            node.GetExp().Apply(this);
         }
 
         public override void OutAFunctionExp(AFunctionExp node)
@@ -636,6 +637,8 @@ namespace GOAT_Compiler
             }
 
             _symbolTable.GetFunctionNode(_symbolTable.GetFunctionSymbol(node.GetName().Text)).Apply(this);
+
+            nodeMap.Put(node, CurrentReturnValue);
         }
 
 
