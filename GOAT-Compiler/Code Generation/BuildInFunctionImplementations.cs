@@ -5,7 +5,11 @@ namespace GOAT_Compiler.Code_Generation
 {
     public class BuildInFunctionImplementations
     {
-        CNCMachine machine = new CNCMachine();
+        private CNCMachine _machine;
+        public BuildInFunctionImplementations(CNCMachine newMachine)
+        {
+            _machine = newMachine;
+        }
 
         /// <summary>
         /// Calls the specified built in function with the right params.
@@ -78,33 +82,33 @@ namespace GOAT_Compiler.Code_Generation
         public void RelMove(Vector v)
         {
             string gLine = "";
-            Vector oldPosition = machine.Position;
-            machine.Position = new Vector(oldPosition.X + v.X, oldPosition.Y + v.Y, oldPosition.Z + v.Z);
-            if (machine.Build)
+            Vector oldPosition = _machine.Position;
+            _machine.Position = new Vector(oldPosition.X + v.X, oldPosition.Y + v.Y, oldPosition.Z + v.Z);
+            if (_machine.Build)
             {
-                machine.CurrentExtrusion += (machine.ExtruderRate*VectorDistance(oldPosition, machine.Position));
-                gLine += "G1 X" + machine.Position.X + " Y" + machine.Position.Y + " Z" + machine.Position.Z + " E" + machine.CurrentExtrusion;
+                _machine.CurrentExtrusion += (_machine.ExtruderRate*VectorDistance(oldPosition, _machine.Position));
+                gLine += "G1 X" + _machine.Position.X + " Y" + _machine.Position.Y + " Z" + _machine.Position.Z + " E" + _machine.CurrentExtrusion;
             }
             else
             {
-                gLine += "G0 X" + machine.Position.X + " Y" + machine.Position.Y + " Z" + machine.Position.Z;
+                gLine += "G0 X" + _machine.Position.X + " Y" + _machine.Position.Y + " Z" + _machine.Position.Z;
                 
             }
         }
         public void AbsMove(Vector v)
         {
             string gLine = "";
-            Vector oldPosition = machine.Position;
-            machine.Position = v;
-            if (machine.Build)
+            Vector oldPosition = _machine.Position;
+            _machine.Position = v;
+            if (_machine.Build)
             {
-                machine.CurrentExtrusion += (machine.ExtruderRate * VectorDistance(oldPosition, machine.Position));
-                gLine += "G1 X" + machine.Position.X + " Y" + machine.Position.Y + " Z" + machine.Position.Z + " E" + machine.CurrentExtrusion;
+                _machine.CurrentExtrusion += (_machine.ExtruderRate * VectorDistance(oldPosition, _machine.Position));
+                gLine += "G1 X" + _machine.Position.X + " Y" + _machine.Position.Y + " Z" + _machine.Position.Z + " E" + _machine.CurrentExtrusion;
             }
             else
             {
                 
-                gLine += "G0 X" + machine.Position.X + " Y" + machine.Position.Y + " Z" + machine.Position.Z;
+                gLine += "G0 X" + _machine.Position.X + " Y" + _machine.Position.Y + " Z" + _machine.Position.Z;
             }
         }
         private float CircelLenght(Vector v1, Vector v2, float r)
@@ -117,23 +121,23 @@ namespace GOAT_Compiler.Code_Generation
         public void RelArc(Vector v, float r)
         {
             string gLine = "";
-            Vector oldPosition = machine.Position;
+            Vector oldPosition = _machine.Position;
             if (VectorDistance(oldPosition, v) > r*2)
             {
                 throw new Exception("RelArc radius is too small.");
             }
-            machine.Position = new Vector(oldPosition.X + v.X, oldPosition.Y + v.Y, oldPosition.Z + v.Z);
-            Vector v2 = machine.Position;
-            if (machine.Build)
+            _machine.Position = new Vector(oldPosition.X + v.X, oldPosition.Y + v.Y, oldPosition.Z + v.Z);
+            Vector v2 = _machine.Position;
+            if (_machine.Build)
             {
                 if(r < 0) { 
-                    machine.CurrentExtrusion += (machine.ExtruderRate * CircelLenght(oldPosition, machine.Position, -r));
-                    gLine = "G3 X" + v2.X + " Y" + v2.Y + " Z" + v2.Z + " E" + machine.ExtruderRate + " R" + -r;
+                    _machine.CurrentExtrusion += (_machine.ExtruderRate * CircelLenght(oldPosition, _machine.Position, -r));
+                    gLine = "G3 X" + v2.X + " Y" + v2.Y + " Z" + v2.Z + " E" + _machine.ExtruderRate + " R" + -r;
                 }
                 else
                 {
-                    machine.CurrentExtrusion += (machine.ExtruderRate * CircelLenght(oldPosition, machine.Position, r));
-                    gLine = "G2 X" + v2.X + " Y" + v2.Y + " Z" + v2.Z + " E" + machine.ExtruderRate + " R" + r;
+                    _machine.CurrentExtrusion += (_machine.ExtruderRate * CircelLenght(oldPosition, _machine.Position, r));
+                    gLine = "G2 X" + v2.X + " Y" + v2.Y + " Z" + v2.Z + " E" + _machine.ExtruderRate + " R" + r;
                 }
             }
             else
@@ -159,24 +163,24 @@ namespace GOAT_Compiler.Code_Generation
         public void AbsArc(Vector v, float r)
         {
             string gLine = "";
-            Vector oldPosition = machine.Position;
+            Vector oldPosition = _machine.Position;
             if (VectorDistance(oldPosition, v) > r * 2)
             {
                 throw new Exception("AbsArc radius is too small.");
             }
-            machine.Position = v;
-            Vector v2 = machine.Position;
-            if (machine.Build)
+            _machine.Position = v;
+            Vector v2 = _machine.Position;
+            if (_machine.Build)
             {
                 if (r < 0)
                 {
-                    machine.CurrentExtrusion += (machine.ExtruderRate * CircelLenght(oldPosition, machine.Position, -r));
-                    gLine = "G3 X" + v2.X + " Y" + v2.Y + " Z" + v2.Z + " E" + machine.ExtruderRate + " R" + -r;
+                    _machine.CurrentExtrusion += (_machine.ExtruderRate * CircelLenght(oldPosition, _machine.Position, -r));
+                    gLine = "G3 X" + v2.X + " Y" + v2.Y + " Z" + v2.Z + " E" + _machine.ExtruderRate + " R" + -r;
                 }
                 else
                 {
-                    machine.CurrentExtrusion += (machine.ExtruderRate * CircelLenght(oldPosition, machine.Position, r));
-                    gLine = "G2 X" + v2.X + " Y" + v2.Y + " Z" + v2.Z + " E" + machine.ExtruderRate + " R" + r;
+                    _machine.CurrentExtrusion += (_machine.ExtruderRate * CircelLenght(oldPosition, _machine.Position, r));
+                    gLine = "G2 X" + v2.X + " Y" + v2.Y + " Z" + v2.Z + " E" + _machine.ExtruderRate + " R" + r;
                 }
             }
             else
@@ -194,36 +198,36 @@ namespace GOAT_Compiler.Code_Generation
         public void SetExtruderTemp(float temp)
         {
             string gLine = "";
-            machine.ExtruderTemp = temp;
+            _machine.ExtruderTemp = temp;
             gLine = "M104 S" + temp.ToString();
         }
         public void SetFanPower(float power)
         {
             
             string gLine = "";
-            machine.FanPower = power;
+            _machine.FanPower = power;
             gLine = "M106 S" + power.ToString();
         }
         public void SetExtruderRate(float rate)
         {
             string gLine = "";
-            machine.ExtruderRate = rate;
+            _machine.ExtruderRate = rate;
             gLine = "M220 S" + rate.ToString();
         }
         public void SetBedTemp(float temp)
         {
             string gLine = "";
-            machine.BedTemp = temp;
+            _machine.BedTemp = temp;
             gLine = "M140 S" + temp.ToString();
         }
         public Vector Position(){
-            return machine.Position;
+            return _machine.Position;
         }
         public void Steps(float step)
         {
-            Vector oldPosition = machine.Position;
-            Vector newPoint = new ((float)Math.Cos(DegreesToRadians(machine.Rotation))*step, 
-                                   (float)Math.Sin(DegreesToRadians(machine.Rotation))*step,
+            Vector oldPosition = _machine.Position;
+            Vector newPoint = new ((float)Math.Cos(DegreesToRadians(_machine.Rotation))*step, 
+                                   (float)Math.Sin(DegreesToRadians(_machine.Rotation))*step,
                                    0);
             Vector newPosition = new (oldPosition.X + newPoint.X, oldPosition.Y + newPoint.Y, oldPosition.Z + newPoint.Z);
             RelMove(newPosition);
@@ -235,41 +239,41 @@ namespace GOAT_Compiler.Code_Generation
         public void Lift(float step)
         {
             string gLine = "";
-            machine.Position.Z += step;
-            if (machine.Build)
+            _machine.Position.Z += step;
+            if (_machine.Build)
             {
-                machine.CurrentExtrusion += machine.ExtruderRate * step;
-                gLine += "G1 X" + machine.Position.X + " Y" + machine.Position.Y + " Z" + machine.Position.Z + " E" + machine.CurrentExtrusion;
+                _machine.CurrentExtrusion += _machine.ExtruderRate * step;
+                gLine += "G1 X" + _machine.Position.X + " Y" + _machine.Position.Y + " Z" + _machine.Position.Z + " E" + _machine.CurrentExtrusion;
             }
             else
             {
-                gLine += "G0 X" + machine.Position.X + " Y" + machine.Position.Y + " Z" + machine.Position.Z;
+                gLine += "G0 X" + _machine.Position.X + " Y" + _machine.Position.Y + " Z" + _machine.Position.Z;
 
             }
         }
         public void Right(float deg)
         {
-            machine.Rotation -= deg;
+            _machine.Rotation -= deg;
         }
         public void Left(float deg)
         {
-            machine.Rotation += deg;
+            _machine.Rotation += deg;
         }
         public float Direction()
         {
-            return machine.Rotation;
+            return _machine.Rotation;
         }
         public void TurnTo(float deg)
         {
-            machine.Rotation = deg;
+            _machine.Rotation = deg;
         }
         public void WaitForBedTemp()
         {
-            string gLine = "M190 R" + machine.BedTemp.ToString();
+            string gLine = "M190 R" + _machine.BedTemp.ToString();
         }
         public void WaitForExtruderTemp()
         {
-            string gLine = "M109 R" + machine.ExtruderTemp.ToString();
+            string gLine = "M109 R" + _machine.ExtruderTemp.ToString();
         }
         public void WaitForCurrentMove()
         {
