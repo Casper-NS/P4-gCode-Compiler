@@ -5,6 +5,8 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Xml;
+using GOAT_Compiler.Code_Generation;
+using GOAT_Compiler.Exceptions;
 using GOATCode.node;
 
 namespace GOAT_Compiler
@@ -14,6 +16,7 @@ namespace GOAT_Compiler
         private Dictionary<Node, Types> typeMap;
         private RuntimeTable<Node> nodeMap;
         private dynamic CurrentReturnValue = null;
+        private bool BreakFromFunction = false;
 
         internal RuntimeTable<Symbol> RT
         {
@@ -24,10 +27,18 @@ namespace GOAT_Compiler
 
         internal RuntimeTable<Symbol> GlobalRT;
         internal Stack<RuntimeTable<Symbol>> CallStackRT;
+        private Stack<bool> BuildStack;
         private Stream _outputFileStream;
+
+        private CNCMachine _machine;
+
+        private BuildInFunctionImplementations _buildInFunctions;
+
 
         public CodeGenerator(ISymbolTable symbolTable, Dictionary<Node, Types> typesDictionary, Stream outputStream) : base(symbolTable)
         {
+            _machine = new();
+            _buildInFunctions = new BuildInFunctionImplementations(_machine, Stream.Null);
             _symbolTable = symbolTable;
             typeMap = typesDictionary;
             GlobalRT = new();
@@ -613,7 +624,7 @@ namespace GOAT_Compiler
         public override void OutAReturnStmt(AReturnStmt node)
         {
             CurrentReturnValue = GetValue(node.GetExp());
-            nodeMap.Put(node, CurrentReturnValue);
+            BreakFromFunction = true;
         }
 
         public override void CaseAStmtlistBlock(AStmtlistBlock node)
@@ -626,7 +637,7 @@ namespace GOAT_Compiler
                 {
                     ((PStmt)temp[i]).Apply(this);
 
-                    if (nodeMap.Contains((PStmt)temp[i]))
+                    if (BreakFromFunction)
                     {
                         break;
                     }
@@ -634,6 +645,28 @@ namespace GOAT_Compiler
             }
             OutAStmtlistBlock(node);
         }
+
+
+        public override void InABuildBlock(ABuildBlock node)
+        {
+            BuildStack.Push(true);
+        }
+
+        public override void OutABuildBlock(ABuildBlock node)
+        {
+            BuildStack.Pop();
+        }
+
+        public override void InAWalkBlock(AWalkBlock node)
+        {
+            BuildStack.Push(false);
+        }
+
+        public override void OutAWalkBlock(AWalkBlock node)
+        {
+            BuildStack.Pop();
+        }
+
 
         public override void OutAFunctionStmt(AFunctionStmt node)
         {
@@ -647,6 +680,7 @@ namespace GOAT_Compiler
             {
                 throw null;
             }
+
             Node[] args = new Node[node.GetArgs().Count];
             node.GetArgs().CopyTo(args, 0);
 
@@ -655,9 +689,36 @@ namespace GOAT_Compiler
                 CurrentParams.Add(GetValue(arg));
             }
 
-            _symbolTable.GetFunctionNode(_symbolTable.GetFunctionSymbol(node.GetName().Text)).Apply(this);
+            if (BuiltInFunctions.FunctionsList.ContainsKey(node.GetName().Text))
+            {
+                if (BuildStack.TryPeek(out bool build))
+                {
+                    _machine.Build = build;
+                }
+                else
+                {
+                    throw new BuildWalkException(node, "cant execute command without a build or walk scope.");
+                }
+                dynamic returnValue = _buildInFunctions.CallBuildInFunctions(node.GetName().Text, CurrentParams);
+                if (returnValue != null)
+                {
+                    nodeMap.Put(node, returnValue);
+                }
+                CurrentParams.Clear();
+            }
+            else
+            {
+                Node funcNode = _symbolTable.GetFunctionNode(_symbolTable.GetFunctionSymbol(node.GetName().Text));
 
-            nodeMap.Put(node, CurrentReturnValue);
+                funcNode.Apply(this);
+
+                if (funcNode is AFuncDecl)
+                {
+                    nodeMap.Put(node, CurrentReturnValue);
+                }
+
+                BreakFromFunction = false;
+            }
         }
 
 
