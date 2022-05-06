@@ -83,10 +83,21 @@ namespace GOAT_Compiler.Code_Generation
                 case "WaitForMillis":
                     WaitForMillis(actuelParams[0]);
                     break;
+                case "Home":
+                    Home();
+                    break;
             }
             return null;
         }
-        public void RelMove(Vector v)
+
+        private void Home()
+        {
+            string gLine = "G28";
+            _machine.Position = new Vector(0, 0, 0);
+            _stream.Write(Encoding.UTF8.GetBytes(gLine), 0, gLine.Length);
+        }
+
+        private void RelMove(Vector v)
         {
             string gLine = "";
             Vector oldPosition = _machine.Position;
@@ -102,7 +113,7 @@ namespace GOAT_Compiler.Code_Generation
             }
             _stream.Write(Encoding.UTF8.GetBytes(gLine), 0, gLine.Length);
         }
-        public void AbsMove(Vector v)
+        private void AbsMove(Vector v)
         {
             string gLine = "";
             Vector oldPosition = _machine.Position;
@@ -125,7 +136,7 @@ namespace GOAT_Compiler.Code_Generation
             float deg = (float)Math.Acos(top/bot);
             return deg * r
 ;        }
-        public void RelArc(Vector v, float r)
+        private void RelArc(Vector v, float r)
         {
             string gLine = "";
             Vector oldPosition = _machine.Position;
@@ -168,7 +179,7 @@ namespace GOAT_Compiler.Code_Generation
             }
             throw new Exception("VectorDistance: Z values are not the same.");
         }
-        public void AbsArc(Vector v, float r)
+        private void AbsArc(Vector v, float r)
         {
             string gLine = "";
             Vector oldPosition = _machine.Position;
@@ -204,14 +215,14 @@ namespace GOAT_Compiler.Code_Generation
             }
             _stream.Write(Encoding.UTF8.GetBytes(gLine), 0, gLine.Length);
         }
-        public void SetExtruderTemp(float temp)
+        private void SetExtruderTemp(float temp)
         {
             string gLine = "";
             _machine.ExtruderTemp = temp;
             gLine = "M104 S" + temp.ToString();
             _stream.Write(Encoding.UTF8.GetBytes(gLine), 0, gLine.Length);
         }
-        public void SetFanPower(float power)
+        private void SetFanPower(float power)
         {
             string gLine = "";
             _machine.FanPower = power;
@@ -219,24 +230,24 @@ namespace GOAT_Compiler.Code_Generation
             _stream.Write(Encoding.UTF8.GetBytes(gLine), 0, gLine.Length);
             
         }
-        public void SetExtruderRate(float rate)
+        private void SetExtruderRate(float rate)
         {
             string gLine = "";
             _machine.ExtruderRate = rate;
             gLine = "M220 S" + rate.ToString();
             _stream.Write(Encoding.UTF8.GetBytes(gLine), 0, gLine.Length);
         }
-        public void SetBedTemp(float temp)
+        private void SetBedTemp(float temp)
         {
             string gLine = "";
             _machine.BedTemp = temp;
             gLine = "M140 S" + temp.ToString();
             _stream.Write(Encoding.UTF8.GetBytes(gLine), 0, gLine.Length);
         }
-        public Vector Position(){
+        private Vector Position(){
             return _machine.Position;
         }
-        public void Steps(float step)
+        private void Steps(float step)
         {
             Vector oldPosition = _machine.Position;
             Vector newPoint = new ((float)Math.Cos(DegreesToRadians(_machine.Rotation))*step, 
@@ -249,7 +260,7 @@ namespace GOAT_Compiler.Code_Generation
         {
            return degrees * (float)Math.PI / 180.0f;
         }
-        public void Lift(float step)
+        private void Lift(float step)
         {
             string gLine = "";
             _machine.Position.Z += step;
@@ -264,38 +275,38 @@ namespace GOAT_Compiler.Code_Generation
             }
             _stream.Write(Encoding.UTF8.GetBytes(gLine), 0, gLine.Length);
         }
-        public void Right(float deg)
+        private void Right(float deg)
         {
             _machine.Rotation -= deg;
         }
-        public void Left(float deg)
+        private void Left(float deg)
         {
             _machine.Rotation += deg;
         }
-        public float Direction()
+        private float Direction()
         {
             return _machine.Rotation;
         }
-        public void TurnTo(float deg)
+        private void TurnTo(float deg)
         {
             _machine.Rotation = deg;
         }
-        public void WaitForBedTemp()
+        private void WaitForBedTemp()
         {
             string gLine = "M190 R" + _machine.BedTemp.ToString();
             _stream.Write(Encoding.UTF8.GetBytes(gLine), 0, gLine.Length);
         }
-        public void WaitForExtruderTemp()
+        private void WaitForExtruderTemp()
         {
             string gLine = "M109 R" + _machine.ExtruderTemp.ToString();
             _stream.Write(Encoding.UTF8.GetBytes(gLine), 0, gLine.Length);
         }
-        public void WaitForCurrentMove()
+        private void WaitForCurrentMove()
         {
             string gLine = "M400";
             _stream.Write(Encoding.UTF8.GetBytes(gLine), 0, gLine.Length);
         }
-        public void WaitForMillis(int millis)
+        private void WaitForMillis(int millis)
         {
             string gLine = "G4 P" + millis.ToString();
             _stream.Write(Encoding.UTF8.GetBytes(gLine), 0, gLine.Length);
