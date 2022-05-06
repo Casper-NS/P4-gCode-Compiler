@@ -10,8 +10,8 @@ namespace GOAT_Compiler
 {
     class RecSymbolTable : ISymbolTable
     {
-        private Table tables;
-        private Table currentScope;
+        private Table _globalScope = null;
+        private Table currentScope = null;
 
         private Stack<Table> scopeStack = new();
         
@@ -26,8 +26,6 @@ namespace GOAT_Compiler
 
         public RecSymbolTable() 
         {
-            tables = new Table(null);
-            currentScope = tables;
             functionSymbols = new Dictionary<string, Symbol>(BuiltInFunctions.FunctionsList);
         }
 
@@ -41,6 +39,10 @@ namespace GOAT_Compiler
             else
             {
                 Table scope = new Table(currentScope);
+                if (currentScope == null)
+                {
+                    _globalScope = scope;
+                }
                 scopeMap.Add(node, scope);
                 currentScope = scope;
             }
@@ -49,7 +51,7 @@ namespace GOAT_Compiler
         public void CloseScope()
         {
             currentScope = scopeStack.Pop();
-            if (currentScope.ParentTable == null)
+            if (currentScope == null)
             {
                 buildComplete = true;
             }
@@ -94,7 +96,7 @@ namespace GOAT_Compiler
 
         public bool IsGlobal(Symbol symbol)
         {
-            return (tables.GetSymbol(symbol.name) != null);
+            return (_globalScope.GetSymbol(symbol.name) != null);
         }
     }
 
