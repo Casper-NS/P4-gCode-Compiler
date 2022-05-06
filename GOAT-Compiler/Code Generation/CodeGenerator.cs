@@ -9,28 +9,6 @@ using GOATCode.node;
 
 namespace GOAT_Compiler
 {
-    public enum GCommands
-    {
-        G00,  // Fast move
-        G01,  // Linear interpolation
-        G02,  // Circular Interpolation CW
-        G03,  // Circular interpolation CCW
-        G04,  // Dwell
-        G20,  // Set English units
-        G21,  // Set metric units
-        G28,  // Machine zero return (point 1)
-        G80,  // Fixed cycle cancel
-        G90,  // Set the interpreter to absolute positions
-        G91,  // Set the interpreter to relative positions
-        G92,  // Set the current position of one or more axes.
-        M00,  // Stop and wait for user
-        M01,  // Is a deprecated alias for M0
-        M80,  // Turn on the high-voltage power supply.
-        M81,  // Turn off the high-voltage power supply.
-        M104, // Set a new target hot end temperature and continue without waiting.
-        M140, // Set a new target temperature for the heated bed and continue without waiting.
-        F     // The speed of the 3D-printer
-    }
     internal class CodeGenerator : SymbolTableVisitor
     {
         private Dictionary<Node, Types> typeMap;
@@ -56,11 +34,6 @@ namespace GOAT_Compiler
             nodeMap = new RuntimeTable<Node>();
             _outputFileStream = outputStream;
         }
-        public string CreateGCodeLine(GCommands gCommand, Vector vector)
-        {
-            return gCommand.ToString() + " X" + vector.X + " Y" + vector.Y + " Z" + vector.Z;
-        }
-
 
         void RTPutValue(Symbol symbol, dynamic value)
         {
@@ -592,6 +565,31 @@ namespace GOAT_Compiler
             OutAWhileStmt(node);
         }
 
+
+        public override void CaseARepeatStmt(ARepeatStmt node)
+        {
+            InARepeatStmt(node);
+            if (node.GetExp() != null)
+            {
+                node.GetExp().Apply(this);
+            }
+
+            int i = 0;
+            while (GetValue(node.GetExp()) > i)
+            {
+                if (node.GetBlock() != null)
+                {
+                    node.GetBlock().Apply(this);
+                }
+
+                i++;
+                node.GetExp().Apply(this);
+            }
+
+            OutARepeatStmt(node);
+        }
+
+
         public override void OutAReturnStmt(AReturnStmt node)
         {
             nodeMap.Put(node, GetValue(node.GetExp()));
@@ -713,22 +711,6 @@ namespace GOAT_Compiler
 
 
 
-
-
-        /*
-        public override void OutARepeatStmt(ARepeatStmt node)
-        {
-        }
-        public override void OutAFunctionExp(AFunctionExp node)
-        {
-        }
-        public override void InsideScopeOutAFuncDecl(AFuncDecl node)
-        {
-        }
-        public override void CaseAFunctionExp(AFunctionExp node)
-        {
-        }
-        */
         internal class RuntimeTable<TKey>
         {
             private Dictionary<TKey, int> IntMap = new Dictionary<TKey, int>();
