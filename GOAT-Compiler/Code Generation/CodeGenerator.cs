@@ -176,7 +176,14 @@ namespace GOAT_Compiler
 
             if (idSymbol != null)
             {
-                RTPutValue(idSymbol, GetValue(node.GetExp()));
+                if (idSymbol.type == Types.FloatingPoint)
+                {
+                    RTPutValue(idSymbol, (float)GetValue(node.GetExp()));
+                }
+                else
+                {
+                    RTPutValue(idSymbol, GetValue(node.GetExp()));
+                }
             }
             else
             {
@@ -198,7 +205,14 @@ namespace GOAT_Compiler
                 }
                 else
                 {
-                    RTPutValue(idSymbol, GetValue(idSymbol) + GetValue(node.GetExp()));
+                    if (idSymbol.type == Types.FloatingPoint)
+                    {
+                        RTPutValue(idSymbol, (float)(GetValue(idSymbol) + GetValue(node.GetExp())));
+                    }
+                    else
+                    {
+                        RTPutValue(idSymbol, GetValue(idSymbol) + GetValue(node.GetExp()));
+                    }
                 }
             }
             else
@@ -221,7 +235,15 @@ namespace GOAT_Compiler
                 }
                 else
                 {
-                    RTPutValue(idSymbol, GetValue(idSymbol) - GetValue(node.GetExp()));
+                    if (idSymbol.type == Types.FloatingPoint)
+                    {
+                        RTPutValue(idSymbol, (float)(GetValue(idSymbol) - GetValue(node.GetExp())));
+                    }
+                    else
+                    {
+                        RTPutValue(idSymbol, GetValue(idSymbol) - GetValue(node.GetExp()));
+                    }
+
                 }
             }
             else
@@ -244,7 +266,14 @@ namespace GOAT_Compiler
                 }
                 else
                 {
-                    RTPutValue(idSymbol, GetValue(idSymbol) * GetValue(node.GetExp()));
+                    if (idSymbol.type == Types.FloatingPoint)
+                    {
+                        RTPutValue(idSymbol, (float)(GetValue(idSymbol) * GetValue(node.GetExp())));
+                    }
+                    else
+                    {
+                        RTPutValue(idSymbol, GetValue(idSymbol) * GetValue(node.GetExp()));
+                    }
                 }
             }
             else
@@ -258,7 +287,14 @@ namespace GOAT_Compiler
             Symbol idSymbol = _symbolTable.GetVariableSymbol(node.GetId().Text);
             if (idSymbol != null)
             {
-                RTPutValue(idSymbol, GetValue(idSymbol) % GetValue(node.GetExp()));
+                if (idSymbol.type == Types.FloatingPoint)
+                {
+                    RTPutValue(idSymbol, (float)(GetValue(idSymbol) % GetValue(node.GetExp())));
+                }
+                else
+                {
+                    RTPutValue(idSymbol, GetValue(idSymbol) % GetValue(node.GetExp()));
+                }
             }
             else
             {
@@ -280,7 +316,14 @@ namespace GOAT_Compiler
                 }
                 else
                 {
-                    RTPutValue(idSymbol, GetValue(idSymbol) / GetValue(node.GetExp()));
+                    if (idSymbol.type == Types.FloatingPoint)
+                    {
+                        RTPutValue(idSymbol, (float)(GetValue(idSymbol) / GetValue(node.GetExp())));
+                    }
+                    else
+                    {
+                        RTPutValue(idSymbol, GetValue(idSymbol) / GetValue(node.GetExp()));
+                    }
                 }
             }
             else
@@ -503,18 +546,33 @@ namespace GOAT_Compiler
                 throw new Exception("NotExp did not work");
             }
         }
-        public override void OutAIfStmt(AIfStmt node) //Needs fixing
+
+
+        public override void CaseAIfStmt(AIfStmt node)
         {
-            bool value = GetValue(node.GetExp());
-            if (value)
+            InAIfStmt(node);
+            if (node.GetExp() != null)
             {
-                nodeMap.Put(node.GetThen(), GetValue(node.GetThen()));
+                node.GetExp().Apply(this);
+            }
+
+            if (GetValue(node.GetExp()))
+            {
+                if (node.GetThen() != null)
+                {
+                    node.GetThen().Apply(this);
+                }
             }
             else
             {
-                nodeMap.Put(node.GetElse(), GetValue(node.GetElse()));
+                if (node.GetElse() != null)
+                {
+                    node.GetElse().Apply(this);
+                }
             }
+            OutAIfStmt(node);
         }
+
 
         //Todo: Make sure the compiler stops even if the while true is written.
         public override void CaseAWhileStmt(AWhileStmt node)
