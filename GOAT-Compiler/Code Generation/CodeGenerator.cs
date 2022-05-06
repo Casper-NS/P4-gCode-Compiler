@@ -198,7 +198,7 @@ namespace GOAT_Compiler
                 }
                 else
                 {
-                    RTPutValue(idSymbol, GetValue(node.GetExp()) + GetValue(idSymbol));
+                    RTPutValue(idSymbol, GetValue(idSymbol) + GetValue(node.GetExp()));
                 }
             }
             else
@@ -221,7 +221,7 @@ namespace GOAT_Compiler
                 }
                 else
                 {
-                    RTPutValue(idSymbol, GetValue(node.GetExp()) - GetValue(idSymbol));
+                    RTPutValue(idSymbol, GetValue(idSymbol) - GetValue(node.GetExp()));
                 }
             }
             else
@@ -244,7 +244,7 @@ namespace GOAT_Compiler
                 }
                 else
                 {
-                    RTPutValue(idSymbol, GetValue(node.GetExp()) * GetValue(idSymbol));
+                    RTPutValue(idSymbol, GetValue(idSymbol) * GetValue(node.GetExp()));
                 }
             }
             else
@@ -258,7 +258,7 @@ namespace GOAT_Compiler
             Symbol idSymbol = _symbolTable.GetVariableSymbol(node.GetId().Text);
             if (idSymbol != null)
             {
-                RTPutValue(idSymbol, GetValue(node.GetExp()) % GetValue(idSymbol));
+                RTPutValue(idSymbol, GetValue(idSymbol) % GetValue(node.GetExp()));
             }
             else
             {
@@ -280,7 +280,7 @@ namespace GOAT_Compiler
                 }
                 else
                 {
-                    RTPutValue(idSymbol, GetValue(node.GetExp()) / GetValue(idSymbol));
+                    RTPutValue(idSymbol, GetValue(idSymbol) / GetValue(node.GetExp()));
                 }
             }
             else
