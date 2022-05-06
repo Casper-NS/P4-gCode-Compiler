@@ -91,6 +91,11 @@ namespace GOAT_Compiler
         {
             return funcDeclMap.TryGetValue(symbol, out Node node) ? node : null;
         }
+
+        public bool IsGlobal(Symbol symbol)
+        {
+            return (tables.GetSymbol(symbol.name) != null);
+        }
     }
 
     class Table

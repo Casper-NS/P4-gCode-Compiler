@@ -69,5 +69,13 @@ namespace GOAT_Compiler
         /// </summary>
         /// <returns>Returns a bool, true if the table has been build and false otherwise</returns>
         public bool IsComplete();
+
+        /// <summary>
+        /// Checks whether a given symbol is from the global scope.
+        /// </summary>
+        /// <param name="symbol">The symbol to look for in the global scope.</param>
+        /// <returns>Whether the given symbol is in the global scope.</returns>
+        public bool IsGlobal(Symbol symbol);
+
     }
 }
