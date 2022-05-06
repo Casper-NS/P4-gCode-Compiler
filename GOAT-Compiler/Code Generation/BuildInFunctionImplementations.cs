@@ -1,14 +1,21 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Text;
 
 namespace GOAT_Compiler.Code_Generation
 {
+    /// <summary>
+    /// The class with the implentations of the built in functions
+    /// </summary>
     public class BuildInFunctionImplementations
     {
         private CNCMachine _machine;
-        public BuildInFunctionImplementations(CNCMachine newMachine)
+        private Stream _stream;
+        public BuildInFunctionImplementations(CNCMachine newMachine, Stream stream)
         {
             _machine = newMachine;
+            _stream = stream;
         }
 
         /// <summary>
@@ -92,8 +99,8 @@ namespace GOAT_Compiler.Code_Generation
             else
             {
                 gLine += "G0 X" + _machine.Position.X + " Y" + _machine.Position.Y + " Z" + _machine.Position.Z;
-                
             }
+            _stream.Write(Encoding.UTF8.GetBytes(gLine), 0, gLine.Length);
         }
         public void AbsMove(Vector v)
         {
@@ -107,9 +114,9 @@ namespace GOAT_Compiler.Code_Generation
             }
             else
             {
-                
                 gLine += "G0 X" + _machine.Position.X + " Y" + _machine.Position.Y + " Z" + _machine.Position.Z;
             }
+            _stream.Write(Encoding.UTF8.GetBytes(gLine), 0, gLine.Length);
         }
         private float CircelLenght(Vector v1, Vector v2, float r)
         {
@@ -151,6 +158,7 @@ namespace GOAT_Compiler.Code_Generation
                     gLine = "G2 X" + v2.X + " Y" + v2.Y + " Z" + v2.Z + " R" + r;
                 }
             }
+            _stream.Write(Encoding.UTF8.GetBytes(gLine), 0, gLine.Length);
         }
         private float VectorDistance(Vector v1, Vector v2) 
         {
@@ -194,31 +202,36 @@ namespace GOAT_Compiler.Code_Generation
                     gLine = "G2 X" + v2.X + " Y" + v2.Y + " Z" + v2.Z + " R" + r;
                 }
             }
+            _stream.Write(Encoding.UTF8.GetBytes(gLine), 0, gLine.Length);
         }
         public void SetExtruderTemp(float temp)
         {
             string gLine = "";
             _machine.ExtruderTemp = temp;
             gLine = "M104 S" + temp.ToString();
+            _stream.Write(Encoding.UTF8.GetBytes(gLine), 0, gLine.Length);
         }
         public void SetFanPower(float power)
         {
-            
             string gLine = "";
             _machine.FanPower = power;
             gLine = "M106 S" + power.ToString();
+            _stream.Write(Encoding.UTF8.GetBytes(gLine), 0, gLine.Length);
+            
         }
         public void SetExtruderRate(float rate)
         {
             string gLine = "";
             _machine.ExtruderRate = rate;
             gLine = "M220 S" + rate.ToString();
+            _stream.Write(Encoding.UTF8.GetBytes(gLine), 0, gLine.Length);
         }
         public void SetBedTemp(float temp)
         {
             string gLine = "";
             _machine.BedTemp = temp;
             gLine = "M140 S" + temp.ToString();
+            _stream.Write(Encoding.UTF8.GetBytes(gLine), 0, gLine.Length);
         }
         public Vector Position(){
             return _machine.Position;
@@ -248,8 +261,8 @@ namespace GOAT_Compiler.Code_Generation
             else
             {
                 gLine += "G0 X" + _machine.Position.X + " Y" + _machine.Position.Y + " Z" + _machine.Position.Z;
-
             }
+            _stream.Write(Encoding.UTF8.GetBytes(gLine), 0, gLine.Length);
         }
         public void Right(float deg)
         {
@@ -270,18 +283,22 @@ namespace GOAT_Compiler.Code_Generation
         public void WaitForBedTemp()
         {
             string gLine = "M190 R" + _machine.BedTemp.ToString();
+            _stream.Write(Encoding.UTF8.GetBytes(gLine), 0, gLine.Length);
         }
         public void WaitForExtruderTemp()
         {
             string gLine = "M109 R" + _machine.ExtruderTemp.ToString();
+            _stream.Write(Encoding.UTF8.GetBytes(gLine), 0, gLine.Length);
         }
         public void WaitForCurrentMove()
         {
             string gLine = "M400";
+            _stream.Write(Encoding.UTF8.GetBytes(gLine), 0, gLine.Length);
         }
         public void WaitForMillis(int millis)
         {
             string gLine = "G4 P" + millis.ToString();
+            _stream.Write(Encoding.UTF8.GetBytes(gLine), 0, gLine.Length);
         }
     }
 }
