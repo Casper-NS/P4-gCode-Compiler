@@ -26,9 +26,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="CodeGenerator\" />
-    <Folder Include="CodeGenerator\TestFiles\FloatArithmetics\" />
-    <Folder Include="CodeGenerator\TestFiles\OutputFolder\" />
+    <Folder Include="CodeGenerator\Tests\OutputFolder\" />
     <Folder Include="ExtruderChecker\" />
     <Folder Include="ScopeChecker\" />
     <Folder Include="TypeChecker\" />
