@@ -706,11 +706,12 @@ namespace GOAT_Compiler
             BuildStack.Pop();
         }
 
-
+        /*
         public override void OutAFunctionStmt(AFunctionStmt node)
         {
             node.GetExp().Apply(this);
         }
+        */
 
         public override void OutAFunctionExp(AFunctionExp node)
         {

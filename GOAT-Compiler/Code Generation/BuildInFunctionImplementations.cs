@@ -140,12 +140,12 @@ namespace GOAT_Compiler.Code_Generation
         {
             string gLine = "";
             Vector oldPosition = _machine.Position;
-            if (VectorDistance(oldPosition, v) > r*2)
+            _machine.Position = new Vector(oldPosition.X + v.X, oldPosition.Y + v.Y, oldPosition.Z + v.Z);
+            Vector v2 = _machine.Position;
+            if (VectorDistance(oldPosition, v2) > r*2)
             {
                 throw new Exception("RelArc radius is too small.");
             }
-            _machine.Position = new Vector(oldPosition.X + v.X, oldPosition.Y + v.Y, oldPosition.Z + v.Z);
-            Vector v2 = _machine.Position;
             if (_machine.Build)
             {
                 if(r < 0) { 
