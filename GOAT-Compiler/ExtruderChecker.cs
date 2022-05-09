@@ -1,4 +1,5 @@
-﻿using GOATCode.node;
+﻿using GOATCode.analysis;
+using GOATCode.node;
 using System;
 using System.Collections.Generic;
 
@@ -12,7 +13,7 @@ namespace GOAT_Compiler
         Walk
     };
 
-    internal class ExtruderChecker : SymbolTableVisitor
+    internal class ExtruderChecker : DepthFirstAdapter
     {
         //The stack which maintains the current Extrude scope
         private Stack<Extrude> _stack = new Stack<Extrude>();
@@ -20,9 +21,11 @@ namespace GOAT_Compiler
         private Dictionary<Symbol, BFSNode> _functions = new();
         //The Symbol which is used for keeping track of which function's scope we are currently in
         private Symbol _currentSymbol;
+        private ISymbolTable _symbolTable;
 
-        internal ExtruderChecker(ISymbolTable symbolTable) : base(symbolTable)
+        internal ExtruderChecker(ISymbolTable symbolTable)
         {
+            _symbolTable = symbolTable;
         }
 
         /// <summary>
@@ -82,7 +85,7 @@ namespace GOAT_Compiler
         /// Sets the "global-scope"'s extrude type to notSet. 
         /// </summary>
         /// <param name="node"></param>
-        public override void InsideScopeInADeclProgram(ADeclProgram node)
+        public override void InADeclProgram(ADeclProgram node)
         {
             _stack.Push(Extrude.NotSet);
         }
@@ -92,7 +95,7 @@ namespace GOAT_Compiler
         /// if not, create a new BFSNode and add it to the dictionary
         /// </summary>
         /// <param name="node">AFuncDecl</param>
-        public override void InsideScopeInAFuncDecl(AFuncDecl node)
+        public override void InAFuncDecl(AFuncDecl node)
         {
             _currentSymbol = _symbolTable.GetFunctionSymbol(node.GetId().Text);
 
@@ -101,7 +104,7 @@ namespace GOAT_Compiler
                 _functions.Add(_currentSymbol, new BFSNode(_currentSymbol.name, Extrude.NotSet));
             }
         }
-        public override void InsideScopeInAProcDecl(AProcDecl node)
+        public override void InAProcDecl(AProcDecl node)
         {
             _currentSymbol = _symbolTable.GetFunctionSymbol(node.GetId().Text);
 
@@ -197,7 +200,7 @@ namespace GOAT_Compiler
         /// The function is run on main
         /// </summary>
         /// <param name="node"></param>
-        public override void OutsideScopeOutADeclProgram(ADeclProgram node)
+        public override void OutADeclProgram(ADeclProgram node)
         {
             BFSAlgorithm(_functions[_symbolTable.GetFunctionSymbol("main")]);
         }
