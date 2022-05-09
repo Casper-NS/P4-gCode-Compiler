@@ -39,10 +39,7 @@ namespace GOAT_Compiler
             {
                 throw new PopException(_stack.Peek());
             }
-            else
-            {
-                _stack.Pop();
-            }
+            _stack.Pop();
         }
 
         /// <summary>
@@ -56,12 +53,8 @@ namespace GOAT_Compiler
             {
                 throw new StaticCallBuildInWalkException(node, "Tried to build in a walk scope");
             }
-            else
-            {
-                _stack.Push(candidate);
-            }
+            _stack.Push(candidate);
         }
-
 
         /// <summary>
         /// Functions to check if a function already is in the functions-dictionary
@@ -256,11 +249,8 @@ namespace GOAT_Compiler
                 edge.BFSNode.SetTheNodeItCameFrom(node);
                 throw new CallBuildInWalkException(edge.BFSNode);
             }
-            else
-            {
-                //Returns the nodes extrudetype if its value is higher, else return the edges extrudetype.
-                return node.GetCallStackType() > edge.extrudeType ? node.GetCallStackType() : edge.extrudeType;
-            }
+            //Returns the nodes extrudetype if its value is higher, else return the edges extrudetype.
+            return node.GetCallStackType() > edge.extrudeType ? node.GetCallStackType() : edge.extrudeType;
         }
     }
 }
