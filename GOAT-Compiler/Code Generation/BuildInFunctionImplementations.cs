@@ -175,7 +175,7 @@ namespace GOAT_Compiler.Code_Generation
         {
             if(v1.Z == v2.Z)
             {
-                return (float)Math.Sqrt(Math.Pow(v1.X - v2.X, 2) + Math.Pow(v1.Y - v2.Y, 2));
+                return (float)Math.Sqrt(Math.Pow(v1.X - v2.X, 2) + Math.Pow(v1.Y - v2.Y, 2) + Math.Pow(v1.Z - v2.Z, 2));
             }
             throw new Exception("VectorDistance: Z values are not the same.");
         }
