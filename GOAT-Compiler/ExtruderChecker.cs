@@ -125,7 +125,7 @@ namespace GOAT_Compiler
         //and updates the scope extrude type.
         public override void InANoneBlock(ANoneBlock node)
         {
-            _functions[_currentSymbol].SetExtrudeType(Extrude.None);
+            _functions[_currentSymbol].ExtrudeType = Extrude.None;
 
             _stack.Push(Extrude.None);
         }
@@ -135,7 +135,7 @@ namespace GOAT_Compiler
         }
         public override void InABuildBlock(ABuildBlock node)
         {
-            _functions[_currentSymbol].SetExtrudeType(Extrude.Build);
+            _functions[_currentSymbol].ExtrudeType = Extrude.Build;
 
             PushVerification(node, Extrude.Build);
         }
@@ -145,7 +145,7 @@ namespace GOAT_Compiler
         }
         public override void InAWalkBlock(AWalkBlock node)
         {
-            _functions[_currentSymbol].SetExtrudeType(Extrude.Walk);
+            _functions[_currentSymbol].ExtrudeType = Extrude.Walk;
 
             _stack.Push(Extrude.Walk);
         }
@@ -208,7 +208,7 @@ namespace GOAT_Compiler
             //The first node will be main!
             List<BFSNode> frontier = new List<BFSNode>();
             frontier.Add(node);
-            node.SetCallStackType(Extrude.None);
+            node.TheExtrudeTypeFromCallStack = Extrude.None;
 
             //while the list of function nodes to be checked is not empty...
             while(frontier.Count > 0)
@@ -216,17 +216,17 @@ namespace GOAT_Compiler
                 BFSNode curNode = frontier[0];
 
                 //Go through that function's function calls...
-                foreach (var functionCall in curNode.GetFunctionCalls())
+                foreach (var functionCall in curNode.FunctionCalls)
                 {
                     Extrude currentExtrude = UpdateExtrudeType(functionCall, curNode);
                     //and check if the call stack extrude type can be updated and if so...
-                    if (currentExtrude > functionCall.BFSNode.GetCallStackType())
+                    if (currentExtrude > functionCall.BFSNode.TheExtrudeTypeFromCallStack)
                     {
                         //set the new call stack type to the function being called
                         //and set where it was called from
                         //and lastly add all the function calls to be checked.
-                        functionCall.BFSNode.SetCallStackType(currentExtrude);
-                        functionCall.BFSNode.SetTheNodeItCameFrom(curNode);
+                        functionCall.BFSNode.TheExtrudeTypeFromCallStack = currentExtrude;
+                        functionCall.BFSNode.TheNodeThatCalledThisOne = curNode;
                         frontier.Add(functionCall.BFSNode);
                     }
                 }
@@ -244,13 +244,13 @@ namespace GOAT_Compiler
         /// <exception cref="CallBuildInWalkException">Called if walk calls a build</exception>
         private Extrude UpdateExtrudeType(FunctionCall edge, BFSNode node)
         {
-            if (node.GetCallStackType() == Extrude.Walk && edge.extrudeType == Extrude.Build)
+            if (node.TheExtrudeTypeFromCallStack == Extrude.Walk && edge.extrudeType == Extrude.Build)
             {
-                edge.BFSNode.SetTheNodeItCameFrom(node);
+                edge.BFSNode.TheNodeThatCalledThisOne = node;
                 throw new CallBuildInWalkException(edge.BFSNode);
             }
             //Returns the nodes extrudetype if its value is higher, else return the edges extrudetype.
-            return node.GetCallStackType() > edge.extrudeType ? node.GetCallStackType() : edge.extrudeType;
+            return node.TheExtrudeTypeFromCallStack > edge.extrudeType ? node.TheExtrudeTypeFromCallStack : edge.extrudeType;
         }
     }
 }

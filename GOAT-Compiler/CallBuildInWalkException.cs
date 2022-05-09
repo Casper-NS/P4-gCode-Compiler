@@ -21,12 +21,12 @@ namespace GOAT_Compiler
             string message = $"{node.Name}";
 
             //Assembles a string with all the names of the function call stack
-            while (node.GetWhereItWasCalled() is not null)
+            while (node.TheNodeThatCalledThisOne is not null)
             {
-                if (!nodes.Contains(node.GetWhereItWasCalled()))
+                if (!nodes.Contains(node.TheNodeThatCalledThisOne))
                 {
-                    node = node.GetWhereItWasCalled();
-                    message = $"{node.Name}({node.GetCallStackType()}) -> {message}";
+                    node = node.TheNodeThatCalledThisOne;
+                    message = $"{node.Name}({node.TheExtrudeTypeFromCallStack}) -> {message}";
                     nodes.Add(node);
                 }
                 else

@@ -23,58 +23,23 @@ namespace GOAT_Compiler
     {
         internal string Name { get; private set; }
 
-        private List<FunctionCall> _functionCalls = new();
+        internal List<FunctionCall> FunctionCalls { get; private set; } = new();
 
-        private Extrude _extrudeType;
+        internal Extrude ExtrudeType { get; set; }
 
-        private Extrude _callStackExtrudeType = Extrude.NotSet;
-
-        private BFSNode _cameFrom;
+        internal Extrude TheExtrudeTypeFromCallStack { get; set; } = Extrude.NotSet;
         
+        internal BFSNode TheNodeThatCalledThisOne { get; set; }
+
         internal BFSNode(string n, Extrude extrude)
         {
             Name = n;
-            _extrudeType = extrude;
+            ExtrudeType = extrude;
         }
 
         internal void AddFunctionCall(BFSNode dn, Extrude e)
         {
-            _functionCalls.Add(new FunctionCall(dn, e));
-        }
-        
-        internal List<FunctionCall> GetFunctionCalls()
-        {
-            return _functionCalls;
-        }
-
-        internal void SetExtrudeType(Extrude e)
-        {
-            _extrudeType = e;
-        }
-
-        internal Extrude GetExtrudeType()
-        {
-            return _extrudeType;
-        }
-
-        internal Extrude GetCallStackType()
-        {
-            return _callStackExtrudeType;
-        }
-
-        internal void SetCallStackType(Extrude e)
-        {
-            _callStackExtrudeType = e;
-        }
-
-        internal void SetTheNodeItCameFrom(BFSNode node)
-        {
-            _cameFrom = node;
-        }
-
-        internal BFSNode GetWhereItWasCalled()
-        {
-            return _cameFrom;
+            FunctionCalls.Add(new FunctionCall(dn, e));
         }
     }
 }
