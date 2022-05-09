@@ -28,23 +28,22 @@ namespace GOAT_Compiler
         internal RuntimeTable<Symbol> GlobalRT;
         internal Stack<RuntimeTable<Symbol>> CallStackRT;
         private Stack<bool> BuildStack;
-        private Stream _outputFileStream;
 
         private CNCMachine _machine;
 
         private BuildInFunctionImplementations _buildInFunctions;
 
 
-        public CodeGenerator(ISymbolTable symbolTable, Dictionary<Node, Types> typesDictionary, Stream outputStream) : base(symbolTable)
+        public CodeGenerator(ISymbolTable symbolTable, Dictionary<Node, Types> typesDictionary, StreamWriter outputStream) : base(symbolTable)
         {
             _machine = new();
-            _buildInFunctions = new BuildInFunctionImplementations(_machine, Stream.Null);
+            _buildInFunctions = new BuildInFunctionImplementations(_machine, outputStream);
             _symbolTable = symbolTable;
             typeMap = typesDictionary;
             GlobalRT = new();
             CallStackRT = new();
+            BuildStack = new Stack<bool>();
             nodeMap = new RuntimeTable<Node>();
-            _outputFileStream = outputStream;
         }
 
         void RTPutValue(Symbol symbol, dynamic value)
@@ -647,12 +646,52 @@ namespace GOAT_Compiler
         }
 
 
+        public override void InABuildStmt(ABuildStmt node)
+        {
+            BuildStack.Push(true);
+        }
+
+        public override void OutABuildStmt(ABuildStmt node)
+        {
+            BuildStack.Pop();
+        }
+
+        public override void InABuildExp(ABuildExp node)
+        {
+            BuildStack.Push(true);
+        }
+
+        public override void OutABuildExp(ABuildExp node)
+        {
+            BuildStack.Pop();
+        }
+
         public override void InABuildBlock(ABuildBlock node)
         {
             BuildStack.Push(true);
         }
 
         public override void OutABuildBlock(ABuildBlock node)
+        {
+            BuildStack.Pop();
+        }
+
+        public override void InAWalkStmt(AWalkStmt node)
+        {
+            BuildStack.Push(false);
+        }
+
+        public override void OutAWalkStmt(AWalkStmt node)
+        {
+            BuildStack.Pop();
+        }
+
+        public override void InAWalkExp(AWalkExp node)
+        {
+            BuildStack.Push(false);
+        }
+
+        public override void OutAWalkExp(AWalkExp node)
         {
             BuildStack.Pop();
         }

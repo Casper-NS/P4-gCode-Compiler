@@ -11,8 +11,8 @@ namespace GOAT_Compiler.Code_Generation
     public class BuildInFunctionImplementations
     {
         private CNCMachine _machine;
-        private Stream _stream;
-        public BuildInFunctionImplementations(CNCMachine newMachine, Stream stream)
+        private StreamWriter _stream;
+        public BuildInFunctionImplementations(CNCMachine newMachine, StreamWriter stream)
         {
             _machine = newMachine;
             _stream = stream;
@@ -94,7 +94,7 @@ namespace GOAT_Compiler.Code_Generation
         {
             string gLine = "G28";
             _machine.Position = new Vector(0, 0, 0);
-            _stream.Write(Encoding.UTF8.GetBytes(gLine), 0, gLine.Length);
+            _stream.WriteLine(gLine);
         }
 
         private void RelMove(Vector v)
@@ -111,7 +111,7 @@ namespace GOAT_Compiler.Code_Generation
             {
                 gLine += "G0 X" + _machine.Position.X + " Y" + _machine.Position.Y + " Z" + _machine.Position.Z;
             }
-            _stream.Write(Encoding.UTF8.GetBytes(gLine), 0, gLine.Length);
+            _stream.WriteLine(gLine);
         }
         private void AbsMove(Vector v)
         {
@@ -127,7 +127,7 @@ namespace GOAT_Compiler.Code_Generation
             {
                 gLine += "G0 X" + _machine.Position.X + " Y" + _machine.Position.Y + " Z" + _machine.Position.Z;
             }
-            _stream.Write(Encoding.UTF8.GetBytes(gLine), 0, gLine.Length);
+            _stream.WriteLine(gLine);
         }
         private float CircelLenght(Vector v1, Vector v2, float r)
         {
@@ -169,7 +169,7 @@ namespace GOAT_Compiler.Code_Generation
                     gLine = "G2 X" + v2.X + " Y" + v2.Y + " Z" + v2.Z + " R" + r;
                 }
             }
-            _stream.Write(Encoding.UTF8.GetBytes(gLine), 0, gLine.Length);
+            _stream.WriteLine(gLine);
         }
         private float VectorDistance(Vector v1, Vector v2) 
         {
@@ -213,22 +213,22 @@ namespace GOAT_Compiler.Code_Generation
                     gLine = "G2 X" + v2.X + " Y" + v2.Y + " Z" + v2.Z + " R" + r;
                 }
             }
-            _stream.Write(Encoding.UTF8.GetBytes(gLine), 0, gLine.Length);
+            _stream.WriteLine(gLine);
         }
         private void SetExtruderTemp(float temp)
         {
             string gLine = "";
             _machine.ExtruderTemp = temp;
             gLine = "M104 S" + temp.ToString();
-            _stream.Write(Encoding.UTF8.GetBytes(gLine), 0, gLine.Length);
+            _stream.WriteLine(gLine);
         }
         private void SetFanPower(float power)
         {
             string gLine = "";
             _machine.FanPower = power;
             gLine = "M106 S" + power.ToString();
-            _stream.Write(Encoding.UTF8.GetBytes(gLine), 0, gLine.Length);
-            
+            _stream.WriteLine(gLine);
+
         }
         private void SetExtruderRate(float rate)
         {
@@ -239,7 +239,7 @@ namespace GOAT_Compiler.Code_Generation
             string gLine = "";
             _machine.BedTemp = temp;
             gLine = "M140 S" + temp.ToString();
-            _stream.Write(Encoding.UTF8.GetBytes(gLine), 0, gLine.Length);
+            _stream.WriteLine(gLine);
         }
         private Vector Position(){
             return _machine.Position;
@@ -270,7 +270,7 @@ namespace GOAT_Compiler.Code_Generation
             {
                 gLine += "G0 X" + _machine.Position.X + " Y" + _machine.Position.Y + " Z" + _machine.Position.Z;
             }
-            _stream.Write(Encoding.UTF8.GetBytes(gLine), 0, gLine.Length);
+            _stream.WriteLine(gLine);
         }
         private void Right(float deg)
         {
@@ -291,22 +291,22 @@ namespace GOAT_Compiler.Code_Generation
         private void WaitForBedTemp()
         {
             string gLine = "M190 R" + _machine.BedTemp.ToString();
-            _stream.Write(Encoding.UTF8.GetBytes(gLine), 0, gLine.Length);
+            _stream.WriteLine(gLine);
         }
         private void WaitForExtruderTemp()
         {
             string gLine = "M109 R" + _machine.ExtruderTemp.ToString();
-            _stream.Write(Encoding.UTF8.GetBytes(gLine), 0, gLine.Length);
+            _stream.WriteLine(gLine);
         }
         private void WaitForCurrentMove()
         {
             string gLine = "M400";
-            _stream.Write(Encoding.UTF8.GetBytes(gLine), 0, gLine.Length);
+            _stream.WriteLine(gLine);
         }
         private void WaitForMillis(int millis)
         {
             string gLine = "G4 P" + millis.ToString();
-            _stream.Write(Encoding.UTF8.GetBytes(gLine), 0, gLine.Length);
+            _stream.WriteLine(gLine);
         }
     }
 }
