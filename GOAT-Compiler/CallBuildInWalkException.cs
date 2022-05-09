@@ -6,7 +6,7 @@ namespace GOAT_Compiler
 
     internal class CallBuildInWalkException : Exception
     {
-        internal CallBuildInWalkException(DijkstraNode node) : base(stringMessage(node))
+        internal CallBuildInWalkException(BFSNode node) : base(stringMessage(node))
         {
         }
 
@@ -15,9 +15,9 @@ namespace GOAT_Compiler
         /// </summary>
         /// <param name="node">The node wich called the exception</param>
         /// <returns>Returns the string to be printed.</returns>
-        private static string stringMessage(DijkstraNode node)
+        private static string stringMessage(BFSNode node)
         {
-            HashSet<DijkstraNode> nodes = new();
+            HashSet<BFSNode> nodes = new();
             string message = $"{node.Name}";
 
             //Assembles a string with all the names of the function call stack

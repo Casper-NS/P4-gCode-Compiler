@@ -3,23 +3,23 @@
 namespace GOAT_Compiler
 {
     /// <summary>
-    /// This class represents a functioncall from a dijkstranode.
+    /// This class represents a functioncall from a BFSnode.
     /// </summary>
     internal struct FunctionCall
     {
-        internal FunctionCall(DijkstraNode dn, Extrude e)
+        internal FunctionCall(BFSNode bfsnode, Extrude e)
         {
-            dijkstraNode = dn;
+            BFSNode = bfsnode;
             extrudeType = e;
         }
-        internal DijkstraNode dijkstraNode;
+        internal BFSNode BFSNode;
         internal Extrude extrudeType;
     }
 
     /// <summary>
-    /// DijkstraNode represents a function with a name, a list of function calls, and what node it came from.
+    /// BFSNode represents a function with a name, a list of function calls, and what node it came from.
     /// </summary>
-    internal class DijkstraNode
+    internal class BFSNode
     {
         internal string Name { get; private set; }
 
@@ -29,15 +29,15 @@ namespace GOAT_Compiler
 
         private Extrude _callStackExtrudeType = Extrude.NotSet;
 
-        private DijkstraNode _cameFrom;
+        private BFSNode _cameFrom;
         
-        internal DijkstraNode(string n, Extrude extrude)
+        internal BFSNode(string n, Extrude extrude)
         {
             Name = n;
             _extrudeType = extrude;
         }
 
-        internal void AddFunctionCall(DijkstraNode dn, Extrude e)
+        internal void AddFunctionCall(BFSNode dn, Extrude e)
         {
             _functionCalls.Add(new FunctionCall(dn, e));
         }
@@ -67,12 +67,12 @@ namespace GOAT_Compiler
             _callStackExtrudeType = e;
         }
 
-        internal void SetTheNodeItCameFrom(DijkstraNode node)
+        internal void SetTheNodeItCameFrom(BFSNode node)
         {
             _cameFrom = node;
         }
 
-        internal DijkstraNode GetWhereItWasCalled()
+        internal BFSNode GetWhereItWasCalled()
         {
             return _cameFrom;
         }
