@@ -65,17 +65,17 @@ namespace GOAT_Compiler
         /// </summary>
         /// <param name="node"></param>
         /// <returns></returns>
-        private bool DoesntContainKey(AFuncDecl node)
+        private bool IsFunctionDeclared(AFuncDecl node)
         {
-            return !_functions.ContainsKey(_symbolTable.GetFunctionSymbol(node.GetId().Text));
+            return _functions.ContainsKey(_symbolTable.GetFunctionSymbol(node.GetId().Text));
         }
-        private bool DoesntContainKey(AFunctionExp node)
+        private bool IsFunctionDeclared(AFunctionExp node)
         {
-            return !_functions.ContainsKey(_symbolTable.GetFunctionSymbol(node.GetName().Text));
+            return _functions.ContainsKey(_symbolTable.GetFunctionSymbol(node.GetName().Text));
         }
-        private bool DoesntContainKey(AProcDecl node)
+        private bool IsFunctionDeclared(AProcDecl node)
         {
-            return !_functions.ContainsKey(_symbolTable.GetFunctionSymbol(node.GetId().Text));
+            return _functions.ContainsKey(_symbolTable.GetFunctionSymbol(node.GetId().Text));
         }
 
         /// <summary>
@@ -96,7 +96,7 @@ namespace GOAT_Compiler
         {
             _currentSymbol = _symbolTable.GetFunctionSymbol(node.GetId().Text);
 
-            if (DoesntContainKey(node))
+            if (!IsFunctionDeclared(node))
             {
                 _functions.Add(_currentSymbol, new BFSNode(_currentSymbol.name, Extrude.NotSet));
             }
@@ -105,7 +105,7 @@ namespace GOAT_Compiler
         {
             _currentSymbol = _symbolTable.GetFunctionSymbol(node.GetId().Text);
 
-            if (DoesntContainKey(node))
+            if (!IsFunctionDeclared(node))
             {
                 _functions.Add(_currentSymbol, new BFSNode(_currentSymbol.name, Extrude.NotSet));
             }
@@ -118,7 +118,7 @@ namespace GOAT_Compiler
         /// <param name="node"></param>
         public override void OutAFunctionExp(AFunctionExp node)
         {
-            if (DoesntContainKey(node)) 
+            if (!IsFunctionDeclared(node)) 
             {
                 _functions.Add(_symbolTable.GetFunctionSymbol(node.GetName().Text), new BFSNode(node.GetName().Text, Extrude.NotSet));
             }
