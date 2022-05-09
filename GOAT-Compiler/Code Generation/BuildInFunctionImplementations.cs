@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Text;
 
@@ -14,6 +15,7 @@ namespace GOAT_Compiler.Code_Generation
         private StreamWriter _stream;
         public BuildInFunctionImplementations(CNCMachine newMachine, StreamWriter stream)
         {
+            CultureInfo.CurrentCulture = CultureInfo.InvariantCulture;
             _machine = newMachine;
             _stream = stream;
         }
@@ -142,10 +144,6 @@ namespace GOAT_Compiler.Code_Generation
             Vector oldPosition = _machine.Position;
             _machine.Position = new Vector(oldPosition.X + v.X, oldPosition.Y + v.Y, oldPosition.Z + v.Z);
             Vector v2 = _machine.Position;
-            if (VectorDistance(oldPosition, v2) > r*2)
-            {
-                throw new Exception("RelArc radius is too small.");
-            }
             if (_machine.Build)
             {
                 if(r < 0) { 
@@ -168,6 +166,10 @@ namespace GOAT_Compiler.Code_Generation
                 {
                     gLine = "G2 X" + v2.X + " Y" + v2.Y + " Z" + v2.Z + " R" + r;
                 }
+            }
+            if (VectorDistance(oldPosition, v2) > Math.Abs(r)*2)
+            {
+                throw new Exception("RelArc radius is too small.");
             }
             _stream.WriteLine(gLine);
         }
