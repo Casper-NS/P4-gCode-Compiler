@@ -225,17 +225,17 @@ namespace GOAT_Compiler
         }
         public override void OutAModuloExp(AModuloExp node)
         {
-            MultDivModTypeChecker(node.GetL(), node.GetL(), node);
+            MultDivModTypeChecker(node.GetL(), node.GetR(), node);
         }
 
         public override void OutAMultExp(AMultExp node)
         {
-            MultDivModTypeChecker(node.GetL(), node.GetL(), node);
+            MultDivModTypeChecker(node.GetL(), node.GetR(), node);
         }
 
         public override void OutADivdExp(ADivdExp node)
         {
-            MultDivModTypeChecker(node.GetL(), node.GetL(), node);
+            MultDivModTypeChecker(node.GetL(), node.GetR(), node);
         }
         public override void OutAGeqExp(AGeqExp node)
         {
