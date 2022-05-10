@@ -36,11 +36,17 @@ namespace GOAT_Compiler.Code_Generation
                 case "AbsMove":
                     AbsMove(actuelParams[0]);
                     break;
-                case "RelArc":
-                    RelArc(actuelParams[0], actuelParams[1]);
+                case "RelArcCW":
+                    RelArc(actuelParams[0], actuelParams[1], false);
                     break;
-                case "AbsArc":
-                    AbsArc(actuelParams[0], actuelParams[1]);
+                case "RelArcCCW":
+                    RelArc(actuelParams[0], actuelParams[1], true);
+                    break;
+                case "AbsArcCW":
+                    AbsArc(actuelParams[0], actuelParams[1], false);
+                    break;
+                case "AbsArcCCW":
+                    AbsArc(actuelParams[0], actuelParams[1], true);
                     break;
                 case "SetExtruderRate":
                     SetExtruderRate(actuelParams[0]);
@@ -138,7 +144,7 @@ namespace GOAT_Compiler.Code_Generation
             float deg = (float)Math.Acos(top/bot);
             return deg * r
 ;        }
-        private void RelArc(Vector v, float r)
+        private void RelArc(Vector v, float r, bool CCW)
         {
             string gLine = "";
             Vector oldPosition = _machine.Position;
@@ -146,9 +152,9 @@ namespace GOAT_Compiler.Code_Generation
             Vector v2 = _machine.Position;
             if (_machine.Build)
             {
-                if(r < 0) { 
-                    _machine.CurrentExtrusion += (_machine.ExtruderRate * CircelLenght(oldPosition, _machine.Position, -r));
-                    gLine = "G3 X" + v2.X + " Y" + v2.Y + " Z" + v2.Z + " E" + _machine.ExtruderRate + " R" + -r;
+                if(CCW) { 
+                    _machine.CurrentExtrusion += (_machine.ExtruderRate * CircelLenght(oldPosition, _machine.Position, r));
+                    gLine = "G3 X" + v2.X + " Y" + v2.Y + " Z" + v2.Z + " E" + _machine.ExtruderRate + " R" + r;
                 }
                 else
                 {
@@ -158,9 +164,9 @@ namespace GOAT_Compiler.Code_Generation
             }
             else
             {
-                if (r < 0)
+                if (CCW)
                 {
-                    gLine = "G3 X" + "X" + v2.X + " Y" + v2.Y + " Z" + v2.Z + " R" + -r;
+                    gLine = "G3 X" + "X" + v2.X + " Y" + v2.Y + " Z" + v2.Z + " R" + r;
                 }
                 else
                 {
@@ -177,7 +183,7 @@ namespace GOAT_Compiler.Code_Generation
         {
             return (float)Math.Sqrt(Math.Pow(v1.X - v2.X, 2) + Math.Pow(v1.Y - v2.Y, 2) + Math.Pow(v1.Z - v2.Z, 2));
         }
-        private void AbsArc(Vector v, float r)
+        private void AbsArc(Vector v, float r, bool CCW)
         {
             string gLine = "";
             Vector oldPosition = _machine.Position;
@@ -185,10 +191,10 @@ namespace GOAT_Compiler.Code_Generation
             Vector v2 = _machine.Position;
             if (_machine.Build)
             {
-                if (r < 0)
+                if (CCW)
                 {
-                    _machine.CurrentExtrusion += (_machine.ExtruderRate * CircelLenght(oldPosition, _machine.Position, -r));
-                    gLine = "G3 X" + v2.X + " Y" + v2.Y + " Z" + v2.Z + " E" + _machine.ExtruderRate + " R" + -r;
+                    _machine.CurrentExtrusion += (_machine.ExtruderRate * CircelLenght(oldPosition, _machine.Position, r));
+                    gLine = "G3 X" + v2.X + " Y" + v2.Y + " Z" + v2.Z + " E" + _machine.ExtruderRate + " R" + r;
                 }
                 else
                 {
@@ -198,9 +204,9 @@ namespace GOAT_Compiler.Code_Generation
             }
             else
             {
-                if (r < 0)
+                if (CCW)
                 {
-                    gLine = "G3 X" + v2.X + " Y" + v2.Y + " Z" + v2.Z + " R" + -r;
+                    gLine = "G3 X" + v2.X + " Y" + v2.Y + " Z" + v2.Z + " R" + r;
                 }
                 else
                 {
