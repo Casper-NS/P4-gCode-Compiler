@@ -154,7 +154,14 @@ namespace GOAT_Compiler
                     throw new Exception("Im litteraly crying right now");
             }
         }
-        
+
+
+        public override void OutANegExp(ANegExp node)
+        {
+            nodeMap.Put(node, -GetValue(node.GetExp()));
+        }
+
+
         public override void OutAAssignStmt(AAssignStmt node)
         {
             Symbol idSymbol = _symbolTable.GetVariableSymbol(node.GetId().Text);
@@ -175,7 +182,7 @@ namespace GOAT_Compiler
                 throw new Exception("AssignStmt did not work");
             }
         }
-        
+
         public override void OutAAssignPlusStmt(AAssignPlusStmt node)
         {
             Symbol idSymbol = _symbolTable.GetVariableSymbol(node.GetId().Text);
@@ -206,7 +213,7 @@ namespace GOAT_Compiler
                 throw new Exception("AssignPlusStmt did not work");
             }
         }
-        
+
         public override void OutAAssignMinusStmt(AAssignMinusStmt node)
         {
             Symbol idSymbol = _symbolTable.GetVariableSymbol(node.GetId().Text);
@@ -238,7 +245,7 @@ namespace GOAT_Compiler
                 throw new Exception("AssignMinusStmt did not work");
             }
         }
-        
+
         public override void OutAAssignMultStmt(AAssignMultStmt node)
         {
             Symbol idSymbol = _symbolTable.GetVariableSymbol(node.GetId().Text);
@@ -269,7 +276,7 @@ namespace GOAT_Compiler
                 throw new Exception("AssignMultStmt did not work");
             }
         }
-        
+
         //Check the modulo statements
         public override void OutAAssignModStmt(AAssignModStmt node)
         {
@@ -290,7 +297,7 @@ namespace GOAT_Compiler
                 throw new Exception("AssignModStmt did not work");
             }
         }
-        
+
         public override void OutAAssignDivisionStmt(AAssignDivisionStmt node)
         {
             Symbol idSymbol = _symbolTable.GetVariableSymbol(node.GetId().Text);
@@ -321,7 +328,7 @@ namespace GOAT_Compiler
                 throw new Exception("AssignDivStmt did not work");
             }
         }
-        
+
         public override void OutAPlusExp(APlusExp node)
         {
             Node left = node.GetL();
@@ -346,7 +353,7 @@ namespace GOAT_Compiler
                 throw new Exception("PlusExp did not work");
             }
         }
-        
+
         public override void OutAMinusExp(AMinusExp node)
         {
             Node left = node.GetL();
@@ -371,7 +378,7 @@ namespace GOAT_Compiler
                 throw new Exception("MinusExp did not work");
             }
         }
-        
+
         public override void OutADivdExp(ADivdExp node)
         {
             Node left = node.GetL();
@@ -411,7 +418,7 @@ namespace GOAT_Compiler
                 throw new Exception("ModuloExp did not work");
             }
         }
-        
+
         public override void OutAMultExp(AMultExp node)
         {
             Node left = node.GetL();
@@ -436,7 +443,7 @@ namespace GOAT_Compiler
                 throw new Exception("MultExp did not work");
             }
         }
-        
+
         public override void OutAAndExp(AAndExp node)
         {
             bool l = nodeMap.Get(node.GetL(), typeMap[node.GetL()]);
@@ -450,7 +457,7 @@ namespace GOAT_Compiler
                 throw new Exception("AndExp didnt not work");
             }
         }
-        
+
         public override void OutAOrExp(AOrExp node)
         {
             bool l = nodeMap.Get(node.GetL(), typeMap[node.GetL()]);
@@ -464,7 +471,7 @@ namespace GOAT_Compiler
                 throw new Exception("AndExp didnt not work");
             }
         }
-        
+
         public override void OutAEqExp(AEqExp node)
         {
             dynamic l = GetValue(node.GetL());
@@ -476,7 +483,7 @@ namespace GOAT_Compiler
                 throw new Exception("EqExp did not work");
             }
         }
-        
+
         public override void OutAGtExp(AGtExp node)
         {
             dynamic l = GetValue(node.GetL());
@@ -488,7 +495,7 @@ namespace GOAT_Compiler
                 throw new Exception("GtExp did not work");
             }
         }
-        
+
         public override void OutALtExp(ALtExp node)
         {
             dynamic l = GetValue(node.GetL());
@@ -500,7 +507,7 @@ namespace GOAT_Compiler
                 throw new Exception("LtExp did not work");
             }
         }
-        
+
         public override void OutANeqExp(ANeqExp node)
         {
             dynamic l = GetValue(node.GetL());
@@ -512,7 +519,7 @@ namespace GOAT_Compiler
                 throw new Exception("NeqExp did not work");
             }
         }
-        
+
         public override void OutALeqExp(ALeqExp node)
         {
             dynamic l = GetValue(node.GetL());
@@ -524,7 +531,7 @@ namespace GOAT_Compiler
                 throw new Exception("LeqExp did not work");
             }
         }
-        
+
         public override void OutAGeqExp(AGeqExp node)
         {
             dynamic l = GetValue(node.GetL());
@@ -536,7 +543,7 @@ namespace GOAT_Compiler
                 throw new Exception("GeqExp did not work");
             }
         }
-        
+
         public override void OutANotExp(ANotExp node)
         {
             bool value = GetValue(node.GetExp());
