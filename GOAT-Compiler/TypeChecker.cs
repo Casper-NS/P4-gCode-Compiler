@@ -28,14 +28,14 @@ namespace GOAT_Compiler
         public TypeChecker(ISymbolTable symbolTable) : base(symbolTable)
         {
         }
-        private void ExpressionTypeChecker(Node left, Node right, Node current)
+        private void ArithmeticTypeChecker(Node left, Node right, Node current)
         {
             Types leftType = _typeDictionary[left];
             Types rightType = _typeDictionary[right];
             Types type = TypePromoter(leftType, rightType);
             if (type == Types.Void || type == Types.Boolean) 
             {
-                throw new TypeMismatchException(current, "Type " + type + " is not valid for this arithemtic operations.");
+                throw new TypeMismatchException(current, "Type " + type + " is not valid for this arithmetic operations.");
             }
             else
             {
@@ -97,7 +97,7 @@ namespace GOAT_Compiler
             Types rightType = _typeDictionary[right];
             if ((leftType == Types.Integer || leftType == Types.FloatingPoint) && (rightType == Types.Integer || rightType == Types.FloatingPoint))
             {
-                ExpressionTypeChecker(left, right, current);
+                ArithmeticTypeChecker(left, right, current);
             }
             else
             {
@@ -198,12 +198,12 @@ namespace GOAT_Compiler
 
         public override void OutAPlusExp(APlusExp node)
         {
-            ExpressionTypeChecker(node.GetL(), node.GetR(), node);
+            ArithmeticTypeChecker(node.GetL(), node.GetR(), node);
         }
 
         public override void OutAMinusExp(AMinusExp node)
         {
-            ExpressionTypeChecker(node.GetL(), node.GetR(), node);
+            ArithmeticTypeChecker(node.GetL(), node.GetR(), node);
         }
         public override void OutANegExp(ANegExp node)
         {
