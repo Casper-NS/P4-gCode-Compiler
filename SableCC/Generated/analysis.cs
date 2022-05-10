@@ -48,6 +48,7 @@ public interface Analysis : Switch
     void CaseAMinusExp(AMinusExp node);
     void CaseAMultExp(AMultExp node);
     void CaseADivdExp(ADivdExp node);
+    void CaseANegExp(ANegExp node);
     void CaseAModuloExp(AModuloExp node);
     void CaseAAndExp(AAndExp node);
     void CaseAOrExp(AOrExp node);
@@ -303,6 +304,10 @@ public class AnalysisAdapter : Analysis
         DefaultCase(node);
     }
     public virtual void CaseADivdExp(ADivdExp node)
+    {
+        DefaultCase(node);
+    }
+    public virtual void CaseANegExp(ANegExp node)
     {
         DefaultCase(node);
     }
@@ -1333,6 +1338,25 @@ public class DepthFirstAdapter : AnalysisAdapter
             node.GetR().Apply(this);
         }
         OutADivdExp(node);
+    }
+    public virtual void InANegExp(ANegExp node)
+    {
+        DefaultIn(node);
+    }
+
+    public virtual void OutANegExp(ANegExp node)
+    {
+        DefaultOut(node);
+    }
+
+    public override void CaseANegExp(ANegExp node)
+    {
+        InANegExp(node);
+        if(node.GetExp() != null)
+        {
+            node.GetExp().Apply(this);
+        }
+        OutANegExp(node);
     }
     public virtual void InAModuloExp(AModuloExp node)
     {
@@ -2467,6 +2491,25 @@ public class ReversedDepthFirstAdapter : AnalysisAdapter
             node.GetL().Apply(this);
         }
         OutADivdExp(node);
+    }
+    public virtual void InANegExp(ANegExp node)
+    {
+        DefaultIn(node);
+    }
+
+    public virtual void OutANegExp(ANegExp node)
+    {
+        DefaultOut(node);
+    }
+
+    public override void CaseANegExp(ANegExp node)
+    {
+        InANegExp(node);
+        if(node.GetExp() != null)
+        {
+            node.GetExp().Apply(this);
+        }
+        OutANegExp(node);
     }
     public virtual void InAModuloExp(AModuloExp node)
     {

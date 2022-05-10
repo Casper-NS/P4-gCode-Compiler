@@ -3792,6 +3792,84 @@ public sealed class ADivdExp : PExp
     }
 
 }
+public sealed class ANegExp : PExp
+{
+    private PExp _exp_;
+
+    public ANegExp ()
+    {
+    }
+
+    public ANegExp (
+            PExp _exp_
+    )
+    {
+        SetExp (_exp_);
+    }
+
+    public override Object Clone()
+    {
+        return new ANegExp (
+            (PExp)CloneNode (_exp_)
+        );
+    }
+
+    public override void Apply(Switch sw)
+    {
+        ((Analysis) sw).CaseANegExp(this);
+    }
+
+    public PExp GetExp ()
+    {
+        return _exp_;
+    }
+
+    public void SetExp (PExp node)
+    {
+        if(_exp_ != null)
+        {
+            _exp_.Parent(null);
+        }
+
+        if(node != null)
+        {
+            if(node.Parent() != null)
+            {
+                node.Parent().RemoveChild(node);
+            }
+
+            node.Parent(this);
+        }
+
+        _exp_ = node;
+    }
+
+    public override string ToString()
+    {
+        return ""
+            + ToString (_exp_)
+        ;
+    }
+
+    internal override void RemoveChild(Node child)
+    {
+        if ( _exp_ == child )
+        {
+            _exp_ = null;
+            return;
+        }
+    }
+
+    internal override void ReplaceChild(Node oldChild, Node newChild)
+    {
+        if ( _exp_ == oldChild )
+        {
+            SetExp ((PExp) newChild);
+            return;
+        }
+    }
+
+}
 public sealed class AModuloExp : PExp
 {
     private PExp _l_;
