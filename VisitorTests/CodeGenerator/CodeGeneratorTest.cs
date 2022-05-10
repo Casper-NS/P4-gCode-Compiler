@@ -23,12 +23,17 @@ namespace VisitorTests
             Start s = FileReadingTestUtilities.ParseFile(TestFilePath);
             ISymbolTable symbolTable = FileReadingTestUtilities.BuildSymbolTable(s);
             TypeChecker typeChecker = new TypeChecker(symbolTable);
+            CodeGenerator codeGenerator;
             s.Apply(typeChecker);
             
-
+            
             using (Stream stream = new FileStream(OutputFilePath, FileMode.Open))
             {
-                _ = new CodeGenerator(symbolTable, typeChecker.GetTypeDictionary(), stream);
+                using (StreamWriter writer = new StreamWriter(stream))
+                {
+                    codeGenerator = new CodeGenerator(symbolTable, typeChecker.GetTypeDictionary(), writer);
+                    s.Apply(codeGenerator);
+                }
             }
 
             Assert.True(File.Exists(OutputFilePath+".gcode"));
@@ -37,7 +42,6 @@ namespace VisitorTests
                 File.Delete(OutputFilePath + ".gcode");
             }
         }
-
         [SkippableTheory(typeof(TestDependencyException))]
         [InlineData("RelMoveTest.txt", "RelMove.gcode")]
         public void CheckIfCreatedFileIsntEmpty(string file, string outPutFileName)
@@ -47,11 +51,16 @@ namespace VisitorTests
             Start s = FileReadingTestUtilities.ParseFile(TestFilePath);
             ISymbolTable symbolTable = FileReadingTestUtilities.BuildSymbolTable(s);
             TypeChecker typeChecker = new TypeChecker(symbolTable);
+            CodeGenerator codeGenerator;
             s.Apply(typeChecker);
-            
+
             using (Stream stream = new FileStream(OutputFilePath, FileMode.Open))
             {
-                _ = new CodeGenerator(symbolTable, typeChecker.GetTypeDictionary(), stream);
+                using (StreamWriter writer = new StreamWriter(stream))
+                {
+                    codeGenerator = new CodeGenerator(symbolTable, typeChecker.GetTypeDictionary(), writer);
+                    s.Apply(codeGenerator);
+                }
             }
             Assert.True(File.Exists(OutputFilePath + ".gcode"));
             
@@ -82,9 +91,18 @@ namespace VisitorTests
             Start s = FileReadingTestUtilities.ParseFile(file);
             ISymbolTable symbolTable = FileReadingTestUtilities.BuildSymbolTable(s);
             TypeChecker typeChecker = FileReadingTestUtilities.DoTypeChecking(s, symbolTable);
-            MemoryStream dummyStream = new MemoryStream();
-            CodeGenerator generator = new CodeGenerator(symbolTable, typeChecker.GetTypeDictionary(), dummyStream);
-            s.Apply(generator);
+            CodeGenerator generator;
+
+            using (MemoryStream dummyStream = new MemoryStream())
+            {
+                using (StreamWriter writer = new StreamWriter(dummyStream))
+                {
+                    generator = new CodeGenerator(symbolTable, typeChecker.GetTypeDictionary(), writer);
+                    s.Apply(generator);
+                }
+            }
+
+            
             
             //open the global scope and check the value of f
             symbolTable.OpenScope(s.GetPProgram());

@@ -32,7 +32,7 @@ namespace VisitorTests
             Symbol symbol = symbolTable.GetVariableSymbol(name);
             RuntimeTable<Symbol> table = new RuntimeTable<Symbol>();
             table.Put(symbol, value);
-            Assert.Equal(value, table.Get(symbol, symbol.type)); ;
+            Assert.Equal(value, table.Get(symbol, symbol.type));
         }
         
         [Theory]
