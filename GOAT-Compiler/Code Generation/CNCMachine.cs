@@ -7,10 +7,10 @@ namespace GOAT_Compiler.Code_Generation
     /// </summary>
     public class CNCMachine
     {
-        private float _currentExtrusion = 0;
-        private float _bedTemp = 0;
-        private float _extruderTemp = 0;
-        private float _fanPower = 0;
+        private double _currentExtrusion = 0;
+        private double _bedTemp = 0;
+        private double _extruderTemp = 0;
+        private double _fanPower = 0;
 
         /// <summary>
         /// The current positon of the extruder.
@@ -20,7 +20,7 @@ namespace GOAT_Compiler.Code_Generation
         /// <summary>
         /// The current extrusion.
         /// </summary>
-        public float CurrentExtrusion
+        public double CurrentExtrusion
         {
             get
             {
@@ -39,12 +39,12 @@ namespace GOAT_Compiler.Code_Generation
         /// <summary>
         /// The current extruder rate.
         /// </summary>
-        public float ExtruderRate { get; set; } = 0;
+        public double ExtruderRate { get; set; } = 0;
         
         /// <summary>
         /// The current bed temperature.
         /// </summary>        
-        public float BedTemp
+        public double BedTemp
         {
             get
             {
@@ -63,7 +63,7 @@ namespace GOAT_Compiler.Code_Generation
         /// <summary>
         /// The current extruder temperature.
         /// </summary>
-        public float ExtruderTemp 
+        public double ExtruderTemp 
         {
             get
             {
@@ -82,7 +82,7 @@ namespace GOAT_Compiler.Code_Generation
         /// <summary>
         /// The current fan power.
         /// </summary>
-        public float FanPower 
+        public double FanPower 
         {
             get
             {
@@ -106,7 +106,7 @@ namespace GOAT_Compiler.Code_Generation
         /// <summary>
         /// The current rotation of the tutle.
         /// </summary>
-        public float Rotation { get; set; } = 0;
+        public double Rotation { get; set; } = 0;
 
     }
 }

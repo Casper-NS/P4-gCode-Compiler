@@ -74,13 +74,13 @@ namespace VisitorTests
         [ClassData(typeof(FloatArithmeticWorksFilesEnumerator))]
         public void CheckFloatArithmeticsResult(string file)
         {
-            float expectedFloat;
+            double expectedFloat;
             // grab the expected float from the file name
             try
             {
                 string fileName = file.Split("/").Last();
                 string floatingPointString = fileName.Split('{', '}')[1];
-                expectedFloat = float.Parse(floatingPointString, CultureInfo.InvariantCulture);
+                expectedFloat = double.Parse(floatingPointString, CultureInfo.InvariantCulture);
             }
             catch (Exception e)
             {
@@ -105,7 +105,7 @@ namespace VisitorTests
             
             //open the global scope and check the value of f
             symbolTable.OpenScope(s.GetPProgram());
-            float f = generator.RT.Get(symbolTable.GetVariableSymbol("f"), Types.FloatingPoint);
+            double f = generator.RT.Get(symbolTable.GetVariableSymbol("f"), Types.FloatingPoint);
 
             // assert equality within 5 decimal places
             Assert.Equal(expectedFloat, f, 5);

@@ -107,7 +107,7 @@ namespace GOAT_Compiler
                         RT.Put(symbol, GetValue(nodeExpr));
                         break;
                     case Types.FloatingPoint:
-                        RT.Put(symbol, (float)GetValue(nodeExpr));
+                        RT.Put(symbol, (double)GetValue(nodeExpr));
                         break;
                     case Types.Boolean:
                         RT.Put(symbol, GetValue(nodeExpr));
@@ -134,9 +134,9 @@ namespace GOAT_Compiler
 
         public override void OutAVectorExp(AVectorExp node)
         {
-            float x = GetValue(node.GetX());
-            float y = GetValue(node.GetY());
-            float z = GetValue(node.GetZ());
+            double x = GetValue(node.GetX());
+            double y = GetValue(node.GetY());
+            double z = GetValue(node.GetZ());
             nodeMap.Put(node, new Vector(x, y, z));
         }
 
@@ -148,7 +148,7 @@ namespace GOAT_Compiler
                     nodeMap.Put(node, int.Parse(node.GetNumber().Text));
                     break;
                 case Types.FloatingPoint:
-                    nodeMap.Put(node, float.Parse(node.GetNumber().Text, CultureInfo.InvariantCulture));
+                    nodeMap.Put(node, double.Parse(node.GetNumber().Text, CultureInfo.InvariantCulture));
                     break;
                 default:
                     throw new Exception("Im litteraly crying right now");
@@ -170,7 +170,7 @@ namespace GOAT_Compiler
             {
                 if (idSymbol.type == Types.FloatingPoint)
                 {
-                    RTPutValue(idSymbol, (float)GetValue(node.GetExp()));
+                    RTPutValue(idSymbol, (double)GetValue(node.GetExp()));
                 }
                 else
                 {
@@ -200,7 +200,7 @@ namespace GOAT_Compiler
                 {
                     if (idSymbol.type == Types.FloatingPoint)
                     {
-                        RTPutValue(idSymbol, (float)(GetValue(idSymbol) + GetValue(node.GetExp())));
+                        RTPutValue(idSymbol, (double)(GetValue(idSymbol) + GetValue(node.GetExp())));
                     }
                     else
                     {
@@ -231,7 +231,7 @@ namespace GOAT_Compiler
                 {
                     if (idSymbol.type == Types.FloatingPoint)
                     {
-                        RTPutValue(idSymbol, (float)(GetValue(idSymbol) - GetValue(node.GetExp())));
+                        RTPutValue(idSymbol, (double)(GetValue(idSymbol) - GetValue(node.GetExp())));
                     }
                     else
                     {
@@ -263,7 +263,7 @@ namespace GOAT_Compiler
                 {
                     if (idSymbol.type == Types.FloatingPoint)
                     {
-                        RTPutValue(idSymbol, (float)(GetValue(idSymbol) * GetValue(node.GetExp())));
+                        RTPutValue(idSymbol, (double)(GetValue(idSymbol) * GetValue(node.GetExp())));
                     }
                     else
                     {
@@ -285,7 +285,7 @@ namespace GOAT_Compiler
             {
                 if (idSymbol.type == Types.FloatingPoint)
                 {
-                    RTPutValue(idSymbol, (float)(GetValue(idSymbol) % GetValue(node.GetExp())));
+                    RTPutValue(idSymbol, (double)(GetValue(idSymbol) % GetValue(node.GetExp())));
                 }
                 else
                 {
@@ -315,7 +315,7 @@ namespace GOAT_Compiler
                 {
                     if (idSymbol.type == Types.FloatingPoint)
                     {
-                        RTPutValue(idSymbol, (float)(GetValue(idSymbol) / GetValue(node.GetExp())));
+                        RTPutValue(idSymbol, (double)(GetValue(idSymbol) / GetValue(node.GetExp())));
                     }
                     else
                     {
@@ -774,7 +774,7 @@ namespace GOAT_Compiler
             Symbol paramSymbol = _symbolTable.GetVariableSymbol(node.GetId().Text);
             if (typeMap[node] == Types.FloatingPoint)
             {
-                RTPutValue(paramSymbol, (float)CurrentParams[0]);
+                RTPutValue(paramSymbol, (double)CurrentParams[0]);
             }
             else
             {
@@ -851,7 +851,7 @@ namespace GOAT_Compiler
         internal class RuntimeTable<TKey>
         {
             private Dictionary<TKey, int> IntMap = new Dictionary<TKey, int>();
-            private Dictionary<TKey, float> FloatMap = new Dictionary<TKey, float>();
+            private Dictionary<TKey, double> FloatMap = new Dictionary<TKey, double>();
             private Dictionary<TKey, bool> BoolMap = new Dictionary<TKey, bool>();
             private Dictionary<TKey, Vector> VecMap = new Dictionary<TKey, Vector>();
 
@@ -879,7 +879,7 @@ namespace GOAT_Compiler
                 }
             }
 
-            public void Put(TKey key, float value)
+            public void Put(TKey key, double value)
             {
                 if (FloatMap.ContainsKey(key))
                 {

@@ -2,11 +2,11 @@
 {
     public class Vector
     {
-        public float X { get; set; }
-        public float Y { get; set; }
-        public float Z { get; set; }
+        public double X { get; set; }
+        public double Y { get; set; }
+        public double Z { get; set; }
 
-        public Vector(float x, float y, float z)
+        public Vector(double x, double y, double z)
         {
             X = x;
             Y = y;

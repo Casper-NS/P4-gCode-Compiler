@@ -40,7 +40,7 @@ namespace VisitorTests
         
         [Theory]
         [InlineData("vector", Types.Vector, 2.2f, 3.3f, 4.4f)]
-        public void GetVectorValuesFromRuntimeTable(string name, Types types, float x, float y, float z)
+        public void GetVectorValuesFromRuntimeTable(string name, Types types, double x, double y, double z)
         {
             ISymbolTable symbolTable = new RecSymbolTable();
             symbolTable.OpenScope(new ANumberExp());
@@ -54,7 +54,7 @@ namespace VisitorTests
 
         [Theory]
         [InlineData("float", Types.FloatingPoint, 2.2f)]
-        public void GetFloatValuesFromRuntimeTable(string name, Types types, float value)
+        public void GetFloatValuesFromRuntimeTable(string name, Types types, double value)
         {
             ISymbolTable symbolTable = new RecSymbolTable();
             symbolTable.OpenScope(new ANumberExp());

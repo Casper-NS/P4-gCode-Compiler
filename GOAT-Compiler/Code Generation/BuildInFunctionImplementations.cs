@@ -137,14 +137,14 @@ namespace GOAT_Compiler.Code_Generation
             }
             _stream.WriteLine(gLine);
         }
-        private float CircelLenght(Vector v1, Vector v2, float r)
+        private double CircelLenght(Vector v1, Vector v2, double r)
         {
-            float top = v1.X * v2.X + v1.Y * v2.Y;
-            float bot = (float)Math.Sqrt(Math.Pow(v1.X, 2) + Math.Pow(v1.Y, 2)) * (float)Math.Sqrt(Math.Pow(v2.X, 2) + Math.Pow(v2.Y, 2));
-            float deg = (float)Math.Acos(top/bot);
+            double top = v1.X * v2.X + v1.Y * v2.Y;
+            double bot = Math.Sqrt(Math.Pow(v1.X, 2) + Math.Pow(v1.Y, 2)) * Math.Sqrt(Math.Pow(v2.X, 2) + Math.Pow(v2.Y, 2));
+            double deg = Math.Acos(top / bot);
             return deg * r
 ;        }
-        private void RelArc(Vector v, float r, bool CCW)
+        private void RelArc(Vector v, double r, bool CCW)
         {
             string gLine = "";
             Vector oldPosition = _machine.Position;
@@ -179,11 +179,11 @@ namespace GOAT_Compiler.Code_Generation
             }
             _stream.WriteLine(gLine);
         }
-        private float VectorDistance(Vector v1, Vector v2) 
+        private double VectorDistance(Vector v1, Vector v2) 
         {
-            return (float)Math.Sqrt(Math.Pow(v1.X - v2.X, 2) + Math.Pow(v1.Y - v2.Y, 2) + Math.Pow(v1.Z - v2.Z, 2));
+            return Math.Sqrt(Math.Pow((v1.X - v2.X), 2) + Math.Pow(v1.Y - v2.Y, 2) + Math.Pow(v1.Z - v2.Z, 2));
         }
-        private void AbsArc(Vector v, float r, bool CCW)
+        private void AbsArc(Vector v, double r, bool CCW)
         {
             string gLine = "";
             Vector oldPosition = _machine.Position;
@@ -219,14 +219,14 @@ namespace GOAT_Compiler.Code_Generation
             }
             _stream.WriteLine(gLine);
         }
-        private void SetExtruderTemp(float temp)
+        private void SetExtruderTemp(double temp)
         {
             string gLine = "";
             _machine.ExtruderTemp = temp;
             gLine = "M104 S" + temp.ToString();
             _stream.WriteLine(gLine);
         }
-        private void SetFanPower(float power)
+        private void SetFanPower(double power)
         {
             string gLine = "";
             _machine.FanPower = power;
@@ -234,11 +234,11 @@ namespace GOAT_Compiler.Code_Generation
             _stream.WriteLine(gLine);
 
         }
-        private void SetExtruderRate(float rate)
+        private void SetExtruderRate(double rate)
         {
             _machine.ExtruderRate = rate;
         }
-        private void SetBedTemp(float temp)
+        private void SetBedTemp(double temp)
         {
             string gLine = "";
             _machine.BedTemp = temp;
@@ -248,18 +248,18 @@ namespace GOAT_Compiler.Code_Generation
         private Vector Position(){
             return _machine.Position;
         }
-        private void Steps(float step)
+        private void Steps(double step)
         {
-            Vector movement = new ((float)Math.Cos(DegreesToRadians(_machine.Rotation))*step, 
-                                   (float)Math.Sin(DegreesToRadians(_machine.Rotation))*step,
+            Vector movement = new (Math.Cos(DegreesToRadians(_machine.Rotation))*step, 
+                                   Math.Sin(DegreesToRadians(_machine.Rotation))*step,
                                    0);
             RelMove(movement);
         }
-        private float DegreesToRadians(float degrees)
+        private double DegreesToRadians(double degrees)
         {
-           return degrees * (float)Math.PI / 180.0f;
+           return degrees * Math.PI / 180.0f;
         }
-        private void Lift(float step)
+        private void Lift(double step)
         {
             string gLine = "";
             _machine.Position.Z += step;
@@ -274,19 +274,19 @@ namespace GOAT_Compiler.Code_Generation
             }
             _stream.WriteLine(gLine);
         }
-        private void Right(float deg)
+        private void Right(double deg)
         {
             _machine.Rotation -= deg;
         }
-        private void Left(float deg)
+        private void Left(double deg)
         {
             _machine.Rotation += deg;
         }
-        private float Direction()
+        private double Direction()
         {
             return _machine.Rotation;
         }
-        private void TurnTo(float deg)
+        private void TurnTo(double deg)
         {
             _machine.Rotation = deg;
         }
