@@ -15,19 +15,18 @@ namespace VisitorTests
     public class CodeGeneratorTest
     {
         [SkippableTheory(typeof(TestDependencyException))]
-        [InlineData("RelMoveTest.txt", "RelMoveTest")]
+        [InlineData("RelMoveTest.txt", "RelMoveTest.gcode")]
         public void CreatedFileChecker(string file, string outPutFileName)
         {
-            string TestFilePath = FileReadingTestUtilities.ProjectBaseDirectory + "CodeGenerator/Tests/InputFolder/" + file;
-            string OutputFilePath = FileReadingTestUtilities.ProjectBaseDirectory + "CodeGenerator/Tests/OutputFolder/" + outPutFileName;
+            string TestFilePath = FileReadingTestUtilities.ProjectBaseDirectory + "CodeGenerator/Tests/InputFolder/"+ file;
             Start s = FileReadingTestUtilities.ParseFile(TestFilePath);
             ISymbolTable symbolTable = FileReadingTestUtilities.BuildSymbolTable(s);
             TypeChecker typeChecker = new TypeChecker(symbolTable);
             CodeGenerator codeGenerator;
             s.Apply(typeChecker);
+            using (File.Create(outPutFileName)) { }
             
-            
-            using (Stream stream = new FileStream(OutputFilePath, FileMode.Open))
+            using (Stream stream = new FileStream(outPutFileName, FileMode.Open))
             {
                 using (StreamWriter writer = new StreamWriter(stream))
                 {
@@ -36,10 +35,10 @@ namespace VisitorTests
                 }
             }
 
-            Assert.True(File.Exists(OutputFilePath+".gcode"));
-            if (File.Exists(OutputFilePath + ".gcode"))
+            Assert.True(File.Exists(outPutFileName));
+            if (File.Exists(outPutFileName))
             {
-                File.Delete(OutputFilePath + ".gcode");
+                File.Delete(outPutFileName);
             }
         }
         [SkippableTheory(typeof(TestDependencyException))]
@@ -47,14 +46,14 @@ namespace VisitorTests
         public void CheckIfCreatedFileIsntEmpty(string file, string outPutFileName)
         {
             string TestFilePath = FileReadingTestUtilities.ProjectBaseDirectory + "CodeGenerator/Tests/InputFolder/" + file;
-            string OutputFilePath = FileReadingTestUtilities.ProjectBaseDirectory + "CodeGenerator/Tests/OutputFolder/" + outPutFileName;
             Start s = FileReadingTestUtilities.ParseFile(TestFilePath);
             ISymbolTable symbolTable = FileReadingTestUtilities.BuildSymbolTable(s);
             TypeChecker typeChecker = new TypeChecker(symbolTable);
             CodeGenerator codeGenerator;
             s.Apply(typeChecker);
+            using (File.Create(outPutFileName)) { }
 
-            using (Stream stream = new FileStream(OutputFilePath, FileMode.Open))
+            using (Stream stream = new FileStream(outPutFileName, FileMode.Open))
             {
                 using (StreamWriter writer = new StreamWriter(stream))
                 {
@@ -62,12 +61,12 @@ namespace VisitorTests
                     s.Apply(codeGenerator);
                 }
             }
-            Assert.True(File.Exists(OutputFilePath + ".gcode"));
+            Assert.True(File.Exists(outPutFileName));
             
-            Assert.True(File.ReadAllText(OutputFilePath + ".gcode").Length > 0);
-            if (File.Exists(OutputFilePath + ".gcode"))
+            Assert.True(File.ReadAllText(outPutFileName).Length > 0);
+            if (File.Exists(outPutFileName))
             {
-                File.Delete(OutputFilePath + ".gcode");
+                File.Delete(outPutFileName);
             }
         }
 

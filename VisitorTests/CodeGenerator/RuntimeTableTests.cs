@@ -1,4 +1,5 @@
 ﻿using GOAT_Compiler;
+using GOATCode.node;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,6 +17,7 @@ namespace VisitorTests
         public void GetIntegerValuesFromRuntimeTable(string name, Types types, int value)
         {
             ISymbolTable symbolTable = new RecSymbolTable();
+            symbolTable.OpenScope(new ANumberExp());
             symbolTable.AddVariableSymbol(name, types);
             Symbol symbol = symbolTable.GetVariableSymbol(name);
             RuntimeTable<Symbol> table = new RuntimeTable<Symbol>();
@@ -28,6 +30,7 @@ namespace VisitorTests
         public void GetBooleanValuesFromRuntimeTable(string name, Types types, bool value)
         {
             ISymbolTable symbolTable = new RecSymbolTable();
+            symbolTable.OpenScope(new ANumberExp());
             symbolTable.AddVariableSymbol(name, types);
             Symbol symbol = symbolTable.GetVariableSymbol(name);
             RuntimeTable<Symbol> table = new RuntimeTable<Symbol>();
@@ -40,6 +43,7 @@ namespace VisitorTests
         public void GetVectorValuesFromRuntimeTable(string name, Types types, float x, float y, float z)
         {
             ISymbolTable symbolTable = new RecSymbolTable();
+            symbolTable.OpenScope(new ANumberExp());
             symbolTable.AddVariableSymbol(name, types);
             Symbol symbol = symbolTable.GetVariableSymbol(name);
             RuntimeTable<Symbol> table = new RuntimeTable<Symbol>();
@@ -53,6 +57,7 @@ namespace VisitorTests
         public void GetFloatValuesFromRuntimeTable(string name, Types types, float value)
         {
             ISymbolTable symbolTable = new RecSymbolTable();
+            symbolTable.OpenScope(new ANumberExp());
             symbolTable.AddVariableSymbol(name, types);
             Symbol symbol = symbolTable.GetVariableSymbol(name);
             RuntimeTable<Symbol> table = new RuntimeTable<Symbol>();
