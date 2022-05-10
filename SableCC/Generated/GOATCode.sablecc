@@ -331,6 +331,9 @@ cst_bool_exp {-> exp} =
             
       | {neq}  [a]:cst_associative_exp not_equal             [b]:cst_associative_exp 
             {-> New exp.neq(a.exp, b.exp)} 
+
+      | {neg} minus_op cst_associative_exp 
+            {-> New exp.neg(cst_associative_exp.exp)}
             
       | cst_associative_exp 
             {-> cst_associative_exp.exp};
@@ -428,6 +431,7 @@ exp =
 | {minus} [l]:exp [r]:exp
 | {mult} [l]:exp [r]:exp
 | {divd} [l]:exp [r]:exp
+| {neg} exp
 | {modulo} [l]:exp [r]:exp
 | {and} [l]:exp [r]:exp
 | {or} [l]:exp [r]:exp
