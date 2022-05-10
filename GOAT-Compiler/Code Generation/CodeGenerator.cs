@@ -765,7 +765,14 @@ namespace GOAT_Compiler
         public override void OutAParamDecl(AParamDecl node)
         {
             Symbol paramSymbol = _symbolTable.GetVariableSymbol(node.GetId().Text);
-            RTPutValue(paramSymbol, CurrentParams[0]);
+            if (typeMap[node] == Types.FloatingPoint)
+            {
+                RTPutValue(paramSymbol, (float)CurrentParams[0]);
+            }
+            else
+            {
+                RTPutValue(paramSymbol, CurrentParams[0]);
+            }
             CurrentParams.RemoveAt(0);
         }
 

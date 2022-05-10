@@ -400,6 +400,15 @@ namespace GOAT_Compiler
                 }
             }
         }
+
+
+        public override void OutAParamDecl(AParamDecl node)
+        {
+            Symbol id = _symbolTable.GetVariableSymbol(node.GetId().Text);
+            _typeDictionary.Add(node, id.type);
+        }
+
+
         public override void InsideScopeInAFuncDecl(AFuncDecl node)
         {
             System.Collections.IList list = node.GetDecl();
