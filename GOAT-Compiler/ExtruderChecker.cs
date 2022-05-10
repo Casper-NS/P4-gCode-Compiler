@@ -1,4 +1,5 @@
-﻿using GOATCode.node;
+﻿using GOATCode.analysis;
+using GOATCode.node;
 using System;
 using System.Collections.Generic;
 
@@ -12,17 +13,19 @@ namespace GOAT_Compiler
         Walk
     };
 
-    internal class ExtruderChecker : SymbolTableVisitor
+    internal class ExtruderChecker : DepthFirstAdapter
     {
         //The stack which maintains the current Extrude scope
         private Stack<Extrude> _stack = new Stack<Extrude>();
         //The hashmap which holds all the functions
-        private Dictionary<Symbol, DijkstraNode> _functions = new();
+        private Dictionary<Symbol, BFSNode> _functions = new();
         //The Symbol which is used for keeping track of which function's scope we are currently in
         private Symbol _currentSymbol;
+        private ISymbolTable _symbolTable;
 
-        internal ExtruderChecker(ISymbolTable symbolTable) : base(symbolTable)
+        internal ExtruderChecker(ISymbolTable symbolTable)
         {
+            _symbolTable = symbolTable;
         }
 
         /// <summary>
@@ -36,10 +39,7 @@ namespace GOAT_Compiler
             {
                 throw new PopException(_stack.Peek());
             }
-            else
-            {
-                _stack.Pop();
-            }
+            _stack.Pop();
         }
 
         /// <summary>
@@ -53,61 +53,57 @@ namespace GOAT_Compiler
             {
                 throw new StaticCallBuildInWalkException(node, "Tried to build in a walk scope");
             }
-            else
-            {
-                _stack.Push(candidate);
-            }
+            _stack.Push(candidate);
         }
-
 
         /// <summary>
         /// Functions to check if a function already is in the functions-dictionary
         /// </summary>
         /// <param name="node"></param>
         /// <returns></returns>
-        private bool DoesntContainKey(AFuncDecl node)
+        private bool IsFunctionDeclared(AFuncDecl node)
         {
-            return !_functions.ContainsKey(_symbolTable.GetFunctionSymbol(node.GetId().Text));
+            return _functions.ContainsKey(_symbolTable.GetFunctionSymbol(node.GetId().Text));
         }
-        private bool DoesntContainKey(AFunctionExp node)
+        private bool IsFunctionDeclared(AFunctionExp node)
         {
-            return !_functions.ContainsKey(_symbolTable.GetFunctionSymbol(node.GetName().Text));
+            return _functions.ContainsKey(_symbolTable.GetFunctionSymbol(node.GetName().Text));
         }
-        private bool DoesntContainKey(AProcDecl node)
+        private bool IsFunctionDeclared(AProcDecl node)
         {
-            return !_functions.ContainsKey(_symbolTable.GetFunctionSymbol(node.GetId().Text));
+            return _functions.ContainsKey(_symbolTable.GetFunctionSymbol(node.GetId().Text));
         }
 
         /// <summary>
         /// Sets the "global-scope"'s extrude type to notSet. 
         /// </summary>
         /// <param name="node"></param>
-        public override void InsideScopeInADeclProgram(ADeclProgram node)
+        public override void InADeclProgram(ADeclProgram node)
         {
             _stack.Push(Extrude.NotSet);
         }
 
         /// <summary>
         /// Check if the function is aldready in the function Dictionary,
-        /// if not, create a new DijkstraNode and add it to the dictionary
+        /// if not, create a new BFSNode and add it to the dictionary
         /// </summary>
         /// <param name="node">AFuncDecl</param>
-        public override void InsideScopeInAFuncDecl(AFuncDecl node)
+        public override void InAFuncDecl(AFuncDecl node)
         {
             _currentSymbol = _symbolTable.GetFunctionSymbol(node.GetId().Text);
 
-            if (DoesntContainKey(node))
+            if (!IsFunctionDeclared(node))
             {
-                _functions.Add(_currentSymbol, new DijkstraNode(_currentSymbol.name, Extrude.NotSet));
+                _functions.Add(_currentSymbol, new BFSNode(_currentSymbol.name, Extrude.NotSet));
             }
         }
-        public override void InsideScopeInAProcDecl(AProcDecl node)
+        public override void InAProcDecl(AProcDecl node)
         {
             _currentSymbol = _symbolTable.GetFunctionSymbol(node.GetId().Text);
 
-            if (DoesntContainKey(node))
+            if (!IsFunctionDeclared(node))
             {
-                _functions.Add(_currentSymbol, new DijkstraNode(_currentSymbol.name, Extrude.NotSet));
+                _functions.Add(_currentSymbol, new BFSNode(_currentSymbol.name, Extrude.NotSet));
             }
         }
 
@@ -118,9 +114,9 @@ namespace GOAT_Compiler
         /// <param name="node"></param>
         public override void OutAFunctionExp(AFunctionExp node)
         {
-            if (DoesntContainKey(node)) 
+            if (!IsFunctionDeclared(node)) 
             {
-                _functions.Add(_symbolTable.GetFunctionSymbol(node.GetName().Text), new DijkstraNode(node.GetName().Text, Extrude.NotSet));
+                _functions.Add(_symbolTable.GetFunctionSymbol(node.GetName().Text), new BFSNode(node.GetName().Text, Extrude.NotSet));
             }
             _functions[_currentSymbol].AddFunctionCall(_functions[_symbolTable.GetFunctionSymbol(node.GetName().Text)], _stack.Peek());
         }
@@ -129,7 +125,7 @@ namespace GOAT_Compiler
         //and updates the scope extrude type.
         public override void InANoneBlock(ANoneBlock node)
         {
-            _functions[_currentSymbol].SetExtrudeType(Extrude.None);
+            _functions[_currentSymbol].ExtrudeType = Extrude.None;
 
             _stack.Push(Extrude.None);
         }
@@ -139,7 +135,7 @@ namespace GOAT_Compiler
         }
         public override void InABuildBlock(ABuildBlock node)
         {
-            _functions[_currentSymbol].SetExtrudeType(Extrude.Build);
+            _functions[_currentSymbol].ExtrudeType = Extrude.Build;
 
             PushVerification(node, Extrude.Build);
         }
@@ -149,7 +145,7 @@ namespace GOAT_Compiler
         }
         public override void InAWalkBlock(AWalkBlock node)
         {
-            _functions[_currentSymbol].SetExtrudeType(Extrude.Walk);
+            _functions[_currentSymbol].ExtrudeType = Extrude.Walk;
 
             _stack.Push(Extrude.Walk);
         }
@@ -193,45 +189,45 @@ namespace GOAT_Compiler
         }
 
         /// <summary>
-        /// Runs the djikstrasearch funtion as the very last thing when the whole program has been visited.
+        /// Runs the BFSalgorithm funtion as the very last thing when the whole program has been visited.
         /// The function is run on main
         /// </summary>
         /// <param name="node"></param>
-        public override void OutsideScopeOutADeclProgram(ADeclProgram node)
+        public override void OutADeclProgram(ADeclProgram node)
         {
-            DijkstraSearch(_functions[_symbolTable.GetFunctionSymbol("main")]);
+            BFSAlgorithm(_functions[_symbolTable.GetFunctionSymbol("main")]);
         }
 
         /// <summary>
-        /// Dijkstra search, which goes through all function calls, and updates Extrude type in the stack call.
+        /// Breadth first search, which goes through all function calls, and updates Extrude type in the stack call.
         /// </summary>
         /// <param name="node"></param>
-        private void DijkstraSearch(DijkstraNode node)
+        private void BFSAlgorithm(BFSNode node)
         {
             //Makes frontier list and adds the first node to be checked, and sets the extrude type to none
             //The first node will be main!
-            List<DijkstraNode> frontier = new List<DijkstraNode>();
+            List<BFSNode> frontier = new List<BFSNode>();
             frontier.Add(node);
-            node.SetCallStackType(Extrude.None);
+            node.TheExtrudeTypeFromCallStack = Extrude.None;
 
             //while the list of function nodes to be checked is not empty...
             while(frontier.Count > 0)
             {
-                DijkstraNode curNode = frontier[0];
+                BFSNode curNode = frontier[0];
 
                 //Go through that function's function calls...
-                foreach (var functionCall in curNode.GetFunctionCalls())
+                foreach (var functionCall in curNode.FunctionCalls)
                 {
                     Extrude currentExtrude = UpdateExtrudeType(functionCall, curNode);
                     //and check if the call stack extrude type can be updated and if so...
-                    if (currentExtrude > functionCall.dijkstraNode.GetCallStackType())
+                    if (currentExtrude > functionCall.BFSNode.TheExtrudeTypeFromCallStack)
                     {
                         //set the new call stack type to the function being called
                         //and set where it was called from
                         //and lastly add all the function calls to be checked.
-                        functionCall.dijkstraNode.SetCallStackType(currentExtrude);
-                        functionCall.dijkstraNode.SetTheNodeItCameFrom(curNode);
-                        frontier.Add(functionCall.dijkstraNode);
+                        functionCall.BFSNode.TheExtrudeTypeFromCallStack = currentExtrude;
+                        functionCall.BFSNode.TheNodeThatCalledThisOne = curNode;
+                        frontier.Add(functionCall.BFSNode);
                     }
                 }
                 //Remove the checked function from being checked.
@@ -246,18 +242,15 @@ namespace GOAT_Compiler
         /// <param name="node"></param>
         /// <returns>The highest extrude type</returns>
         /// <exception cref="CallBuildInWalkException">Called if walk calls a build</exception>
-        private Extrude UpdateExtrudeType(FunctionCall edge, DijkstraNode node)
+        private Extrude UpdateExtrudeType(FunctionCall edge, BFSNode node)
         {
-            if (node.GetCallStackType() == Extrude.Walk && edge.extrudeType == Extrude.Build)
+            if (node.TheExtrudeTypeFromCallStack == Extrude.Walk && edge.extrudeType == Extrude.Build)
             {
-                edge.dijkstraNode.SetTheNodeItCameFrom(node);
-                throw new CallBuildInWalkException(edge.dijkstraNode);
+                edge.BFSNode.TheNodeThatCalledThisOne = node;
+                throw new CallBuildInWalkException(edge.BFSNode);
             }
-            else
-            {
-                //Returns the nodes extrudetype if its value is higher, else return the edges extrudetype.
-                return node.GetCallStackType() > edge.extrudeType ? node.GetCallStackType() : edge.extrudeType;
-            }
+            //Returns the nodes extrudetype if its value is higher, else return the edges extrudetype.
+            return node.TheExtrudeTypeFromCallStack > edge.extrudeType ? node.TheExtrudeTypeFromCallStack : edge.extrudeType;
         }
     }
 }
