@@ -244,12 +244,10 @@ namespace GOAT_Compiler.Code_Generation
         }
         private void Steps(float step)
         {
-            Vector oldPosition = _machine.Position;
-            Vector newPoint = new ((float)Math.Cos(DegreesToRadians(_machine.Rotation))*step, 
+            Vector movement = new ((float)Math.Cos(DegreesToRadians(_machine.Rotation))*step, 
                                    (float)Math.Sin(DegreesToRadians(_machine.Rotation))*step,
                                    0);
-            Vector newPosition = new (oldPosition.X + newPoint.X, oldPosition.Y + newPoint.Y, oldPosition.Z + newPoint.Z);
-            RelMove(newPosition);
+            RelMove(movement);
         }
         private float DegreesToRadians(float degrees)
         {
