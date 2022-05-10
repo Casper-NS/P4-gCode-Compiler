@@ -75,7 +75,7 @@ namespace GOAT_Compiler
             }
             else
             {
-                throw new TypeMismatchException(current, "Type " + leftType + " and " + rightType + " are not valid for this logical operations.");
+                throw new TypeMismatchException(current, "Type " + leftType + " and " + rightType + " are not valid for this logical operation.");
             }
         }
         private void GreaterThanLessThanTypeChecker(Node nodeleft, Node nodeRight, Node current)
