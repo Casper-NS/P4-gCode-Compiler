@@ -29,7 +29,6 @@
     <Folder Include="CodeGenerator\Tests\OutputFolder\" />
     <Folder Include="ExtruderChecker\" />
     <Folder Include="ScopeChecker\" />
-    <Folder Include="TypeChecker\" />
   </ItemGroup>
 
 </Project>

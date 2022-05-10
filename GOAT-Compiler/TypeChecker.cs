@@ -28,14 +28,14 @@ namespace GOAT_Compiler
         public TypeChecker(ISymbolTable symbolTable) : base(symbolTable)
         {
         }
-        private void ExpressionTypeChecker(Node left, Node right, Node current)
+        private void ArithmeticTypeChecker(Node left, Node right, Node current)
         {
             Types leftType = _typeDictionary[left];
             Types rightType = _typeDictionary[right];
             Types type = TypePromoter(leftType, rightType);
-            if (type == Types.Void) 
+            if (type == Types.Void || type == Types.Boolean) 
             {
-                throw new TypeMismatchException(current);
+                throw new TypeMismatchException(current, "Type " + type + " is not valid for this arithmetic operations.");
             }
             else
             {
@@ -61,7 +61,7 @@ namespace GOAT_Compiler
             }
             else
             {
-                throw new TypeMismatchException(current);
+                throw new TypeMismatchException(current, "Type " + leftType + " and " + rightType + " are not valid for this comparison operations.");
             }
         }
 
@@ -75,7 +75,7 @@ namespace GOAT_Compiler
             }
             else
             {
-                throw new TypeMismatchException(current);
+                throw new TypeMismatchException(current, "Type " + leftType + " and " + rightType + " are not valid for this logical operation.");
             }
         }
         private void GreaterThanLessThanTypeChecker(Node nodeleft, Node nodeRight, Node current)
@@ -88,7 +88,7 @@ namespace GOAT_Compiler
             }
             else
             {
-                throw new TypeMismatchException(current);
+                throw new TypeMismatchException(current, "Type " + leftType + " and " + rightType + " are not valid for this comparison operations.");
             }
         }
         private void MultDivModTypeChecker(Node left, Node right, Node current)
@@ -97,11 +97,11 @@ namespace GOAT_Compiler
             Types rightType = _typeDictionary[right];
             if ((leftType == Types.Integer || leftType == Types.FloatingPoint) && (rightType == Types.Integer || rightType == Types.FloatingPoint))
             {
-                ExpressionTypeChecker(left, right, current);
+                ArithmeticTypeChecker(left, right, current);
             }
             else
             {
-                throw new TypeMismatchException(current);
+                throw new TypeMismatchException(current, "Type " + leftType + " and " + rightType + " are not valid for this arithemtic operations.");
             }
         }
         private void DivMultTypeChecker(Symbol id, Types type, Node node, Node expr, TDot dot)
@@ -131,7 +131,7 @@ namespace GOAT_Compiler
             }
             else
             {
-                throw new TypeMismatchException(node);
+                throw new TypeMismatchException(node, "Types not compatible with multiply or divide expression");
             }
         }
         private Types TypePromoter(Types t1, Types t2)
@@ -176,7 +176,7 @@ namespace GOAT_Compiler
             }
             else
             {
-                throw new TypeMismatchException(n);
+                throw new TypeMismatchException(n, "Type " + _typeDictionary[n] + " is not valid for the Convert method.");
             }
         }
         public override void OutAVectorExp(AVectorExp node)
@@ -198,12 +198,12 @@ namespace GOAT_Compiler
 
         public override void OutAPlusExp(APlusExp node)
         {
-            ExpressionTypeChecker(node.GetL(), node.GetR(), node);
+            ArithmeticTypeChecker(node.GetL(), node.GetR(), node);
         }
 
         public override void OutAMinusExp(AMinusExp node)
         {
-            ExpressionTypeChecker(node.GetL(), node.GetR(), node);
+            ArithmeticTypeChecker(node.GetL(), node.GetR(), node);
         }
         public override void OutANegExp(ANegExp node)
         {
@@ -296,7 +296,7 @@ namespace GOAT_Compiler
         {
             if (_typeDictionary[node.GetExp()] != Types.Boolean)
             {
-                throw new TypeMismatchException(node);
+                throw new TypeMismatchException(node, "If statement must have a boolean expression");
             }
             else
             {
@@ -352,7 +352,7 @@ namespace GOAT_Compiler
             }
             else
             {
-                throw new TypeMismatchException(node);
+                throw new TypeMismatchException(node, "Not operator can only be used on booleans");
             }
         }
         public override void OutAVarDecl(AVarDecl node)
@@ -405,7 +405,7 @@ namespace GOAT_Compiler
             {
                 if(Convert((Node)list[i], formelList[i]) != formelList[i]) 
                 {
-                    throw new TypeMismatchException(node);
+                    throw new TypeMismatchException(node, "Wrong type of argument");
                 }
             }
         }
@@ -428,7 +428,7 @@ namespace GOAT_Compiler
         {
             if (currentFunctionType != Convert(node.GetExp(), currentFunctionType))
             {
-                throw new TypeMismatchException(node);
+                throw new TypeMismatchException(node, "Wrong type of return statement");
             }
             else
             {
