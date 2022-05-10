@@ -113,11 +113,11 @@ namespace GOAT_Compiler.Code_Generation
             if (_machine.Build)
             {
                 _machine.CurrentExtrusion += (_machine.ExtruderRate*VectorDistance(oldPosition, _machine.Position));
-                gLine += "G1 X" + _machine.Position.X + " Y" + _machine.Position.Y + " Z" + _machine.Position.Z + " E" + _machine.CurrentExtrusion;
+                gLine += "G1 X" + (decimal)_machine.Position.X + " Y" + (decimal)_machine.Position.Y + " Z" + (decimal)_machine.Position.Z + " E" + (decimal)_machine.CurrentExtrusion;
             }
             else
             {
-                gLine += "G0 X" + _machine.Position.X + " Y" + _machine.Position.Y + " Z" + _machine.Position.Z;
+                gLine += "G0 X" + (decimal)_machine.Position.X + " Y" + (decimal)_machine.Position.Y + " Z" + (decimal)_machine.Position.Z;
             }
             _stream.WriteLine(gLine);
         }
@@ -129,11 +129,11 @@ namespace GOAT_Compiler.Code_Generation
             if (_machine.Build)
             {
                 _machine.CurrentExtrusion += (_machine.ExtruderRate * VectorDistance(oldPosition, _machine.Position));
-                gLine += "G1 X" + _machine.Position.X + " Y" + _machine.Position.Y + " Z" + _machine.Position.Z + " E" + _machine.CurrentExtrusion;
+                gLine += "G1 X" + (decimal)_machine.Position.X + " Y" + (decimal)_machine.Position.Y + " Z" + (decimal)_machine.Position.Z + " E" + (decimal)_machine.CurrentExtrusion;
             }
             else
             {
-                gLine += "G0 X" + _machine.Position.X + " Y" + _machine.Position.Y + " Z" + _machine.Position.Z;
+                gLine += "G0 X" + (decimal)_machine.Position.X + " Y" + (decimal)_machine.Position.Y + " Z" + (decimal)_machine.Position.Z;
             }
             _stream.WriteLine(gLine);
         }
@@ -154,23 +154,23 @@ namespace GOAT_Compiler.Code_Generation
             {
                 if(CCW) { 
                     _machine.CurrentExtrusion += (_machine.ExtruderRate * CircelLenght(oldPosition, _machine.Position, r));
-                    gLine = "G3 X" + v2.X + " Y" + v2.Y + " Z" + v2.Z + " E" + _machine.ExtruderRate + " R" + r;
+                    gLine = "G3 X" + (decimal)v2.X + " Y" + (decimal)v2.Y + " Z" + (decimal)v2.Z + " E" + (decimal)_machine.ExtruderRate + " R" + (decimal)r;
                 }
                 else
                 {
                     _machine.CurrentExtrusion += (_machine.ExtruderRate * CircelLenght(oldPosition, _machine.Position, r));
-                    gLine = "G2 X" + v2.X + " Y" + v2.Y + " Z" + v2.Z + " E" + _machine.ExtruderRate + " R" + r;
+                    gLine = "G2 X" + (decimal)v2.X + " Y" + (decimal)v2.Y + " Z" + (decimal)v2.Z + " E" + (decimal)_machine.ExtruderRate + " R" + (decimal)r;
                 }
             }
             else
             {
                 if (CCW)
                 {
-                    gLine = "G3 X" + "X" + v2.X + " Y" + v2.Y + " Z" + v2.Z + " R" + r;
+                    gLine = "G3 X" + "X" + (decimal)v2.X + " Y" + (decimal)v2.Y + " Z" + (decimal)v2.Z + " R" + (decimal)r;
                 }
                 else
                 {
-                    gLine = "G2 X" + v2.X + " Y" + v2.Y + " Z" + v2.Z + " R" + r;
+                    gLine = "G2 X" + (decimal)v2.X + " Y" + (decimal)v2.Y + " Z" + (decimal)v2.Z + " R" + (decimal)r;
                 }
             }
             if (VectorDistance(oldPosition, v2) > Math.Abs(r)*2)
@@ -194,23 +194,23 @@ namespace GOAT_Compiler.Code_Generation
                 if (CCW)
                 {
                     _machine.CurrentExtrusion += (_machine.ExtruderRate * CircelLenght(oldPosition, _machine.Position, r));
-                    gLine = "G3 X" + v2.X + " Y" + v2.Y + " Z" + v2.Z + " E" + _machine.ExtruderRate + " R" + r;
+                    gLine = "G3 X" + (decimal)v2.X + " Y" + (decimal)v2.Y + " Z" + (decimal)v2.Z + " E" + (decimal)_machine.ExtruderRate + " R" + (decimal)r;
                 }
                 else
                 {
                     _machine.CurrentExtrusion += (_machine.ExtruderRate * CircelLenght(oldPosition, _machine.Position, r));
-                    gLine = "G2 X" + v2.X + " Y" + v2.Y + " Z" + v2.Z + " E" + _machine.ExtruderRate + " R" + r;
+                    gLine = "G2 X" + (decimal)v2.X + " Y" + (decimal)v2.Y + " Z" + (decimal)v2.Z + " E" + (decimal)_machine.ExtruderRate + " R" + (decimal)r;
                 }
             }
             else
             {
                 if (CCW)
                 {
-                    gLine = "G3 X" + v2.X + " Y" + v2.Y + " Z" + v2.Z + " R" + r;
+                    gLine = "G3 X" + (decimal)v2.X + " Y" + (decimal)v2.Y + " Z" + (decimal)v2.Z + " R" + (decimal)r;
                 }
                 else
                 {
-                    gLine = "G2 X" + v2.X + " Y" + v2.Y + " Z" + v2.Z + " R" + r;
+                    gLine = "G2 X" + (decimal)v2.X + " Y" + (decimal)v2.Y + " Z" + (decimal)v2.Z + " R" + (decimal)r;
                 }
             }
             if (VectorDistance(oldPosition, v2) > Math.Abs(r) * 2)
@@ -223,14 +223,14 @@ namespace GOAT_Compiler.Code_Generation
         {
             string gLine = "";
             _machine.ExtruderTemp = temp;
-            gLine = "M104 S" + temp.ToString();
+            gLine = "M104 S" + (decimal)temp;
             _stream.WriteLine(gLine);
         }
         private void SetFanPower(double power)
         {
             string gLine = "";
             _machine.FanPower = power;
-            gLine = "M106 S" + power.ToString();
+            gLine = "M106 S" + (decimal)power;
             _stream.WriteLine(gLine);
 
         }
@@ -242,7 +242,7 @@ namespace GOAT_Compiler.Code_Generation
         {
             string gLine = "";
             _machine.BedTemp = temp;
-            gLine = "M140 S" + temp.ToString();
+            gLine = "M140 S" + (decimal)temp;
             _stream.WriteLine(gLine);
         }
         private Vector Position(){
@@ -266,11 +266,11 @@ namespace GOAT_Compiler.Code_Generation
             if (_machine.Build)
             {
                 _machine.CurrentExtrusion += _machine.ExtruderRate * step;
-                gLine += "G1 X" + _machine.Position.X + " Y" + _machine.Position.Y + " Z" + _machine.Position.Z + " E" + _machine.CurrentExtrusion;
+                gLine += "G1 X" + (decimal)_machine.Position.X + " Y" + (decimal)_machine.Position.Y + " Z" + (decimal)_machine.Position.Z + " E" + (decimal)_machine.CurrentExtrusion;
             }
             else
             {
-                gLine += "G0 X" + _machine.Position.X + " Y" + _machine.Position.Y + " Z" + _machine.Position.Z;
+                gLine += "G0 X" + (decimal)_machine.Position.X + " Y" + (decimal)_machine.Position.Y + " Z" + (decimal)_machine.Position.Z;
             }
             _stream.WriteLine(gLine);
         }
@@ -292,12 +292,12 @@ namespace GOAT_Compiler.Code_Generation
         }
         private void WaitForBedTemp()
         {
-            string gLine = "M190 R" + _machine.BedTemp.ToString();
+            string gLine = "M190 R" + (decimal)(_machine.BedTemp);
             _stream.WriteLine(gLine);
         }
         private void WaitForExtruderTemp()
         {
-            string gLine = "M109 R" + _machine.ExtruderTemp.ToString();
+            string gLine = "M109 R" + (decimal)(_machine.ExtruderTemp);
             _stream.WriteLine(gLine);
         }
         private void WaitForCurrentMove()
@@ -307,7 +307,7 @@ namespace GOAT_Compiler.Code_Generation
         }
         private void WaitForMillis(int millis)
         {
-            string gLine = "G4 P" + millis.ToString();
+            string gLine = "G4 P" + millis;
             _stream.WriteLine(gLine);
         }
     }
