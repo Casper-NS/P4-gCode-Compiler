@@ -9,6 +9,14 @@ namespace P4_GCode_Compiler
 {
     class Program
     {
+        static void Main(string[] args)
+        {
+            ReadArgs(args, out string fileIn, out string fileOut);
+
+            ReadAndGenerateAST(fileIn, out Start AST, out ISymbolTable symTable, out TypeChecker typeChecker);
+
+            GenerateCode(fileOut, AST, symTable, typeChecker);
+        }
 
         static void ReadArgs(string[] args, out string fileIn, out string fileOut)
         {
@@ -18,15 +26,6 @@ namespace P4_GCode_Compiler
             }
             fileIn = args[0];
             fileOut = args[1];
-        }
-
-        static void Main(string[] args)
-        {
-            ReadArgs(args, out string fileIn, out string fileOut);
-
-            ReadAndGenerateAST(fileIn, out Start AST, out ISymbolTable symTable, out TypeChecker typeChecker);
-
-            GenerateCode(fileOut, AST, symTable, typeChecker);
         }
 
         static void ReadAndGenerateAST(string file, out Start AST, out ISymbolTable symTable, out TypeChecker typeChecker)
