@@ -1,0 +1,21 @@
+﻿void main()
+{
+	build
+	{
+		// Walk to the end of the mouth
+		Right(15)
+		walk Steps(1)
+
+		// save position for later
+		vector endPosition = Position()
+
+		// draw the mouth
+		Right(180)
+		Steps(1)
+		Right(150)
+		Steps(1)
+		
+		//arc around
+		AbsArcCCW(endPosition, -1)
+	}
+}
