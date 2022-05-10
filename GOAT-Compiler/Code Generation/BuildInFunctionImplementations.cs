@@ -181,10 +181,6 @@ namespace GOAT_Compiler.Code_Generation
         {
             string gLine = "";
             Vector oldPosition = _machine.Position;
-            if (VectorDistance(oldPosition, v) > r * 2)
-            {
-                throw new Exception("AbsArc radius is too small.");
-            }
             _machine.Position = v;
             Vector v2 = _machine.Position;
             if (_machine.Build)
@@ -210,6 +206,10 @@ namespace GOAT_Compiler.Code_Generation
                 {
                     gLine = "G2 X" + v2.X + " Y" + v2.Y + " Z" + v2.Z + " R" + r;
                 }
+            }
+            if (VectorDistance(oldPosition, v2) > Math.Abs(r) * 2)
+            {
+                throw new Exception("AbsArc radius is too small.");
             }
             _stream.WriteLine(gLine);
         }
