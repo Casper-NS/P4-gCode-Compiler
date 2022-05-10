@@ -1,4 +1,0 @@
-﻿void main()wefoas
-{
-	inwq dt x = 1
-}

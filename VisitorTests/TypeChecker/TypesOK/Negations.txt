@@ -1,0 +1,10 @@
+﻿void main()
+{
+	int i = -1
+	float f = -1.0
+	vector v = -(1.0, 1.0, 1.0)
+	i = -i
+	f = -i
+	f = -f
+	v = -v
+}

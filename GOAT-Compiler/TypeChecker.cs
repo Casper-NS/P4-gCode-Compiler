@@ -205,6 +205,15 @@ namespace GOAT_Compiler
         {
             ExpressionTypeChecker(node.GetL(), node.GetR(), node);
         }
+        public override void OutANegExp(ANegExp node)
+        {
+            Types type = _typeDictionary[node.GetExp()];
+            if (type == Types.Boolean)
+            {
+                throw new TypeMismatchException(node, "Tried to negate a boolean");
+            }
+            _typeDictionary.Add(node, type);
+        }
 
         public override void OutABoolvalExp(ABoolvalExp node)
         {
