@@ -12,7 +12,7 @@ namespace P4_GCode_Compiler
         static void Main(string[] args)
         {
             ISymbolTable symTab = new RecSymbolTable();
-            StreamReader reader = new StreamReader("../../../../SymbolTableTest/SymbolBuildTest.txt");
+            StreamReader reader = new StreamReader("../../../../visitorTests/Test.txt");
             Lexer l = new Lexer(reader);
             Parser p = new Parser(l);
             Start S = p.Parse();
@@ -23,10 +23,16 @@ namespace P4_GCode_Compiler
             ScopeChecker scopeChecker = new ScopeChecker(symTab);
             S.Apply(scopeChecker);
             CodeGenerator codeGenerator;
-            using (Stream stream = new FileStream("", FileMode.Open))
+            using (File.Create("test.gcode")) { }
+
+            using (Stream stream = new FileStream("test.gcode", FileMode.Open))
             {
-                codeGenerator = new CodeGenerator(symTab, Tchecker.GetTypeDictionary(), stream);
-                S.Apply(codeGenerator);
+                using (StreamWriter writer = new StreamWriter(stream))
+                {
+                    codeGenerator = new CodeGenerator(symTab, Tchecker.GetTypeDictionary(), writer);
+                    S.Apply(codeGenerator);
+                }
+
             }
         }
     }

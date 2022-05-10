@@ -1,0 +1,44 @@
+﻿void main()
+{
+	walk SetExtruderRate(1)
+
+	walk
+	{
+	Home()
+	RelMove((2, 0, 0))
+	}
+
+	build
+	{
+		RelMove((0, 3, 0))
+		RelArc((0-2, 1, 0), 2)
+		RelMove((0, 2, 0))
+		RelArc((2, 1, 0), 2)
+		RelMove((0, 2, 0))
+		RelArc((1, 1, 0), 1.2)
+		walk RelMove((2, 0, 0))
+		RelArc((1, 0-1, 0), 1.2)
+		RelMove((0, 0-1, 0))
+		vizor()
+		RelMove((0, 0-6, 0))
+		RelMove((0-1.5, 0, 0))
+		RelMove((0, 2.5, 0))
+		RelArc((0-1, 0, 0), 0.75)
+		RelMove((0, 0-2.5, 0))
+		RelMove((0-1.5, 0, 0))
+	}
+}
+
+
+build void vizor(){
+		RelMove((0-1.5, 0, 0))
+		RelArc((0-0.75, 0-0.75, 0), 0-0.8)
+		RelArc((0.75, 0-0.75, 0), 0-0.8)
+		RelMove((1.5, 0, 0))
+		RelArc((0.75, 0.75, 0), 0-0.8)
+		RelArc((0-0.75, 0.75, 0), 0-0.8)
+		walk 
+		{
+			RelMove((0, 0-1.5, 0))
+		}
+}
