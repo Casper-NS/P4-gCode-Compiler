@@ -1,4 +1,5 @@
-﻿using GOATCode.node;
+﻿using GOAT_Compiler.Exceptions;
+using GOATCode.node;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -15,6 +16,8 @@ namespace GOAT_Compiler
     {
         private Types currentFunctionType;
         private Dictionary<Node, Types> _typeDictionary = new Dictionary<Node, Types>();
+
+        private HashSet<Node> guaranteeedToReturn = new HashSet<Node>();
 
         public Dictionary<Node, Types> GetTypeDictionary()
         {
@@ -302,6 +305,11 @@ namespace GOAT_Compiler
             {
                 _typeDictionary.Add(node, Types.Void);
             }
+
+            if (guaranteeedToReturn.Contains(node.GetThen()) && (node.GetElse() == null  || guaranteeedToReturn.Contains(node.GetElse())))
+            {
+                guaranteeedToReturn.Add(node);
+            }
         }
         public override void OutAWhileStmt(AWhileStmt node)
         {
@@ -420,10 +428,14 @@ namespace GOAT_Compiler
 
         public override void InsideScopeInAFuncDecl(AFuncDecl node)
         {
-            System.Collections.IList list = node.GetDecl();
             currentFunctionType = _symbolTable.GetFunctionSymbol(node.GetId().Text).type;
 
         }
+        public override void InsideScopeInAProcDecl(AProcDecl node)
+        {
+            currentFunctionType = Types.Void;
+        }
+
         public override void OutAReturnStmt(AReturnStmt node)
         {
             if (currentFunctionType != Convert(node.GetExp(), currentFunctionType))
@@ -434,16 +446,50 @@ namespace GOAT_Compiler
             {
                 _typeDictionary.Add(node, currentFunctionType);
             }
+
+            guaranteeedToReturn.Add(node);
         }
         public override void InsideScopeOutAFuncDecl(AFuncDecl node)
         {
             Symbol id = _symbolTable.GetFunctionSymbol(node.GetId().Text);
             _typeDictionary.Add(node, id.type);
+
+            if (!guaranteeedToReturn.Contains(node.GetBlock()))
+            {
+                throw new NotAllPathsReturnException(node, id.name);
+            }
         }
         public override void InsideScopeOutAProcDecl(AProcDecl node)
         {
             Symbol id = _symbolTable.GetFunctionSymbol(node.GetId().Text);
             _typeDictionary.Add(node, id.type);
         }
+
+        // blocks
+        public override void OutsideScopeOutAStmtlistBlock(AStmtlistBlock node)
+        {
+            Object[] nodes = new Object[node.GetStmt().Count];
+            node.GetStmt().CopyTo(nodes, 0);
+            foreach (Object stmtNode in nodes)
+            {
+                if (guaranteeedToReturn.Contains((Node)stmtNode))
+                {
+                    guaranteeedToReturn.Add(node);
+                    break;
+                }
+            }
+        }
+
+        public override void OutAWalkBlock(AWalkBlock node) => OutWalkBuildNoneblock(node, node.GetBlock());
+        public override void OutABuildBlock(ABuildBlock node) => OutWalkBuildNoneblock(node, node.GetBlock());
+        public override void OutANoneBlock(ANoneBlock node) => OutWalkBuildNoneblock(node, node.GetBlock());
+        private void OutWalkBuildNoneblock(Node node, Node childBlock)
+        {
+            if (guaranteeedToReturn.Contains(childBlock))
+            {
+                guaranteeedToReturn.Add(node);
+            }
+        }
+
     }
 }
