@@ -113,7 +113,7 @@ namespace GOAT_Compiler.Code_Generation
         public BuildScope ExtrusionMode { get; set; } = BuildScope.none;
 
         /// <summary>
-        /// The current rotation of the tutle, where 0 degrees are the x-axis.
+        /// The current rotation of the tutle, where 0 degrees are the positive x-axis.
         /// </summary>
         public double Rotation { get; set; } = 0;
 
