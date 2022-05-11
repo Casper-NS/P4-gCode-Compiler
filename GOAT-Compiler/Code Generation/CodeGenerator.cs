@@ -33,11 +33,14 @@ namespace GOAT_Compiler
 
         private BuildInFunctionImplementations _buildInFunctions;
 
+        private TextWriter _textWriter;
+
 
         public CodeGenerator(ISymbolTable symbolTable, Dictionary<Node, Types> typesDictionary, TextWriter outputStream) : base(symbolTable)
         {
             _machine = new();
             _buildInFunctions = new BuildInFunctionImplementations(_machine, outputStream);
+            _textWriter = outputStream;
             _symbolTable = symbolTable;
             typeMap = typesDictionary;
             GlobalRT = new();
@@ -846,6 +849,15 @@ namespace GOAT_Compiler
             CallStackRT.Pop();
         }
 
+        public override void CaseAGcodeStmt(AGcodeStmt node)
+        {
+            string literal = node.GetGcodeLiteral().Text;
+            var linebyline = literal.Split(new string[] { "\r\n", "\r", "\n" }, StringSplitOptions.None);
+            foreach (string line in linebyline)
+            {
+                _textWriter.WriteLine(line.Trim());
+            }
+        }
 
 
         internal class RuntimeTable<TKey>
