@@ -434,7 +434,6 @@ namespace GOAT_Compiler
         public override void InsideScopeInAProcDecl(AProcDecl node)
         {
             currentFunctionType = Types.Void;
-
         }
 
         public override void OutAReturnStmt(AReturnStmt node)
@@ -481,25 +480,15 @@ namespace GOAT_Compiler
             }
         }
 
-        public override void OutAWalkBlock(AWalkBlock node)
-        {
-            OutWalkBuildNoneblock(node, node.GetBlock());
-        }
-        public override void OutABuildBlock(ABuildBlock node)
-        {
-            OutWalkBuildNoneblock(node, node.GetBlock());
-        }
-        public override void OutANoneBlock(ANoneBlock node)
-        {
-            OutWalkBuildNoneblock(node, node.GetBlock());
-        }
+        public override void OutAWalkBlock(AWalkBlock node) => OutWalkBuildNoneblock(node, node.GetBlock());
+        public override void OutABuildBlock(ABuildBlock node) => OutWalkBuildNoneblock(node, node.GetBlock());
+        public override void OutANoneBlock(ANoneBlock node) => OutWalkBuildNoneblock(node, node.GetBlock());
         private void OutWalkBuildNoneblock(Node node, Node childBlock)
         {
             if (guaranteeedToReturn.Contains(childBlock))
             {
                 guaranteeedToReturn.Add(node);
             }
-
         }
 
     }
