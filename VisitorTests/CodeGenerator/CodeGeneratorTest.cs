@@ -21,9 +21,9 @@ namespace VisitorTests
             string TestFilePath = FileReadingTestUtilities.ProjectBaseDirectory + "CodeGenerator/Tests/InputFolder/"+ file;
             Start s = FileReadingTestUtilities.ParseFile(TestFilePath);
             ISymbolTable symbolTable = FileReadingTestUtilities.BuildSymbolTable(s);
-            TypeChecker typeChecker = new TypeChecker(symbolTable);
+            TypeChecker typeChecker = FileReadingTestUtilities.DoTypeChecking(s, symbolTable);
+            
             CodeGenerator codeGenerator;
-            s.Apply(typeChecker);
             using (File.Create(outPutFileName)) { }
             
             using (Stream stream = new FileStream(outPutFileName, FileMode.Open))
@@ -48,9 +48,9 @@ namespace VisitorTests
             string TestFilePath = FileReadingTestUtilities.ProjectBaseDirectory + "CodeGenerator/Tests/InputFolder/" + file;
             Start s = FileReadingTestUtilities.ParseFile(TestFilePath);
             ISymbolTable symbolTable = FileReadingTestUtilities.BuildSymbolTable(s);
-            TypeChecker typeChecker = new TypeChecker(symbolTable);
+            TypeChecker typeChecker = FileReadingTestUtilities.DoTypeChecking(s, symbolTable);
+            
             CodeGenerator codeGenerator;
-            s.Apply(typeChecker);
             using (File.Create(outPutFileName)) { }
 
             using (Stream stream = new FileStream(outPutFileName, FileMode.Open))
