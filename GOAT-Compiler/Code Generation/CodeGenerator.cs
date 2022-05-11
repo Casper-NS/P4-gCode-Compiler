@@ -18,6 +18,8 @@ namespace GOAT_Compiler
         private dynamic CurrentReturnValue = null;
         private bool BreakFromFunction = false;
 
+        private const int _maxIterationLimit = 100000;
+
         internal RuntimeTable<Symbol> RT
         {
             get => CallStackRT.TryPeek(out RuntimeTable<Symbol> rt) ? rt : GlobalRT;
@@ -462,15 +464,21 @@ namespace GOAT_Compiler
         //Todo: Make sure the compiler stops even if the while true is written.
         public override void CaseAWhileStmt(AWhileStmt node)
         {
+            int iterations = 0;
             InAWhileStmt(node);
             if (node.GetExp() != null && node.GetBlock() != null)
             {
                 node.GetExp().Apply(this);
 
-                while (GetValue(node.GetExp()))
+                while (GetValue(node.GetExp()) && iterations < _maxIterationLimit)
                 {
                     node.GetBlock().Apply(this);
                     node.GetExp().Apply(this);
+                    iterations++;
+                }
+                if (iterations >= _maxIterationLimit)
+                {
+                    throw new ExceededMaxIterationLimitException(node);
                 }
 
             }
@@ -487,7 +495,7 @@ namespace GOAT_Compiler
             }
 
             int i = 0;
-            while (GetValue(node.GetExp()) > i)
+            while (GetValue(node.GetExp()) > i && i < _maxIterationLimit)
             {
                 if (node.GetBlock() != null)
                 {
@@ -497,6 +505,11 @@ namespace GOAT_Compiler
                 i++;
                 node.GetExp().Apply(this);
             }
+            if (i >= _maxIterationLimit)
+            {
+                throw new ExceededMaxIterationLimitException(node);
+            }
+
 
             OutARepeatStmt(node);
         }
