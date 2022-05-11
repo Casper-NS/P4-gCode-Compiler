@@ -1,0 +1,4 @@
+﻿float f()
+{
+	float a = 1
+}

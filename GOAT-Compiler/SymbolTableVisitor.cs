@@ -101,7 +101,7 @@ namespace GOAT_Compiler
             {
                 _symbolTable.CloseScope();
             }
-            OutsideScopeInAStmtlistBlock(node);
+            OutsideScopeOutAStmtlistBlock(node);
         }
         public virtual void InsideScopeOutAStmtlistBlock(AStmtlistBlock node) { }
         public virtual void OutsideScopeOutAStmtlistBlock(AStmtlistBlock node) { }
