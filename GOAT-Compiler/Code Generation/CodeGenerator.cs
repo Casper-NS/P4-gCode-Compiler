@@ -169,114 +169,86 @@ namespace GOAT_Compiler
         {
             Symbol idSymbol = _symbolTable.GetVariableSymbol(node.GetId().Text);
 
-            if (idSymbol != null)
+            if (idSymbol.type == Types.FloatingPoint)
             {
-                if (idSymbol.type == Types.FloatingPoint)
-                {
-                    RTPutValue(idSymbol, (double)GetValue(node.GetExp()));
-                }
-                else
-                {
-                    RTPutValue(idSymbol, GetValue(node.GetExp()));
-                }
+                RTPutValue(idSymbol, (double)GetValue(node.GetExp()));
             }
             else
             {
-                throw new Exception("AssignStmt did not work");
+                RTPutValue(idSymbol, GetValue(node.GetExp()));
             }
         }
 
         public override void OutAAssignPlusStmt(AAssignPlusStmt node)
         {
             Symbol idSymbol = _symbolTable.GetVariableSymbol(node.GetId().Text);
-            if (idSymbol != null)
+            if (idSymbol.type == Types.Vector)
             {
-                if (idSymbol.type == Types.Vector)
-                {
-                    Vector Vec1 = ((Vector)GetValue(node.GetExp()));
-                    Vector Vec2 = ((Vector)GetValue(idSymbol));
+                Vector Vec1 = ((Vector)GetValue(node.GetExp()));
+                Vector Vec2 = ((Vector)GetValue(idSymbol));
 
-                    Vector resultVec = new Vector(Vec1.X + Vec2.X, Vec1.Y + Vec2.Y, Vec1.Z + Vec2.Z);
-                    RTPutValue(idSymbol, resultVec);
-                }
-                else
-                {
-                    if (idSymbol.type == Types.FloatingPoint)
-                    {
-                        RTPutValue(idSymbol, (double)(GetValue(idSymbol) + GetValue(node.GetExp())));
-                    }
-                    else
-                    {
-                        RTPutValue(idSymbol, GetValue(idSymbol) + GetValue(node.GetExp()));
-                    }
-                }
+                Vector resultVec = new Vector(Vec1.X + Vec2.X, Vec1.Y + Vec2.Y, Vec1.Z + Vec2.Z);
+                RTPutValue(idSymbol, resultVec);
             }
             else
             {
-                throw new Exception("AssignPlusStmt did not work");
+                if (idSymbol.type == Types.FloatingPoint)
+                {
+                    RTPutValue(idSymbol, (double)(GetValue(idSymbol) + GetValue(node.GetExp())));
+                }
+                else
+                {
+                    RTPutValue(idSymbol, GetValue(idSymbol) + GetValue(node.GetExp()));
+                }
             }
         }
 
         public override void OutAAssignMinusStmt(AAssignMinusStmt node)
         {
             Symbol idSymbol = _symbolTable.GetVariableSymbol(node.GetId().Text);
-            if (idSymbol != null)
+            if (idSymbol.type == Types.Vector)
             {
-                if (idSymbol.type == Types.Vector)
-                {
-                    Vector Vec1 = ((Vector)GetValue(node.GetExp()));
-                    Vector Vec2 = ((Vector)GetValue(idSymbol));
+                Vector Vec1 = ((Vector)GetValue(node.GetExp()));
+                Vector Vec2 = ((Vector)GetValue(idSymbol));
 
-                    Vector resultVec = new Vector(Vec1.X - Vec2.X, Vec1.Y - Vec2.Y, Vec1.Z - Vec2.Z);
-                    RTPutValue(idSymbol, resultVec);
-                }
-                else
-                {
-                    if (idSymbol.type == Types.FloatingPoint)
-                    {
-                        RTPutValue(idSymbol, (double)(GetValue(idSymbol) - GetValue(node.GetExp())));
-                    }
-                    else
-                    {
-                        RTPutValue(idSymbol, GetValue(idSymbol) - GetValue(node.GetExp()));
-                    }
-
-                }
+                Vector resultVec = new Vector(Vec1.X - Vec2.X, Vec1.Y - Vec2.Y, Vec1.Z - Vec2.Z);
+                RTPutValue(idSymbol, resultVec);
             }
             else
             {
-                throw new Exception("AssignMinusStmt did not work");
+                if (idSymbol.type == Types.FloatingPoint)
+                {
+                    RTPutValue(idSymbol, (double)(GetValue(idSymbol) - GetValue(node.GetExp())));
+                }
+                else
+                {
+                    RTPutValue(idSymbol, GetValue(idSymbol) - GetValue(node.GetExp()));
+                }
+
             }
         }
 
         public override void OutAAssignMultStmt(AAssignMultStmt node)
         {
             Symbol idSymbol = _symbolTable.GetVariableSymbol(node.GetId().Text);
-            if (idSymbol != null)
+            if (idSymbol.type == Types.Vector)
             {
-                if (idSymbol.type == Types.Vector)
-                {
-                    Vector Vec = ((Vector)GetValue(idSymbol));
-                    dynamic scale = GetValue(node.GetExp());
+                Vector Vec = ((Vector)GetValue(idSymbol));
+                dynamic scale = GetValue(node.GetExp());
 
-                    Vector resultVec = new Vector(Vec.X * scale, Vec.Y * scale, Vec.Z * scale);
-                    RTPutValue(idSymbol, resultVec);
-                }
-                else
-                {
-                    if (idSymbol.type == Types.FloatingPoint)
-                    {
-                        RTPutValue(idSymbol, (double)(GetValue(idSymbol) * GetValue(node.GetExp())));
-                    }
-                    else
-                    {
-                        RTPutValue(idSymbol, GetValue(idSymbol) * GetValue(node.GetExp()));
-                    }
-                }
+                Vector resultVec = new Vector(Vec.X * scale, Vec.Y * scale, Vec.Z * scale);
+                RTPutValue(idSymbol, resultVec);
             }
             else
             {
-                throw new Exception("AssignMultStmt did not work");
+                if (idSymbol.type == Types.FloatingPoint)
+                {
+                    RTPutValue(idSymbol, (double)(GetValue(idSymbol) * GetValue(node.GetExp())));
+                }
+                else
+                {
+                    RTPutValue(idSymbol, GetValue(idSymbol) * GetValue(node.GetExp()));
+                }
             }
         }
 
@@ -284,51 +256,37 @@ namespace GOAT_Compiler
         public override void OutAAssignModStmt(AAssignModStmt node)
         {
             Symbol idSymbol = _symbolTable.GetVariableSymbol(node.GetId().Text);
-            if (idSymbol != null)
+            if (idSymbol.type == Types.FloatingPoint)
             {
-                if (idSymbol.type == Types.FloatingPoint)
-                {
-                    RTPutValue(idSymbol, (double)(GetValue(idSymbol) % GetValue(node.GetExp())));
-                }
-                else
-                {
-                    RTPutValue(idSymbol, GetValue(idSymbol) % GetValue(node.GetExp()));
-                }
+                RTPutValue(idSymbol, (double)(GetValue(idSymbol) % GetValue(node.GetExp())));
             }
             else
             {
-                throw new Exception("AssignModStmt did not work");
+                RTPutValue(idSymbol, GetValue(idSymbol) % GetValue(node.GetExp()));
             }
         }
 
         public override void OutAAssignDivisionStmt(AAssignDivisionStmt node)
         {
             Symbol idSymbol = _symbolTable.GetVariableSymbol(node.GetId().Text);
-            if (idSymbol != null)
+            if (idSymbol.type == Types.Vector)
             {
-                if (idSymbol.type == Types.Vector)
-                {
-                    Vector Vec1 = ((Vector)GetValue(idSymbol));
-                    dynamic value = GetValue(node.GetExp());
+                Vector Vec1 = ((Vector)GetValue(idSymbol));
+                dynamic value = GetValue(node.GetExp());
 
-                    Vector resultVec = new Vector(Vec1.X / value, Vec1.Y / value, Vec1.Z / value);
-                    RTPutValue(idSymbol, resultVec);
-                }
-                else
-                {
-                    if (idSymbol.type == Types.FloatingPoint)
-                    {
-                        RTPutValue(idSymbol, (double)(GetValue(idSymbol) / GetValue(node.GetExp())));
-                    }
-                    else
-                    {
-                        RTPutValue(idSymbol, GetValue(idSymbol) / GetValue(node.GetExp()));
-                    }
-                }
+                Vector resultVec = new Vector(Vec1.X / value, Vec1.Y / value, Vec1.Z / value);
+                RTPutValue(idSymbol, resultVec);
             }
             else
             {
-                throw new Exception("AssignDivStmt did not work");
+                if (idSymbol.type == Types.FloatingPoint)
+                {
+                    RTPutValue(idSymbol, (double)(GetValue(idSymbol) / GetValue(node.GetExp())));
+                }
+                else
+                {
+                    RTPutValue(idSymbol, GetValue(idSymbol) / GetValue(node.GetExp()));
+                }
             }
         }
 
@@ -336,24 +294,17 @@ namespace GOAT_Compiler
         {
             Node left = node.GetL();
             Node right = node.GetR();
-            if (left != null && right != null)
+            if (typeMap[left] == Types.Vector && typeMap[right] == Types.Vector)
             {
-                if (typeMap[left] == Types.Vector && typeMap[right] == Types.Vector)
-                {
-                    Vector Vec1 = ((Vector)GetValue(left));
-                    Vector Vec2 = ((Vector)GetValue(right));
+                Vector Vec1 = ((Vector)GetValue(left));
+                Vector Vec2 = ((Vector)GetValue(right));
 
-                    Vector resultVec = new Vector(Vec1.X + Vec2.X, Vec1.Y + Vec2.Y, Vec1.Z + Vec2.Z);
-                    nodeMap.Put(node, resultVec);
-                }
-                else
-                {
-                    nodeMap.Put(node, GetValue(left) + GetValue(right));
-                }
+                Vector resultVec = new Vector(Vec1.X + Vec2.X, Vec1.Y + Vec2.Y, Vec1.Z + Vec2.Z);
+                nodeMap.Put(node, resultVec);
             }
             else
             {
-                throw new Exception("PlusExp did not work");
+                nodeMap.Put(node, GetValue(left) + GetValue(right));
             }
         }
 
@@ -361,24 +312,17 @@ namespace GOAT_Compiler
         {
             Node left = node.GetL();
             Node right = node.GetR();
-            if (left != null && right != null)
+            if (typeMap[left] == Types.Vector && typeMap[right] == Types.Vector)
             {
-                if (typeMap[left] == Types.Vector && typeMap[right] == Types.Vector)
-                {
-                    Vector Vec1 = ((Vector)GetValue(left));
-                    Vector Vec2 = ((Vector)GetValue(right));
+                Vector Vec1 = ((Vector)GetValue(left));
+                Vector Vec2 = ((Vector)GetValue(right));
 
-                    Vector resultVec = new Vector(Vec1.X - Vec2.X, Vec1.Y - Vec2.Y, Vec1.Z - Vec2.Z);
-                    nodeMap.Put(node, resultVec);
-                }
-                else
-                {
-                    nodeMap.Put(node, GetValue(left) - GetValue(right));
-                }
+                Vector resultVec = new Vector(Vec1.X - Vec2.X, Vec1.Y - Vec2.Y, Vec1.Z - Vec2.Z);
+                nodeMap.Put(node, resultVec);
             }
             else
             {
-                throw new Exception("MinusExp did not work");
+                nodeMap.Put(node, GetValue(left) - GetValue(right));
             }
         }
 
@@ -386,24 +330,17 @@ namespace GOAT_Compiler
         {
             Node left = node.GetL();
             Node right = node.GetR();
-            if (left != null && right != null)
+            if (typeMap[left] == Types.Vector && (typeMap[right] == Types.FloatingPoint || typeMap[right] == Types.Integer))
             {
-                if (typeMap[left] == Types.Vector && (typeMap[right] == Types.FloatingPoint || typeMap[right] == Types.Integer))
-                {
-                    Vector Vec1 = ((Vector)GetValue(left));
-                    dynamic value = GetValue(right);
+                Vector Vec1 = ((Vector)GetValue(left));
+                dynamic value = GetValue(right);
 
-                    Vector resultVec = new Vector(Vec1.X / value, Vec1.Y / value, Vec1.Z / value);
-                    nodeMap.Put(node, resultVec);
-                }
-                else
-                {
-                    nodeMap.Put(node, GetValue(left) / GetValue(right));
-                }
+                Vector resultVec = new Vector(Vec1.X / value, Vec1.Y / value, Vec1.Z / value);
+                nodeMap.Put(node, resultVec);
             }
             else
             {
-                throw new Exception("MinusExp did not work");
+                nodeMap.Put(node, GetValue(left) / GetValue(right));
             }
         }
 
@@ -412,38 +349,24 @@ namespace GOAT_Compiler
         {
             Node left = node.GetL();
             Node right = node.GetR();
-            if (left != null && right != null)
-            {
-                nodeMap.Put(node, GetValue(left) % GetValue(right));
-            }
-            else
-            {
-                throw new Exception("ModuloExp did not work");
-            }
+            nodeMap.Put(node, GetValue(left) % GetValue(right));
         }
 
         public override void OutAMultExp(AMultExp node)
         {
             Node left = node.GetL();
             Node right = node.GetR();
-            if (left != null && right != null)
+            if (typeMap[left] == Types.Vector && (typeMap[right] == Types.FloatingPoint || typeMap[right] == Types.Integer))
             {
-                if (typeMap[left] == Types.Vector && (typeMap[right] == Types.FloatingPoint || typeMap[right] == Types.Integer))
-                {
-                    Vector Vec1 = ((Vector)GetValue(left));
-                    dynamic value = GetValue(right);
+                Vector Vec1 = ((Vector)GetValue(left));
+                dynamic value = GetValue(right);
 
-                    Vector resultVec = new Vector(Vec1.X * value, Vec1.Y * value, Vec1.Z * value);
-                    nodeMap.Put(node, resultVec);
-                }
-                else
-                {
-                    nodeMap.Put(node, GetValue(left) * GetValue(right));
-                }
+                Vector resultVec = new Vector(Vec1.X * value, Vec1.Y * value, Vec1.Z * value);
+                nodeMap.Put(node, resultVec);
             }
             else
             {
-                throw new Exception("MultExp did not work");
+                nodeMap.Put(node, GetValue(left) * GetValue(right));
             }
         }
 
@@ -451,113 +374,62 @@ namespace GOAT_Compiler
         {
             bool l = nodeMap.Get(node.GetL(), typeMap[node.GetL()]);
             bool r = nodeMap.Get(node.GetR(), typeMap[node.GetR()]);
-            if (node.GetL() != null && node.GetR() != null)
-            {
-                nodeMap.Put(node, l && r);
-            }
-            else
-            {
-                throw new Exception("AndExp didnt not work");
-            }
+            nodeMap.Put(node, l && r);
         }
 
         public override void OutAOrExp(AOrExp node)
         {
             bool l = nodeMap.Get(node.GetL(), typeMap[node.GetL()]);
             bool r = nodeMap.Get(node.GetR(), typeMap[node.GetR()]);
-            if (node.GetL() != null && node.GetR() != null)
-            {
-                nodeMap.Put(node, l || r);
-            }
-            else
-            {
-                throw new Exception("AndExp didnt not work");
-            }
+            nodeMap.Put(node, l || r);
         }
 
         public override void OutAEqExp(AEqExp node)
         {
             dynamic l = GetValue(node.GetL());
             dynamic r = GetValue(node.GetR());
-            if (node.GetL() != null && node.GetR() != null)
-                nodeMap.Put(node, l == r);
-            else
-            {
-                throw new Exception("EqExp did not work");
-            }
+            nodeMap.Put(node, l == r);
         }
 
         public override void OutAGtExp(AGtExp node)
         {
             dynamic l = GetValue(node.GetL());
             dynamic r = GetValue(node.GetR());
-            if (node.GetL() != null && node.GetR() != null)
-                nodeMap.Put(node, l > r);
-            else
-            {
-                throw new Exception("GtExp did not work");
-            }
+            nodeMap.Put(node, l > r);
         }
 
         public override void OutALtExp(ALtExp node)
         {
             dynamic l = GetValue(node.GetL());
             dynamic r = GetValue(node.GetR());
-            if (node.GetL() != null && node.GetR() != null)
-                nodeMap.Put(node, l < r);
-            else
-            {
-                throw new Exception("LtExp did not work");
-            }
+            nodeMap.Put(node, l < r);
         }
 
         public override void OutANeqExp(ANeqExp node)
         {
             dynamic l = GetValue(node.GetL());
             dynamic r = GetValue(node.GetR());
-            if (node.GetL() != null && node.GetR() != null)
-                nodeMap.Put(node, l != r);
-            else
-            {
-                throw new Exception("NeqExp did not work");
-            }
+            nodeMap.Put(node, l != r);
         }
 
         public override void OutALeqExp(ALeqExp node)
         {
             dynamic l = GetValue(node.GetL());
             dynamic r = GetValue(node.GetR());
-            if (node.GetL() != null && node.GetR() != null)
-                nodeMap.Put(node, l <= r);
-            else
-            {
-                throw new Exception("LeqExp did not work");
-            }
+            nodeMap.Put(node, l <= r);
         }
 
         public override void OutAGeqExp(AGeqExp node)
         {
             dynamic l = GetValue(node.GetL());
             dynamic r = GetValue(node.GetR());
-            if (node.GetL() != null && node.GetR() != null)
-                nodeMap.Put(node, l >= r);
-            else
-            {
-                throw new Exception("GeqExp did not work");
-            }
+            nodeMap.Put(node, l >= r);
         }
 
         public override void OutANotExp(ANotExp node)
         {
             bool value = GetValue(node.GetExp());
-            if (node != null)
-            {
-                nodeMap.Put(node, !value);
-            }
-            else
-            {
-                throw new Exception("NotExp did not work");
-            }
+            nodeMap.Put(node, !value);
         }
 
 
@@ -719,12 +591,6 @@ namespace GOAT_Compiler
 
         public override void OutAFunctionExp(AFunctionExp node)
         {
-            Symbol funcSymbol = _symbolTable.GetFunctionSymbol(node.GetName().Text);
-            if (funcSymbol == null)
-            {
-                throw null;
-            }
-
             Node[] args = new Node[node.GetArgs().Count];
             node.GetArgs().CopyTo(args, 0);
 
@@ -762,10 +628,7 @@ namespace GOAT_Compiler
                     throw new BuildWalkException(node, e.Message);
                 }
 
-                if (returnValue != null)
-                {
-                    nodeMap.Put(node, returnValue);
-                }
+                nodeMap.Put(node, returnValue);
                 CurrentParams.Clear();
             }
             else
