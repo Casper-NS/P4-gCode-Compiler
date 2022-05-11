@@ -1,6 +1,6 @@
 ﻿build void main()
 {
-	SetExtruderRate(1)
+	SetExtrusionRate(1)
 	Steps(1)
 	Left(90)
 	Steps(1)

@@ -1,11 +1,11 @@
 ﻿build void main()
 {
 	RelMove((1,0,0))
-	SetExtruderRate(1)
+	SetExtrusionRate(1)
 	RelMove((1,0,0))
-	SetExtruderRate(0.1)
+	SetExtrusionRate(0.1)
 	RelMove((1,0,0))
-	SetExtruderRate(10)
+	SetExtrusionRate(10)
 	RelMove((1,0,0))
 }
 @

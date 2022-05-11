@@ -3,4 +3,4 @@
 	WaitForCurrentMove()
 }
 @
-G4
+M400
