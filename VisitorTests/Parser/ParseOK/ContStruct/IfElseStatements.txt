@@ -1,0 +1,26 @@
+﻿void main()
+{
+	if (true)
+	{
+		if (false)
+		{
+			if (2 < 3)
+			{
+				int a = 1
+			} else {
+				int b = 2
+			}
+		}
+		else {
+			int c = 3
+		}
+	}
+	if( false )
+	{
+		int b = 2
+	}
+	else 
+	{
+		int c = 3
+	}
+}

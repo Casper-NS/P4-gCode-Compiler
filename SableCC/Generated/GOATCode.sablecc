@@ -179,7 +179,7 @@ cst_formal_param_list {-> decl*} =
             {-> [New decl.param(cst_types.types, id)]};
 
 cst_block {-> block} = 
-        l_cur eol? cst_statement_list r_cur
+        l_cur eol* cst_statement_list r_cur
             {-> New block.stmtlist([cst_statement_list.stmt])};
 
 
@@ -230,7 +230,7 @@ cst_if_statement {-> stmt} =
         {noelse}  if l_par cst_expression r_par eol? cst_block 
             {-> New stmt.if(cst_expression.exp, cst_block.block, Null)} 
             
-      | {withelse} if l_par cst_expression r_par [c]:eol? [a]:cst_block else [d]:eol? [b]:cst_block 
+      | {withelse} if l_par cst_expression r_par [c]:eol? [a]:cst_block [d]:eol? else [e]:eol? [b]:cst_block 
             {-> New stmt.if(cst_expression.exp, a.block, b.block)};
 
 
