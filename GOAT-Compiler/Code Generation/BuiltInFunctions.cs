@@ -33,7 +33,7 @@ namespace GOAT_Compiler
             { "Direction", new Symbol("Direction", Types.FloatingPoint) },
             { "TurnTo", new Symbol("TurnTo", Types.Void, Types.FloatingPoint) },
             { "SetBedTemp", new Symbol("SetBedTemp", Types.Void, Types.FloatingPoint) },
-            { "SetExtruderRate", new Symbol("SetExtruderRate", Types.Void, Types.FloatingPoint) },
+            { "SetExtrusionRate", new Symbol("SetExtrusionRate", Types.Void, Types.FloatingPoint) },
             { "SetExtruderTemp", new Symbol("SetExtruderTemp", Types.Void, Types.FloatingPoint) },
             { "WaitForBedTemp", new Symbol("WaitForBedTemp", Types.Void) },
             { "WaitForExtruderTemp", new Symbol("WaitForExtruderTemp", Types.Void) },
