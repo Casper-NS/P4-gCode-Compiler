@@ -110,7 +110,7 @@ namespace GOAT_Compiler.Code_Generation
         /// <summary>
         /// The current extruder state.
         /// </summary>
-        public BuildScope Build { get; set; } = BuildScope.none;
+        public BuildScope ExtrusionMode { get; set; } = BuildScope.none;
 
         /// <summary>
         /// The current rotation of the tutle.

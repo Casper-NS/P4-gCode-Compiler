@@ -618,16 +618,16 @@ namespace GOAT_Compiler
                 {
                     if (build)
                     {
-                        _machine.Build = BuildScope.build;
+                        _machine.ExtrusionMode = BuildScope.build;
                     }
                     else
                     {
-                        _machine.Build = BuildScope.walk;
+                        _machine.ExtrusionMode = BuildScope.walk;
                     }
                 }
                 else
                 {
-                    _machine.Build = BuildScope.none;
+                    _machine.ExtrusionMode = BuildScope.none;
                 }
 
                 dynamic returnValue;
