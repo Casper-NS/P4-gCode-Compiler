@@ -34,7 +34,7 @@ namespace GOAT_Compiler
         private BuildInFunctionImplementations _buildInFunctions;
 
 
-        public CodeGenerator(ISymbolTable symbolTable, Dictionary<Node, Types> typesDictionary, StreamWriter outputStream) : base(symbolTable)
+        public CodeGenerator(ISymbolTable symbolTable, Dictionary<Node, Types> typesDictionary, TextWriter outputStream) : base(symbolTable)
         {
             _machine = new();
             _buildInFunctions = new BuildInFunctionImplementations(_machine, outputStream);

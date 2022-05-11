@@ -1,0 +1,12 @@
+﻿walk void main()
+{
+	SetBedTemp(25)
+	SetExtruderTemp(30)
+	WaitForBedTemp()
+	WaitForExtruderTemp()
+}
+@
+M140 S25
+M104 S30
+M190 R25
+M109 R30

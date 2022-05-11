@@ -1,0 +1,8 @@
+﻿walk void main()
+{
+	WaitForMillis(0)
+	WaitForMillis(1000)
+}
+@
+G4 P0
+G4 P1000

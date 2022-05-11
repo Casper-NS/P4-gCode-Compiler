@@ -1,0 +1,9 @@
+﻿void main()
+{
+	walk SetExtruderRate(1)
+	walk RelMove((-1, 0, 0))
+	build RelMove((2,0,0))
+}
+@
+G0 X-1 Y0 Z0
+G1 X1 Y0 Z0 E2

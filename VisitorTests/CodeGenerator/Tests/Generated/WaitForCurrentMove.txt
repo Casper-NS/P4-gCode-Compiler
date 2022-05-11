@@ -1,0 +1,6 @@
+﻿walk void main()
+{
+	WaitForCurrentMove()
+}
+@
+G4
