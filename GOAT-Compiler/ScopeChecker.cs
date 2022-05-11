@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using GOAT_Compiler.Exceptions;
 using GOATCode.node;
 
@@ -8,6 +9,7 @@ namespace GOAT_Compiler
     {
         private HashSet<Symbol> isDeclared = new HashSet<Symbol>();
         private HashSet<Symbol> isInitialized = new HashSet<Symbol>();
+        private HashSet<Symbol> isConst = new HashSet<Symbol>();
 
         public ScopeChecker(ISymbolTable symbolTable) : base(symbolTable)
         {
@@ -20,6 +22,11 @@ namespace GOAT_Compiler
             if (node.GetExp() != null)
             {
                 isInitialized.Add(symbol);
+            }
+
+            if (node.GetConst() != null)
+            {
+                isConst.Add(symbol);
             }
         }
 
@@ -52,10 +59,16 @@ namespace GOAT_Compiler
                 throw new RefUsedBeforeClosestDeclException(node, symbol.name);
             }
 
+            if (isConst.Contains(symbol) == true)
+            {
+                throw new AssignConstException(node, $"Const variable named {symbol.name} cant be changed");
+            }
+
             if (isInitialized.Contains(symbol) == false)
             {
                 isInitialized.Add(symbol);
             }
+
         }
 
         public override void OutAAssignPlusStmt(AAssignPlusStmt node)
@@ -102,6 +115,12 @@ namespace GOAT_Compiler
             {
                 throw new VarNotInitializedException(node, SymName);
             }
+
+            if (isConst.Contains(symbol) == true)
+            {
+                throw new AssignConstException(node, $"Const variable named {symbol.name} cant be changed");
+            }
+
         }
 
     }
