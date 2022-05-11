@@ -25,60 +25,60 @@ namespace GOAT_Compiler.Code_Generation
         /// Calls the specified built in function with the right params.
         /// </summary>
         /// <param name="functionName">The name of the built in function.</param>
-        /// <param name="actuelParams">The params for the built in function.</param>
+        /// <param name="actualParams">The params for the built in function.</param>
         /// <returns></returns>
-        public dynamic CallBuildInFunctions(string functionName, List<dynamic> actuelParams)
+        public dynamic CallBuildInFunctions(string functionName, List<dynamic> actualParams)
         {
             switch (functionName)
             {
                 case "RelMove":
-                    RelMove(actuelParams[0]);
+                    RelMove(actualParams[0]);
                     break;
                 case "AbsMove":
-                    AbsMove(actuelParams[0]);
+                    AbsMove(actualParams[0]);
                     break;
                 case "RelArcCW":
-                    RelArc(actuelParams[0], actuelParams[1], false);
+                    RelArc(actualParams[0], actualParams[1], false);
                     break;
                 case "RelArcCCW":
-                    RelArc(actuelParams[0], actuelParams[1], true);
+                    RelArc(actualParams[0], actualParams[1], true);
                     break;
                 case "AbsArcCW":
-                    AbsArc(actuelParams[0], actuelParams[1], false);
+                    AbsArc(actualParams[0], actualParams[1], false);
                     break;
                 case "AbsArcCCW":
-                    AbsArc(actuelParams[0], actuelParams[1], true);
+                    AbsArc(actualParams[0], actualParams[1], true);
                     break;
                 case "SetExtrusionRate":
-                    SetExtrusionRate(actuelParams[0]);
+                    SetExtrusionRate(actualParams[0]);
                     break;
                 case "SetBedTemp":
-                    SetBedTemp(actuelParams[0]);
+                    SetBedTemp(actualParams[0]);
                     break;
                 case "SetExtruderTemp":
-                    SetExtruderTemp(actuelParams[0]);
+                    SetExtruderTemp(actualParams[0]);
                     break;
                 case "SetFanPower":
-                    SetFanPower(actuelParams[0]);
+                    SetFanPower(actualParams[0]);
                     break;
                 case "Steps":
-                    Steps(actuelParams[0]);
+                    Steps(actualParams[0]);
                     break;
                 case "Position":
                     return Position();
                 case "Lift":
-                    Lift(actuelParams[0]);
+                    Lift(actualParams[0]);
                     break;
                 case "Right":
-                    Right(actuelParams[0]);
+                    Right(actualParams[0]);
                     break;
                 case "Left":
-                    Left(actuelParams[0]);
+                    Left(actualParams[0]);
                     break;
                 case "Direction":
                     return Direction();
                 case "TurnTo":
-                    TurnTo(actuelParams[0]);
+                    TurnTo(actualParams[0]);
                     break;
                 case "WaitForBedTemp":
                     WaitForBedTemp();
@@ -90,7 +90,7 @@ namespace GOAT_Compiler.Code_Generation
                     WaitForCurrentMove();
                     break;
                 case "WaitForMillis":
-                    WaitForMillis(actuelParams[0]);
+                    WaitForMillis(actualParams[0]);
                     break;
                 case "Home":
                     Home();
@@ -98,55 +98,57 @@ namespace GOAT_Compiler.Code_Generation
             }
             return null;
         }
-
+        private string VectorToGCodeStringCoordinate(Vector v) => $"X{(decimal)v.X} Y{(decimal)v.Y} Z{(decimal)v.Z}";
         private void Home()
         {
-            string gLine = "G28";
             _machine.Position = new Vector(0, 0, 0);
-            _stream.WriteLine(gLine);
+            _stream.WriteLine("G28");
         }
 
         private void RelMove(Vector v)
         {
-            string gLine = "";
+            string gLine;
             Vector oldPosition = _machine.Position;
-            _machine.Position = new Vector(oldPosition.X + v.X, oldPosition.Y + v.Y, oldPosition.Z + v.Z);
+            _machine.Position = oldPosition + v;
+            ThrowExceptionIfInNoneScope("Relmove");
             if (_machine.Build == BuildScope.build)
             {
                 _machine.CurrentExtrusion += (_machine.ExtrusionRate*VectorDistance(oldPosition, _machine.Position));
-                gLine += "G1 X" + (decimal)_machine.Position.X + " Y" + (decimal)_machine.Position.Y + " Z" + (decimal)_machine.Position.Z + " E" + (decimal)_machine.CurrentExtrusion;
-            }
-            else if (_machine.Build == BuildScope.walk)
-            {
-                gLine += "G0 X" + (decimal)_machine.Position.X + " Y" + (decimal)_machine.Position.Y + " Z" + (decimal)_machine.Position.Z;
+                gLine = "G1 " + VectorToGCodeStringCoordinate(_machine.Position) + " E" + (decimal)_machine.CurrentExtrusion;
             }
             else
             {
-                throw new MoveWithoutScopeException("RelMove cant be called without being in a build or walk scope.");
+                gLine = "G0 " + VectorToGCodeStringCoordinate(_machine.Position);
             }
             _stream.WriteLine(gLine);
         }
+
+        void ThrowExceptionIfInNoneScope(string MovementFunctionName)
+        {
+            if (_machine.Build == BuildScope.none)
+            {
+                throw new MoveWithoutScopeException($"{MovementFunctionName} cant be called without being in a build or walk scope.");
+            }
+        }
+
         private void AbsMove(Vector v)
         {
-            string gLine = "";
+            string gLine;
             Vector oldPosition = _machine.Position;
             _machine.Position = v;
+            ThrowExceptionIfInNoneScope("Absmove");
             if (_machine.Build == BuildScope.build)
             {
                 _machine.CurrentExtrusion += (_machine.ExtrusionRate * VectorDistance(oldPosition, _machine.Position));
-                gLine += "G1 X" + (decimal)_machine.Position.X + " Y" + (decimal)_machine.Position.Y + " Z" + (decimal)_machine.Position.Z + " E" + (decimal)_machine.CurrentExtrusion;
-            }
-            else if(_machine.Build == BuildScope.walk)
-            {
-                gLine += "G0 X" + (decimal)_machine.Position.X + " Y" + (decimal)_machine.Position.Y + " Z" + (decimal)_machine.Position.Z;
+                gLine = "G1 " + VectorToGCodeStringCoordinate(_machine.Position) + " E" + (decimal)_machine.CurrentExtrusion;
             }
             else
             {
-                throw new MoveWithoutScopeException("AbsMove cant be called without being in a build or walk scope.");
+                gLine = "G0 " + VectorToGCodeStringCoordinate(_machine.Position);
             }
             _stream.WriteLine(gLine);
         }
-        private double CircelLenght(Vector v1, Vector v2, double r)
+        private double CircleLength(Vector v1, Vector v2, double r)
         {
             double chord = VectorDistance(v1, v2);
             double shortArcLength = 2 * r * Math.Asin(chord / (2 * r));
@@ -162,38 +164,34 @@ namespace GOAT_Compiler.Code_Generation
         }
         private void RelArc(Vector v, double r, bool CCW)
         {
-            string gLine = "";
+            string gLine;
             Vector oldPosition = _machine.Position;
-            _machine.Position = new Vector(oldPosition.X + v.X, oldPosition.Y + v.Y, oldPosition.Z + v.Z);
+            _machine.Position = oldPosition + v;
             Vector v2 = _machine.Position;
+            ThrowExceptionIfInNoneScope("RelArc");
             if (_machine.Build == BuildScope.build)
             {
                 if(CCW) { 
-                    _machine.CurrentExtrusion += (_machine.ExtrusionRate * CircelLenght(oldPosition, _machine.Position, r));
-                    gLine = "G3 X" + (decimal)v2.X + " Y" + (decimal)v2.Y + " Z" + (decimal)v2.Z + " E" + (decimal)_machine.CurrentExtrusion + " R" + (decimal)r;
+                    _machine.CurrentExtrusion += (_machine.ExtrusionRate * CircleLength(oldPosition, _machine.Position, r));
+                    gLine = "G3 " + VectorToGCodeStringCoordinate(_machine.Position) + " E" + (decimal)_machine.CurrentExtrusion + " R" + (decimal)r;
                 }
                 else
                 {
-                    _machine.CurrentExtrusion += (_machine.ExtrusionRate * CircelLenght(oldPosition, _machine.Position, r));
-                    gLine = "G2 X" + (decimal)v2.X + " Y" + (decimal)v2.Y + " Z" + (decimal)v2.Z + " E" + (decimal)_machine.CurrentExtrusion + " R" + (decimal)r;
-                }
-            }
-            else if(_machine.Build == BuildScope.walk)
-            {
-                if (CCW)
-                {
-                    gLine = "G3 X" + (decimal)v2.X + " Y" + (decimal)v2.Y + " Z" + (decimal)v2.Z + " R" + (decimal)r;
-                }
-                else
-                {
-                    gLine = "G2 X" + (decimal)v2.X + " Y" + (decimal)v2.Y + " Z" + (decimal)v2.Z + " R" + (decimal)r;
+                    _machine.CurrentExtrusion += (_machine.ExtrusionRate * CircleLength(oldPosition, _machine.Position, r));
+                    gLine = "G2 " + VectorToGCodeStringCoordinate(_machine.Position) + " E" + (decimal)_machine.CurrentExtrusion + " R" + (decimal)r;
                 }
             }
             else
             {
-                throw new MoveWithoutScopeException("RelArc cant be called without being in a build or walk scope.");
+                if (CCW)
+                {
+                    gLine = "G3 " + VectorToGCodeStringCoordinate(_machine.Position) + (decimal)v2.Z + " R" + (decimal)r;
+                }
+                else
+                {
+                    gLine = "G2 " + VectorToGCodeStringCoordinate(_machine.Position) + (decimal)v2.Z + " R" + (decimal)r;
+                }
             }
-
             if (VectorDistance(oldPosition, v2) > Math.Abs(r)*2)
             {
                 throw new Exception("RelArc radius is too small.");
@@ -206,39 +204,35 @@ namespace GOAT_Compiler.Code_Generation
         }
         private void AbsArc(Vector v, double r, bool CCW)
         {
-            string gLine = "";
+            string gLine;
             Vector oldPosition = _machine.Position;
             _machine.Position = v;
-            Vector v2 = _machine.Position;
+            ThrowExceptionIfInNoneScope("AbsArc");
             if (_machine.Build == BuildScope.build)
             {
                 if (CCW)
                 {
-                    _machine.CurrentExtrusion += (_machine.ExtrusionRate * CircelLenght(oldPosition, _machine.Position, r));
-                    gLine = "G3 X" + (decimal)v2.X + " Y" + (decimal)v2.Y + " Z" + (decimal)v2.Z + " E" + (decimal)_machine.CurrentExtrusion + " R" + (decimal)r;
+                    _machine.CurrentExtrusion += (_machine.ExtrusionRate * CircleLength(oldPosition, _machine.Position, r));
+                    gLine = "G3 " + VectorToGCodeStringCoordinate(_machine.Position) + " E" + (decimal)_machine.CurrentExtrusion + " R" + (decimal)r;
                 }
                 else
                 {
-                    _machine.CurrentExtrusion += (_machine.ExtrusionRate * CircelLenght(oldPosition, _machine.Position, r));
-                    gLine = "G2 X" + (decimal)v2.X + " Y" + (decimal)v2.Y + " Z" + (decimal)v2.Z + " E" + (decimal)_machine.CurrentExtrusion + " R" + (decimal)r;
-                }
-            }
-            else if(_machine.Build == BuildScope.walk)
-            {
-                if (CCW)
-                {
-                    gLine = "G3 X" + (decimal)v2.X + " Y" + (decimal)v2.Y + " Z" + (decimal)v2.Z + " R" + (decimal)r;
-                }
-                else
-                {
-                    gLine = "G2 X" + (decimal)v2.X + " Y" + (decimal)v2.Y + " Z" + (decimal)v2.Z + " R" + (decimal)r;
+                    _machine.CurrentExtrusion += (_machine.ExtrusionRate * CircleLength(oldPosition, _machine.Position, r));
+                    gLine = "G2 " + VectorToGCodeStringCoordinate(_machine.Position) + " E" + (decimal)_machine.CurrentExtrusion + " R" + (decimal)r;
                 }
             }
             else
             {
-                throw new MoveWithoutScopeException("AbsArc cant be called without being in a build or walk scope.");
+                if (CCW)
+                {
+                    gLine = "G3 " + VectorToGCodeStringCoordinate(_machine.Position) + " R" + (decimal)r;
+                }
+                else
+                {
+                    gLine = "G2 " + VectorToGCodeStringCoordinate(_machine.Position) + " R" + (decimal)r;
+                }
             }
-            if (VectorDistance(oldPosition, v2) > Math.Abs(r) * 2)
+            if (VectorDistance(oldPosition, _machine.Position) > Math.Abs(r) * 2)
             {
                 throw new Exception("AbsArc radius is too small.");
             }
@@ -246,33 +240,21 @@ namespace GOAT_Compiler.Code_Generation
         }
         private void SetExtruderTemp(double temp)
         {
-            string gLine = "";
             _machine.ExtruderTemp = temp;
-            gLine = "M104 S" + (decimal)temp;
-            _stream.WriteLine(gLine);
+            _stream.WriteLine("M104 S" + (decimal)temp);
         }
         private void SetFanPower(double power)
         {
-            string gLine = "";
             _machine.FanPower = power;
-            gLine = "M106 S" + Math.Floor(_machine.FanPower * 255);
-            _stream.WriteLine(gLine);
-
+            _stream.WriteLine("M106 S" + Math.Floor(_machine.FanPower * 255));
         }
-        private void SetExtrusionRate(double rate)
-        {
-            _machine.ExtrusionRate = rate;
-        }
+        private void SetExtrusionRate(double rate) => _machine.ExtrusionRate = rate;
         private void SetBedTemp(double temp)
         {
-            string gLine = "";
             _machine.BedTemp = temp;
-            gLine = "M140 S" + (decimal)temp;
-            _stream.WriteLine(gLine);
+            _stream.WriteLine("M140 S" + (decimal)temp);
         }
-        private Vector Position(){
-            return _machine.Position;
-        }
+        private Vector Position() => _machine.Position;
         private void Steps(double step)
         {
             Vector movement = new (Math.Cos(DegreesToRadians(_machine.Rotation))*step, 
@@ -280,64 +262,30 @@ namespace GOAT_Compiler.Code_Generation
                                    0);
             RelMove(movement);
         }
-        private double DegreesToRadians(double degrees)
-        {
-           return degrees * Math.PI / 180.0f;
-        }
+        private double DegreesToRadians(double degrees) => degrees * Math.PI / 180.0f;
         private void Lift(double step)
         {
-            string gLine = "";
+            string gLine;
             _machine.Position.Z += step;
+            ThrowExceptionIfInNoneScope("Lift");
             if (_machine.Build == BuildScope.build)
             {
                 _machine.CurrentExtrusion += _machine.ExtrusionRate * step;
-                gLine += "G1 X" + (decimal)_machine.Position.X + " Y" + (decimal)_machine.Position.Y + " Z" + (decimal)_machine.Position.Z + " E" + (decimal)_machine.CurrentExtrusion;
-            }
-            else if (_machine.Build == BuildScope.walk)
-            {
-                gLine += "G0 X" + (decimal)_machine.Position.X + " Y" + (decimal)_machine.Position.Y + " Z" + (decimal)_machine.Position.Z;
+                gLine = "G1 " + VectorToGCodeStringCoordinate(_machine.Position) + " E" + (decimal)_machine.CurrentExtrusion;
             }
             else
             {
-                throw new MoveWithoutScopeException("Lift cant be called without being in a build or walk scope.");
+                gLine = "G0 " + VectorToGCodeStringCoordinate(_machine.Position);
             }
             _stream.WriteLine(gLine);
         }
-        private void Right(double deg)
-        {
-            _machine.Rotation -= deg;
-        }
-        private void Left(double deg)
-        {
-            _machine.Rotation += deg;
-        }
-        private double Direction()
-        {
-            return _machine.Rotation;
-        }
-        private void TurnTo(double deg)
-        {
-            _machine.Rotation = deg;
-        }
-        private void WaitForBedTemp()
-        {
-            string gLine = "M190 R" + (decimal)(_machine.BedTemp);
-            _stream.WriteLine(gLine);
-        }
-        private void WaitForExtruderTemp()
-        {
-            string gLine = "M109 R" + (decimal)(_machine.ExtruderTemp);
-            _stream.WriteLine(gLine);
-        }
-        private void WaitForCurrentMove()
-        {
-            string gLine = "M400";
-            _stream.WriteLine(gLine);
-        }
-        private void WaitForMillis(int millis)
-        {
-            string gLine = "G4 P" + millis;
-            _stream.WriteLine(gLine);
-        }
+        private void Right(double deg) => _machine.Rotation -= deg;
+        private void Left(double deg) => _machine.Rotation += deg;
+        private double Direction() => _machine.Rotation;
+        private void TurnTo(double deg) => _machine.Rotation = deg;
+        private void WaitForBedTemp() => _stream.WriteLine("M190 R" + (decimal)_machine.BedTemp);
+        private void WaitForExtruderTemp() => _stream.WriteLine("M109 R" + (decimal)_machine.ExtruderTemp);
+        private void WaitForCurrentMove() => _stream.WriteLine("M400");
+        private void WaitForMillis(int millis) => _stream.WriteLine("G4 P" + millis);
     }
 }

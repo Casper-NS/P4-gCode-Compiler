@@ -12,6 +12,21 @@
             Y = y;
             Z = z;
         }
+        
+        /// <summary>
+        /// Overloads plus operator for the vector class.
+        /// </summary>
+        /// <param name="a">Vector a.</param>
+        /// <param name="b">Vector b.</param>
+        /// <returns></returns>
+        public static Vector operator +(Vector a, Vector b) => new Vector(a.X + b.X, a.Y + b.Y, a.Z + b.Z);
 
+        /// <summary>
+        /// Overloads minus operator for the vector class.
+        /// </summary>
+        /// <param name="a">Vector a.</param>
+        /// <param name="b">Vector b.</param>
+        /// <returns></returns>
+        public static Vector operator -(Vector a, Vector b) => new Vector(a.X - b.X, a.Y - b.Y, a.Z - b.Z);
     }
 }
