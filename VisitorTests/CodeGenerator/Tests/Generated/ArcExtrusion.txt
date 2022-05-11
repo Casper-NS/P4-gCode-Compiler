@@ -1,0 +1,9 @@
+﻿void main()
+{
+	walk SetExtrusionRate(1)
+	// should be about 1.5708
+	build AbsArcCW((1, 0, 0), 0.5) 
+
+}
+@
+G2 X1 Y0 Z0 E1.5707963267949 R0.5

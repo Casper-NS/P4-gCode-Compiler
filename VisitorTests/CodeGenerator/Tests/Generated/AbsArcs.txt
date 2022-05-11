@@ -1,0 +1,13 @@
+﻿walk void main()
+{
+	AbsArcCW((1, 0, 0), 1)
+	AbsArcCCW((2, 0, 0), 1)
+	AbsArcCW((3, 0, 0), -1)
+	AbsArcCCW((4, 0, 0), -1)
+
+}
+@
+G2 X1 Y0 Z0 R1
+G3 X2 Y0 Z0 R1
+G2 X3 Y0 Z0 R-1
+G3 X4 Y0 Z0 R-1

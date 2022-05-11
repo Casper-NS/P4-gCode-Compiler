@@ -139,11 +139,18 @@ namespace GOAT_Compiler.Code_Generation
         }
         private double CircelLenght(Vector v1, Vector v2, double r)
         {
-            double top = v1.X * v2.X + v1.Y * v2.Y;
-            double bot = Math.Sqrt(Math.Pow(v1.X, 2) + Math.Pow(v1.Y, 2)) * Math.Sqrt(Math.Pow(v2.X, 2) + Math.Pow(v2.Y, 2));
-            double deg = Math.Acos(top / bot);
-            return deg * r
-;        }
+            double chord = VectorDistance(v1, v2);
+            double shortArcLength = 2 * r * Math.Asin(chord / (2 * r));
+            if (r < 0) // if its the long arc
+            {
+                // subtract from total circle length
+                return (2 * Math.Abs(r) * Math.PI) - shortArcLength;
+            }
+            else
+            {
+                return shortArcLength;
+            }
+        }
         private void RelArc(Vector v, double r, bool CCW)
         {
             string gLine = "";
@@ -154,19 +161,19 @@ namespace GOAT_Compiler.Code_Generation
             {
                 if(CCW) { 
                     _machine.CurrentExtrusion += (_machine.ExtrusionRate * CircelLenght(oldPosition, _machine.Position, r));
-                    gLine = "G3 X" + (decimal)v2.X + " Y" + (decimal)v2.Y + " Z" + (decimal)v2.Z + " E" + (decimal)_machine.ExtrusionRate + " R" + (decimal)r;
+                    gLine = "G3 X" + (decimal)v2.X + " Y" + (decimal)v2.Y + " Z" + (decimal)v2.Z + " E" + (decimal)_machine.CurrentExtrusion + " R" + (decimal)r;
                 }
                 else
                 {
                     _machine.CurrentExtrusion += (_machine.ExtrusionRate * CircelLenght(oldPosition, _machine.Position, r));
-                    gLine = "G2 X" + (decimal)v2.X + " Y" + (decimal)v2.Y + " Z" + (decimal)v2.Z + " E" + (decimal)_machine.ExtrusionRate + " R" + (decimal)r;
+                    gLine = "G2 X" + (decimal)v2.X + " Y" + (decimal)v2.Y + " Z" + (decimal)v2.Z + " E" + (decimal)_machine.CurrentExtrusion + " R" + (decimal)r;
                 }
             }
             else
             {
                 if (CCW)
                 {
-                    gLine = "G3 X" + "X" + (decimal)v2.X + " Y" + (decimal)v2.Y + " Z" + (decimal)v2.Z + " R" + (decimal)r;
+                    gLine = "G3 X" + (decimal)v2.X + " Y" + (decimal)v2.Y + " Z" + (decimal)v2.Z + " R" + (decimal)r;
                 }
                 else
                 {
@@ -194,12 +201,12 @@ namespace GOAT_Compiler.Code_Generation
                 if (CCW)
                 {
                     _machine.CurrentExtrusion += (_machine.ExtrusionRate * CircelLenght(oldPosition, _machine.Position, r));
-                    gLine = "G3 X" + (decimal)v2.X + " Y" + (decimal)v2.Y + " Z" + (decimal)v2.Z + " E" + (decimal)_machine.ExtrusionRate + " R" + (decimal)r;
+                    gLine = "G3 X" + (decimal)v2.X + " Y" + (decimal)v2.Y + " Z" + (decimal)v2.Z + " E" + (decimal)_machine.CurrentExtrusion + " R" + (decimal)r;
                 }
                 else
                 {
                     _machine.CurrentExtrusion += (_machine.ExtrusionRate * CircelLenght(oldPosition, _machine.Position, r));
-                    gLine = "G2 X" + (decimal)v2.X + " Y" + (decimal)v2.Y + " Z" + (decimal)v2.Z + " E" + (decimal)_machine.ExtrusionRate + " R" + (decimal)r;
+                    gLine = "G2 X" + (decimal)v2.X + " Y" + (decimal)v2.Y + " Z" + (decimal)v2.Z + " E" + (decimal)_machine.CurrentExtrusion + " R" + (decimal)r;
                 }
             }
             else
