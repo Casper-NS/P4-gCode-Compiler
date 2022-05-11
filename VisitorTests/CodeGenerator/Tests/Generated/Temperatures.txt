@@ -1,4 +1,4 @@
-﻿walk void main()
+﻿void main()
 {
 	SetBedTemp(25)
 	SetExtruderTemp(30)

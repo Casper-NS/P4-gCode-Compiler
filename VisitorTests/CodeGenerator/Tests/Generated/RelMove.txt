@@ -1,6 +1,6 @@
 ﻿void main()
 {
-	walk SetExtrusionRate(1)
+	SetExtrusionRate(1)
 	walk RelMove((-1, 0, 0))
 	build RelMove((2,0,0))
 }

@@ -1,6 +1,6 @@
 ﻿void main()
 {
-	walk Home()
+	Home()
 }
 @
 G28

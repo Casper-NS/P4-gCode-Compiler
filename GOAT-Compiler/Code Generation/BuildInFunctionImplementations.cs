@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Text;
+using GOAT_Compiler.Exceptions;
 
 namespace GOAT_Compiler.Code_Generation
 {
@@ -110,14 +111,18 @@ namespace GOAT_Compiler.Code_Generation
             string gLine = "";
             Vector oldPosition = _machine.Position;
             _machine.Position = new Vector(oldPosition.X + v.X, oldPosition.Y + v.Y, oldPosition.Z + v.Z);
-            if (_machine.Build)
+            if (_machine.Build == BuildScope.build)
             {
                 _machine.CurrentExtrusion += (_machine.ExtrusionRate*VectorDistance(oldPosition, _machine.Position));
                 gLine += "G1 X" + (decimal)_machine.Position.X + " Y" + (decimal)_machine.Position.Y + " Z" + (decimal)_machine.Position.Z + " E" + (decimal)_machine.CurrentExtrusion;
             }
-            else
+            else if (_machine.Build == BuildScope.walk)
             {
                 gLine += "G0 X" + (decimal)_machine.Position.X + " Y" + (decimal)_machine.Position.Y + " Z" + (decimal)_machine.Position.Z;
+            }
+            else
+            {
+                throw new MoveWithoutScopeException("RelMove cant be called without being in a build or walk scope.");
             }
             _stream.WriteLine(gLine);
         }
@@ -126,14 +131,18 @@ namespace GOAT_Compiler.Code_Generation
             string gLine = "";
             Vector oldPosition = _machine.Position;
             _machine.Position = v;
-            if (_machine.Build)
+            if (_machine.Build == BuildScope.build)
             {
                 _machine.CurrentExtrusion += (_machine.ExtrusionRate * VectorDistance(oldPosition, _machine.Position));
                 gLine += "G1 X" + (decimal)_machine.Position.X + " Y" + (decimal)_machine.Position.Y + " Z" + (decimal)_machine.Position.Z + " E" + (decimal)_machine.CurrentExtrusion;
             }
-            else
+            else if(_machine.Build == BuildScope.walk)
             {
                 gLine += "G0 X" + (decimal)_machine.Position.X + " Y" + (decimal)_machine.Position.Y + " Z" + (decimal)_machine.Position.Z;
+            }
+            else
+            {
+                throw new MoveWithoutScopeException("AbsMove cant be called without being in a build or walk scope.");
             }
             _stream.WriteLine(gLine);
         }
@@ -157,7 +166,7 @@ namespace GOAT_Compiler.Code_Generation
             Vector oldPosition = _machine.Position;
             _machine.Position = new Vector(oldPosition.X + v.X, oldPosition.Y + v.Y, oldPosition.Z + v.Z);
             Vector v2 = _machine.Position;
-            if (_machine.Build)
+            if (_machine.Build == BuildScope.build)
             {
                 if(CCW) { 
                     _machine.CurrentExtrusion += (_machine.ExtrusionRate * CircelLenght(oldPosition, _machine.Position, r));
@@ -169,7 +178,7 @@ namespace GOAT_Compiler.Code_Generation
                     gLine = "G2 X" + (decimal)v2.X + " Y" + (decimal)v2.Y + " Z" + (decimal)v2.Z + " E" + (decimal)_machine.CurrentExtrusion + " R" + (decimal)r;
                 }
             }
-            else
+            else if(_machine.Build == BuildScope.walk)
             {
                 if (CCW)
                 {
@@ -180,6 +189,11 @@ namespace GOAT_Compiler.Code_Generation
                     gLine = "G2 X" + (decimal)v2.X + " Y" + (decimal)v2.Y + " Z" + (decimal)v2.Z + " R" + (decimal)r;
                 }
             }
+            else
+            {
+                throw new MoveWithoutScopeException("RelArc cant be called without being in a build or walk scope.");
+            }
+
             if (VectorDistance(oldPosition, v2) > Math.Abs(r)*2)
             {
                 throw new Exception("RelArc radius is too small.");
@@ -196,7 +210,7 @@ namespace GOAT_Compiler.Code_Generation
             Vector oldPosition = _machine.Position;
             _machine.Position = v;
             Vector v2 = _machine.Position;
-            if (_machine.Build)
+            if (_machine.Build == BuildScope.build)
             {
                 if (CCW)
                 {
@@ -209,7 +223,7 @@ namespace GOAT_Compiler.Code_Generation
                     gLine = "G2 X" + (decimal)v2.X + " Y" + (decimal)v2.Y + " Z" + (decimal)v2.Z + " E" + (decimal)_machine.CurrentExtrusion + " R" + (decimal)r;
                 }
             }
-            else
+            else if(_machine.Build == BuildScope.walk)
             {
                 if (CCW)
                 {
@@ -219,6 +233,10 @@ namespace GOAT_Compiler.Code_Generation
                 {
                     gLine = "G2 X" + (decimal)v2.X + " Y" + (decimal)v2.Y + " Z" + (decimal)v2.Z + " R" + (decimal)r;
                 }
+            }
+            else
+            {
+                throw new MoveWithoutScopeException("AbsArc cant be called without being in a build or walk scope.");
             }
             if (VectorDistance(oldPosition, v2) > Math.Abs(r) * 2)
             {
@@ -270,14 +288,18 @@ namespace GOAT_Compiler.Code_Generation
         {
             string gLine = "";
             _machine.Position.Z += step;
-            if (_machine.Build)
+            if (_machine.Build == BuildScope.build)
             {
                 _machine.CurrentExtrusion += _machine.ExtrusionRate * step;
                 gLine += "G1 X" + (decimal)_machine.Position.X + " Y" + (decimal)_machine.Position.Y + " Z" + (decimal)_machine.Position.Z + " E" + (decimal)_machine.CurrentExtrusion;
             }
-            else
+            else if (_machine.Build == BuildScope.walk)
             {
                 gLine += "G0 X" + (decimal)_machine.Position.X + " Y" + (decimal)_machine.Position.Y + " Z" + (decimal)_machine.Position.Z;
+            }
+            else
+            {
+                throw new MoveWithoutScopeException("Lift cant be called without being in a build or walk scope.");
             }
             _stream.WriteLine(gLine);
         }

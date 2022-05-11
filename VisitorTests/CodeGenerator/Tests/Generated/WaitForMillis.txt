@@ -1,4 +1,4 @@
-﻿walk void main()
+﻿void main()
 {
 	WaitForMillis(0)
 	WaitForMillis(1000)

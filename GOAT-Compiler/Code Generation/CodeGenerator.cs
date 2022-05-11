@@ -713,12 +713,6 @@ namespace GOAT_Compiler
             BuildStack.Pop();
         }
 
-        /*
-        public override void OutAFunctionStmt(AFunctionStmt node)
-        {
-            node.GetExp().Apply(this);
-        }
-        */
 
         public override void OutAFunctionExp(AFunctionExp node)
         {
@@ -740,13 +734,31 @@ namespace GOAT_Compiler
             {
                 if (BuildStack.TryPeek(out bool build))
                 {
-                    _machine.Build = build;
+                    if (build)
+                    {
+                        _machine.Build = BuildScope.build;
+                    }
+                    else
+                    {
+                        _machine.Build = BuildScope.walk;
+                    }
                 }
                 else
                 {
-                    throw new BuildWalkException(node, "cant execute command without a build or walk scope.");
+                    _machine.Build = BuildScope.none;
                 }
-                dynamic returnValue = _buildInFunctions.CallBuildInFunctions(node.GetName().Text, CurrentParams);
+
+                dynamic returnValue;
+
+                try
+                {
+                    returnValue = _buildInFunctions.CallBuildInFunctions(node.GetName().Text, CurrentParams);
+                }
+                catch (MoveWithoutScopeException e)
+                {
+                    throw new BuildWalkException(node, e.Message);
+                }
+
                 if (returnValue != null)
                 {
                     nodeMap.Put(node, returnValue);

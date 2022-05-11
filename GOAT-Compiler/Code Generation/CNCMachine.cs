@@ -2,6 +2,15 @@
 
 namespace GOAT_Compiler.Code_Generation
 {
+
+    public enum BuildScope
+    {
+        build,
+        walk,
+        none
+    }
+
+
     /// <summary>
     /// The class that holds information about the CNC machine.
     /// </summary>
@@ -101,7 +110,7 @@ namespace GOAT_Compiler.Code_Generation
         /// <summary>
         /// The current extruder state.
         /// </summary>
-        public bool Build { get; set; } = false;
+        public BuildScope Build { get; set; } = BuildScope.none;
 
         /// <summary>
         /// The current rotation of the tutle.

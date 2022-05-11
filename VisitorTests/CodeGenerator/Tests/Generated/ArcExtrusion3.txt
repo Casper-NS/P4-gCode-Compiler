@@ -1,6 +1,6 @@
 ﻿void main()
 {
-	walk SetExtrusionRate(1)
+	SetExtrusionRate(1)
 	// should be about 1.0472
 	build RelArcCW((1, 0, 0), 1) 
 

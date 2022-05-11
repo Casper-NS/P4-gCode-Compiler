@@ -1,4 +1,4 @@
-﻿walk void main()
+﻿void main()
 {
 	WaitForCurrentMove()
 }
