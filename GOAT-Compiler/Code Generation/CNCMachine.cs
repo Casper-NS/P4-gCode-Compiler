@@ -39,7 +39,7 @@ namespace GOAT_Compiler.Code_Generation
         /// <summary>
         /// The current extruder rate.
         /// </summary>
-        public double ExtruderRate { get; set; } = 0;
+        public double ExtrusionRate { get; set; } = 0;
         
         /// <summary>
         /// The current bed temperature.
@@ -78,7 +78,7 @@ namespace GOAT_Compiler.Code_Generation
                 _extruderTemp = value;
             }
         }
-
+        
         /// <summary>
         /// The current fan power.
         /// </summary>
@@ -90,9 +90,9 @@ namespace GOAT_Compiler.Code_Generation
             }
             set
             {
-                if (value < 0 || value > 255)
+                if (value < 0 || value > 1)
                 {
-                    throw new Exception("Fan power must be between 0 and 255.");
+                    throw new Exception("Fan power must be between 0 and 1.");
                 }
                 _fanPower = value;
             }
