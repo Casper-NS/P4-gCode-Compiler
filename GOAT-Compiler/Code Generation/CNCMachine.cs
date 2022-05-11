@@ -17,7 +17,7 @@ namespace GOAT_Compiler.Code_Generation
     public class CNCMachine
     {
         private double _currentExtrusion = 0;
-        private double _bedTemp = 0;
+        private double _hotBedTemp = 0;
         private double _extruderTemp = 0;
         private double _fanPower = 0;
 
@@ -27,7 +27,7 @@ namespace GOAT_Compiler.Code_Generation
         public Vector Position { get; set; } = new Vector(0, 0, 0);
 
         /// <summary>
-        /// The current extrusion.
+        /// The current amount of extrusion: totaltDistance*extrusionRate.
         /// </summary>
         public double CurrentExtrusion
         {
@@ -39,7 +39,7 @@ namespace GOAT_Compiler.Code_Generation
             {
                 if (value < 0)
                 {
-                    throw new Exception("Extrusion cannot be negative.");
+                    throw new Exception("The amount of extrusion cannot be negative.");
                 }
                 _currentExtrusion = value;
             } 
@@ -51,21 +51,21 @@ namespace GOAT_Compiler.Code_Generation
         public double ExtrusionRate { get; set; } = 0;
         
         /// <summary>
-        /// The current bed temperature.
+        /// The current hot-bed temperature.
         /// </summary>        
-        public double BedTemp
+        public double HotBedTemp
         {
             get
             {
-                return _bedTemp;
+                return _hotBedTemp;
             }
             set
             {
                 if (value < 0)
                 {
-                    throw new Exception("Bed temperature cannot be negative.");
+                    throw new Exception("The hot-bed temperature cannot be negative.");
                 }
-                _bedTemp = value;
+                _hotBedTemp = value;
             }
         }
 
@@ -113,7 +113,7 @@ namespace GOAT_Compiler.Code_Generation
         public BuildScope ExtrusionMode { get; set; } = BuildScope.none;
 
         /// <summary>
-        /// The current rotation of the tutle.
+        /// The current rotation of the tutle, where 0 degrees are the x-axis.
         /// </summary>
         public double Rotation { get; set; } = 0;
 

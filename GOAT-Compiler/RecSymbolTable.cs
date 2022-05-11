@@ -1,10 +1,6 @@
 ﻿using GOATCode.node;
-using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+
 
 namespace GOAT_Compiler
 {
@@ -58,20 +54,11 @@ namespace GOAT_Compiler
 
         }
 
-        public Symbol GetVariableSymbol(string name)
-        {
-            return currentScope.GetSymbol(name);
-        }
+        public Symbol GetVariableSymbol(string name) => currentScope.GetSymbol(name);
 
-        public void AddVariableSymbol(string name, Types type)
-        {
-            currentScope.SetSymbol(name, type);
-        }
+        public void AddVariableSymbol(string name, Types type) => currentScope.SetSymbol(name, type);
 
-        public bool IsComplete()
-        {
-            return buildComplete;
-        }
+        public bool IsComplete() => buildComplete;
 
         public Symbol GetFunctionSymbol(string name)
         {
@@ -89,15 +76,9 @@ namespace GOAT_Compiler
             funcDeclMap.Add(sym, node);
         }
 
-        public Node GetFunctionNode(Symbol symbol)
-        {
-            return funcDeclMap.TryGetValue(symbol, out Node node) ? node : null;
-        }
+        public Node GetFunctionNode(Symbol symbol) => funcDeclMap.TryGetValue(symbol, out Node node) ? node : null;
 
-        public bool IsGlobal(Symbol symbol)
-        {
-            return (_globalScope.GetSymbol(symbol.name) != null);
-        }
+        public bool IsGlobal(Symbol symbol) => (_globalScope.GetSymbol(symbol.name) != null);
     }
 
     class Table
@@ -138,14 +119,15 @@ namespace GOAT_Compiler
             {
                 return ParentTable.GetSymbol(Name);
             }
-
             return null;
         }
 
-        public void SetSymbol(string Name, Types type, params Types[] paramTypeArray)
-        {
-            Symbols.Add(Name, new Symbol(Name, type, paramTypeArray));
-        }
-
+        /// <summary>
+        /// Sets the given symbol in the current table.
+        /// </summary>
+        /// <param name="Name">Name of the symbol.</param>
+        /// <param name="type">The type of the symbol.</param>
+        /// <param name="paramTypeArray">X amount of formel parameters.</param>
+        public void SetSymbol(string Name, Types type, params Types[] paramTypeArray) => Symbols.Add(Name, new Symbol(Name, type, paramTypeArray));
     }
 }

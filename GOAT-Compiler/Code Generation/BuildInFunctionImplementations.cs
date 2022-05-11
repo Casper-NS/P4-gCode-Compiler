@@ -251,7 +251,7 @@ namespace GOAT_Compiler.Code_Generation
         private void SetExtrusionRate(double rate) => _machine.ExtrusionRate = rate;
         private void SetBedTemp(double temp)
         {
-            _machine.BedTemp = temp;
+            _machine.HotBedTemp = temp;
             _stream.WriteLine("M140 S" + (decimal)temp);
         }
         private Vector Position() => _machine.Position;
@@ -283,7 +283,7 @@ namespace GOAT_Compiler.Code_Generation
         private void Left(double deg) => _machine.Rotation += deg;
         private double Direction() => _machine.Rotation;
         private void TurnTo(double deg) => _machine.Rotation = deg;
-        private void WaitForBedTemp() => _stream.WriteLine("M190 R" + (decimal)_machine.BedTemp);
+        private void WaitForBedTemp() => _stream.WriteLine("M190 R" + (decimal)_machine.HotBedTemp);
         private void WaitForExtruderTemp() => _stream.WriteLine("M109 R" + (decimal)_machine.ExtruderTemp);
         private void WaitForCurrentMove() => _stream.WriteLine("M400");
         private void WaitForMillis(int millis) => _stream.WriteLine("G4 P" + millis);
