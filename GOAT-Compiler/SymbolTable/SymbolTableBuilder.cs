@@ -80,7 +80,13 @@ namespace GOAT_Compiler
             AddFunctionSymbol(node, node.GetId().Text, Types.Void, paramTypesList.ToArray());
             paramTypesList.Clear();
         }
-
+        /// <summary>
+        /// Adds a function symbol to the symboltable.
+        /// </summary>
+        /// <param name="node"></param>
+        /// <param name="name">The id of the functions</param>
+        /// <param name="type">The returntype of the function</param>
+        /// <param name="types">The types of the formal parameters</param>
         private void AddFunctionSymbol(Node node, string name, Types type, params Types[] types)
         {
             try

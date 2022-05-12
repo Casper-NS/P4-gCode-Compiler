@@ -10,7 +10,7 @@ namespace GOAT_Compiler
 {
     /// <summary>
     /// A class that handles scopes for a symbol table
-    /// If you inherit from this, scopes are handled automatically.Q
+    /// If you inherit from this, scopes are handled automatically.
     /// For safety, this class will seal cases that include modifying scope.
     /// Instead cases OutsideScope______ and InsideScope____ are included, 
     /// that are run inside and outside the scope.
@@ -116,6 +116,5 @@ namespace GOAT_Compiler
             }
             return true;
         }
-
     }
 }

@@ -15,7 +15,9 @@ namespace GOAT_Compiler
         Boolean,
         Void
     };
-
+    /// <summary>
+    /// The symbol-class which is used for variables and functions. The symboltable stores symbols.
+    /// </summary>
     internal class Symbol
     {
         public Symbol(string name, Types type, params Types[] paramTypes)
