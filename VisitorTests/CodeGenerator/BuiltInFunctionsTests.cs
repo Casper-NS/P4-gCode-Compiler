@@ -32,9 +32,9 @@ namespace VisitorTests
             
             // run the code generator
             StringBuilder stringBuilder = new StringBuilder();
+            CodeGenerator codeGenerator;
             using (StringWriter writer = new StringWriter(stringBuilder))
             {
-                CodeGenerator codeGenerator;
                 codeGenerator = new CodeGenerator(symbolTable, typeChecker.GetTypeDictionary(), writer);
                 s.Apply(codeGenerator);
             }
