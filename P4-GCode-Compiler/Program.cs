@@ -45,7 +45,7 @@ namespace P4_GCode_Compiler
 
         static void GenerateCode(string file, Start AST, ISymbolTable symTable, TypeChecker typeChecker)
         {
-            using (Stream stream = new FileStream(file, FileMode.OpenOrCreate))
+            using (Stream stream = new FileStream(file, FileMode.Create))
             {
                 using (StreamWriter writer = new StreamWriter(stream))
                 {
