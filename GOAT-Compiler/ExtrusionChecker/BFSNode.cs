@@ -28,8 +28,10 @@ namespace GOAT_Compiler
         internal Extrude ExtrudeType { get; set; }
 
         internal Extrude TheExtrudeTypeFromCallStack { get; set; } = Extrude.NotSet;
-        
-        internal BFSNode TheNodeThatCalledThisOne { get; set; }
+        /// <summary>
+        /// The node that called this node
+        /// </summary>
+        internal BFSNode CallerNode { get; set; }
 
         internal BFSNode(string n, Extrude extrude)
         {
