@@ -42,7 +42,6 @@ namespace GOAT_Compiler
         public virtual void InsideScopeOutADeclProgram(ADeclProgram node) { }
         public virtual void OutsideScopeOutADeclProgram(ADeclProgram node) { }
 
-
         public sealed override void InAFuncDecl(AFuncDecl node)
         {
             OutsideScopeInAFuncDecl(node);
@@ -60,7 +59,6 @@ namespace GOAT_Compiler
         }
         public virtual void InsideScopeOutAFuncDecl(AFuncDecl node) { }
         public virtual void OutsideScopeOutAFuncDecl(AFuncDecl node) { }
-
 
         public sealed override void InAProcDecl(AProcDecl node)
         {
@@ -80,7 +78,6 @@ namespace GOAT_Compiler
         public virtual void InsideScopeOutAProcDecl(AProcDecl node) { }
         public virtual void OutsideScopeOutAProcDecl(AProcDecl node) { }
 
-
         public sealed override void InAStmtlistBlock(AStmtlistBlock node)
         {
             OutsideScopeInAStmtlistBlock(node);
@@ -93,7 +90,6 @@ namespace GOAT_Compiler
         public virtual void OutsideScopeInAStmtlistBlock(AStmtlistBlock node) { }
         public virtual void InsideScopeInAStmtlistBlock(AStmtlistBlock node) { }
 
-
         public sealed override void OutAStmtlistBlock(AStmtlistBlock node)
         {
             InsideScopeOutAStmtlistBlock(node);
@@ -105,7 +101,6 @@ namespace GOAT_Compiler
         }
         public virtual void InsideScopeOutAStmtlistBlock(AStmtlistBlock node) { }
         public virtual void OutsideScopeOutAStmtlistBlock(AStmtlistBlock node) { }
-
 
         /// <summary>
         /// Function to check whether the grandparent of the node is a function or a procedure.
