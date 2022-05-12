@@ -8,17 +8,26 @@ namespace GOAT_Compiler
     {
         private Table _globalScope = null;
         private Table currentScope = null;
-
+        /// <summary>
+        /// The stack that keeps track of which scope we are in, the top of the stack is the current scope.
+        /// </summary>
         private readonly Stack<Table> scopeStack = new();
-        
+        /// <summary>
+        /// Maps from a node to a symboltable. Nodes that open a scope create a symbol-table.
+        /// </summary>
         private readonly Dictionary<Node, Table> scopeMap = new ();
-
+        /// <summary>
+        /// Maps from function id to the function symbol.
+        /// </summary>
         private readonly Dictionary<string, Symbol> functionSymbols;
-
+        /// <summary>
+        /// Maps from function symbols to the node that declares the functions.
+        /// Used to execute functions-calls in code-generator.
+        /// </summary>
         private readonly Dictionary<Symbol, Node> funcDeclMap = new();
 
         /// <summary>
-        /// Flag to determine whether we are building or going through the symbol table.
+        /// Flag to determine whether we are building the symboltable or going through the symbol table.
         /// </summary>
         private bool buildComplete = false;
 
@@ -36,6 +45,7 @@ namespace GOAT_Compiler
             }
             else
             {
+                // On the first iteration this builds the symbol-table
                 Table scope = new Table(currentScope);
                 if (currentScope == null)
                 {
