@@ -2,9 +2,6 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Xml;
 using GOAT_Compiler.Code_Generation;
 using GOAT_Compiler.Exceptions;
 using GOATCode.node;
@@ -13,30 +10,24 @@ namespace GOAT_Compiler
 {
     internal class CodeGenerator : SymbolTableVisitor
     {
+        private const int _maxIterationLimit = 100000;
         private Dictionary<Node, Types> typeMap;
         private RuntimeTable<Node> nodeMap;
         private dynamic CurrentReturnValue = null;
         private bool BreakFromFunction = false;
-
-        private const int _maxIterationLimit = 100000;
-
-        internal RuntimeTable<Symbol> RT
-        {
-            get => CallStackRT.TryPeek(out RuntimeTable<Symbol> rt) ? rt : GlobalRT;
-        }
-
+        private Stack<bool> BuildStack;
+        private CNCMachine _machine;
+        private BuildInFunctionImplementations _buildInFunctions;
+        private TextWriter _textWriter;
         private List<dynamic> CurrentParams = new();
 
         internal RuntimeTable<Symbol> GlobalRT;
         internal Stack<RuntimeTable<Symbol>> CallStackRT;
-        private Stack<bool> BuildStack;
-
-        private CNCMachine _machine;
-
-        private BuildInFunctionImplementations _buildInFunctions;
-
-        private TextWriter _textWriter;
-
+        
+        internal RuntimeTable<Symbol> RT
+        {
+            get => CallStackRT.TryPeek(out RuntimeTable<Symbol> rt) ? rt : GlobalRT;
+        }
 
         public CodeGenerator(ISymbolTable symbolTable, Dictionary<Node, Types> typesDictionary, TextWriter outputStream) : base(symbolTable)
         {
@@ -75,21 +66,17 @@ namespace GOAT_Compiler
             }
         }
 
-        dynamic GetValue(Node node)
-        {
-            return nodeMap.Get(node, typeMap[node]);
-        }
-
+        dynamic GetValue(Node node) => nodeMap.Get(node, typeMap[node]);
 
         public override void CaseADeclProgram(ADeclProgram node)
         {
             InADeclProgram(node);
             {
-                Object[] temp = new Object[node.GetDecl().Count];
-                node.GetDecl().CopyTo(temp, 0);
-                for (int i = 0; i < temp.Length; i++)
+                Object[] decls = new Object[node.GetDecl().Count];
+                node.GetDecl().CopyTo(decls, 0);
+                foreach (object decl in decls)
                 {
-                    if (temp[i] is AVarDecl vardecl)
+                    if (decl is AVarDecl vardecl)
                     {
                         vardecl.Apply(this);
                     }
@@ -132,10 +119,7 @@ namespace GOAT_Compiler
             nodeMap.Put(node, GetValue(VarSymbol));
         }
 
-        public override void OutABoolvalExp(ABoolvalExp node)
-        {
-            nodeMap.Put(node, bool.Parse(node.GetBoolValue().Text));
-        }
+        public override void OutABoolvalExp(ABoolvalExp node) => nodeMap.Put(node, bool.Parse(node.GetBoolValue().Text));
 
         public override void OutAVectorExp(AVectorExp node)
         {
@@ -160,12 +144,7 @@ namespace GOAT_Compiler
             }
         }
 
-
-        public override void OutANegExp(ANegExp node)
-        {
-            nodeMap.Put(node, -GetValue(node.GetExp()));
-        }
-
+        public override void OutANegExp(ANegExp node) => nodeMap.Put(node, -GetValue(node.GetExp()));
 
         public override void OutAAssignStmt(AAssignStmt node)
         {
@@ -254,7 +233,6 @@ namespace GOAT_Compiler
             }
         }
 
-        //Check the modulo statements
         public override void OutAAssignModStmt(AAssignModStmt node)
         {
             Symbol idSymbol = _symbolTable.GetVariableSymbol(node.GetId().Text);
@@ -346,7 +324,6 @@ namespace GOAT_Compiler
             }
         }
 
-        //C# should handel the modulo expression
         public override void OutAModuloExp(AModuloExp node)
         {
             Node left = node.GetL();
@@ -434,7 +411,6 @@ namespace GOAT_Compiler
             nodeMap.Put(node, !value);
         }
 
-
         public override void CaseAIfStmt(AIfStmt node)
         {
             InAIfStmt(node);
@@ -460,8 +436,6 @@ namespace GOAT_Compiler
             OutAIfStmt(node);
         }
 
-
-        //Todo: Make sure the compiler stops even if the while true is written.
         public override void CaseAWhileStmt(AWhileStmt node)
         {
             int iterations = 0;
@@ -484,7 +458,6 @@ namespace GOAT_Compiler
             }
             OutAWhileStmt(node);
         }
-
 
         public override void CaseARepeatStmt(ARepeatStmt node)
         {
@@ -514,7 +487,6 @@ namespace GOAT_Compiler
             OutARepeatStmt(node);
         }
 
-
         public override void OutAReturnStmt(AReturnStmt node)
         {
             CurrentReturnValue = GetValue(node.GetExp());
@@ -540,67 +512,29 @@ namespace GOAT_Compiler
             OutAStmtlistBlock(node);
         }
 
+        public override void InABuildStmt(ABuildStmt node) => BuildStack.Push(true);
 
-        public override void InABuildStmt(ABuildStmt node)
-        {
-            BuildStack.Push(true);
-        }
+        public override void OutABuildStmt(ABuildStmt node) => BuildStack.Pop();
 
-        public override void OutABuildStmt(ABuildStmt node)
-        {
-            BuildStack.Pop();
-        }
+        public override void InABuildExp(ABuildExp node) => BuildStack.Push(true);
 
-        public override void InABuildExp(ABuildExp node)
-        {
-            BuildStack.Push(true);
-        }
+        public override void OutABuildExp(ABuildExp node) => BuildStack.Pop();
 
-        public override void OutABuildExp(ABuildExp node)
-        {
-            BuildStack.Pop();
-        }
+        public override void InABuildBlock(ABuildBlock node) => BuildStack.Push(true);
 
-        public override void InABuildBlock(ABuildBlock node)
-        {
-            BuildStack.Push(true);
-        }
+        public override void OutABuildBlock(ABuildBlock node) => BuildStack.Pop();
 
-        public override void OutABuildBlock(ABuildBlock node)
-        {
-            BuildStack.Pop();
-        }
+        public override void InAWalkStmt(AWalkStmt node) => BuildStack.Push(false);
 
-        public override void InAWalkStmt(AWalkStmt node)
-        {
-            BuildStack.Push(false);
-        }
+        public override void OutAWalkStmt(AWalkStmt node) => BuildStack.Pop();
 
-        public override void OutAWalkStmt(AWalkStmt node)
-        {
-            BuildStack.Pop();
-        }
+        public override void InAWalkExp(AWalkExp node) => BuildStack.Push(false);
 
-        public override void InAWalkExp(AWalkExp node)
-        {
-            BuildStack.Push(false);
-        }
+        public override void OutAWalkExp(AWalkExp node) => BuildStack.Pop();
 
-        public override void OutAWalkExp(AWalkExp node)
-        {
-            BuildStack.Pop();
-        }
+        public override void InAWalkBlock(AWalkBlock node) => BuildStack.Push(false);
 
-        public override void InAWalkBlock(AWalkBlock node)
-        {
-            BuildStack.Push(false);
-        }
-
-        public override void OutAWalkBlock(AWalkBlock node)
-        {
-            BuildStack.Pop();
-        }
-
+        public override void OutAWalkBlock(AWalkBlock node) => BuildStack.Pop();
 
         public override void OutAFunctionExp(AFunctionExp node)
         {
@@ -659,7 +593,6 @@ namespace GOAT_Compiler
             }
         }
 
-
         public override void OutAParamDecl(AParamDecl node)
         {
             Symbol paramSymbol = _symbolTable.GetVariableSymbol(node.GetId().Text);
@@ -673,7 +606,6 @@ namespace GOAT_Compiler
             }
             CurrentParams.RemoveAt(0);
         }
-
 
         public override void CaseAFuncDecl(AFuncDecl node)
         {
@@ -702,11 +634,7 @@ namespace GOAT_Compiler
             OutAFuncDecl(node);
         }
 
-        public override void InsideScopeOutAFuncDecl(AFuncDecl node)
-        {
-            CallStackRT.Pop();
-        }
-
+        public override void InsideScopeOutAFuncDecl(AFuncDecl node) => CallStackRT.Pop();
 
         public override void CaseAProcDecl(AProcDecl node)
         {
@@ -731,11 +659,7 @@ namespace GOAT_Compiler
             OutAProcDecl(node);
         }
 
-
-        public override void InsideScopeOutAProcDecl(AProcDecl node)
-        {
-            CallStackRT.Pop();
-        }
+        public override void InsideScopeOutAProcDecl(AProcDecl node) => CallStackRT.Pop();
 
         public override void CaseAGcodeStmt(AGcodeStmt node)
         {
@@ -746,7 +670,6 @@ namespace GOAT_Compiler
                 _textWriter.WriteLine(line.Trim());
             }
         }
-
 
         internal class RuntimeTable<TKey>
         {
@@ -766,7 +689,6 @@ namespace GOAT_Compiler
                     IntMap.Add(key, value);
                 }
             }
-
             public void Put(TKey key, bool value)
             {
                 if (BoolMap.ContainsKey(key))
