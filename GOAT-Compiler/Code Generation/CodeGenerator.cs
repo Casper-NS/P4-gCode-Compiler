@@ -23,7 +23,7 @@ namespace GOAT_Compiler
 
         internal RuntimeTable<Symbol> GlobalRT;
         internal Stack<RuntimeTable<Symbol>> CallStackRT;
-        
+
         internal RuntimeTable<Symbol> RT
         {
             get => CallStackRT.TryPeek(out RuntimeTable<Symbol> rt) ? rt : GlobalRT;
@@ -107,8 +107,6 @@ namespace GOAT_Compiler
                     case Types.Vector:
                         RT.Put(symbol, GetValue(nodeExpr));
                         break;
-                    default:
-                        throw new Exception("This should never happen.");
                 }
             }
         }
@@ -139,8 +137,6 @@ namespace GOAT_Compiler
                 case Types.FloatingPoint:
                     nodeMap.Put(node, double.Parse(node.GetNumber().Text, CultureInfo.InvariantCulture));
                     break;
-                default:
-                    throw new Exception("Im litteraly crying right now");
             }
         }
 
@@ -297,8 +293,7 @@ namespace GOAT_Compiler
                 Vector Vec1 = ((Vector)GetValue(left));
                 Vector Vec2 = ((Vector)GetValue(right));
 
-                Vector resultVec = new Vector(Vec1.X - Vec2.X, Vec1.Y - Vec2.Y, Vec1.Z - Vec2.Z);
-                nodeMap.Put(node, resultVec);
+                nodeMap.Put(node, (Vec1 - Vec2));
             }
             else
             {
@@ -497,11 +492,11 @@ namespace GOAT_Compiler
         {
             InAStmtlistBlock(node);
             {
-                Object[] temp = new Object[node.GetStmt().Count];
-                node.GetStmt().CopyTo(temp, 0);
-                for (int i = 0; i < temp.Length; i++)
+                Object[] stmts = new Object[node.GetStmt().Count];
+                node.GetStmt().CopyTo(stmts, 0);
+                foreach (object stmt in stmts)
                 {
-                    ((PStmt)temp[i]).Apply(this);
+                    ((PStmt)stmt).Apply(this);
 
                     if (BreakFromFunction)
                     {
@@ -538,6 +533,7 @@ namespace GOAT_Compiler
 
         public override void OutAFunctionExp(AFunctionExp node)
         {
+            dynamic returnValue;
             Node[] args = new Node[node.GetArgs().Count];
             node.GetArgs().CopyTo(args, 0);
 
@@ -563,8 +559,6 @@ namespace GOAT_Compiler
                 {
                     _machine.ExtrusionMode = BuildScope.none;
                 }
-
-                dynamic returnValue;
 
                 try
                 {
@@ -619,13 +613,11 @@ namespace GOAT_Compiler
             {
                 node.GetId().Apply(this);
             }
+            Object[] decls = new Object[node.GetDecl().Count];
+            node.GetDecl().CopyTo(decls, 0);
+            foreach (object decl in decls)
             {
-                Object[] temp = new Object[node.GetDecl().Count];
-                node.GetDecl().CopyTo(temp, 0);
-                for (int i = 0; i < temp.Length; i++)
-                {
-                    ((PDecl)temp[i]).Apply(this);
-                }
+                ((PDecl)decl).Apply(this);
             }
             if (node.GetBlock() != null)
             {
@@ -644,13 +636,12 @@ namespace GOAT_Compiler
             {
                 node.GetId().Apply(this);
             }
+            Object[] decls = new Object[node.GetDecl().Count];
+            node.GetDecl().CopyTo(decls, 0);
+            foreach (var decl in decls)
             {
-                Object[] temp = new Object[node.GetDecl().Count];
-                node.GetDecl().CopyTo(temp, 0);
-                for (int i = 0; i < temp.Length; i++)
-                {
-                    ((PDecl)temp[i]).Apply(this);
-                }
+                ((PDecl)decl).Apply(this);
+
             }
             if (node.GetBlock() != null)
             {
@@ -744,15 +735,10 @@ namespace GOAT_Compiler
 
             public bool Contains(TKey key)
             {
-                if (IntMap.ContainsKey(key) ||
+                return (IntMap.ContainsKey(key) ||
                     FloatMap.ContainsKey(key) ||
                     BoolMap.ContainsKey(key) ||
-                    VecMap.ContainsKey(key))
-                {
-                    return true;
-                }
-
-                return false;
+                    VecMap.ContainsKey(key));
             }
         }
     }
