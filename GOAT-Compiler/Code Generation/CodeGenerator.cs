@@ -566,7 +566,7 @@ namespace GOAT_Compiler
                 }
                 catch (MoveWithoutScopeException e)
                 {
-                    throw new BuildWalkException(node, e.Message);
+                    throw new BuildInWalkException(node, e.Message);
                 }
 
                 nodeMap.Put(node, returnValue);
