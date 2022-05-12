@@ -1,0 +1,7 @@
+﻿void main()
+{
+	vector a = f()
+}
+void f(){
+	float b
+}
