@@ -14,7 +14,7 @@ namespace GOAT_Compiler
         private Types currentFunctionType;
         public Dictionary<Node, Types> TypeDictionary { get; } = new Dictionary<Node, Types>();
 
-        private HashSet<Node> guaranteedToReturn = new HashSet<Node>();
+        private readonly HashSet<Node> guaranteedToReturn = new HashSet<Node>();
 
         /// <summary>
         /// The constructor for the type checker.
@@ -28,16 +28,22 @@ namespace GOAT_Compiler
             Types leftType = TypeDictionary[left];
             Types rightType = TypeDictionary[right];
             Types type = TypePromoter(leftType, rightType);
-            if (type == Types.Void || type == Types.Boolean) 
+            if (type == Types.Void || type == Types.Boolean)
             {
                 throw new TypeMismatchException(current, "Type " + type + " is not valid for this arithmetic operations.");
             }
             else
             {
                 TypeDictionary.Add(current, type);
-            }            
+            }
         }
-        private void EqlNotEqlTypeChecker(Node left, Node right, Node current)
+        /// <summary>
+        /// Typechecker for != and == operators.
+        /// </summary>
+        /// <param name="left"></param>
+        /// <param name="right"></param>
+        /// <param name="current"></param>
+        private void EqualAndNotEqualTypeChecker(Node left, Node right, Node current)
         {
             Types leftType = TypeDictionary[left];
             Types rightType = TypeDictionary[right];
@@ -59,7 +65,12 @@ namespace GOAT_Compiler
                 throw new TypeMismatchException(current, "Type " + leftType + " and " + rightType + " are not valid for this comparison operations.");
             }
         }
-
+        /// <summary>
+        /// Typechecker for && and || operators.
+        /// </summary>
+        /// <param name="nodeleft"></param>
+        /// <param name="nodeRight"></param>
+        /// <param name="current"></param>
         private void AndAndOrTypeChecker(Node nodeleft, Node nodeRight, Node current)
         {
             Types leftType = TypeDictionary[nodeleft];
@@ -130,7 +141,7 @@ namespace GOAT_Compiler
             }
         }
         
-        private Types TypePromoter(Types t1, Types t2)
+        private static Types TypePromoter(Types t1, Types t2)
         {
             if (t1 == Types.Integer && t2 == Types.FloatingPoint)
             {
@@ -150,7 +161,7 @@ namespace GOAT_Compiler
             }
         }
         
-        private Types NumberType(string numberToken)
+        private static Types NumberType(string numberToken)
         {
             if (numberToken.Contains("."))
             {
@@ -180,9 +191,6 @@ namespace GOAT_Compiler
         
         public override void OutAVectorExp(AVectorExp node)
         {
-            Types x = TypeDictionary[node.GetX()];
-            Types y = TypeDictionary[node.GetY()];
-            Types z = TypeDictionary[node.GetZ()];
             if (Convert(node.GetX(), Types.FloatingPoint) == Types.FloatingPoint 
                 && Convert(node.GetY(), Types.FloatingPoint) == Types.FloatingPoint 
                 && Convert(node.GetZ(), Types.FloatingPoint) == Types.FloatingPoint)
@@ -213,7 +221,7 @@ namespace GOAT_Compiler
         
         public override void OutAOrExp(AOrExp node) => AndAndOrTypeChecker(node.GetL(), node.GetR(), node);
         
-        public override void OutAEqExp(AEqExp node) => EqlNotEqlTypeChecker(node.GetL(), node.GetR(), node);
+        public override void OutAEqExp(AEqExp node) => EqualAndNotEqualTypeChecker(node.GetL(), node.GetR(), node);
         
         public override void OutAModuloExp(AModuloExp node) => MultDivModTypeChecker(node.GetL(), node.GetR(), node);
         
@@ -229,7 +237,7 @@ namespace GOAT_Compiler
         
         public override void OutALeqExp(ALeqExp node) => GreaterThanLessThanTypeChecker(node.GetL(), node.GetR(), node);
         
-        public override void OutANeqExp(ANeqExp node) => EqlNotEqlTypeChecker(node.GetL(), node.GetR(), node);
+        public override void OutANeqExp(ANeqExp node) => EqualAndNotEqualTypeChecker(node.GetL(), node.GetR(), node);
 
         private void CheckDot(Node node, PExp expr, Symbol symbol, TDot dot)
         {

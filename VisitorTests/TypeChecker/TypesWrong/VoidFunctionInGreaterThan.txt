@@ -1,0 +1,7 @@
+﻿void main()
+{
+	bool b = f() <= f()
+}
+void f(){
+	int q
+}
