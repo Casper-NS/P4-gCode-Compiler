@@ -1,0 +1,60 @@
+﻿const float layerHeight = 0.2
+const float lineWidth = 0.4
+const int wallLayers = 46
+const float size = 10
+const int floorLineCount = 25
+
+void main()
+{
+    Home()
+    int layer = 0
+    EazyFloor(0)
+    layer += 2
+    repeat(wallLayers) {
+        wall(layerHeight * layer, -lineWidth)
+        wall(layerHeight * layer, 0)
+        layer += 1
+    }
+    EazyFloor(layer * layerHeight)
+}
+
+build void wall(float z, float offset)
+{
+    walk AbsMove((0-offset, 0-offset, z))
+    AbsMove((-offset, size+offset, z))
+    AbsMove((size+offset, size+offset, z))
+    AbsMove((size+offset, -offset, z))
+    AbsMove((-offset, -offset, z))
+}
+
+build void EazyFloor(float z)
+{
+    walk AbsMove((0, 0, z)) // go to corner
+
+    int i = 1
+
+    repeat(floorLineCount){
+        if(i%2 == 1){
+            RelMove((0, size, 0))
+        } else
+        {
+            RelMove((0, -size, 0))
+        }
+        RelMove((lineWidth, 0, 0))
+        i += 1
+    }
+    
+    walk RelMove((0, 0, lineWidth))
+    
+    i = 1
+    repeat(floorLineCount){
+        if(i%2 == 1){
+            RelMove((-size, 0, 0))
+        } else
+        {
+            RelMove((size, 0, 0))
+        }
+        RelMove((0, -lineWidth, 0))
+        i += 1
+    }
+}
