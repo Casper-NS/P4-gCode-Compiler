@@ -7,7 +7,6 @@ namespace GOAT_Compiler.Exceptions
     {
         public ExceededMaxIterationLimitException(Node n) : base(n, "Exceeded the max amount of iterations.")
         {
-            
         }
     }
 }

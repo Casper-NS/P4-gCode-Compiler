@@ -6,7 +6,6 @@ namespace GOAT_Compiler.Exceptions
     {
         public MoveWithoutScopeException(string msg) : base(msg)
         {
-            
         }
     }
 }
