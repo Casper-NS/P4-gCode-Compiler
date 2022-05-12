@@ -98,7 +98,17 @@ namespace GOAT_Compiler.Code_Generation
             }
             return null;
         }
-        private string VectorToGCodeStringCoordinate(Vector v) => $"X{(decimal)v.X} Y{(decimal)v.Y} Z{(decimal)v.Z}";
+
+        private void ThrowExceptionIfInNoneScope(string MovementFunctionName)
+        {
+            if (_machine.ExtrusionMode == ExtrusionMode.none)
+            {
+                throw new MoveWithoutScopeException($"{MovementFunctionName} cant be called without being in a build or walk scope.");
+            }
+        }
+
+        private static string VectorToGCodeStringCoordinate(Vector v) => $"X{(decimal)v.X} Y{(decimal)v.Y} Z{(decimal)v.Z}";
+
         private void Home()
         {
             _machine.Position = new Vector(0, 0, 0);
@@ -113,7 +123,7 @@ namespace GOAT_Compiler.Code_Generation
             ThrowExceptionIfInNoneScope("Relmove");
             if (_machine.ExtrusionMode == ExtrusionMode.build)
             {
-                _machine.CurrentExtrusion += (_machine.ExtrusionRate*VectorDistance(oldPosition, _machine.Position));
+                _machine.CurrentExtrusion += (_machine.ExtrusionRate * VectorDistance(oldPosition, _machine.Position));
                 gLine = "G1 " + VectorToGCodeStringCoordinate(_machine.Position) + " E" + (decimal)_machine.CurrentExtrusion;
             }
             else
@@ -121,14 +131,6 @@ namespace GOAT_Compiler.Code_Generation
                 gLine = "G0 " + VectorToGCodeStringCoordinate(_machine.Position);
             }
             _stream.WriteLine(gLine);
-        }
-
-        void ThrowExceptionIfInNoneScope(string MovementFunctionName)
-        {
-            if (_machine.ExtrusionMode == ExtrusionMode.none)
-            {
-                throw new MoveWithoutScopeException($"{MovementFunctionName} cant be called without being in a build or walk scope.");
-            }
         }
 
         private void AbsMove(Vector v)
@@ -148,20 +150,7 @@ namespace GOAT_Compiler.Code_Generation
             }
             _stream.WriteLine(gLine);
         }
-        private double CircleLength(Vector v1, Vector v2, double r)
-        {
-            double chord = VectorDistance(v1, v2);
-            double shortArcLength = 2 * r * Math.Asin(chord / (2 * r));
-            if (r < 0) // if its the long arc
-            {
-                // subtract from total circle length
-                return (2 * Math.Abs(r) * Math.PI) - shortArcLength;
-            }
-            else
-            {
-                return shortArcLength;
-            }
-        }
+
         private void RelArc(Vector v, double r, bool CCW)
         {
             string gLine;
@@ -169,6 +158,10 @@ namespace GOAT_Compiler.Code_Generation
             _machine.Position = oldPosition + v;
             Vector v2 = _machine.Position;
             ThrowExceptionIfInNoneScope("RelArc");
+            if (VectorDistance(oldPosition, v2) > Math.Abs(r)*2)
+            {
+                throw new Exception("RelArc radius is too small.");
+            }
             if (_machine.ExtrusionMode == ExtrusionMode.build)
             {
                 if(CCW) { 
@@ -192,22 +185,20 @@ namespace GOAT_Compiler.Code_Generation
                     gLine = "G2 " + VectorToGCodeStringCoordinate(_machine.Position) + " R" + (decimal)r;
                 }
             }
-            if (VectorDistance(oldPosition, v2) > Math.Abs(r)*2)
-            {
-                throw new Exception("RelArc radius is too small.");
-            }
             _stream.WriteLine(gLine);
         }
-        private double VectorDistance(Vector v1, Vector v2) 
-        {
-            return Math.Sqrt(Math.Pow((v1.X - v2.X), 2) + Math.Pow(v1.Y - v2.Y, 2) + Math.Pow(v1.Z - v2.Z, 2));
-        }
+
+
         private void AbsArc(Vector v, double r, bool CCW)
         {
             string gLine;
             Vector oldPosition = _machine.Position;
             _machine.Position = v;
             ThrowExceptionIfInNoneScope("AbsArc");
+            if (VectorDistance(oldPosition, _machine.Position) > Math.Abs(r) * 2)
+            {
+                throw new Exception("AbsArc radius is too small.");
+            }
             if (_machine.ExtrusionMode == ExtrusionMode.build)
             {
                 if (CCW)
@@ -232,29 +223,31 @@ namespace GOAT_Compiler.Code_Generation
                     gLine = "G2 " + VectorToGCodeStringCoordinate(_machine.Position) + " R" + (decimal)r;
                 }
             }
-            if (VectorDistance(oldPosition, _machine.Position) > Math.Abs(r) * 2)
-            {
-                throw new Exception("AbsArc radius is too small.");
-            }
             _stream.WriteLine(gLine);
         }
+
         private void SetExtruderTemp(double temp)
         {
             _machine.ExtruderTemp = temp;
             _stream.WriteLine("M104 S" + (decimal)temp);
         }
+
         private void SetFanPower(double power)
         {
             _machine.FanPower = power;
             _stream.WriteLine("M106 S" + Math.Floor(_machine.FanPower * 255));
         }
+
         private void SetExtrusionRate(double rate) => _machine.ExtrusionRate = rate;
+        
         private void SetBedTemp(double temp)
         {
             _machine.HotBedTemp = temp;
             _stream.WriteLine("M140 S" + (decimal)temp);
         }
+
         private Vector Position() => _machine.Position;
+
         private void Steps(double step)
         {
             Vector movement = new (Math.Cos(DegreesToRadians(_machine.Rotation))*step, 
@@ -262,7 +255,8 @@ namespace GOAT_Compiler.Code_Generation
                                    0);
             RelMove(movement);
         }
-        private double DegreesToRadians(double degrees) => degrees * Math.PI / 180.0f;
+
+
         private void Lift(double step)
         {
             string gLine;
@@ -279,6 +273,7 @@ namespace GOAT_Compiler.Code_Generation
             }
             _stream.WriteLine(gLine);
         }
+
         private void Right(double deg) => _machine.Rotation -= deg;
         private void Left(double deg) => _machine.Rotation += deg;
         private double Direction() => _machine.Rotation;
@@ -287,5 +282,22 @@ namespace GOAT_Compiler.Code_Generation
         private void WaitForExtruderTemp() => _stream.WriteLine("M109 R" + (decimal)_machine.ExtruderTemp);
         private void WaitForCurrentMove() => _stream.WriteLine("M400");
         private void WaitForMillis(int millis) => _stream.WriteLine("G4 P" + millis);
+        // Math and Geometry functions:
+        private static double DegreesToRadians(double degrees) => degrees * Math.PI / 180.0f;
+        private static double VectorDistance(Vector v1, Vector v2) => Math.Sqrt(Math.Pow((v1.X - v2.X), 2) + Math.Pow(v1.Y - v2.Y, 2) + Math.Pow(v1.Z - v2.Z, 2));
+        private static double CircleLength(Vector v1, Vector v2, double r)
+        {
+            double chord = VectorDistance(v1, v2);
+            double shortArcLength = 2 * r * Math.Asin(chord / (2 * r));
+            if (r < 0) // if its the long arc
+            {
+                // subtract from total circle length
+                return (2 * Math.Abs(r) * Math.PI) - shortArcLength;
+            }
+            else
+            {
+                return shortArcLength;
+            }
+        }
     }
 }
