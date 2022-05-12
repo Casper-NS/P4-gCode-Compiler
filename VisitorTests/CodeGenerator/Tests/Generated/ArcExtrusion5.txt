@@ -1,0 +1,9 @@
+﻿void main()
+{
+	SetExtrusionRate(1)
+	// should be about 7.23986
+	build RelArcCW((1, 0, 5), -1) 
+
+}
+@
+G2 X1 Y0 Z5 E7.2398596520101 R-1
