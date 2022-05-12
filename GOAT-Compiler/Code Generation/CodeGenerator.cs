@@ -10,18 +10,36 @@ namespace GOAT_Compiler
 {
     internal class CodeGenerator : SymbolTableVisitor
     {
+        /// <summary>
+        /// The max amount of iterations of a while-loop
+        /// </summary>
         private const int _maxIterationLimit = 100000;
+        /// <summary>
+        /// Stores the types of nodes with types, e.g. id-expression-nodes.
+        /// </summary>
         private readonly Dictionary<Node, Types> typeMap;
-        private readonly RuntimeTable<Node> nodeMap;
+        /// <summary>
+        /// Stores the values of all expression nodes.
+        /// </summary>
+        private readonly RuntimeTable<Node> valueMap;
         private dynamic CurrentReturnValue = null;
         private bool BreakFromFunction = false;
+        /// <summary>
+        /// The top-value of the stack indicates wheter we are in a build-scope(true) or not(false).
+        /// </summary>
         private readonly Stack<bool> BuildStack;
         private readonly CNCMachine _machine;
         private readonly BuildInFunctionImplementations _buildInFunctions;
+        /// <summary>
+        /// The textwriter which writes g-code to the output file.
+        /// </summary>
         private readonly TextWriter _textWriter;
         private readonly List<dynamic> CurrentParams = new();
 
         internal RuntimeTable<Symbol> GlobalRT;
+        /// <summary>
+        /// A callstack of runtime tables, a table is added for each function-call.
+        /// </summary>
         internal Stack<RuntimeTable<Symbol>> CallStackRT;
 
         internal RuntimeTable<Symbol> RT
@@ -39,7 +57,7 @@ namespace GOAT_Compiler
             GlobalRT = new();
             CallStackRT = new();
             BuildStack = new Stack<bool>();
-            nodeMap = new RuntimeTable<Node>();
+            valueMap = new RuntimeTable<Node>();
         }
 
         private void RTPutValue(Symbol symbol, dynamic value)
@@ -66,7 +84,7 @@ namespace GOAT_Compiler
             }
         }
 
-        private dynamic GetValue(Node node) => nodeMap.Get(node, typeMap[node]);
+        private dynamic GetValue(Node node) => valueMap.Get(node, typeMap[node]);
 
         public override void CaseADeclProgram(ADeclProgram node)
         {
@@ -114,17 +132,17 @@ namespace GOAT_Compiler
         public override void OutAIdExp(AIdExp node)
         {
             Symbol VarSymbol = _symbolTable.GetVariableSymbol(node.GetId().Text);
-            nodeMap.Put(node, GetValue(VarSymbol));
+            valueMap.Put(node, GetValue(VarSymbol));
         }
 
-        public override void OutABoolvalExp(ABoolvalExp node) => nodeMap.Put(node, bool.Parse(node.GetBoolValue().Text));
+        public override void OutABoolvalExp(ABoolvalExp node) => valueMap.Put(node, bool.Parse(node.GetBoolValue().Text));
 
         public override void OutAVectorExp(AVectorExp node)
         {
             double x = GetValue(node.GetX());
             double y = GetValue(node.GetY());
             double z = GetValue(node.GetZ());
-            nodeMap.Put(node, new Vector(x, y, z));
+            valueMap.Put(node, new Vector(x, y, z));
         }
 
         public override void OutANumberExp(ANumberExp node)
@@ -132,15 +150,15 @@ namespace GOAT_Compiler
             switch (typeMap[node])
             {
                 case Types.Integer:
-                    nodeMap.Put(node, int.Parse(node.GetNumber().Text));
+                    valueMap.Put(node, int.Parse(node.GetNumber().Text));
                     break;
                 case Types.FloatingPoint:
-                    nodeMap.Put(node, double.Parse(node.GetNumber().Text, CultureInfo.InvariantCulture));
+                    valueMap.Put(node, double.Parse(node.GetNumber().Text, CultureInfo.InvariantCulture));
                     break;
             }
         }
 
-        public override void OutANegExp(ANegExp node) => nodeMap.Put(node, -GetValue(node.GetExp()));
+        public override void OutANegExp(ANegExp node) => valueMap.Put(node, -GetValue(node.GetExp()));
 
         public override void OutAAssignStmt(AAssignStmt node)
         {
@@ -275,12 +293,11 @@ namespace GOAT_Compiler
                 Vector Vec1 = ((Vector)GetValue(left));
                 Vector Vec2 = ((Vector)GetValue(right));
 
-                Vector resultVec = new Vector(Vec1.X + Vec2.X, Vec1.Y + Vec2.Y, Vec1.Z + Vec2.Z);
-                nodeMap.Put(node, resultVec);
+                valueMap.Put(node, Vec1+Vec2);
             }
             else
             {
-                nodeMap.Put(node, GetValue(left) + GetValue(right));
+                valueMap.Put(node, GetValue(left) + GetValue(right));
             }
         }
 
@@ -293,11 +310,11 @@ namespace GOAT_Compiler
                 Vector Vec1 = ((Vector)GetValue(left));
                 Vector Vec2 = ((Vector)GetValue(right));
 
-                nodeMap.Put(node, (Vec1 - Vec2));
+                valueMap.Put(node, (Vec1 - Vec2));
             }
             else
             {
-                nodeMap.Put(node, GetValue(left) - GetValue(right));
+                valueMap.Put(node, GetValue(left) - GetValue(right));
             }
         }
 
@@ -311,11 +328,11 @@ namespace GOAT_Compiler
                 dynamic value = GetValue(right);
 
                 Vector resultVec = new Vector(Vec1.X / value, Vec1.Y / value, Vec1.Z / value);
-                nodeMap.Put(node, resultVec);
+                valueMap.Put(node, resultVec);
             }
             else
             {
-                nodeMap.Put(node, GetValue(left) / GetValue(right));
+                valueMap.Put(node, GetValue(left) / GetValue(right));
             }
         }
 
@@ -323,7 +340,7 @@ namespace GOAT_Compiler
         {
             Node left = node.GetL();
             Node right = node.GetR();
-            nodeMap.Put(node, GetValue(left) % GetValue(right));
+            valueMap.Put(node, GetValue(left) % GetValue(right));
         }
 
         public override void OutAMultExp(AMultExp node)
@@ -336,74 +353,74 @@ namespace GOAT_Compiler
                 dynamic value = GetValue(right);
 
                 Vector resultVec = new Vector(Vec1.X * value, Vec1.Y * value, Vec1.Z * value);
-                nodeMap.Put(node, resultVec);
+                valueMap.Put(node, resultVec);
             }
             else
             {
-                nodeMap.Put(node, GetValue(left) * GetValue(right));
+                valueMap.Put(node, GetValue(left) * GetValue(right));
             }
         }
 
         public override void OutAAndExp(AAndExp node)
         {
-            bool l = nodeMap.Get(node.GetL(), typeMap[node.GetL()]);
-            bool r = nodeMap.Get(node.GetR(), typeMap[node.GetR()]);
-            nodeMap.Put(node, l && r);
+            bool l = valueMap.Get(node.GetL(), typeMap[node.GetL()]);
+            bool r = valueMap.Get(node.GetR(), typeMap[node.GetR()]);
+            valueMap.Put(node, l && r);
         }
 
         public override void OutAOrExp(AOrExp node)
         {
-            bool l = nodeMap.Get(node.GetL(), typeMap[node.GetL()]);
-            bool r = nodeMap.Get(node.GetR(), typeMap[node.GetR()]);
-            nodeMap.Put(node, l || r);
+            bool l = valueMap.Get(node.GetL(), typeMap[node.GetL()]);
+            bool r = valueMap.Get(node.GetR(), typeMap[node.GetR()]);
+            valueMap.Put(node, l || r);
         }
 
         public override void OutAEqExp(AEqExp node)
         {
             dynamic l = GetValue(node.GetL());
             dynamic r = GetValue(node.GetR());
-            nodeMap.Put(node, l == r);
+            valueMap.Put(node, l == r);
         }
 
         public override void OutAGtExp(AGtExp node)
         {
             dynamic l = GetValue(node.GetL());
             dynamic r = GetValue(node.GetR());
-            nodeMap.Put(node, l > r);
+            valueMap.Put(node, l > r);
         }
 
         public override void OutALtExp(ALtExp node)
         {
             dynamic l = GetValue(node.GetL());
             dynamic r = GetValue(node.GetR());
-            nodeMap.Put(node, l < r);
+            valueMap.Put(node, l < r);
         }
 
         public override void OutANeqExp(ANeqExp node)
         {
             dynamic l = GetValue(node.GetL());
             dynamic r = GetValue(node.GetR());
-            nodeMap.Put(node, l != r);
+            valueMap.Put(node, l != r);
         }
 
         public override void OutALeqExp(ALeqExp node)
         {
             dynamic l = GetValue(node.GetL());
             dynamic r = GetValue(node.GetR());
-            nodeMap.Put(node, l <= r);
+            valueMap.Put(node, l <= r);
         }
 
         public override void OutAGeqExp(AGeqExp node)
         {
             dynamic l = GetValue(node.GetL());
             dynamic r = GetValue(node.GetR());
-            nodeMap.Put(node, l >= r);
+            valueMap.Put(node, l >= r);
         }
 
         public override void OutANotExp(ANotExp node)
         {
             bool value = GetValue(node.GetExp());
-            nodeMap.Put(node, !value);
+            valueMap.Put(node, !value);
         }
 
         public override void CaseAIfStmt(AIfStmt node)
@@ -569,7 +586,7 @@ namespace GOAT_Compiler
                     throw new BuildInWalkException(node, e.Message);
                 }
 
-                nodeMap.Put(node, returnValue);
+                valueMap.Put(node, returnValue);
                 CurrentParams.Clear();
             }
             else
@@ -580,7 +597,7 @@ namespace GOAT_Compiler
 
                 if (funcNode is AFuncDecl)
                 {
-                    nodeMap.Put(node, CurrentReturnValue);
+                    valueMap.Put(node, CurrentReturnValue);
                 }
 
                 BreakFromFunction = false;
