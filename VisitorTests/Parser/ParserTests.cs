@@ -10,7 +10,10 @@ using Xunit.Sdk;
 
 namespace ParserTester
 {
-    public class Tests
+    /// <summary>
+    /// The class runs the tests that checks sableCC.
+    /// </summary>
+    public class ParserTests
     {
         // Tests if all files in the CorrectFiles folder can be parsed
         [SkippableTheory]
