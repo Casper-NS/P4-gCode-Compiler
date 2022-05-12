@@ -9,7 +9,7 @@ namespace GOAT_Compiler
         private Table _globalScope = null;
         private Table currentScope = null;
 
-        private Stack<Table> scopeStack = new();
+        private readonly Stack<Table> scopeStack = new();
         
         private readonly Dictionary<Node, Table> scopeMap = new ();
 

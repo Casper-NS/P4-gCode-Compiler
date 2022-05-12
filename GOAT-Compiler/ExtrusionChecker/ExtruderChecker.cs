@@ -244,13 +244,13 @@ namespace GOAT_Compiler
         /// <exception cref="CallBuildInWalkException">Called if walk calls a build</exception>
         private Extrude UpdateExtrudeType(FunctionCall edge, BFSNode node)
         {
-            if (node.TheExtrudeTypeFromCallStack == Extrude.Walk && edge.extrudeType == Extrude.Build)
+            if (node.TheExtrudeTypeFromCallStack == Extrude.Walk && edge.extrusionType == Extrude.Build)
             {
                 edge.BFSNode.TheNodeThatCalledThisOne = node;
                 throw new CallBuildInWalkException(edge.BFSNode);
             }
             //Returns the nodes extrudetype if its value is higher, else return the edges extrudetype.
-            return node.TheExtrudeTypeFromCallStack > edge.extrudeType ? node.TheExtrudeTypeFromCallStack : edge.extrudeType;
+            return node.TheExtrudeTypeFromCallStack > edge.extrusionType ? node.TheExtrudeTypeFromCallStack : edge.extrusionType;
         }
     }
 }
