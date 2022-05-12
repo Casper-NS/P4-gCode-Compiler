@@ -111,7 +111,7 @@ namespace GOAT_Compiler.Code_Generation
             Vector oldPosition = _machine.Position;
             _machine.Position = oldPosition + v;
             ThrowExceptionIfInNoneScope("Relmove");
-            if (_machine.ExtrusionMode == BuildScope.build)
+            if (_machine.ExtrusionMode == ExtrusionMode.build)
             {
                 _machine.CurrentExtrusion += (_machine.ExtrusionRate*VectorDistance(oldPosition, _machine.Position));
                 gLine = "G1 " + VectorToGCodeStringCoordinate(_machine.Position) + " E" + (decimal)_machine.CurrentExtrusion;
@@ -125,7 +125,7 @@ namespace GOAT_Compiler.Code_Generation
 
         void ThrowExceptionIfInNoneScope(string MovementFunctionName)
         {
-            if (_machine.ExtrusionMode == BuildScope.none)
+            if (_machine.ExtrusionMode == ExtrusionMode.none)
             {
                 throw new MoveWithoutScopeException($"{MovementFunctionName} cant be called without being in a build or walk scope.");
             }
@@ -137,7 +137,7 @@ namespace GOAT_Compiler.Code_Generation
             Vector oldPosition = _machine.Position;
             _machine.Position = v;
             ThrowExceptionIfInNoneScope("Absmove");
-            if (_machine.ExtrusionMode == BuildScope.build)
+            if (_machine.ExtrusionMode == ExtrusionMode.build)
             {
                 _machine.CurrentExtrusion += (_machine.ExtrusionRate * VectorDistance(oldPosition, _machine.Position));
                 gLine = "G1 " + VectorToGCodeStringCoordinate(_machine.Position) + " E" + (decimal)_machine.CurrentExtrusion;
@@ -169,7 +169,7 @@ namespace GOAT_Compiler.Code_Generation
             _machine.Position = oldPosition + v;
             Vector v2 = _machine.Position;
             ThrowExceptionIfInNoneScope("RelArc");
-            if (_machine.ExtrusionMode == BuildScope.build)
+            if (_machine.ExtrusionMode == ExtrusionMode.build)
             {
                 if(CCW) { 
                     _machine.CurrentExtrusion += (_machine.ExtrusionRate * CircleLength(oldPosition, _machine.Position, r));
@@ -208,7 +208,7 @@ namespace GOAT_Compiler.Code_Generation
             Vector oldPosition = _machine.Position;
             _machine.Position = v;
             ThrowExceptionIfInNoneScope("AbsArc");
-            if (_machine.ExtrusionMode == BuildScope.build)
+            if (_machine.ExtrusionMode == ExtrusionMode.build)
             {
                 if (CCW)
                 {
@@ -268,7 +268,7 @@ namespace GOAT_Compiler.Code_Generation
             string gLine;
             _machine.Position.Z += step;
             ThrowExceptionIfInNoneScope("Lift");
-            if (_machine.ExtrusionMode == BuildScope.build)
+            if (_machine.ExtrusionMode == ExtrusionMode.build)
             {
                 _machine.CurrentExtrusion += _machine.ExtrusionRate * step;
                 gLine = "G1 " + VectorToGCodeStringCoordinate(_machine.Position) + " E" + (decimal)_machine.CurrentExtrusion;

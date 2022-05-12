@@ -3,7 +3,7 @@
 namespace GOAT_Compiler.Code_Generation
 {
 
-    public enum BuildScope
+    public enum ExtrusionMode
     {
         build,
         walk,
@@ -108,9 +108,9 @@ namespace GOAT_Compiler.Code_Generation
         }
 
         /// <summary>
-        /// The current extruder state.
+        /// The current extruder mode, (build/walk/none).
         /// </summary>
-        public BuildScope ExtrusionMode { get; set; } = BuildScope.none;
+        public ExtrusionMode ExtrusionMode { get; set; } = ExtrusionMode.none;
 
         /// <summary>
         /// The current rotation of the tutle, where 0 degrees are the positive x-axis.

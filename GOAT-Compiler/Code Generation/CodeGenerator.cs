@@ -548,16 +548,16 @@ namespace GOAT_Compiler
                 {
                     if (build)
                     {
-                        _machine.ExtrusionMode = BuildScope.build;
+                        _machine.ExtrusionMode = ExtrusionMode.build;
                     }
                     else
                     {
-                        _machine.ExtrusionMode = BuildScope.walk;
+                        _machine.ExtrusionMode = ExtrusionMode.walk;
                     }
                 }
                 else
                 {
-                    _machine.ExtrusionMode = BuildScope.none;
+                    _machine.ExtrusionMode = ExtrusionMode.none;
                 }
 
                 try
