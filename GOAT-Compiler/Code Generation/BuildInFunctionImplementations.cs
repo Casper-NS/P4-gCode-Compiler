@@ -185,11 +185,11 @@ namespace GOAT_Compiler.Code_Generation
             {
                 if (CCW)
                 {
-                    gLine = "G3 " + VectorToGCodeStringCoordinate(_machine.Position) + (decimal)v2.Z + " R" + (decimal)r;
+                    gLine = "G3 " + VectorToGCodeStringCoordinate(_machine.Position) + " R" + (decimal)r;
                 }
                 else
                 {
-                    gLine = "G2 " + VectorToGCodeStringCoordinate(_machine.Position) + (decimal)v2.Z + " R" + (decimal)r;
+                    gLine = "G2 " + VectorToGCodeStringCoordinate(_machine.Position) + " R" + (decimal)r;
                 }
             }
             if (VectorDistance(oldPosition, v2) > Math.Abs(r)*2)
