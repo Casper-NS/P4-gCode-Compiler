@@ -80,7 +80,7 @@ namespace GOAT_Compiler
 
         public Node GetFunctionNode(Symbol symbol) => funcDeclMap.TryGetValue(symbol, out Node node) ? node : null;
 
-        public bool IsGlobal(Symbol symbol) => (_globalScope.GetSymbol(symbol.name) != null);
+        public bool IsGlobal(Symbol symbol) => (_globalScope.GetSymbol(symbol.Name) != null);
     }
 
     class Table

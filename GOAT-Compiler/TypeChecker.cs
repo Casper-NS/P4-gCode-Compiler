@@ -108,7 +108,7 @@ namespace GOAT_Compiler
         {
             if (dot != null)
             {
-                if (id.type != Types.Vector)
+                if (id.Type != Types.Vector)
                 {
                     throw new TypeMismatchException(node, "symbols with.extensions have to be vectors");
                 }
@@ -121,13 +121,13 @@ namespace GOAT_Compiler
                     throw new TypeMismatchException(node, "Types not compatible with multiply or divide expression");
                 }
             }
-            else if (id.type == Types.Vector && (type == Types.FloatingPoint || type == Types.Integer))
+            else if (id.Type == Types.Vector && (type == Types.FloatingPoint || type == Types.Integer))
             {
-                _typeDictionary.Add(node, id.type);
+                _typeDictionary.Add(node, id.Type);
             }
-            else if (id.type != Types.Vector)
+            else if (id.Type != Types.Vector)
             {
-                _typeDictionary.Add(node, Convert(expr, id.type));
+                _typeDictionary.Add(node, Convert(expr, id.Type));
             }
             else
             {
@@ -240,7 +240,7 @@ namespace GOAT_Compiler
         {
             if (dot != null)
             {
-                if (symbol.type == Types.Vector)
+                if (symbol.Type == Types.Vector)
                 {
                     _typeDictionary.Add(node, Convert(expr, Types.FloatingPoint));
                 }
@@ -251,7 +251,7 @@ namespace GOAT_Compiler
             }
             else
             {
-                _typeDictionary.Add(node, Convert(expr, symbol.type));
+                _typeDictionary.Add(node, Convert(expr, symbol.Type));
             }
         }
 
@@ -343,14 +343,14 @@ namespace GOAT_Compiler
             Symbol id = _symbolTable.GetVariableSymbol(node.GetId().Text);
             if(node.GetExp() != null)
             {
-                if (Convert(node.GetExp(), id.type) == id.type)
+                if (Convert(node.GetExp(), id.Type) == id.Type)
                 {
-                    _typeDictionary.Add(node, id.type);
+                    _typeDictionary.Add(node, id.Type);
                 }
             }
             else
             {
-                _typeDictionary.Add(node, id.type);
+                _typeDictionary.Add(node, id.Type);
             }
         }
         
@@ -359,7 +359,7 @@ namespace GOAT_Compiler
             Symbol id = _symbolTable.GetVariableSymbol(node.GetId().Text);
             if (node.GetDot() != null)
             {
-                if (id.type == Types.Vector)
+                if (id.Type == Types.Vector)
                 {
                     _typeDictionary.Add(node, Types.FloatingPoint);
                 }
@@ -370,7 +370,7 @@ namespace GOAT_Compiler
             }
             else
             {
-                _typeDictionary.Add(node, id.type);
+                _typeDictionary.Add(node, id.Type);
             }
         }
 
@@ -379,8 +379,8 @@ namespace GOAT_Compiler
             IList list = node.GetArgs();
 
             Symbol id = _symbolTable.GetFunctionSymbol(node.GetName().Text);
-            _typeDictionary.Add(node, id.type);
-            List<Types> formelList = id.GetParamTypes();
+            _typeDictionary.Add(node, id.Type);
+            List<Types> formelList = id.ParamTypes;
             if(list.Count != formelList.Count)
             {
                 throw new TypeMismatchException(node, "Wrong number of arguments");
@@ -397,10 +397,10 @@ namespace GOAT_Compiler
         public override void OutAParamDecl(AParamDecl node)
         {
             Symbol id = _symbolTable.GetVariableSymbol(node.GetId().Text);
-            _typeDictionary.Add(node, id.type);
+            _typeDictionary.Add(node, id.Type);
         }
 
-        public override void InsideScopeInAFuncDecl(AFuncDecl node) => currentFunctionType = _symbolTable.GetFunctionSymbol(node.GetId().Text).type;
+        public override void InsideScopeInAFuncDecl(AFuncDecl node) => currentFunctionType = _symbolTable.GetFunctionSymbol(node.GetId().Text).Type;
        
         public override void InsideScopeInAProcDecl(AProcDecl node) => currentFunctionType = Types.Void;
 
@@ -421,18 +421,18 @@ namespace GOAT_Compiler
         public override void InsideScopeOutAFuncDecl(AFuncDecl node)
         {
             Symbol id = _symbolTable.GetFunctionSymbol(node.GetId().Text);
-            _typeDictionary.Add(node, id.type);
+            _typeDictionary.Add(node, id.Type);
 
             if (!guaranteeedToReturn.Contains(node.GetBlock()))
             {
-                throw new NotAllPathsReturnException(node, id.name);
+                throw new NotAllPathsReturnException(node, id.Name);
             }
         }
         
         public override void InsideScopeOutAProcDecl(AProcDecl node)
         {
             Symbol id = _symbolTable.GetFunctionSymbol(node.GetId().Text);
-            _typeDictionary.Add(node, id.type);
+            _typeDictionary.Add(node, id.Type);
         }
 
         // blocks

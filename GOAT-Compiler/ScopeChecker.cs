@@ -50,12 +50,12 @@ namespace GOAT_Compiler
 
             if (isDeclared.Contains(symbol) == false)
             {
-                throw new RefUsedBeforeClosestDeclException(node, symbol.name);
+                throw new RefUsedBeforeClosestDeclException(node, symbol.Name);
             }
 
             if (isInitialized.Contains(symbol) == false)
             {
-                throw new VarNotInitializedException(node, symbol.name);
+                throw new VarNotInitializedException(node, symbol.Name);
             }
         }
 
@@ -80,12 +80,12 @@ namespace GOAT_Compiler
 
             if (isDeclared.Contains(symbol) == false)
             {
-                throw new RefUsedBeforeClosestDeclException(node, symbol.name);
+                throw new RefUsedBeforeClosestDeclException(node, symbol.Name);
             }
 
             if (isConst.Contains(symbol) == true)
             {
-                throw new AssignConstException(node, $"Const variable named {symbol.name} cant be changed");
+                throw new AssignConstException(node, $"Const variable named {symbol.Name} cant be changed");
             }
 
             if (isInitialized.Contains(symbol) == false)
@@ -133,7 +133,7 @@ namespace GOAT_Compiler
 
             if (isDeclared.Contains(symbol) == false)
             {
-                throw new RefUsedBeforeClosestDeclException(node, symbol.name);
+                throw new RefUsedBeforeClosestDeclException(node, symbol.Name);
             }
 
             if (isInitialized.Contains(symbol) == false)
@@ -143,7 +143,7 @@ namespace GOAT_Compiler
 
             if (isConst.Contains(symbol) == true)
             {
-                throw new AssignConstException(node, $"Const variable named {symbol.name} cant be changed");
+                throw new AssignConstException(node, $"Const variable named {symbol.Name} cant be changed");
             }
 
         }

@@ -88,7 +88,7 @@ namespace GOAT_Compiler
 
             if (!IsFunctionDeclared(node))
             {
-                _functions.Add(_currentSymbol, new BFSNode(_currentSymbol.name, Extrude.NotSet));
+                _functions.Add(_currentSymbol, new BFSNode(_currentSymbol.Name, Extrude.NotSet));
             }
         }
         public override void InAProcDecl(AProcDecl node)
@@ -97,7 +97,7 @@ namespace GOAT_Compiler
 
             if (!IsFunctionDeclared(node))
             {
-                _functions.Add(_currentSymbol, new BFSNode(_currentSymbol.name, Extrude.NotSet));
+                _functions.Add(_currentSymbol, new BFSNode(_currentSymbol.Name, Extrude.NotSet));
             }
         }
 

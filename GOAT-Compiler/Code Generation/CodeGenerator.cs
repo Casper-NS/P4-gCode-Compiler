@@ -76,11 +76,11 @@ namespace GOAT_Compiler
         {
             if (RT.Contains(symbol))
             {
-                return RT.Get(symbol, symbol.type);
+                return RT.Get(symbol, symbol.Type);
             }
             else
             {
-                return GlobalRT.Get(symbol, symbol.type);
+                return GlobalRT.Get(symbol, symbol.Type);
             }
         }
 
@@ -164,7 +164,7 @@ namespace GOAT_Compiler
         {
             Symbol idSymbol = _symbolTable.GetVariableSymbol(node.GetId().Text);
 
-            if (idSymbol.type == Types.FloatingPoint)
+            if (idSymbol.Type == Types.FloatingPoint)
             {
                 RTPutValue(idSymbol, (double)GetValue(node.GetExp()));
             }
@@ -177,7 +177,7 @@ namespace GOAT_Compiler
         public override void OutAAssignPlusStmt(AAssignPlusStmt node)
         {
             Symbol idSymbol = _symbolTable.GetVariableSymbol(node.GetId().Text);
-            if (idSymbol.type == Types.Vector)
+            if (idSymbol.Type == Types.Vector)
             {
                 Vector Vec1 = ((Vector)GetValue(node.GetExp()));
                 Vector Vec2 = ((Vector)GetValue(idSymbol));
@@ -187,7 +187,7 @@ namespace GOAT_Compiler
             }
             else
             {
-                if (idSymbol.type == Types.FloatingPoint)
+                if (idSymbol.Type == Types.FloatingPoint)
                 {
                     RTPutValue(idSymbol, (double)(GetValue(idSymbol) + GetValue(node.GetExp())));
                 }
@@ -201,7 +201,7 @@ namespace GOAT_Compiler
         public override void OutAAssignMinusStmt(AAssignMinusStmt node)
         {
             Symbol idSymbol = _symbolTable.GetVariableSymbol(node.GetId().Text);
-            if (idSymbol.type == Types.Vector)
+            if (idSymbol.Type == Types.Vector)
             {
                 Vector Vec1 = ((Vector)GetValue(node.GetExp()));
                 Vector Vec2 = ((Vector)GetValue(idSymbol));
@@ -211,7 +211,7 @@ namespace GOAT_Compiler
             }
             else
             {
-                if (idSymbol.type == Types.FloatingPoint)
+                if (idSymbol.Type == Types.FloatingPoint)
                 {
                     RTPutValue(idSymbol, (double)(GetValue(idSymbol) - GetValue(node.GetExp())));
                 }
@@ -226,7 +226,7 @@ namespace GOAT_Compiler
         public override void OutAAssignMultStmt(AAssignMultStmt node)
         {
             Symbol idSymbol = _symbolTable.GetVariableSymbol(node.GetId().Text);
-            if (idSymbol.type == Types.Vector)
+            if (idSymbol.Type == Types.Vector)
             {
                 Vector Vec = ((Vector)GetValue(idSymbol));
                 dynamic scale = GetValue(node.GetExp());
@@ -236,7 +236,7 @@ namespace GOAT_Compiler
             }
             else
             {
-                if (idSymbol.type == Types.FloatingPoint)
+                if (idSymbol.Type == Types.FloatingPoint)
                 {
                     RTPutValue(idSymbol, (double)(GetValue(idSymbol) * GetValue(node.GetExp())));
                 }
@@ -250,7 +250,7 @@ namespace GOAT_Compiler
         public override void OutAAssignModStmt(AAssignModStmt node)
         {
             Symbol idSymbol = _symbolTable.GetVariableSymbol(node.GetId().Text);
-            if (idSymbol.type == Types.FloatingPoint)
+            if (idSymbol.Type == Types.FloatingPoint)
             {
                 RTPutValue(idSymbol, (double)(GetValue(idSymbol) % GetValue(node.GetExp())));
             }
@@ -263,7 +263,7 @@ namespace GOAT_Compiler
         public override void OutAAssignDivisionStmt(AAssignDivisionStmt node)
         {
             Symbol idSymbol = _symbolTable.GetVariableSymbol(node.GetId().Text);
-            if (idSymbol.type == Types.Vector)
+            if (idSymbol.Type == Types.Vector)
             {
                 Vector Vec1 = ((Vector)GetValue(idSymbol));
                 dynamic value = GetValue(node.GetExp());
@@ -273,7 +273,7 @@ namespace GOAT_Compiler
             }
             else
             {
-                if (idSymbol.type == Types.FloatingPoint)
+                if (idSymbol.Type == Types.FloatingPoint)
                 {
                     RTPutValue(idSymbol, (double)(GetValue(idSymbol) / GetValue(node.GetExp())));
                 }

@@ -22,7 +22,7 @@ namespace SymbolTableTest
             ISymbolTable symbolTable = new RecSymbolTable();
             symbolTable.OpenScope(new ANumberExp());
             symbolTable.AddVariableSymbol(value, type);
-            Assert.Equal(type, symbolTable.GetVariableSymbol(value).type);
+            Assert.Equal(type, symbolTable.GetVariableSymbol(value).Type);
             symbolTable.CloseScope();
         }
 
@@ -53,7 +53,7 @@ namespace SymbolTableTest
             {
                 symbolTable.OpenScope(nodes[i]);
             }
-            Assert.Contains(symbolName, symbolTable.GetVariableSymbol(symbolName).name);
+            Assert.Contains(symbolName, symbolTable.GetVariableSymbol(symbolName).Name);
             for (int i = 1; i <= depth; i++)
             {
                 symbolTable.CloseScope();
@@ -87,7 +87,7 @@ namespace SymbolTableTest
             ISymbolTable symbolTable = new RecSymbolTable();
             symbolTable.OpenScope(new ANumberExp());
             symbolTable.AddFunctionSymbol(new ANumberExp(), "testfunc", Types.Void, Types.Boolean, Types.FloatingPoint, Types.Integer, Types.Vector);
-            List<Types> paramTypes = symbolTable.GetFunctionSymbol("testfunc").GetParamTypes();
+            List<Types> paramTypes = symbolTable.GetFunctionSymbol("testfunc").ParamTypes;
             Assert.Equal(Types.Boolean, paramTypes[0]);
             Assert.Equal(Types.FloatingPoint, paramTypes[1]);
             Assert.Equal(Types.Integer, paramTypes[2]);
@@ -127,9 +127,9 @@ namespace SymbolTableTest
             symbolTable.AddVariableSymbol("a", Types.Integer);
             symbolTable.OpenScope(new ANumberExp());
             symbolTable.AddVariableSymbol("a", Types.Boolean);
-            Assert.Equal(Types.Boolean, symbolTable.GetVariableSymbol("a").type);
+            Assert.Equal(Types.Boolean, symbolTable.GetVariableSymbol("a").Type);
             symbolTable.CloseScope();
-            Assert.Equal(Types.Integer, symbolTable.GetVariableSymbol("a").type);
+            Assert.Equal(Types.Integer, symbolTable.GetVariableSymbol("a").Type);
             symbolTable.CloseScope();
         }
 
