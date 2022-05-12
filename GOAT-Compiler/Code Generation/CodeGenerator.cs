@@ -42,7 +42,7 @@ namespace GOAT_Compiler
             nodeMap = new RuntimeTable<Node>();
         }
 
-        void RTPutValue(Symbol symbol, dynamic value)
+        private void RTPutValue(Symbol symbol, dynamic value)
         {
             if (_symbolTable.IsGlobal(symbol))
             {
@@ -54,7 +54,7 @@ namespace GOAT_Compiler
             }
         }
 
-        dynamic GetValue(Symbol symbol)
+        private dynamic GetValue(Symbol symbol)
         {
             if (RT.Contains(symbol))
             {
@@ -66,7 +66,7 @@ namespace GOAT_Compiler
             }
         }
 
-        dynamic GetValue(Node node) => nodeMap.Get(node, typeMap[node]);
+        private dynamic GetValue(Node node) => nodeMap.Get(node, typeMap[node]);
 
         public override void CaseADeclProgram(ADeclProgram node)
         {
@@ -664,10 +664,10 @@ namespace GOAT_Compiler
 
         internal class RuntimeTable<TKey>
         {
-            private Dictionary<TKey, int> IntMap = new Dictionary<TKey, int>();
-            private Dictionary<TKey, double> FloatMap = new Dictionary<TKey, double>();
-            private Dictionary<TKey, bool> BoolMap = new Dictionary<TKey, bool>();
-            private Dictionary<TKey, Vector> VecMap = new Dictionary<TKey, Vector>();
+            private readonly Dictionary<TKey, int> IntMap = new Dictionary<TKey, int>();
+            private readonly Dictionary<TKey, double> FloatMap = new Dictionary<TKey, double>();
+            private readonly Dictionary<TKey, bool> BoolMap = new Dictionary<TKey, bool>();
+            private readonly Dictionary<TKey, Vector> VecMap = new Dictionary<TKey, Vector>();
 
             public void Put(TKey key, int value)
             {
