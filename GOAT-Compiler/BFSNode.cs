@@ -10,10 +10,10 @@ namespace GOAT_Compiler
         internal FunctionCall(BFSNode bfsnode, Extrude e)
         {
             BFSNode = bfsnode;
-            extrudeType = e;
+            extrusionType = e;
         }
         internal BFSNode BFSNode;
-        internal Extrude extrudeType;
+        internal Extrude extrusionType;
     }
 
     /// <summary>
@@ -37,9 +37,6 @@ namespace GOAT_Compiler
             ExtrudeType = extrude;
         }
 
-        internal void AddFunctionCall(BFSNode dn, Extrude e)
-        {
-            FunctionCalls.Add(new FunctionCall(dn, e));
-        }
+        internal void AddFunctionCall(BFSNode dn, Extrude e) => FunctionCalls.Add(new FunctionCall(dn, e));
     }
 }
