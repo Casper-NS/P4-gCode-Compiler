@@ -1,0 +1,6 @@
+﻿void main()
+{
+	const int a = 4
+	
+	a += (2 + 5)
+}

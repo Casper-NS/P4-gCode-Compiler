@@ -1,9 +1,11 @@
 ﻿void main()
 {
-	int a
+	int a = f
 }
 
 void f(){
-   hej = 2
+   hej = 2 + f
 }
 int hej
+
+const float f = 4
