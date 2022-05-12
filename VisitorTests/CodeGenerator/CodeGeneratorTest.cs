@@ -23,14 +23,13 @@ namespace VisitorTests
             ISymbolTable symbolTable = FileReadingTestUtilities.BuildSymbolTable(s);
             TypeChecker typeChecker = FileReadingTestUtilities.DoTypeChecking(s, symbolTable);
             
-            CodeGenerator codeGenerator;
             using (File.Create(outPutFileName)) { }
             
             using (Stream stream = new FileStream(outPutFileName, FileMode.Open))
             {
                 using (StreamWriter writer = new StreamWriter(stream))
                 {
-                    codeGenerator = new CodeGenerator(symbolTable, typeChecker.GetTypeDictionary(), writer);
+                    CodeGenerator codeGenerator = new CodeGenerator(symbolTable, typeChecker.GetTypeDictionary(), writer);
                     s.Apply(codeGenerator);
                 }
             }
@@ -61,7 +60,6 @@ namespace VisitorTests
                     s.Apply(codeGenerator);
                 }
             }
-            Assert.True(File.Exists(outPutFileName));
             
             Assert.True(File.ReadAllText(outPutFileName).Length > 0);
             if (File.Exists(outPutFileName))
@@ -101,18 +99,13 @@ namespace VisitorTests
                 }
             }
 
-            
-            
             //open the global scope and check the value of f
             symbolTable.OpenScope(s.GetPProgram());
             double f = generator.RT.Get(symbolTable.GetVariableSymbol("f"), Types.FloatingPoint);
 
             // assert equality within 5 decimal places
             Assert.Equal(expectedFloat, f, 5);
-
         }
-
-
     }
     class CodeGeneratorFilesEnumerator : BaseFilesEnumerator
     {
