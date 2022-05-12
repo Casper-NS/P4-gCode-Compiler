@@ -82,7 +82,7 @@ Tokens
   {normal} id    = idletter idchar*;
   {normal} dot = '.' xyz;
 
-  {normal} multiline_comment = '/*' not_star * star + ( not_star_slash not_star * star+) * '/' eol_char;
+  {normal} multiline_comment = '/*' not_star * star + ( not_star_slash not_star * star+) * '/';
   {normal} singleline_comment = '//' not_eol_char* eol_char;
 
 Ignored Tokens
