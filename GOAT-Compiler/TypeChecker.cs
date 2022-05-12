@@ -56,7 +56,7 @@ namespace GOAT_Compiler
             {
                 TypeDictionary.Add(current, Types.Boolean);
             }
-            else if (leftType == rightType)
+            else if (leftType == rightType && leftType != Types.Void && rightType != Types.Void)
             {
                 TypeDictionary.Add(current, Types.Boolean);
             }
@@ -88,7 +88,7 @@ namespace GOAT_Compiler
         {
             Types leftType = TypeDictionary[nodeleft];
             Types rightType = TypeDictionary[nodeRight];
-            if ((leftType != Types.Boolean && rightType != Types.Boolean) && (leftType != Types.Vector && rightType != Types.Vector))
+            if (TypePromoter(leftType, rightType) == Types.Integer || TypePromoter(leftType, rightType) == Types.FloatingPoint)
             {
                 TypeDictionary.Add(current, Types.Boolean);
             }
@@ -97,7 +97,7 @@ namespace GOAT_Compiler
                 throw new TypeMismatchException(current, "Type " + leftType + " and " + rightType + " are not valid for this comparison operations.");
             }
         }
-        private void MultDivModTypeChecker(Node left, Node right, Node current)
+        private void ModuloTypeChecker(Node left, Node right, Node current)
         {
             Types leftType = TypeDictionary[left];
             Types rightType = TypeDictionary[right];
@@ -110,7 +110,61 @@ namespace GOAT_Compiler
                 throw new TypeMismatchException(current, "Type " + leftType + " and " + rightType + " are not valid for this arithemtic operations.");
             }
         }
-        private void DivMultTypeChecker(Symbol id, Types type, Node node, Node expr, TDot dot)
+        private void DivTypeChecker(Node left, Node right, Node current)
+        {
+            Types leftType = TypeDictionary[left];
+            Types rightType = TypeDictionary[right];
+            if (leftType == Types.Integer && rightType == Types.FloatingPoint || leftType == Types.FloatingPoint && rightType == Types.Integer)
+            {
+                TypeDictionary.Add(current, Types.FloatingPoint);
+            }
+            else if (leftType == Types.FloatingPoint && rightType == Types.FloatingPoint)
+            {
+                TypeDictionary.Add(current, Types.FloatingPoint);
+            }
+            else if (leftType == Types.Integer && rightType == Types.Integer)
+            {
+                TypeDictionary.Add(current, Types.Integer);
+            }
+            else if(leftType == Types.Vector && (rightType == Types.Integer || rightType == Types.FloatingPoint))
+            {
+                TypeDictionary.Add(current, Types.Vector);
+            }
+            else
+            {
+                throw new TypeMismatchException(current, "Type " + leftType + " and " + rightType + " are not valid for this arithemtic operations.");
+            }
+        }
+        private void MultTypeChecker(Node left, Node right, Node current)
+        {
+            Types leftType = TypeDictionary[left];
+            Types rightType = TypeDictionary[right];
+            if (leftType == Types.Integer && rightType == Types.Vector || leftType == Types.Vector && rightType == Types.Integer)
+            {
+                TypeDictionary.Add(current, Types.Vector);
+            }
+            else if (leftType == Types.FloatingPoint && rightType == Types.Vector || leftType == Types.Vector && rightType == Types.FloatingPoint)
+            {
+                TypeDictionary.Add(current, Types.Vector);
+            }
+            else if (leftType == Types.Integer && rightType == Types.FloatingPoint || leftType == Types.FloatingPoint && rightType == Types.Integer)
+            {
+                TypeDictionary.Add(current, Types.FloatingPoint);
+            }
+            else if (leftType == Types.FloatingPoint && rightType == Types.FloatingPoint)
+            {
+                TypeDictionary.Add(current, Types.FloatingPoint);
+            }
+            else if (leftType == Types.Integer && rightType == Types.Integer)
+            {
+                TypeDictionary.Add(current, Types.Integer);
+            }
+            else
+            {
+                throw new TypeMismatchException(current, "Type " + leftType + " and " + rightType + " are not valid for this arithemtic operations.");
+            }
+        }
+        private void CompoundAssignmentDivAndMultTypeChecker(Symbol id, Types type, Node node, Node expr, TDot dot)
         {
             if (dot != null)
             {
@@ -223,11 +277,11 @@ namespace GOAT_Compiler
         
         public override void OutAEqExp(AEqExp node) => EqualAndNotEqualTypeChecker(node.GetL(), node.GetR(), node);
         
-        public override void OutAModuloExp(AModuloExp node) => MultDivModTypeChecker(node.GetL(), node.GetR(), node);
+        public override void OutAModuloExp(AModuloExp node) => ModuloTypeChecker(node.GetL(), node.GetR(), node);
         
-        public override void OutAMultExp(AMultExp node) => MultDivModTypeChecker(node.GetL(), node.GetR(), node);
+        public override void OutAMultExp(AMultExp node) => MultTypeChecker(node.GetL(), node.GetR(), node);
         
-        public override void OutADivdExp(ADivdExp node) => MultDivModTypeChecker(node.GetL(), node.GetR(), node);
+        public override void OutADivdExp(ADivdExp node) => DivTypeChecker(node.GetL(), node.GetR(), node);
         
         public override void OutAGeqExp(AGeqExp node) => GreaterThanLessThanTypeChecker(node.GetL(), node.GetR(), node);
         
@@ -313,14 +367,14 @@ namespace GOAT_Compiler
         {
             Symbol id = _symbolTable.GetVariableSymbol(node.GetId().Text);
             Types expType = TypeDictionary[node.GetExp()];
-            DivMultTypeChecker(id, expType, node, node.GetExp(), node.GetDot());
+            CompoundAssignmentDivAndMultTypeChecker(id, expType, node, node.GetExp(), node.GetDot());
         }
        
         public override void OutAAssignMultStmt(AAssignMultStmt node)
         {
             Symbol id = _symbolTable.GetVariableSymbol(node.GetId().Text);
             Types expType = TypeDictionary[node.GetExp()];
-            DivMultTypeChecker(id, expType, node, node.GetExp(), node.GetDot());
+            CompoundAssignmentDivAndMultTypeChecker(id, expType, node, node.GetExp(), node.GetDot());
         }
         
         public override void OutAAssignModStmt(AAssignModStmt node)
