@@ -28,12 +28,12 @@ namespace GOAT_Compiler
         /// <summary>
         /// The name of the symbol (the id).
         /// </summary>
-        public string Name { get; private set; }
+        public string Name { get; }
         /// <summary>
         /// If the symbol is a variable, this is the type of the variable. 
         /// If the symbol is a function then this is the returntype of the function.
         /// </summary>
-        public Types Type { get; private set; }
+        public Types Type { get; }
 
         /// <summary>
         /// If the symbol is a function, then this returns the types of the formal parameters.
