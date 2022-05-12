@@ -35,7 +35,7 @@ namespace VisitorTests
             CodeGenerator codeGenerator;
             using (StringWriter writer = new StringWriter(stringBuilder))
             {
-                codeGenerator = new CodeGenerator(symbolTable, typeChecker.GetTypeDictionary(), writer);
+                codeGenerator = new CodeGenerator(symbolTable, typeChecker.TypeDictionary, writer);
                 s.Apply(codeGenerator);
             }
 

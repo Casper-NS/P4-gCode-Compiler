@@ -49,7 +49,7 @@ namespace P4_GCode_Compiler
             {
                 using (StreamWriter writer = new StreamWriter(stream))
                 {
-                    CodeGenerator codeGenerator = new CodeGenerator(symTable, typeChecker.GetTypeDictionary(), writer);
+                    CodeGenerator codeGenerator = new CodeGenerator(symTable, typeChecker.TypeDictionary, writer);
                     AST.Apply(codeGenerator);
                 }
             }

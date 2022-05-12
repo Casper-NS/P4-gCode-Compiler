@@ -12,14 +12,9 @@ namespace GOAT_Compiler
     internal class TypeChecker : SymbolTableVisitor
     {
         private Types currentFunctionType;
-        private Dictionary<Node, Types> _typeDictionary = new Dictionary<Node, Types>();
+        public Dictionary<Node, Types> TypeDictionary { get; } = new Dictionary<Node, Types>();
 
-        private HashSet<Node> guaranteeedToReturn = new HashSet<Node>();
-
-        public Dictionary<Node, Types> GetTypeDictionary()
-        {
-            return _typeDictionary;
-        }
+        private HashSet<Node> guaranteedToReturn = new HashSet<Node>();
 
         /// <summary>
         /// The constructor for the type checker.
@@ -30,8 +25,8 @@ namespace GOAT_Compiler
         }
         private void ArithmeticTypeChecker(Node left, Node right, Node current)
         {
-            Types leftType = _typeDictionary[left];
-            Types rightType = _typeDictionary[right];
+            Types leftType = TypeDictionary[left];
+            Types rightType = TypeDictionary[right];
             Types type = TypePromoter(leftType, rightType);
             if (type == Types.Void || type == Types.Boolean) 
             {
@@ -39,25 +34,25 @@ namespace GOAT_Compiler
             }
             else
             {
-                _typeDictionary.Add(current, type);
+                TypeDictionary.Add(current, type);
             }            
         }
         private void EqlNotEqlTypeChecker(Node left, Node right, Node current)
         {
-            Types leftType = _typeDictionary[left];
-            Types rightType = _typeDictionary[right];
+            Types leftType = TypeDictionary[left];
+            Types rightType = TypeDictionary[right];
 
             if (leftType == Types.Integer && rightType == Types.FloatingPoint)
             {
-                _typeDictionary.Add(current, Types.Boolean);
+                TypeDictionary.Add(current, Types.Boolean);
             }
             else if (leftType == Types.FloatingPoint && rightType == Types.Integer)
             {
-                _typeDictionary.Add(current, Types.Boolean);
+                TypeDictionary.Add(current, Types.Boolean);
             }
             else if (leftType == rightType)
             {
-                _typeDictionary.Add(current, Types.Boolean);
+                TypeDictionary.Add(current, Types.Boolean);
             }
             else
             {
@@ -67,11 +62,11 @@ namespace GOAT_Compiler
 
         private void AndAndOrTypeChecker(Node nodeleft, Node nodeRight, Node current)
         {
-            Types leftType = _typeDictionary[nodeleft];
-            Types rightType = _typeDictionary[nodeRight];
+            Types leftType = TypeDictionary[nodeleft];
+            Types rightType = TypeDictionary[nodeRight];
             if (leftType == Types.Boolean && rightType == Types.Boolean)
             {
-                _typeDictionary.Add(current, Types.Boolean);
+                TypeDictionary.Add(current, Types.Boolean);
             }
             else
             {
@@ -80,11 +75,11 @@ namespace GOAT_Compiler
         }
         private void GreaterThanLessThanTypeChecker(Node nodeleft, Node nodeRight, Node current)
         {
-            Types leftType = _typeDictionary[nodeleft];
-            Types rightType = _typeDictionary[nodeRight];
+            Types leftType = TypeDictionary[nodeleft];
+            Types rightType = TypeDictionary[nodeRight];
             if ((leftType != Types.Boolean && rightType != Types.Boolean) && (leftType != Types.Vector && rightType != Types.Vector))
             {
-                _typeDictionary.Add(current, Types.Boolean);
+                TypeDictionary.Add(current, Types.Boolean);
             }
             else
             {
@@ -93,8 +88,8 @@ namespace GOAT_Compiler
         }
         private void MultDivModTypeChecker(Node left, Node right, Node current)
         {
-            Types leftType = _typeDictionary[left];
-            Types rightType = _typeDictionary[right];
+            Types leftType = TypeDictionary[left];
+            Types rightType = TypeDictionary[right];
             if ((leftType == Types.Integer || leftType == Types.FloatingPoint) && (rightType == Types.Integer || rightType == Types.FloatingPoint))
             {
                 ArithmeticTypeChecker(left, right, current);
@@ -114,7 +109,7 @@ namespace GOAT_Compiler
                 }
                 if (type == Types.FloatingPoint || type == Types.Integer)
                 {
-                    _typeDictionary.Add(node, Types.FloatingPoint);
+                    TypeDictionary.Add(node, Types.FloatingPoint);
                 }
                 else
                 {
@@ -123,11 +118,11 @@ namespace GOAT_Compiler
             }
             else if (id.Type == Types.Vector && (type == Types.FloatingPoint || type == Types.Integer))
             {
-                _typeDictionary.Add(node, id.Type);
+                TypeDictionary.Add(node, id.Type);
             }
             else if (id.Type != Types.Vector)
             {
-                _typeDictionary.Add(node, Convert(expr, id.Type));
+                TypeDictionary.Add(node, Convert(expr, id.Type));
             }
             else
             {
@@ -169,34 +164,34 @@ namespace GOAT_Compiler
         
         private Types Convert(Node n, Types t)
         {
-            if (_typeDictionary[n] == t)
+            if (TypeDictionary[n] == t)
             {
                 return t;
             }
-            else if (_typeDictionary[n] == Types.Integer && t == Types.FloatingPoint)
+            else if (TypeDictionary[n] == Types.Integer && t == Types.FloatingPoint)
             {
                 return Types.FloatingPoint;
             }
             else
             {
-                throw new TypeMismatchException(n, "Type " + _typeDictionary[n] + " is not valid for the Convert method.");
+                throw new TypeMismatchException(n, "Type " + TypeDictionary[n] + " is not valid for the Convert method.");
             }
         }
         
         public override void OutAVectorExp(AVectorExp node)
         {
-            Types x = _typeDictionary[node.GetX()];
-            Types y = _typeDictionary[node.GetY()];
-            Types z = _typeDictionary[node.GetZ()];
+            Types x = TypeDictionary[node.GetX()];
+            Types y = TypeDictionary[node.GetY()];
+            Types z = TypeDictionary[node.GetZ()];
             if (Convert(node.GetX(), Types.FloatingPoint) == Types.FloatingPoint 
                 && Convert(node.GetY(), Types.FloatingPoint) == Types.FloatingPoint 
                 && Convert(node.GetZ(), Types.FloatingPoint) == Types.FloatingPoint)
             {
-                _typeDictionary.Add(node, Types.Vector);
+                TypeDictionary.Add(node, Types.Vector);
             }
         }
         
-        public override void OutANumberExp(ANumberExp node) => _typeDictionary.Add(node, NumberType(node.GetNumber().Text));
+        public override void OutANumberExp(ANumberExp node) => TypeDictionary.Add(node, NumberType(node.GetNumber().Text));
         
         public override void OutAPlusExp(APlusExp node) => ArithmeticTypeChecker(node.GetL(), node.GetR(), node);
         
@@ -204,15 +199,15 @@ namespace GOAT_Compiler
         
         public override void OutANegExp(ANegExp node)
         {
-            Types type = _typeDictionary[node.GetExp()];
+            Types type = TypeDictionary[node.GetExp()];
             if (type == Types.Boolean)
             {
                 throw new TypeMismatchException(node, "Tried to negate a boolean");
             }
-            _typeDictionary.Add(node, type);
+            TypeDictionary.Add(node, type);
         }
 
-        public override void OutABoolvalExp(ABoolvalExp node) => _typeDictionary.Add(node, Types.Boolean);
+        public override void OutABoolvalExp(ABoolvalExp node) => TypeDictionary.Add(node, Types.Boolean);
         
         public override void OutAAndExp(AAndExp node) => AndAndOrTypeChecker(node.GetL(), node.GetR(), node);
         
@@ -242,7 +237,7 @@ namespace GOAT_Compiler
             {
                 if (symbol.Type == Types.Vector)
                 {
-                    _typeDictionary.Add(node, Convert(expr, Types.FloatingPoint));
+                    TypeDictionary.Add(node, Convert(expr, Types.FloatingPoint));
                 }
                 else
                 {
@@ -251,7 +246,7 @@ namespace GOAT_Compiler
             }
             else
             {
-                _typeDictionary.Add(node, Convert(expr, symbol.Type));
+                TypeDictionary.Add(node, Convert(expr, symbol.Type));
             }
         }
 
@@ -263,24 +258,24 @@ namespace GOAT_Compiler
         
         public override void OutAIfStmt(AIfStmt node)
         {
-            if (_typeDictionary[node.GetExp()] != Types.Boolean)
+            if (TypeDictionary[node.GetExp()] != Types.Boolean)
             {
                 throw new TypeMismatchException(node, "If statement must have a boolean expression");
             }
             else
             {
-                _typeDictionary.Add(node, Types.Void);
+                TypeDictionary.Add(node, Types.Void);
             }
 
-            if (guaranteeedToReturn.Contains(node.GetThen()) && (node.GetElse() == null  || guaranteeedToReturn.Contains(node.GetElse())))
+            if (guaranteedToReturn.Contains(node.GetThen()) && (node.GetElse() == null  || guaranteedToReturn.Contains(node.GetElse())))
             {
-                guaranteeedToReturn.Add(node);
+                guaranteedToReturn.Add(node);
             }
         }
         
         public override void OutAWhileStmt(AWhileStmt node)
         {
-            if (_typeDictionary[node.GetExp()] != Types.Boolean)
+            if (TypeDictionary[node.GetExp()] != Types.Boolean)
             {
                 throw new TypeMismatchException(node);
             }
@@ -288,7 +283,7 @@ namespace GOAT_Compiler
         
         public override void OutARepeatStmt(ARepeatStmt node)
         {
-            if (_typeDictionary[node.GetExp()] != Types.Integer)
+            if (TypeDictionary[node.GetExp()] != Types.Integer)
             {
                 throw new TypeMismatchException(node);
             }
@@ -309,14 +304,14 @@ namespace GOAT_Compiler
         public override void OutAAssignDivisionStmt(AAssignDivisionStmt node)
         {
             Symbol id = _symbolTable.GetVariableSymbol(node.GetId().Text);
-            Types expType = _typeDictionary[node.GetExp()];
+            Types expType = TypeDictionary[node.GetExp()];
             DivMultTypeChecker(id, expType, node, node.GetExp(), node.GetDot());
         }
        
         public override void OutAAssignMultStmt(AAssignMultStmt node)
         {
             Symbol id = _symbolTable.GetVariableSymbol(node.GetId().Text);
-            Types expType = _typeDictionary[node.GetExp()];
+            Types expType = TypeDictionary[node.GetExp()];
             DivMultTypeChecker(id, expType, node, node.GetExp(), node.GetDot());
         }
         
@@ -328,9 +323,9 @@ namespace GOAT_Compiler
         
         public override void OutANotExp(ANotExp node)
         {
-            if (_typeDictionary[node.GetExp()] == Types.Boolean)
+            if (TypeDictionary[node.GetExp()] == Types.Boolean)
             {
-                _typeDictionary.Add(node, Types.Boolean);
+                TypeDictionary.Add(node, Types.Boolean);
             }
             else
             {
@@ -345,12 +340,12 @@ namespace GOAT_Compiler
             {
                 if (Convert(node.GetExp(), id.Type) == id.Type)
                 {
-                    _typeDictionary.Add(node, id.Type);
+                    TypeDictionary.Add(node, id.Type);
                 }
             }
             else
             {
-                _typeDictionary.Add(node, id.Type);
+                TypeDictionary.Add(node, id.Type);
             }
         }
         
@@ -361,7 +356,7 @@ namespace GOAT_Compiler
             {
                 if (id.Type == Types.Vector)
                 {
-                    _typeDictionary.Add(node, Types.FloatingPoint);
+                    TypeDictionary.Add(node, Types.FloatingPoint);
                 }
                 else
                 {
@@ -370,7 +365,7 @@ namespace GOAT_Compiler
             }
             else
             {
-                _typeDictionary.Add(node, id.Type);
+                TypeDictionary.Add(node, id.Type);
             }
         }
 
@@ -379,7 +374,7 @@ namespace GOAT_Compiler
             IList list = node.GetArgs();
 
             Symbol id = _symbolTable.GetFunctionSymbol(node.GetName().Text);
-            _typeDictionary.Add(node, id.Type);
+            TypeDictionary.Add(node, id.Type);
             List<Types> formelList = id.ParamTypes;
             if(list.Count != formelList.Count)
             {
@@ -397,7 +392,7 @@ namespace GOAT_Compiler
         public override void OutAParamDecl(AParamDecl node)
         {
             Symbol id = _symbolTable.GetVariableSymbol(node.GetId().Text);
-            _typeDictionary.Add(node, id.Type);
+            TypeDictionary.Add(node, id.Type);
         }
 
         public override void InsideScopeInAFuncDecl(AFuncDecl node) => currentFunctionType = _symbolTable.GetFunctionSymbol(node.GetId().Text).Type;
@@ -412,18 +407,18 @@ namespace GOAT_Compiler
             }
             else
             {
-                _typeDictionary.Add(node, currentFunctionType);
+                TypeDictionary.Add(node, currentFunctionType);
             }
 
-            guaranteeedToReturn.Add(node);
+            guaranteedToReturn.Add(node);
         }
         
         public override void InsideScopeOutAFuncDecl(AFuncDecl node)
         {
             Symbol id = _symbolTable.GetFunctionSymbol(node.GetId().Text);
-            _typeDictionary.Add(node, id.Type);
+            TypeDictionary.Add(node, id.Type);
 
-            if (!guaranteeedToReturn.Contains(node.GetBlock()))
+            if (!guaranteedToReturn.Contains(node.GetBlock()))
             {
                 throw new NotAllPathsReturnException(node, id.Name);
             }
@@ -432,7 +427,7 @@ namespace GOAT_Compiler
         public override void InsideScopeOutAProcDecl(AProcDecl node)
         {
             Symbol id = _symbolTable.GetFunctionSymbol(node.GetId().Text);
-            _typeDictionary.Add(node, id.Type);
+            TypeDictionary.Add(node, id.Type);
         }
 
         // blocks
@@ -442,9 +437,9 @@ namespace GOAT_Compiler
             node.GetStmt().CopyTo(nodes, 0);
             foreach (Object stmtNode in nodes)
             {
-                if (guaranteeedToReturn.Contains((Node)stmtNode))
+                if (guaranteedToReturn.Contains((Node)stmtNode))
                 {
-                    guaranteeedToReturn.Add(node);
+                    guaranteedToReturn.Add(node);
                     break;
                 }
             }
@@ -458,9 +453,9 @@ namespace GOAT_Compiler
         
         private void OutWalkBuildNoneblock(Node node, Node childBlock)
         {
-            if (guaranteeedToReturn.Contains(childBlock))
+            if (guaranteedToReturn.Contains(childBlock))
             {
-                guaranteeedToReturn.Add(node);
+                guaranteedToReturn.Add(node);
             }
         }
     }

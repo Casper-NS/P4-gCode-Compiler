@@ -29,7 +29,7 @@ namespace VisitorTests
             {
                 using (StreamWriter writer = new StreamWriter(stream))
                 {
-                    CodeGenerator codeGenerator = new CodeGenerator(symbolTable, typeChecker.GetTypeDictionary(), writer);
+                    CodeGenerator codeGenerator = new CodeGenerator(symbolTable, typeChecker.TypeDictionary, writer);
                     s.Apply(codeGenerator);
                 }
             }
@@ -56,7 +56,7 @@ namespace VisitorTests
             {
                 using (StreamWriter writer = new StreamWriter(stream))
                 {
-                    codeGenerator = new CodeGenerator(symbolTable, typeChecker.GetTypeDictionary(), writer);
+                    codeGenerator = new CodeGenerator(symbolTable, typeChecker.TypeDictionary, writer);
                     s.Apply(codeGenerator);
                 }
             }
@@ -94,7 +94,7 @@ namespace VisitorTests
             {
                 using (StreamWriter writer = new StreamWriter(dummyStream))
                 {
-                    generator = new CodeGenerator(symbolTable, typeChecker.GetTypeDictionary(), writer);
+                    generator = new CodeGenerator(symbolTable, typeChecker.TypeDictionary, writer);
                     s.Apply(generator);
                 }
             }
