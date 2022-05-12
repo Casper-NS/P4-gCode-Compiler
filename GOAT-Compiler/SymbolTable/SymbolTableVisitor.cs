@@ -107,7 +107,7 @@ namespace GOAT_Compiler
         /// </summary>
         /// <param name="node">The node whose grandparent is checked</param>
         /// <returns>Returns true or false depending on if is a function or a procedure</returns>
-        private bool IsGrandparentNotFuncOrProc(Node node)
+        private static bool IsGrandparentNotFuncOrProc(Node node)
         {
             Node GrandParent = node.Parent().Parent();
             if (GrandParent is AProcDecl || GrandParent is AFuncDecl)

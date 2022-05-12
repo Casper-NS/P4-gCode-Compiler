@@ -8,15 +8,13 @@ namespace GOAT_Compiler
 {
     internal class SymbolTableBuilder : SymbolTableVisitor
     {
-        
-
         /// <summary>
         /// The dictionary that stores the name of the type, that a variable or function declaration, is stored.
         /// </summary>
-        private Dictionary<Node, string> _typeTable = new Dictionary<Node, string>();
+        private readonly Dictionary<Node, string> _typeTable = new Dictionary<Node, string>();
 
 
-        private List<Types> paramTypesList = new List<Types>();
+        private readonly List<Types> paramTypesList = new List<Types>();
 
         /// <summary>
         /// The constructor for the SymbolTableBuilder
@@ -51,10 +49,7 @@ namespace GOAT_Compiler
             }
         }
 
-        public override void OutAVarDecl(AVarDecl node)
-        {
-            AddVariableSymbol(node, node.GetId().Text, ProcessTypeOfNode(node.GetTypes()));
-        }
+        public override void OutAVarDecl(AVarDecl node) => AddVariableSymbol(node, node.GetId().Text, ProcessTypeOfNode(node.GetTypes()));
 
         public override void OutAParamDecl(AParamDecl node)
         {
@@ -73,7 +68,6 @@ namespace GOAT_Compiler
                 throw new VariableAlreadyDefinedException(node, name);
             }
         }
-
 
         public override void OutsideScopeOutAFuncDecl(AFuncDecl node)
         {
@@ -103,36 +97,24 @@ namespace GOAT_Compiler
         /// Adds a string with the name of the right type to typeTable.
         /// </summary>
         /// <param name="node">The given node being anlysed</param>
-        public override void OutAIntTypes(AIntTypes node) 
-        {
-            _typeTable.Add(node, "int");
-        }
+        public override void OutAIntTypes(AIntTypes node) => _typeTable.Add(node, "int");
 
         /// <summary>
         /// Adds a string with the name of the right type to typeTable.
         /// </summary>
         /// <param name="node">The given node being anlysed</param>
-        public override void OutAFloatTypes(AFloatTypes node)
-        {
-            _typeTable.Add(node, "float");
-        }
+        public override void OutAFloatTypes(AFloatTypes node) => _typeTable.Add(node, "float");
 
         /// <summary>
         /// Adds a string with the name of the right type to typeTable.
         /// </summary>
         /// <param name="node">The given node being anlysed</param>
-        public override void OutABoolTypes(ABoolTypes node) 
-        {
-            _typeTable.Add(node, "bool");
-        }
+        public override void OutABoolTypes(ABoolTypes node) => _typeTable.Add(node, "bool");
 
         /// <summary>
         /// Adds a string with the name of the right type to typeTable. 
         /// </summary>
         /// <param name="node">The given node being anlysed</param>
-        public override void OutAVectorTypes(AVectorTypes node)
-        {
-            _typeTable.Add(node, "vector");
-        }
+        public override void OutAVectorTypes(AVectorTypes node) => _typeTable.Add(node, "vector");
     }
 }
