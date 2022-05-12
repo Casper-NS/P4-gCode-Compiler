@@ -1,0 +1,5 @@
+﻿float f = 1
+
+void main(){
+	f = f + 1
+}

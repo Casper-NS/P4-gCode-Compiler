@@ -59,5 +59,20 @@ namespace VisitorTests
                 throw new TestDependencyException("Symbol table building", e);
             }
         }
+
+        internal static TypeChecker DoTypeChecking(Start s, ISymbolTable symbolTable)
+        {
+            try
+            {
+                TypeChecker typeChecker = new TypeChecker(symbolTable);
+                s.Apply(typeChecker);
+                return typeChecker;
+            }
+            catch (Exception e)
+            {
+                throw new TestDependencyException("Type checking", e);
+            }
+        }
+
     }
 }

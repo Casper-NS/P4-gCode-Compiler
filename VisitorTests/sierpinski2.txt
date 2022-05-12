@@ -1,0 +1,43 @@
+﻿void main()
+{
+	walk
+	{
+		Home()
+		AbsMove((0, 0, 0))
+	}
+	build iteration(1, 3)
+}
+
+int i = 0
+
+void iteration(float steps, int iteration)
+{
+	turn()
+	doStep(steps, iteration)
+	turn()
+	doStep(steps, iteration)
+	turn()
+	doStep(steps, iteration)
+
+}
+
+void turn()
+{
+	int modded = i % 6
+	if (modded == 0 || modded == 4 || modded == 5){
+		Left(60)
+	} else{
+		Right(60)
+	}
+
+}
+
+void doStep(float steps, int iteration)
+{
+	if (iteration == 0)
+	{
+		Steps(steps)
+	}else{
+		iteration(steps / 2, iteration - 1)
+	}
+}

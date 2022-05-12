@@ -1,0 +1,3 @@
+﻿void main(){
+	build RelMove((2, 2, 2))
+}

@@ -1,0 +1,15 @@
+﻿walk void main()
+{
+	vector pos = Position()
+
+	AbsMove((2, 5, 1))
+
+	vector pos2 = Position()
+
+	AbsMove(pos)
+	AbsMove(pos2)
+}
+@
+G0 X2 Y5 Z1
+G0 X0 Y0 Z0
+G0 X2 Y5 Z1

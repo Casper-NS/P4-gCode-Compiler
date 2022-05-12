@@ -26,7 +26,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="CodeGenerator\" />
+    <Folder Include="CodeGenerator\Tests\OutputFolder\" />
+    <Folder Include="ExtruderChecker\" />
+    <Folder Include="ScopeChecker\" />
   </ItemGroup>
 
 </Project>

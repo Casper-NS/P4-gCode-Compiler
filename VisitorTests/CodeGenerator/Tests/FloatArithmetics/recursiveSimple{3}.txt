@@ -1,0 +1,11 @@
+﻿float f = 0
+int iterate = 0
+
+void main(){
+	if(iterate < 3)
+	{
+		iterate = iterate + 1
+		f = f + 1
+		main()
+	}
+}

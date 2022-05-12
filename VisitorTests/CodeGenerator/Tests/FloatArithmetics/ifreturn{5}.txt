@@ -1,0 +1,18 @@
+﻿float f = 0
+
+void main(){
+	f = returnNumber()
+}
+
+int returnNumber()
+{
+	if (false)
+	{
+		return 3
+	}
+	if (true)
+	{
+		return 5
+	}
+	return 1
+}

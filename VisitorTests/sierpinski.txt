@@ -1,0 +1,72 @@
+﻿void main()
+{
+    sierpinski(3, 2)
+}
+
+build void sierpinski(int sides, int iterations){
+    if (sides == 3){
+        triangle(4, sides)
+    }
+    Left(180 - 360 / sides)
+    triangleR(2, sides, iterations)
+}
+
+build void triangle(float steps, int sides)
+{
+    repeat (sides)
+    {
+        Steps(steps)
+        Left(360 / sides)
+    }
+}
+
+build void triangleR(float steps, int sides, float x)
+{
+    walk Steps(steps)
+    Right(360 / sides)
+    repeat(sides)
+    {
+        if (x > 0){
+            triangle(steps, sides)
+            repeat(sides)
+            {
+                triangleR(steps/2, sides, x - 1)
+                Left(360 / sides)
+                walk Steps(steps / 2)
+                Left(360 / sides)
+            }
+        }
+    }
+}
+/*
+let tr =(steps sides.
+    repeat sides(
+    forward steps
+    left 360/sides
+    )
+)
+
+let trR =(steps sides x.
+
+    forward steps
+    right 360/sides
+    if (x > 0) then (
+        tr steps sides
+        repeat sides (
+            trR steps/2 sides x-1 
+            left 360/sides
+            forward steps/2
+            left 360/sides
+        )
+    )
+)
+
+
+let shapinski = (sides x.
+    if(sides == 3)then(tr 400 sides)
+    left 180-360/sides
+    trR 200 sides x
+)
+
+shapinski 3 0
+*/

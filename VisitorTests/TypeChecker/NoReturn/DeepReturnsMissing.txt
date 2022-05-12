@@ -1,0 +1,24 @@
+﻿float f()
+{
+	return 1
+	if(true){
+		return 1
+		if(true)
+		{
+			return 3
+			return 1
+		}
+		if(true)
+		{
+			return 1
+			if(true){
+				return 3
+				return 1
+			}
+		}
+		else{
+			// we dont return :)
+			int a = 1
+		}
+	}
+}

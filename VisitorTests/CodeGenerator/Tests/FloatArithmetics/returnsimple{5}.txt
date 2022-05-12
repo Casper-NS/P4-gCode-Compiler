@@ -1,0 +1,10 @@
+﻿float f = 0
+
+void main(){
+	f = returnNumber()
+}
+
+int returnNumber()
+{
+	return 5
+}

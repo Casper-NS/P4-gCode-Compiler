@@ -1,0 +1,11 @@
+﻿walk void main()
+{
+	SetFanPower(0)
+	SetFanPower(1)
+	SetFanPower(0.5)
+
+}
+@
+M106 S0
+M106 S255
+M106 S127

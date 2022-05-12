@@ -1,0 +1,21 @@
+﻿walk void main()
+{
+	float direction = Direction()
+	AbsMove((1, 1, 1))
+	TurnTo(90)
+	Steps(1)
+	TurnTo(90)
+	Steps(1)
+	TurnTo(180)
+	float direction2 = Direction()
+	TurnTo(direction)
+	Steps(1)
+	TurnTo(direction2)
+	Steps(1)
+}
+@
+G0 X1 Y1 Z1
+G0 X1 Y2 Z1
+G0 X1 Y3 Z1
+G0 X2 Y3 Z1
+G0 X1 Y3 Z1

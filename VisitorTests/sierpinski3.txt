@@ -1,0 +1,40 @@
+﻿float stepLength
+
+void main()
+{	
+	float size = 4
+	int iterations = 5
+	stepLength = size/iterations
+	build A(iterations)
+}
+
+
+void A(int iteration)
+{
+	if (iteration > 0)
+	{
+		B(iteration - 1)
+		Right(60)
+		A(iteration - 1)
+		Right(60)
+		B(iteration - 1)
+	} else 
+	{
+		Steps(stepLength)
+	}
+}
+
+void B(int iteration)
+{
+	if (iteration > 0)
+	{
+		A(iteration - 1)
+		Left(60)
+		B(iteration - 1)
+		Left(60)
+		A(iteration - 1)
+	} else
+	{
+		Steps(stepLength)
+	}
+}

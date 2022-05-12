@@ -30,6 +30,15 @@ namespace GOAT_Compiler
             }
         }
 
+
+        public override void OutAParamDecl(AParamDecl node)
+        {
+            Symbol symbol = _symbolTable.GetVariableSymbol(node.GetId().Text);
+            isDeclared.Add(symbol);
+            isInitialized.Add(symbol);
+        }
+
+
         public override void OutAIdExp(AIdExp node)
         {
             Symbol symbol = _symbolTable.GetVariableSymbol(node.GetId().Text);
@@ -90,6 +99,7 @@ namespace GOAT_Compiler
         {
             GetAndCheckSymbol(node, node.GetId().Text);
         }
+
 
 
         public override void OutAAssignMinusStmt(AAssignMinusStmt node)

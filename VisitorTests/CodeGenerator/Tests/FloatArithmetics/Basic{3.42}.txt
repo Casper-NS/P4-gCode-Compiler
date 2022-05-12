@@ -1,0 +1,5 @@
+﻿float f = 3.42
+
+void main(){
+	int a
+}

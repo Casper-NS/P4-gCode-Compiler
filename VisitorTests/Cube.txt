@@ -1,0 +1,53 @@
+﻿void main()
+{
+    build Home()
+    int layer = 0
+    EazyFloor(0)
+    layer += 2
+    repeat(18) {
+        wall(0.5 * layer, 0-0.5)
+        wall(0.5 * layer, 0)
+        layer += 1
+    }
+    EazyFloor(layer * 0.5)
+}
+
+build void wall(float z, float offset)
+{
+    walk AbsMove((0-offset, 0-offset, z))
+    AbsMove((0-offset, 10+offset, z))
+    AbsMove((10+offset, 10+offset, z))
+    AbsMove((10+offset, 0-offset, z))
+    AbsMove((0-offset, 0-offset, z))
+}
+
+build void EazyFloor(float z)
+{
+    walk AbsMove((0, 0, z)) // go to corner
+
+    int i = 1
+    repeat(20){
+        if(i%2 == 1){
+            RelMove((0, 10, 0))
+        } else
+        {
+            RelMove((0, 0-10, 0))
+        }
+        RelMove((0.5, 0, 0))
+        i += 1
+    }
+    
+    walk RelMove((0, 0, 0.5))
+    
+    i = 1
+    repeat(20){
+        if(i%2 == 1){
+            RelMove((0-10, 0, 0))
+        } else
+        {
+            RelMove((10, 0, 0))
+        }
+        RelMove((0, 0.5, 0))
+        i += 1
+    }
+}

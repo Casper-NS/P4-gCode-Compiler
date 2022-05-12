@@ -6,4 +6,8 @@
     <RootNamespace>P4_GCode_Compiler</RootNamespace>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\GOAT-Compiler\GOAT-Compiler.csproj" />
+  </ItemGroup>
+
 </Project>
