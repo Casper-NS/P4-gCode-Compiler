@@ -13,7 +13,9 @@ namespace GOAT_Compiler
     {
         private Types currentFunctionType;
         public Dictionary<Node, Types> TypeDictionary { get; } = new Dictionary<Node, Types>();
-
+        /// <summary>
+        /// Contains the nodes that are guaranteed to return. Like and if where both the then and the else blocks return.
+        /// </summary>
         private readonly HashSet<Node> guaranteedToReturn = new HashSet<Node>();
 
         /// <summary>
@@ -56,7 +58,7 @@ namespace GOAT_Compiler
             {
                 TypeDictionary.Add(current, Types.Boolean);
             }
-            else if (leftType == rightType && leftType != Types.Void && rightType != Types.Void)
+            else if ((leftType == rightType) && (leftType != Types.Void) && (rightType != Types.Void))
             {
                 TypeDictionary.Add(current, Types.Boolean);
             }
@@ -101,9 +103,10 @@ namespace GOAT_Compiler
         {
             Types leftType = TypeDictionary[left];
             Types rightType = TypeDictionary[right];
-            if ((leftType == Types.Integer || leftType == Types.FloatingPoint) && (rightType == Types.Integer || rightType == Types.FloatingPoint))
+            Types type = TypePromoter(leftType, rightType);
+            if (type == Types.Integer || type == Types.FloatingPoint)
             {
-                ArithmeticTypeChecker(left, right, current);
+                TypeDictionary.Add(current, type);
             }
             else
             {
@@ -114,15 +117,12 @@ namespace GOAT_Compiler
         {
             Types leftType = TypeDictionary[left];
             Types rightType = TypeDictionary[right];
-            if (leftType == Types.Integer && rightType == Types.FloatingPoint || leftType == Types.FloatingPoint && rightType == Types.Integer)
+            Types type = TypePromoter(leftType, rightType);
+            if (type == Types.FloatingPoint)
             {
                 TypeDictionary.Add(current, Types.FloatingPoint);
             }
-            else if (leftType == Types.FloatingPoint && rightType == Types.FloatingPoint)
-            {
-                TypeDictionary.Add(current, Types.FloatingPoint);
-            }
-            else if (leftType == Types.Integer && rightType == Types.Integer)
+            else if (type == Types.Integer)
             {
                 TypeDictionary.Add(current, Types.Integer);
             }
@@ -139,25 +139,20 @@ namespace GOAT_Compiler
         {
             Types leftType = TypeDictionary[left];
             Types rightType = TypeDictionary[right];
-            if (leftType == Types.Integer && rightType == Types.Vector || leftType == Types.Vector && rightType == Types.Integer)
-            {
-                TypeDictionary.Add(current, Types.Vector);
-            }
-            else if (leftType == Types.FloatingPoint && rightType == Types.Vector || leftType == Types.Vector && rightType == Types.FloatingPoint)
-            {
-                TypeDictionary.Add(current, Types.Vector);
-            }
-            else if (leftType == Types.Integer && rightType == Types.FloatingPoint || leftType == Types.FloatingPoint && rightType == Types.Integer)
-            {
-                TypeDictionary.Add(current, Types.FloatingPoint);
-            }
-            else if (leftType == Types.FloatingPoint && rightType == Types.FloatingPoint)
-            {
-                TypeDictionary.Add(current, Types.FloatingPoint);
-            }
-            else if (leftType == Types.Integer && rightType == Types.Integer)
+            Types type = TypePromoter(leftType, rightType);
+            if (type == Types.Integer)
             {
                 TypeDictionary.Add(current, Types.Integer);
+            } else if (type == Types.FloatingPoint)
+            {
+                TypeDictionary.Add(current, Types.FloatingPoint);
+            }
+            // Both sides cannot be combinations of int or float, since they have been caught in the previous cases
+            // So it is guaranteed that a vector is involved.
+            else if ((leftType == Types.Integer || leftType == Types.FloatingPoint || leftType == Types.Vector) 
+                   && (rightType == Types.Integer || rightType == Types.FloatingPoint || rightType == Types.Vector))
+            {
+                TypeDictionary.Add(current, Types.Vector);
             }
             else
             {
