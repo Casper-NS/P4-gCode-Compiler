@@ -11,15 +11,15 @@ namespace GOAT_Compiler
     internal class CodeGenerator : SymbolTableVisitor
     {
         private const int _maxIterationLimit = 100000;
-        private Dictionary<Node, Types> typeMap;
-        private RuntimeTable<Node> nodeMap;
+        private readonly Dictionary<Node, Types> typeMap;
+        private readonly RuntimeTable<Node> nodeMap;
         private dynamic CurrentReturnValue = null;
         private bool BreakFromFunction = false;
-        private Stack<bool> BuildStack;
-        private CNCMachine _machine;
-        private BuildInFunctionImplementations _buildInFunctions;
-        private TextWriter _textWriter;
-        private List<dynamic> CurrentParams = new();
+        private readonly Stack<bool> BuildStack;
+        private readonly CNCMachine _machine;
+        private readonly BuildInFunctionImplementations _buildInFunctions;
+        private readonly TextWriter _textWriter;
+        private readonly List<dynamic> CurrentParams = new();
 
         internal RuntimeTable<Symbol> GlobalRT;
         internal Stack<RuntimeTable<Symbol>> CallStackRT;

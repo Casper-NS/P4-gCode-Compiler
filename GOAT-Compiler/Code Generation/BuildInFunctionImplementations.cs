@@ -12,8 +12,8 @@ namespace GOAT_Compiler.Code_Generation
     /// </summary>
     public class BuildInFunctionImplementations
     {
-        private CNCMachine _machine;
-        private TextWriter _stream;
+        private readonly CNCMachine _machine;
+        private readonly TextWriter _stream;
         public BuildInFunctionImplementations(CNCMachine newMachine, TextWriter stream)
         {
             CultureInfo.CurrentCulture = CultureInfo.InvariantCulture;
