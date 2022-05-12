@@ -2,16 +2,18 @@
 int b
 int c
 
+const int constantinteger = 4
+
 void main()
 {
 	// set temperature of both and wait
-	float c = 4
+	float c = 4 + constantinteger
 
 	build 
 	{
 		float a = 2
 		float b = 2
-		if(a==b)
+		if(a==b + constantinteger)
 		{
 			int a = 2
 			if(a==2)
@@ -43,6 +45,6 @@ void testProc()
 
 int testFunc(float x)
 {
-	int f = 1
+	int f = 1 + constantinteger
 	return f
 }

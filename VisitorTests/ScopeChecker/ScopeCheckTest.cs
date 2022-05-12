@@ -62,6 +62,17 @@ namespace SymbolTableTest
             Assert.Throws<VarNotInitializedException>(() => s.Apply(scopeChecker));
         }
 
+        [SkippableTheory(typeof(TestDependencyException))]
+        [ClassData(typeof(AssignToConstFilesEnumerator))]
+        public void Test_AssignToConstFilesEnumerator_Exception(string filePath)
+        {
+            Start s = FileReadingTestUtilities.ParseFile(filePath);
+            ISymbolTable symTab = FileReadingTestUtilities.BuildSymbolTable(s);
+
+            ScopeChecker scopeChecker = new ScopeChecker(symTab);
+            Assert.Throws<AssignConstException>(() => s.Apply(scopeChecker));
+        }
+
         private class RefBeforeDeclFilesEnumerator : BaseFilesEnumerator
         {
             public override string RelativeFolderPath() => "ScopeChecker/ScopeTestFiles/RefBeforeDecl";
@@ -73,6 +84,10 @@ namespace SymbolTableTest
         private class NotInitializedFilesEnumerator : BaseFilesEnumerator
         {
             public override string RelativeFolderPath() => "ScopeChecker/ScopeTestFiles/VarNotInitialized";
+        }
+        private class AssignToConstFilesEnumerator : BaseFilesEnumerator
+        {
+            public override string RelativeFolderPath() => "ScopeChecker/ScopeTestFiles/AssignToConst";
         }
     }
 }
