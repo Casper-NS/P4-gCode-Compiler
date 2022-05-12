@@ -190,7 +190,7 @@ namespace GOAT_Compiler
                         frontier.Add(functionCall.BFSNode);
                     }
                 }
-                //Remove the checked function from being checked.
+                //Remove the checked function from the frontier (so it isn't checked again).
                 frontier.Remove(curNode);
             }
         }

@@ -17,7 +17,9 @@ namespace GOAT_Compiler
 
         private readonly Dictionary<Symbol, Node> funcDeclMap = new();
 
-        //Flag to determine whether we are building or going through the symbol table.
+        /// <summary>
+        /// Flag to determine whether we are building or going through the symbol table.
+        /// </summary>
         private bool buildComplete = false;
 
         public RecSymbolTable() 
