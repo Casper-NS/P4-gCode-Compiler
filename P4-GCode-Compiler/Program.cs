@@ -37,10 +37,10 @@ namespace P4_GCode_Compiler
             AST = p.Parse();
             SymbolTableBuilder builder = new SymbolTableBuilder(symTable);
             AST.Apply(builder);
-            typeChecker = new TypeChecker(symTable);
-            AST.Apply(typeChecker);
             ScopeChecker scopeChecker = new ScopeChecker(symTable);
             AST.Apply(scopeChecker);
+            typeChecker = new TypeChecker(symTable);
+            AST.Apply(typeChecker);
         }
 
         static void GenerateCode(string file, Start AST, ISymbolTable symTable, TypeChecker typeChecker)
