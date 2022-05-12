@@ -19,9 +19,6 @@ namespace GOAT_Compiler
     internal class Symbol
     {
         private readonly List<Types> Types = new List<Types>();
-        public string Name { get; private set; }
-        public Types Type { get => Types[0]; private set => Types.Add(value); }
-
         public Symbol(string name, Types type, params Types[] paramTypes)
         {
             Name = name;
@@ -29,7 +26,19 @@ namespace GOAT_Compiler
             Types.AddRange(paramTypes);
         }
 
-        public List<Types> ParamTypes => Types.GetRange(1, Types.Count - 1);
+        /// <summary>
+        /// The name of the symbol (the id).
+        /// </summary>
+        public string Name { get; private set; }
+        /// <summary>
+        /// If the symbol is a variable, this is the type of the variable. 
+        /// If the symbol is a function then this is the returntype of the function.
+        /// </summary>
+        public Types Type { get => Types[0]; private set => Types.Add(value); }
 
+        /// <summary>
+        /// If the symbol is a function, then this returns the types of the formal parameters.
+        /// </summary>
+        public List<Types> ParamTypes => Types.GetRange(1, Types.Count - 1);
     }
 }
