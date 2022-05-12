@@ -1,0 +1,7 @@
+﻿void main()
+{
+	bool b1 = f() % 1.2
+}
+void f(){
+int a
+}
