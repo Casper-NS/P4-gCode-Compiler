@@ -180,7 +180,7 @@ namespace GOAT_Compiler
             {
                 TypeDictionary.Add(node, id.Type);
             }
-            else if (id.Type != Types.Vector)
+            else if (id.Type != Types.Vector && id.Type != Types.Boolean && id.Type != Types.Void)
             {
                 TypeDictionary.Add(node, Convert(expr, id.Type));
             }
@@ -349,13 +349,49 @@ namespace GOAT_Compiler
         public override void OutAAssignPlusStmt(AAssignPlusStmt node)
         {
             Symbol id = _symbolTable.GetVariableSymbol(node.GetId().Text);
-            CheckDot(node, node.GetExp(), id, node.GetDot());
+            if (node.GetDot() != null)
+            {
+                if (id.Type == Types.Vector)
+                {
+                    TypeDictionary.Add(node, Convert(node.GetExp(), Types.FloatingPoint));
+                }
+                else
+                {
+                    throw new TypeMismatchException(node, "symbols with . extensions have to be vectors");
+                }
+            }
+            else if(id.Type != Types.Boolean && id.Type != Types.Void)
+            {
+                TypeDictionary.Add(node, Convert(node.GetExp(), id.Type));
+            }
+            else
+            {
+                throw new TypeMismatchException(node, "Cannot assign to a boolean or void");
+            }
         }
         
         public override void OutAAssignMinusStmt(AAssignMinusStmt node)
         {
             Symbol id = _symbolTable.GetVariableSymbol(node.GetId().Text);
-            CheckDot(node, node.GetExp(), id, node.GetDot());
+            if (node.GetDot() != null)
+            {
+                if (id.Type == Types.Vector)
+                {
+                    TypeDictionary.Add(node, Convert(node.GetExp(), Types.FloatingPoint));
+                }
+                else
+                {
+                    throw new TypeMismatchException(node, "symbols with . extensions have to be vectors");
+                }
+            }
+            else if (id.Type != Types.Boolean && id.Type != Types.Void)
+            {
+                TypeDictionary.Add(node, Convert(node.GetExp(), id.Type));
+            }
+            else
+            {
+                throw new TypeMismatchException(node, "Cannot assign to a boolean or void");
+            }
         }
        
         public override void OutAAssignDivisionStmt(AAssignDivisionStmt node)
@@ -375,7 +411,33 @@ namespace GOAT_Compiler
         public override void OutAAssignModStmt(AAssignModStmt node)
         {
             Symbol id = _symbolTable.GetVariableSymbol(node.GetId().Text);
-            CheckDot(node, node.GetExp(), id, node.GetDot());
+            if (node.GetDot() != null)
+            {
+                if (id.Type == Types.Vector)
+                {
+                    TypeDictionary.Add(node, Convert(node.GetExp(), Types.FloatingPoint));
+                }
+                else
+                {
+                    throw new TypeMismatchException(node, "symbols with . extensions have to be vectors");
+                }
+            }
+            else if (id.Type == Types.Integer && TypeDictionary[node.GetExp()] == Types.Integer)
+            {
+                TypeDictionary.Add(node, Types.Integer);
+            }
+            else if (id.Type == Types.FloatingPoint && TypeDictionary[node.GetExp()] == Types.FloatingPoint)
+            {
+                TypeDictionary.Add(node, Types.FloatingPoint);
+            }
+            else if (id.Type == Types.FloatingPoint && TypeDictionary[node.GetExp()] == Types.Integer)
+            {
+                TypeDictionary.Add(node, Types.FloatingPoint);
+            }
+            else
+            {
+                throw new TypeMismatchException(node, "Types not compatible with multiply or divide expression");
+            }
         }
         
         public override void OutANotExp(ANotExp node)
