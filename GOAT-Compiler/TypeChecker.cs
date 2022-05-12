@@ -3,9 +3,6 @@ using GOATCode.node;
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace GOAT_Compiler
 {
@@ -137,6 +134,7 @@ namespace GOAT_Compiler
                 throw new TypeMismatchException(node, "Types not compatible with multiply or divide expression");
             }
         }
+        
         private Types TypePromoter(Types t1, Types t2)
         {
             if (t1 == Types.Integer && t2 == Types.FloatingPoint)
@@ -156,6 +154,7 @@ namespace GOAT_Compiler
                 return Types.Void;
             }
         }
+        
         private Types NumberType(string numberToken)
         {
             if (numberToken.Contains("."))
@@ -167,6 +166,7 @@ namespace GOAT_Compiler
                 return Types.Integer;
             }
         }
+        
         private Types Convert(Node n, Types t)
         {
             if (_typeDictionary[n] == t)
@@ -182,6 +182,7 @@ namespace GOAT_Compiler
                 throw new TypeMismatchException(n, "Type " + _typeDictionary[n] + " is not valid for the Convert method.");
             }
         }
+        
         public override void OutAVectorExp(AVectorExp node)
         {
             Types x = _typeDictionary[node.GetX()];
@@ -194,20 +195,13 @@ namespace GOAT_Compiler
                 _typeDictionary.Add(node, Types.Vector);
             }
         }
-        public override void OutANumberExp(ANumberExp node)
-        {
-            _typeDictionary.Add(node, NumberType(node.GetNumber().Text));
-        }
-
-        public override void OutAPlusExp(APlusExp node)
-        {
-            ArithmeticTypeChecker(node.GetL(), node.GetR(), node);
-        }
-
-        public override void OutAMinusExp(AMinusExp node)
-        {
-            ArithmeticTypeChecker(node.GetL(), node.GetR(), node);
-        }
+        
+        public override void OutANumberExp(ANumberExp node) => _typeDictionary.Add(node, NumberType(node.GetNumber().Text));
+        
+        public override void OutAPlusExp(APlusExp node) => ArithmeticTypeChecker(node.GetL(), node.GetR(), node);
+        
+        public override void OutAMinusExp(AMinusExp node) => ArithmeticTypeChecker(node.GetL(), node.GetR(), node);
+        
         public override void OutANegExp(ANegExp node)
         {
             Types type = _typeDictionary[node.GetExp()];
@@ -218,58 +212,29 @@ namespace GOAT_Compiler
             _typeDictionary.Add(node, type);
         }
 
-        public override void OutABoolvalExp(ABoolvalExp node)
-        {
-            _typeDictionary.Add(node, Types.Boolean);
-        }
-
-        public override void OutAAndExp(AAndExp node)
-        {
-            AndAndOrTypeChecker(node.GetL(), node.GetR(), node);
-        }
-        public override void OutAOrExp(AOrExp node)
-        {
-            AndAndOrTypeChecker(node.GetL(), node.GetR(), node);
-        }
-        public override void OutAEqExp(AEqExp node)
-        {
-            EqlNotEqlTypeChecker(node.GetL(), node.GetR(), node);
-        }
-        public override void OutAModuloExp(AModuloExp node)
-        {
-            MultDivModTypeChecker(node.GetL(), node.GetR(), node);
-        }
-
-        public override void OutAMultExp(AMultExp node)
-        {
-            MultDivModTypeChecker(node.GetL(), node.GetR(), node);
-        }
-
-        public override void OutADivdExp(ADivdExp node)
-        {
-            MultDivModTypeChecker(node.GetL(), node.GetR(), node);
-        }
-        public override void OutAGeqExp(AGeqExp node)
-        {
-            GreaterThanLessThanTypeChecker(node.GetL(), node.GetR(), node);
-        }
-
-        public override void OutAGtExp(AGtExp node)
-        {
-            GreaterThanLessThanTypeChecker(node.GetL(), node.GetR(), node);
-        }
-        public override void OutALtExp(ALtExp node)
-        {
-            GreaterThanLessThanTypeChecker(node.GetL(), node.GetR(), node);
-        }
-        public override void OutALeqExp(ALeqExp node)
-        {
-            GreaterThanLessThanTypeChecker(node.GetL(), node.GetR(), node);
-        }
-        public override void OutANeqExp(ANeqExp node)
-        {
-            EqlNotEqlTypeChecker(node.GetL(), node.GetR(), node);
-        }
+        public override void OutABoolvalExp(ABoolvalExp node) => _typeDictionary.Add(node, Types.Boolean);
+        
+        public override void OutAAndExp(AAndExp node) => AndAndOrTypeChecker(node.GetL(), node.GetR(), node);
+        
+        public override void OutAOrExp(AOrExp node) => AndAndOrTypeChecker(node.GetL(), node.GetR(), node);
+        
+        public override void OutAEqExp(AEqExp node) => EqlNotEqlTypeChecker(node.GetL(), node.GetR(), node);
+        
+        public override void OutAModuloExp(AModuloExp node) => MultDivModTypeChecker(node.GetL(), node.GetR(), node);
+        
+        public override void OutAMultExp(AMultExp node) => MultDivModTypeChecker(node.GetL(), node.GetR(), node);
+        
+        public override void OutADivdExp(ADivdExp node) => MultDivModTypeChecker(node.GetL(), node.GetR(), node);
+        
+        public override void OutAGeqExp(AGeqExp node) => GreaterThanLessThanTypeChecker(node.GetL(), node.GetR(), node);
+        
+        public override void OutAGtExp(AGtExp node) => GreaterThanLessThanTypeChecker(node.GetL(), node.GetR(), node);
+        
+        public override void OutALtExp(ALtExp node) => GreaterThanLessThanTypeChecker(node.GetL(), node.GetR(), node);
+        
+        public override void OutALeqExp(ALeqExp node) => GreaterThanLessThanTypeChecker(node.GetL(), node.GetR(), node);
+        
+        public override void OutANeqExp(ANeqExp node) => EqlNotEqlTypeChecker(node.GetL(), node.GetR(), node);
 
         private void CheckDot(Node node, PExp expr, Symbol symbol, TDot dot)
         {
@@ -295,6 +260,7 @@ namespace GOAT_Compiler
             Symbol id = _symbolTable.GetVariableSymbol(node.GetId().Text);
             CheckDot(node, node.GetExp(), id, node.GetDot());
         }
+        
         public override void OutAIfStmt(AIfStmt node)
         {
             if (_typeDictionary[node.GetExp()] != Types.Boolean)
@@ -311,6 +277,7 @@ namespace GOAT_Compiler
                 guaranteeedToReturn.Add(node);
             }
         }
+        
         public override void OutAWhileStmt(AWhileStmt node)
         {
             if (_typeDictionary[node.GetExp()] != Types.Boolean)
@@ -318,6 +285,7 @@ namespace GOAT_Compiler
                 throw new TypeMismatchException(node);
             }
         }
+        
         public override void OutARepeatStmt(ARepeatStmt node)
         {
             if (_typeDictionary[node.GetExp()] != Types.Integer)
@@ -325,33 +293,39 @@ namespace GOAT_Compiler
                 throw new TypeMismatchException(node);
             }
         }
+        
         public override void OutAAssignPlusStmt(AAssignPlusStmt node)
         {
             Symbol id = _symbolTable.GetVariableSymbol(node.GetId().Text);
             CheckDot(node, node.GetExp(), id, node.GetDot());
         }
+        
         public override void OutAAssignMinusStmt(AAssignMinusStmt node)
         {
             Symbol id = _symbolTable.GetVariableSymbol(node.GetId().Text);
             CheckDot(node, node.GetExp(), id, node.GetDot());
         }
+       
         public override void OutAAssignDivisionStmt(AAssignDivisionStmt node)
         {
             Symbol id = _symbolTable.GetVariableSymbol(node.GetId().Text);
             Types expType = _typeDictionary[node.GetExp()];
             DivMultTypeChecker(id, expType, node, node.GetExp(), node.GetDot());
         }
+       
         public override void OutAAssignMultStmt(AAssignMultStmt node)
         {
             Symbol id = _symbolTable.GetVariableSymbol(node.GetId().Text);
             Types expType = _typeDictionary[node.GetExp()];
             DivMultTypeChecker(id, expType, node, node.GetExp(), node.GetDot());
         }
+        
         public override void OutAAssignModStmt(AAssignModStmt node)
         {
             Symbol id = _symbolTable.GetVariableSymbol(node.GetId().Text);
             CheckDot(node, node.GetExp(), id, node.GetDot());
         }
+        
         public override void OutANotExp(ANotExp node)
         {
             if (_typeDictionary[node.GetExp()] == Types.Boolean)
@@ -363,6 +337,7 @@ namespace GOAT_Compiler
                 throw new TypeMismatchException(node, "Not operator can only be used on booleans");
             }
         }
+        
         public override void OutAVarDecl(AVarDecl node)
         {
             Symbol id = _symbolTable.GetVariableSymbol(node.GetId().Text);
@@ -378,6 +353,7 @@ namespace GOAT_Compiler
                 _typeDictionary.Add(node, id.type);
             }
         }
+        
         public override void OutAIdExp(AIdExp node)
         {
             Symbol id = _symbolTable.GetVariableSymbol(node.GetId().Text);
@@ -418,23 +394,15 @@ namespace GOAT_Compiler
             }
         }
 
-
         public override void OutAParamDecl(AParamDecl node)
         {
             Symbol id = _symbolTable.GetVariableSymbol(node.GetId().Text);
             _typeDictionary.Add(node, id.type);
         }
 
-
-        public override void InsideScopeInAFuncDecl(AFuncDecl node)
-        {
-            currentFunctionType = _symbolTable.GetFunctionSymbol(node.GetId().Text).type;
-
-        }
-        public override void InsideScopeInAProcDecl(AProcDecl node)
-        {
-            currentFunctionType = Types.Void;
-        }
+        public override void InsideScopeInAFuncDecl(AFuncDecl node) => currentFunctionType = _symbolTable.GetFunctionSymbol(node.GetId().Text).type;
+       
+        public override void InsideScopeInAProcDecl(AProcDecl node) => currentFunctionType = Types.Void;
 
         public override void OutAReturnStmt(AReturnStmt node)
         {
@@ -449,6 +417,7 @@ namespace GOAT_Compiler
 
             guaranteeedToReturn.Add(node);
         }
+        
         public override void InsideScopeOutAFuncDecl(AFuncDecl node)
         {
             Symbol id = _symbolTable.GetFunctionSymbol(node.GetId().Text);
@@ -459,6 +428,7 @@ namespace GOAT_Compiler
                 throw new NotAllPathsReturnException(node, id.name);
             }
         }
+        
         public override void InsideScopeOutAProcDecl(AProcDecl node)
         {
             Symbol id = _symbolTable.GetFunctionSymbol(node.GetId().Text);
@@ -481,8 +451,11 @@ namespace GOAT_Compiler
         }
 
         public override void OutAWalkBlock(AWalkBlock node) => OutWalkBuildNoneblock(node, node.GetBlock());
+        
         public override void OutABuildBlock(ABuildBlock node) => OutWalkBuildNoneblock(node, node.GetBlock());
+        
         public override void OutANoneBlock(ANoneBlock node) => OutWalkBuildNoneblock(node, node.GetBlock());
+        
         private void OutWalkBuildNoneblock(Node node, Node childBlock)
         {
             if (guaranteeedToReturn.Contains(childBlock))
@@ -490,6 +463,5 @@ namespace GOAT_Compiler
                 guaranteeedToReturn.Add(node);
             }
         }
-
     }
 }
