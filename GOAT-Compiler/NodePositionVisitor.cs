@@ -8,6 +8,9 @@ using System.Threading.Tasks;
 
 namespace GOAT_Compiler
 {
+    /// <summary>
+    /// NodePosition stores the line number and character number of the node in the source-code.
+    /// </summary>
     public class NodePosition
     {
         public int Line { get; }
@@ -27,24 +30,26 @@ namespace GOAT_Compiler
             return $"({Line}, {Character})";
         }
     }
+    /// <summary>
+    /// Adds NodePosition to nodes. This is used for exceptions.
+    /// </summary>
     public class NodePositionVisitor : DepthFirstAdapter
     {
-        public NodePosition GetPosition(Node node)
-        {
-            return positions[node];
-        }
-        public bool HasNode(Node node)
-        {
-            return positions.ContainsKey(node);
-        }
-
-        private Dictionary<Node, NodePosition> positions = new Dictionary<Node, NodePosition>();
-        List<Node> notSet = new();
-        public override void DefaultIn(Node node)
-        {
-            // mark node as having no line number assigned
-            notSet.Add(node);
-        }
+        public NodePosition GetPosition(Node node) => positions[node];
+        public bool HasNode(Node node) => positions.ContainsKey(node);
+        /// <summary>
+        /// Dictionary from node to a NodePosition, this position is used for exceptions (line nr. and char nr.).
+        /// </summary>
+        private readonly Dictionary<Node, NodePosition> positions = new Dictionary<Node, NodePosition>();
+        /// <summary>
+        /// A list of nodes that have no position yet.
+        /// </summary>
+        private readonly List<Node> notSet = new();
+        /// <summary>
+        /// Marks node as having no line number assigned
+        /// </summary>
+        /// <param name="node"></param>
+        public override void DefaultIn(Node node) => notSet.Add(node);
         public override void DefaultCase(Node node)
         {
             if (node is Token token)
