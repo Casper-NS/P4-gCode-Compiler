@@ -110,11 +110,7 @@ namespace GOAT_Compiler
         private static bool IsGrandparentNotFuncOrProc(Node node)
         {
             Node GrandParent = node.Parent().Parent();
-            if (GrandParent is AProcDecl || GrandParent is AFuncDecl)
-            {
-                return false;
-            }
-            return true;
+            return !(GrandParent is AProcDecl || GrandParent is AFuncDecl);
         }
     }
 }
