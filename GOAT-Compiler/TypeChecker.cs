@@ -234,7 +234,7 @@ namespace GOAT_Compiler
             }
             else
             {
-                throw new TypeMismatchException(n, "Type " + TypeDictionary[n] + " is not valid for the Convert method.");
+                throw new TypeMismatchException(n, "Type " + TypeDictionary[n] + " cannot be converted to the type " + t);
             }
         }
         
