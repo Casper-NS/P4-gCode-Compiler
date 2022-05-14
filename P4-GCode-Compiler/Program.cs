@@ -19,6 +19,8 @@ namespace P4_GCode_Compiler
 
                 GenerateCode(fileOut, AST, symTable, typeChecker);
 
+                ShowSuccess("Compiled succesfully to " + fileOut + "!");
+
             }
             catch (CompilerException e)
             {
@@ -43,6 +45,13 @@ namespace P4_GCode_Compiler
             var tempCol = Console.ForegroundColor;
             Console.ForegroundColor = ConsoleColor.Red;
             Console.WriteLine(error);
+            Console.ForegroundColor = tempCol;
+        }
+        static void ShowSuccess(string success)
+        {
+            var tempCol = Console.ForegroundColor;
+            Console.ForegroundColor = ConsoleColor.Cyan;
+            Console.WriteLine(success);
             Console.ForegroundColor = tempCol;
         }
 
