@@ -13,9 +13,37 @@ namespace P4_GCode_Compiler
         {
             ReadArgs(args, out string fileIn, out string fileOut);
 
-            ReadAndGenerateAST(fileIn, out Start AST, out ISymbolTable symTable, out TypeChecker typeChecker);
+            try
+            {
+                ReadAndGenerateAST(fileIn, out Start AST, out ISymbolTable symTable, out TypeChecker typeChecker);
 
-            GenerateCode(fileOut, AST, symTable, typeChecker);
+                GenerateCode(fileOut, AST, symTable, typeChecker);
+
+            }
+            catch (CompilerException e)
+            {
+                ShowError(e.Message);
+            }
+            catch (CallBuildInWalkException e)
+            {
+                ShowError(e.Message);
+            }
+            catch (LexerException e)
+            {
+                ShowError(e.Message);
+            }
+            catch (ParserException e)
+            {
+                ShowError(e.Message);
+            }
+        }
+
+        static void ShowError(string error)
+        {
+            var tempCol = Console.ForegroundColor;
+            Console.ForegroundColor = ConsoleColor.Red;
+            Console.WriteLine(error);
+            Console.ForegroundColor = tempCol;
         }
 
         static void ReadArgs(string[] args, out string fileIn, out string fileOut)
