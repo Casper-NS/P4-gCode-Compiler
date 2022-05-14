@@ -132,7 +132,25 @@ namespace GOAT_Compiler
         public override void OutAIdExp(AIdExp node)
         {
             Symbol VarSymbol = _symbolTable.GetVariableSymbol(node.GetId().Text);
-            valueMap.Put(node, GetValue(VarSymbol));
+            if (node.GetDot() != null)
+            {
+                switch (node.GetDot().Text)
+                {
+                    case ".x":
+                        valueMap.Put(node, GetValue(VarSymbol).X); 
+                        break;
+                    case ".y":
+                        valueMap.Put(node, GetValue(VarSymbol).Y);
+                        break;
+                    case ".z":
+                        valueMap.Put(node, GetValue(VarSymbol).Z);
+                        break;
+                }
+            }
+            else
+            {
+                valueMap.Put(node, GetValue(VarSymbol));
+            }
         }
 
         public override void OutABoolvalExp(ABoolvalExp node) => valueMap.Put(node, bool.Parse(node.GetBoolValue().Text));
