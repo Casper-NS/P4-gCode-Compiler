@@ -90,7 +90,7 @@ Ignored Tokens
 
 Productions
 cst_program  {-> program} = 
-    cst_declaration_list
+    eol* cst_declaration_list
         {-> New program.decl([cst_declaration_list.decl])};
 
 
