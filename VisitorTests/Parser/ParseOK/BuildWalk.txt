@@ -1,4 +1,5 @@
-﻿void Main(){
+﻿// hej
+void Main(){
     build{
         int a
     }

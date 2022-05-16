@@ -75,7 +75,7 @@ namespace SymbolTableTest
         }
         private class WrongFilesEnumerator : BaseFilesEnumerator
         {
-            public override string RelativeFolderPath() => "TypeChecker/TypesWrong";
+            public override string RelativeFolderPath() => "TypeChecker/Wrong";
         }
     }
 }

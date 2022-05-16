@@ -1,0 +1,7 @@
+﻿void main()
+{
+	float a = f()
+}
+void f(){
+	float b
+}

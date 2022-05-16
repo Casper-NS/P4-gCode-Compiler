@@ -12,7 +12,6 @@ namespace ExtruderCheckerTest
 {
     public class ExtruderCheckerTest
     {
-
         [SkippableTheory(typeof(TestDependencyException))]
         [ClassData(typeof(PushErrorThrownFilesEnumerator))]
         public void PushErrorThrown(string filePath)

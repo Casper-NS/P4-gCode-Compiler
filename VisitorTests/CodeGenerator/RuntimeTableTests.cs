@@ -22,7 +22,7 @@ namespace VisitorTests
             Symbol symbol = symbolTable.GetVariableSymbol(name);
             RuntimeTable<Symbol> table = new RuntimeTable<Symbol>();
             table.Put(symbol, value);
-            Assert.Equal(value, table.Get(symbol, symbol.type));
+            Assert.Equal(value, table.Get(symbol, symbol.Type));
         }
         
         [Theory]
@@ -35,7 +35,7 @@ namespace VisitorTests
             Symbol symbol = symbolTable.GetVariableSymbol(name);
             RuntimeTable<Symbol> table = new RuntimeTable<Symbol>();
             table.Put(symbol, value);
-            Assert.Equal(value, table.Get(symbol, symbol.type));
+            Assert.Equal(value, table.Get(symbol, symbol.Type));
         }
         
         [Theory]
@@ -49,7 +49,7 @@ namespace VisitorTests
             RuntimeTable<Symbol> table = new RuntimeTable<Symbol>();
             Vector value = new Vector(x, y, z);
             table.Put(symbol, value);
-            Assert.Equal(value, table.Get(symbol, symbol.type));
+            Assert.Equal(value, table.Get(symbol, symbol.Type));
         }
 
         [Theory]
@@ -62,7 +62,7 @@ namespace VisitorTests
             Symbol symbol = symbolTable.GetVariableSymbol(name);
             RuntimeTable<Symbol> table = new RuntimeTable<Symbol>();
             table.Put(symbol, value);
-            Assert.Equal(value, table.Get(symbol, symbol.type));
+            Assert.Equal(value, table.Get(symbol, symbol.Type));
         }
     }
 }

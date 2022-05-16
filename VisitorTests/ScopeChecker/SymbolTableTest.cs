@@ -22,7 +22,7 @@ namespace SymbolTableTest
             ISymbolTable symbolTable = new RecSymbolTable();
             symbolTable.OpenScope(new ANumberExp());
             symbolTable.AddVariableSymbol(value, type);
-            Assert.Equal(type, symbolTable.GetVariableSymbol(value).type);
+            Assert.Equal(type, symbolTable.GetVariableSymbol(value).Type);
             symbolTable.CloseScope();
         }
 
@@ -53,7 +53,7 @@ namespace SymbolTableTest
             {
                 symbolTable.OpenScope(nodes[i]);
             }
-            Assert.Contains(symbolName, symbolTable.GetVariableSymbol(symbolName).name);
+            Assert.Contains(symbolName, symbolTable.GetVariableSymbol(symbolName).Name);
             for (int i = 1; i <= depth; i++)
             {
                 symbolTable.CloseScope();
@@ -87,7 +87,7 @@ namespace SymbolTableTest
             ISymbolTable symbolTable = new RecSymbolTable();
             symbolTable.OpenScope(new ANumberExp());
             symbolTable.AddFunctionSymbol(new ANumberExp(), "testfunc", Types.Void, Types.Boolean, Types.FloatingPoint, Types.Integer, Types.Vector);
-            List<Types> paramTypes = symbolTable.GetFunctionSymbol("testfunc").GetParamTypes();
+            List<Types> paramTypes = symbolTable.GetFunctionSymbol("testfunc").ParamTypes;
             Assert.Equal(Types.Boolean, paramTypes[0]);
             Assert.Equal(Types.FloatingPoint, paramTypes[1]);
             Assert.Equal(Types.Integer, paramTypes[2]);
@@ -127,64 +127,10 @@ namespace SymbolTableTest
             symbolTable.AddVariableSymbol("a", Types.Integer);
             symbolTable.OpenScope(new ANumberExp());
             symbolTable.AddVariableSymbol("a", Types.Boolean);
-            Assert.Equal(Types.Boolean, symbolTable.GetVariableSymbol("a").type);
+            Assert.Equal(Types.Boolean, symbolTable.GetVariableSymbol("a").Type);
             symbolTable.CloseScope();
-            Assert.Equal(Types.Integer, symbolTable.GetVariableSymbol("a").type);
+            Assert.Equal(Types.Integer, symbolTable.GetVariableSymbol("a").Type);
             symbolTable.CloseScope();
         }
-
-        // This test broke after redesigning the symbol table.
-        /*
-        [SkippableFact]
-        //Checks whether the symbol table is built probably given a test file.
-        public void Symbol_Build_test()
-        {
-            Start s = FileReadingTestUtilities.ParseFile(FileReadingTestUtilities.ProjectBaseDirectory + "ScopeChecker/SymbolBuildTest.txt");
-
-            ISymbolTable symTable = new RecSymbolTable();
-            SymbolTableBuilder builder = new SymbolTableBuilder(symTable);
-            s.Apply(builder);
-
-            Assert.True(symTable.IsComplete());
-
-            symTable.OpenScope(new ANumberExp());
-            Assert.NotNull(symTable.GetVariableSymbol("a"));
-            Assert.NotNull(symTable.GetVariableSymbol("b"));
-            Assert.NotNull(symTable.GetVariableSymbol("c"));
-            symTable.OpenScope(new ANumberExp());
-            Assert.Equal(Types.FloatingPoint, symTable.GetVariableSymbol("c").type);
-            symTable.OpenScope(new ANumberExp());
-            Assert.Equal(Types.FloatingPoint, symTable.GetVariableSymbol("a").type);
-            Assert.Equal(Types.FloatingPoint, symTable.GetVariableSymbol("b").type);
-            symTable.OpenScope(new ANumberExp());
-            Assert.NotNull(symTable.GetVariableSymbol("a"));
-            symTable.OpenScope(new ANumberExp());
-            Assert.Equal(Types.Boolean, symTable.GetVariableSymbol("b").type);
-            symTable.OpenScope(new ANumberExp());
-            Assert.NotNull(symTable.GetVariableSymbol("a"));
-            Assert.NotNull(symTable.GetVariableSymbol("b"));
-            symTable.CloseScope();
-            symTable.CloseScope();
-            Assert.Equal(Types.FloatingPoint, symTable.GetVariableSymbol("b").type);
-            symTable.CloseScope();
-            symTable.CloseScope();
-            symTable.OpenScope(new ANumberExp());
-            Assert.Equal(Types.FloatingPoint, symTable.GetVariableSymbol("c").type);
-            symTable.CloseScope();
-            Assert.Equal(Types.Integer, symTable.GetFunctionSymbol("testFunc").type);
-            symTable.CloseScope();
-
-            symTable.OpenScope(new ANumberExp());
-            Assert.Equal(Types.Integer, symTable.GetVariableSymbol("b").type);
-            symTable.CloseScope();
-
-            symTable.OpenScope(new ANumberExp());
-            Assert.Equal(Types.FloatingPoint, symTable.GetVariableSymbol("x").type);
-            Assert.Equal(Types.Integer, symTable.GetVariableSymbol("f").type);
-            symTable.CloseScope();
-            Assert.Null(symTable.GetVariableSymbol("x"));
-            symTable.CloseScope();
-        }
-        */
     }
 }

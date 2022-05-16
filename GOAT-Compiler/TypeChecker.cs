@@ -12,14 +12,11 @@ namespace GOAT_Compiler
     internal class TypeChecker : SymbolTableVisitor
     {
         private Types currentFunctionType;
-        private Dictionary<Node, Types> _typeDictionary = new Dictionary<Node, Types>();
-
-        private HashSet<Node> guaranteeedToReturn = new HashSet<Node>();
-
-        public Dictionary<Node, Types> GetTypeDictionary()
-        {
-            return _typeDictionary;
-        }
+        public Dictionary<Node, Types> TypeDictionary { get; } = new Dictionary<Node, Types>();
+        /// <summary>
+        /// Contains the nodes that are guaranteed to return. Like and if where both the then and the else blocks return.
+        /// </summary>
+        private readonly HashSet<Node> guaranteedToReturn = new HashSet<Node>();
 
         /// <summary>
         /// The constructor for the type checker.
@@ -30,48 +27,59 @@ namespace GOAT_Compiler
         }
         private void ArithmeticTypeChecker(Node left, Node right, Node current)
         {
-            Types leftType = _typeDictionary[left];
-            Types rightType = _typeDictionary[right];
+            Types leftType = TypeDictionary[left];
+            Types rightType = TypeDictionary[right];
             Types type = TypePromoter(leftType, rightType);
-            if (type == Types.Void || type == Types.Boolean) 
+            if (type == Types.Void || type == Types.Boolean)
             {
                 throw new TypeMismatchException(current, "Type " + type + " is not valid for this arithmetic operations.");
             }
             else
             {
-                _typeDictionary.Add(current, type);
-            }            
+                TypeDictionary.Add(current, type);
+            }
         }
-        private void EqlNotEqlTypeChecker(Node left, Node right, Node current)
+        /// <summary>
+        /// Typechecker for != and == operators.
+        /// </summary>
+        /// <param name="left"></param>
+        /// <param name="right"></param>
+        /// <param name="current"></param>
+        private void EqualAndNotEqualTypeChecker(Node left, Node right, Node current)
         {
-            Types leftType = _typeDictionary[left];
-            Types rightType = _typeDictionary[right];
+            Types leftType = TypeDictionary[left];
+            Types rightType = TypeDictionary[right];
 
             if (leftType == Types.Integer && rightType == Types.FloatingPoint)
             {
-                _typeDictionary.Add(current, Types.Boolean);
+                TypeDictionary.Add(current, Types.Boolean);
             }
             else if (leftType == Types.FloatingPoint && rightType == Types.Integer)
             {
-                _typeDictionary.Add(current, Types.Boolean);
+                TypeDictionary.Add(current, Types.Boolean);
             }
-            else if (leftType == rightType)
+            else if ((leftType == rightType) && (leftType != Types.Void) && (rightType != Types.Void))
             {
-                _typeDictionary.Add(current, Types.Boolean);
+                TypeDictionary.Add(current, Types.Boolean);
             }
             else
             {
                 throw new TypeMismatchException(current, "Type " + leftType + " and " + rightType + " are not valid for this comparison operations.");
             }
         }
-
+        /// <summary>
+        /// Typechecker for && and || operators.
+        /// </summary>
+        /// <param name="nodeleft"></param>
+        /// <param name="nodeRight"></param>
+        /// <param name="current"></param>
         private void AndAndOrTypeChecker(Node nodeleft, Node nodeRight, Node current)
         {
-            Types leftType = _typeDictionary[nodeleft];
-            Types rightType = _typeDictionary[nodeRight];
+            Types leftType = TypeDictionary[nodeleft];
+            Types rightType = TypeDictionary[nodeRight];
             if (leftType == Types.Boolean && rightType == Types.Boolean)
             {
-                _typeDictionary.Add(current, Types.Boolean);
+                TypeDictionary.Add(current, Types.Boolean);
             }
             else
             {
@@ -80,54 +88,101 @@ namespace GOAT_Compiler
         }
         private void GreaterThanLessThanTypeChecker(Node nodeleft, Node nodeRight, Node current)
         {
-            Types leftType = _typeDictionary[nodeleft];
-            Types rightType = _typeDictionary[nodeRight];
-            if ((leftType != Types.Boolean && rightType != Types.Boolean) && (leftType != Types.Vector && rightType != Types.Vector))
+            Types leftType = TypeDictionary[nodeleft];
+            Types rightType = TypeDictionary[nodeRight];
+            if (TypePromoter(leftType, rightType) == Types.Integer || TypePromoter(leftType, rightType) == Types.FloatingPoint)
             {
-                _typeDictionary.Add(current, Types.Boolean);
+                TypeDictionary.Add(current, Types.Boolean);
             }
             else
             {
                 throw new TypeMismatchException(current, "Type " + leftType + " and " + rightType + " are not valid for this comparison operations.");
             }
         }
-        private void MultDivModTypeChecker(Node left, Node right, Node current)
+        private void ModuloTypeChecker(Node left, Node right, Node current)
         {
-            Types leftType = _typeDictionary[left];
-            Types rightType = _typeDictionary[right];
-            if ((leftType == Types.Integer || leftType == Types.FloatingPoint) && (rightType == Types.Integer || rightType == Types.FloatingPoint))
+            Types leftType = TypeDictionary[left];
+            Types rightType = TypeDictionary[right];
+            Types type = TypePromoter(leftType, rightType);
+            if (type == Types.Integer || type == Types.FloatingPoint)
             {
-                ArithmeticTypeChecker(left, right, current);
+                TypeDictionary.Add(current, type);
             }
             else
             {
                 throw new TypeMismatchException(current, "Type " + leftType + " and " + rightType + " are not valid for this arithemtic operations.");
             }
         }
-        private void DivMultTypeChecker(Symbol id, Types type, Node node, Node expr, TDot dot)
+        private void DivTypeChecker(Node left, Node right, Node current)
+        {
+            Types leftType = TypeDictionary[left];
+            Types rightType = TypeDictionary[right];
+            Types type = TypePromoter(leftType, rightType);
+            if (type == Types.FloatingPoint)
+            {
+                TypeDictionary.Add(current, Types.FloatingPoint);
+            }
+            else if (type == Types.Integer)
+            {
+                TypeDictionary.Add(current, Types.Integer);
+            }
+            else if(leftType == Types.Vector && (rightType == Types.Integer || rightType == Types.FloatingPoint))
+            {
+                TypeDictionary.Add(current, Types.Vector);
+            }
+            else
+            {
+                throw new TypeMismatchException(current, "Type " + leftType + " and " + rightType + " are not valid for this arithemtic operations.");
+            }
+        }
+        private void MultTypeChecker(Node left, Node right, Node current)
+        {
+            Types leftType = TypeDictionary[left];
+            Types rightType = TypeDictionary[right];
+            Types type = TypePromoter(leftType, rightType);
+            if (type == Types.Integer)
+            {
+                TypeDictionary.Add(current, Types.Integer);
+            } else if (type == Types.FloatingPoint)
+            {
+                TypeDictionary.Add(current, Types.FloatingPoint);
+            }
+            // Both sides cannot be combinations of int or float, since they have been caught in the previous cases
+            // So it is guaranteed that a vector is involved.
+            else if ((leftType == Types.Integer || leftType == Types.FloatingPoint || leftType == Types.Vector) 
+                   && (rightType == Types.Integer || rightType == Types.FloatingPoint || rightType == Types.Vector))
+            {
+                TypeDictionary.Add(current, Types.Vector);
+            }
+            else
+            {
+                throw new TypeMismatchException(current, "Type " + leftType + " and " + rightType + " are not valid for this arithemtic operations.");
+            }
+        }
+        private void CompoundAssignmentDivAndMultTypeChecker(Symbol id, Types type, Node node, Node expr, TDot dot)
         {
             if (dot != null)
             {
-                if (id.type != Types.Vector)
+                if (id.Type != Types.Vector)
                 {
                     throw new TypeMismatchException(node, "symbols with.extensions have to be vectors");
                 }
                 if (type == Types.FloatingPoint || type == Types.Integer)
                 {
-                    _typeDictionary.Add(node, Types.FloatingPoint);
+                    TypeDictionary.Add(node, Types.FloatingPoint);
                 }
                 else
                 {
                     throw new TypeMismatchException(node, "Types not compatible with multiply or divide expression");
                 }
             }
-            else if (id.type == Types.Vector && (type == Types.FloatingPoint || type == Types.Integer))
+            else if (id.Type == Types.Vector && (type == Types.FloatingPoint || type == Types.Integer))
             {
-                _typeDictionary.Add(node, id.type);
+                TypeDictionary.Add(node, id.Type);
             }
-            else if (id.type != Types.Vector)
+            else if (id.Type != Types.Vector && id.Type != Types.Boolean && id.Type != Types.Void)
             {
-                _typeDictionary.Add(node, Convert(expr, id.type));
+                TypeDictionary.Add(node, Convert(expr, id.Type));
             }
             else
             {
@@ -135,7 +190,7 @@ namespace GOAT_Compiler
             }
         }
         
-        private Types TypePromoter(Types t1, Types t2)
+        private static Types TypePromoter(Types t1, Types t2)
         {
             if (t1 == Types.Integer && t2 == Types.FloatingPoint)
             {
@@ -155,7 +210,7 @@ namespace GOAT_Compiler
             }
         }
         
-        private Types NumberType(string numberToken)
+        private static Types NumberType(string numberToken)
         {
             if (numberToken.Contains("."))
             {
@@ -169,34 +224,31 @@ namespace GOAT_Compiler
         
         private Types Convert(Node n, Types t)
         {
-            if (_typeDictionary[n] == t)
+            if (TypeDictionary[n] == t)
             {
                 return t;
             }
-            else if (_typeDictionary[n] == Types.Integer && t == Types.FloatingPoint)
+            else if (TypeDictionary[n] == Types.Integer && t == Types.FloatingPoint)
             {
                 return Types.FloatingPoint;
             }
             else
             {
-                throw new TypeMismatchException(n, "Type " + _typeDictionary[n] + " is not valid for the Convert method.");
+                throw new TypeMismatchException(n, "Type " + TypeDictionary[n] + " cannot be converted to the type " + t);
             }
         }
         
         public override void OutAVectorExp(AVectorExp node)
         {
-            Types x = _typeDictionary[node.GetX()];
-            Types y = _typeDictionary[node.GetY()];
-            Types z = _typeDictionary[node.GetZ()];
             if (Convert(node.GetX(), Types.FloatingPoint) == Types.FloatingPoint 
                 && Convert(node.GetY(), Types.FloatingPoint) == Types.FloatingPoint 
                 && Convert(node.GetZ(), Types.FloatingPoint) == Types.FloatingPoint)
             {
-                _typeDictionary.Add(node, Types.Vector);
+                TypeDictionary.Add(node, Types.Vector);
             }
         }
         
-        public override void OutANumberExp(ANumberExp node) => _typeDictionary.Add(node, NumberType(node.GetNumber().Text));
+        public override void OutANumberExp(ANumberExp node) => TypeDictionary.Add(node, NumberType(node.GetNumber().Text));
         
         public override void OutAPlusExp(APlusExp node) => ArithmeticTypeChecker(node.GetL(), node.GetR(), node);
         
@@ -204,27 +256,27 @@ namespace GOAT_Compiler
         
         public override void OutANegExp(ANegExp node)
         {
-            Types type = _typeDictionary[node.GetExp()];
+            Types type = TypeDictionary[node.GetExp()];
             if (type == Types.Boolean)
             {
                 throw new TypeMismatchException(node, "Tried to negate a boolean");
             }
-            _typeDictionary.Add(node, type);
+            TypeDictionary.Add(node, type);
         }
 
-        public override void OutABoolvalExp(ABoolvalExp node) => _typeDictionary.Add(node, Types.Boolean);
+        public override void OutABoolvalExp(ABoolvalExp node) => TypeDictionary.Add(node, Types.Boolean);
         
         public override void OutAAndExp(AAndExp node) => AndAndOrTypeChecker(node.GetL(), node.GetR(), node);
         
         public override void OutAOrExp(AOrExp node) => AndAndOrTypeChecker(node.GetL(), node.GetR(), node);
         
-        public override void OutAEqExp(AEqExp node) => EqlNotEqlTypeChecker(node.GetL(), node.GetR(), node);
+        public override void OutAEqExp(AEqExp node) => EqualAndNotEqualTypeChecker(node.GetL(), node.GetR(), node);
         
-        public override void OutAModuloExp(AModuloExp node) => MultDivModTypeChecker(node.GetL(), node.GetR(), node);
+        public override void OutAModuloExp(AModuloExp node) => ModuloTypeChecker(node.GetL(), node.GetR(), node);
         
-        public override void OutAMultExp(AMultExp node) => MultDivModTypeChecker(node.GetL(), node.GetR(), node);
+        public override void OutAMultExp(AMultExp node) => MultTypeChecker(node.GetL(), node.GetR(), node);
         
-        public override void OutADivdExp(ADivdExp node) => MultDivModTypeChecker(node.GetL(), node.GetR(), node);
+        public override void OutADivdExp(ADivdExp node) => DivTypeChecker(node.GetL(), node.GetR(), node);
         
         public override void OutAGeqExp(AGeqExp node) => GreaterThanLessThanTypeChecker(node.GetL(), node.GetR(), node);
         
@@ -234,15 +286,15 @@ namespace GOAT_Compiler
         
         public override void OutALeqExp(ALeqExp node) => GreaterThanLessThanTypeChecker(node.GetL(), node.GetR(), node);
         
-        public override void OutANeqExp(ANeqExp node) => EqlNotEqlTypeChecker(node.GetL(), node.GetR(), node);
+        public override void OutANeqExp(ANeqExp node) => EqualAndNotEqualTypeChecker(node.GetL(), node.GetR(), node);
 
         private void CheckDot(Node node, PExp expr, Symbol symbol, TDot dot)
         {
             if (dot != null)
             {
-                if (symbol.type == Types.Vector)
+                if (symbol.Type == Types.Vector)
                 {
-                    _typeDictionary.Add(node, Convert(expr, Types.FloatingPoint));
+                    TypeDictionary.Add(node, Convert(expr, Types.FloatingPoint));
                 }
                 else
                 {
@@ -251,7 +303,7 @@ namespace GOAT_Compiler
             }
             else
             {
-                _typeDictionary.Add(node, Convert(expr, symbol.type));
+                TypeDictionary.Add(node, Convert(expr, symbol.Type));
             }
         }
 
@@ -263,24 +315,24 @@ namespace GOAT_Compiler
         
         public override void OutAIfStmt(AIfStmt node)
         {
-            if (_typeDictionary[node.GetExp()] != Types.Boolean)
+            if (TypeDictionary[node.GetExp()] != Types.Boolean)
             {
                 throw new TypeMismatchException(node, "If statement must have a boolean expression");
             }
             else
             {
-                _typeDictionary.Add(node, Types.Void);
+                TypeDictionary.Add(node, Types.Void);
             }
 
-            if (guaranteeedToReturn.Contains(node.GetThen()) && (node.GetElse() == null  || guaranteeedToReturn.Contains(node.GetElse())))
+            if (guaranteedToReturn.Contains(node.GetThen()) && (node.GetElse() == null  || guaranteedToReturn.Contains(node.GetElse())))
             {
-                guaranteeedToReturn.Add(node);
+                guaranteedToReturn.Add(node);
             }
         }
         
         public override void OutAWhileStmt(AWhileStmt node)
         {
-            if (_typeDictionary[node.GetExp()] != Types.Boolean)
+            if (TypeDictionary[node.GetExp()] != Types.Boolean)
             {
                 throw new TypeMismatchException(node);
             }
@@ -288,7 +340,7 @@ namespace GOAT_Compiler
         
         public override void OutARepeatStmt(ARepeatStmt node)
         {
-            if (_typeDictionary[node.GetExp()] != Types.Integer)
+            if (TypeDictionary[node.GetExp()] != Types.Integer)
             {
                 throw new TypeMismatchException(node);
             }
@@ -297,40 +349,102 @@ namespace GOAT_Compiler
         public override void OutAAssignPlusStmt(AAssignPlusStmt node)
         {
             Symbol id = _symbolTable.GetVariableSymbol(node.GetId().Text);
-            CheckDot(node, node.GetExp(), id, node.GetDot());
+            if (node.GetDot() != null)
+            {
+                if (id.Type == Types.Vector)
+                {
+                    TypeDictionary.Add(node, Convert(node.GetExp(), Types.FloatingPoint));
+                }
+                else
+                {
+                    throw new TypeMismatchException(node, "symbols with . extensions have to be vectors");
+                }
+            }
+            else if(id.Type != Types.Boolean && id.Type != Types.Void)
+            {
+                TypeDictionary.Add(node, Convert(node.GetExp(), id.Type));
+            }
+            else
+            {
+                throw new TypeMismatchException(node, "Cannot assign to a boolean or void");
+            }
         }
         
         public override void OutAAssignMinusStmt(AAssignMinusStmt node)
         {
             Symbol id = _symbolTable.GetVariableSymbol(node.GetId().Text);
-            CheckDot(node, node.GetExp(), id, node.GetDot());
+            if (node.GetDot() != null)
+            {
+                if (id.Type == Types.Vector)
+                {
+                    TypeDictionary.Add(node, Convert(node.GetExp(), Types.FloatingPoint));
+                }
+                else
+                {
+                    throw new TypeMismatchException(node, "symbols with . extensions have to be vectors");
+                }
+            }
+            else if (id.Type != Types.Boolean && id.Type != Types.Void)
+            {
+                TypeDictionary.Add(node, Convert(node.GetExp(), id.Type));
+            }
+            else
+            {
+                throw new TypeMismatchException(node, "Cannot assign to a boolean or void");
+            }
         }
        
         public override void OutAAssignDivisionStmt(AAssignDivisionStmt node)
         {
             Symbol id = _symbolTable.GetVariableSymbol(node.GetId().Text);
-            Types expType = _typeDictionary[node.GetExp()];
-            DivMultTypeChecker(id, expType, node, node.GetExp(), node.GetDot());
+            Types expType = TypeDictionary[node.GetExp()];
+            CompoundAssignmentDivAndMultTypeChecker(id, expType, node, node.GetExp(), node.GetDot());
         }
        
         public override void OutAAssignMultStmt(AAssignMultStmt node)
         {
             Symbol id = _symbolTable.GetVariableSymbol(node.GetId().Text);
-            Types expType = _typeDictionary[node.GetExp()];
-            DivMultTypeChecker(id, expType, node, node.GetExp(), node.GetDot());
+            Types expType = TypeDictionary[node.GetExp()];
+            CompoundAssignmentDivAndMultTypeChecker(id, expType, node, node.GetExp(), node.GetDot());
         }
         
         public override void OutAAssignModStmt(AAssignModStmt node)
         {
             Symbol id = _symbolTable.GetVariableSymbol(node.GetId().Text);
-            CheckDot(node, node.GetExp(), id, node.GetDot());
+            if (node.GetDot() != null)
+            {
+                if (id.Type == Types.Vector)
+                {
+                    TypeDictionary.Add(node, Convert(node.GetExp(), Types.FloatingPoint));
+                }
+                else
+                {
+                    throw new TypeMismatchException(node, "symbols with . extensions have to be vectors");
+                }
+            }
+            else if (id.Type == Types.Integer && TypeDictionary[node.GetExp()] == Types.Integer)
+            {
+                TypeDictionary.Add(node, Types.Integer);
+            }
+            else if (id.Type == Types.FloatingPoint && TypeDictionary[node.GetExp()] == Types.FloatingPoint)
+            {
+                TypeDictionary.Add(node, Types.FloatingPoint);
+            }
+            else if (id.Type == Types.FloatingPoint && TypeDictionary[node.GetExp()] == Types.Integer)
+            {
+                TypeDictionary.Add(node, Types.FloatingPoint);
+            }
+            else
+            {
+                throw new TypeMismatchException(node, "Types not compatible with multiply or divide expression");
+            }
         }
         
         public override void OutANotExp(ANotExp node)
         {
-            if (_typeDictionary[node.GetExp()] == Types.Boolean)
+            if (TypeDictionary[node.GetExp()] == Types.Boolean)
             {
-                _typeDictionary.Add(node, Types.Boolean);
+                TypeDictionary.Add(node, Types.Boolean);
             }
             else
             {
@@ -343,14 +457,14 @@ namespace GOAT_Compiler
             Symbol id = _symbolTable.GetVariableSymbol(node.GetId().Text);
             if(node.GetExp() != null)
             {
-                if (Convert(node.GetExp(), id.type) == id.type)
+                if (Convert(node.GetExp(), id.Type) == id.Type)
                 {
-                    _typeDictionary.Add(node, id.type);
+                    TypeDictionary.Add(node, id.Type);
                 }
             }
             else
             {
-                _typeDictionary.Add(node, id.type);
+                TypeDictionary.Add(node, id.Type);
             }
         }
         
@@ -359,9 +473,9 @@ namespace GOAT_Compiler
             Symbol id = _symbolTable.GetVariableSymbol(node.GetId().Text);
             if (node.GetDot() != null)
             {
-                if (id.type == Types.Vector)
+                if (id.Type == Types.Vector)
                 {
-                    _typeDictionary.Add(node, Types.FloatingPoint);
+                    TypeDictionary.Add(node, Types.FloatingPoint);
                 }
                 else
                 {
@@ -370,7 +484,7 @@ namespace GOAT_Compiler
             }
             else
             {
-                _typeDictionary.Add(node, id.type);
+                TypeDictionary.Add(node, id.Type);
             }
         }
 
@@ -379,8 +493,8 @@ namespace GOAT_Compiler
             IList list = node.GetArgs();
 
             Symbol id = _symbolTable.GetFunctionSymbol(node.GetName().Text);
-            _typeDictionary.Add(node, id.type);
-            List<Types> formelList = id.GetParamTypes();
+            TypeDictionary.Add(node, id.Type);
+            List<Types> formelList = id.ParamTypes;
             if(list.Count != formelList.Count)
             {
                 throw new TypeMismatchException(node, "Wrong number of arguments");
@@ -397,10 +511,10 @@ namespace GOAT_Compiler
         public override void OutAParamDecl(AParamDecl node)
         {
             Symbol id = _symbolTable.GetVariableSymbol(node.GetId().Text);
-            _typeDictionary.Add(node, id.type);
+            TypeDictionary.Add(node, id.Type);
         }
 
-        public override void InsideScopeInAFuncDecl(AFuncDecl node) => currentFunctionType = _symbolTable.GetFunctionSymbol(node.GetId().Text).type;
+        public override void InsideScopeInAFuncDecl(AFuncDecl node) => currentFunctionType = _symbolTable.GetFunctionSymbol(node.GetId().Text).Type;
        
         public override void InsideScopeInAProcDecl(AProcDecl node) => currentFunctionType = Types.Void;
 
@@ -412,27 +526,27 @@ namespace GOAT_Compiler
             }
             else
             {
-                _typeDictionary.Add(node, currentFunctionType);
+                TypeDictionary.Add(node, currentFunctionType);
             }
 
-            guaranteeedToReturn.Add(node);
+            guaranteedToReturn.Add(node);
         }
         
         public override void InsideScopeOutAFuncDecl(AFuncDecl node)
         {
             Symbol id = _symbolTable.GetFunctionSymbol(node.GetId().Text);
-            _typeDictionary.Add(node, id.type);
+            TypeDictionary.Add(node, id.Type);
 
-            if (!guaranteeedToReturn.Contains(node.GetBlock()))
+            if (!guaranteedToReturn.Contains(node.GetBlock()))
             {
-                throw new NotAllPathsReturnException(node, id.name);
+                throw new NotAllPathsReturnException(node, id.Name);
             }
         }
         
         public override void InsideScopeOutAProcDecl(AProcDecl node)
         {
             Symbol id = _symbolTable.GetFunctionSymbol(node.GetId().Text);
-            _typeDictionary.Add(node, id.type);
+            TypeDictionary.Add(node, id.Type);
         }
 
         // blocks
@@ -442,9 +556,9 @@ namespace GOAT_Compiler
             node.GetStmt().CopyTo(nodes, 0);
             foreach (Object stmtNode in nodes)
             {
-                if (guaranteeedToReturn.Contains((Node)stmtNode))
+                if (guaranteedToReturn.Contains((Node)stmtNode))
                 {
-                    guaranteeedToReturn.Add(node);
+                    guaranteedToReturn.Add(node);
                     break;
                 }
             }
@@ -458,9 +572,9 @@ namespace GOAT_Compiler
         
         private void OutWalkBuildNoneblock(Node node, Node childBlock)
         {
-            if (guaranteeedToReturn.Contains(childBlock))
+            if (guaranteedToReturn.Contains(childBlock))
             {
-                guaranteeedToReturn.Add(node);
+                guaranteedToReturn.Add(node);
             }
         }
     }

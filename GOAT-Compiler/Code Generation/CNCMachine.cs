@@ -3,7 +3,7 @@
 namespace GOAT_Compiler.Code_Generation
 {
 
-    public enum BuildScope
+    public enum ExtrusionMode
     {
         build,
         walk,
@@ -52,7 +52,7 @@ namespace GOAT_Compiler.Code_Generation
         
         /// <summary>
         /// The current hot-bed temperature.
-        /// </summary>        
+        /// </summary>
         public double HotBedTemp
         {
             get
@@ -89,7 +89,7 @@ namespace GOAT_Compiler.Code_Generation
         }
         
         /// <summary>
-        /// The current fan power.
+        /// The current fan power (value from 0 to 1).
         /// </summary>
         public double FanPower 
         {
@@ -108,12 +108,12 @@ namespace GOAT_Compiler.Code_Generation
         }
 
         /// <summary>
-        /// The current extruder state.
+        /// The current extruder mode, (build/walk/none).
         /// </summary>
-        public BuildScope ExtrusionMode { get; set; } = BuildScope.none;
+        public ExtrusionMode ExtrusionMode { get; set; } = ExtrusionMode.none;
 
         /// <summary>
-        /// The current rotation of the tutle, where 0 degrees are the positive x-axis.
+        /// The current rotation of the tutle, where 0 degrees is the positive x-axis.
         /// </summary>
         public double Rotation { get; set; } = 0;
 

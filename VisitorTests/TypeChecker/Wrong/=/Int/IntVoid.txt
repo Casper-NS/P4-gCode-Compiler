@@ -1,0 +1,7 @@
+﻿void main()
+{
+	int a = f()
+}
+void f(){
+	int b
+}

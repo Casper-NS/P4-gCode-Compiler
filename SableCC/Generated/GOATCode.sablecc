@@ -83,14 +83,14 @@ Tokens
   {normal} dot = '.' xyz;
 
   {normal} multiline_comment = '/*' not_star * star + ( not_star_slash not_star * star+) * '/';
-  {normal} singleline_comment = '//' not_eol_char* eol_char;
+  {normal} singleline_comment = '//' not_eol_char*;
 
 Ignored Tokens
   blank, multiline_comment, singleline_comment;
 
 Productions
 cst_program  {-> program} = 
-    cst_declaration_list
+    eol* cst_declaration_list
         {-> New program.decl([cst_declaration_list.decl])};
 
 

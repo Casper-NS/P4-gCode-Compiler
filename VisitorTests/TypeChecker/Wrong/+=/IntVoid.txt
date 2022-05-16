@@ -1,0 +1,8 @@
+﻿void main()
+{
+	int b1 = 0
+	b1 += f()
+}
+void f(){
+int a
+}

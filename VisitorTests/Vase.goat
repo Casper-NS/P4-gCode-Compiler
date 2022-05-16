@@ -1,0 +1,257 @@
+const float height = 30
+const float radiusMult = 5
+const vector offset = (100, 100, 0)
+const float layerHeight = 0.2
+const float layerWidth = 0.4
+const float filledHeight = 5
+const float totalRotation = 180
+
+const vector kochMid = (1.15710678119, 2.35208152802, 0)
+const float kochRad = 2.621295
+
+float curHeight = 0
+
+void main()
+{
+    setup()
+    float rotation = 0
+    
+    repeat(5){
+        filledCircle(v((0,0,curHeight)), radiusMult)
+        curHeight += layerHeight
+    }
+
+    while (curHeight < height)
+    {
+        rotation += 1
+        float curRadius = radiusMult * vaseInterpolation(curHeight / height) 
+        kochIsland(v((0,0,curHeight)), (curHeight / height) * totalRotation, 2, curRadius)
+        curHeight += layerHeight
+    }
+
+    /*
+    filledCircle(v((0,0,0)), radiusMult)
+    curHeight += layerHeight
+    filledCircle(v((0,0,0)), radiusMult)
+
+    while (curHeight < height)
+    {
+        float curRadius = radiusMult * vaseInterpolation(curHeight / height) 
+        if (curHeight < filledHeight)
+        {
+            build filledCircle(v((0,0,curHeight)), curRadius - layerWidth)
+            build circle(v((0,0,curHeight)), curRadius)
+
+        }
+        else{
+            SetFanPower(1)
+            build circle(v((0,0,curHeight)), curRadius - layerWidth)
+            build circle(v((0,0,curHeight)), curRadius)
+
+        }
+
+        curHeight += layerHeight
+    }
+    retract()
+    */
+}
+
+build void circle(vector mid, float radius)
+{
+    walk AbsMove(mid - (radius, 0 ,0))
+
+    RelArcCW((radius * 2, 0, 0), (radius+0.00001))
+    RelArcCW((-radius * 2, 0, 0), (radius+0.00001))
+
+}
+
+vector v(vector in)
+{
+    return in + offset
+}
+
+float vaseInterpolation(float tIn)
+{
+    float tClamped = clamp01(tIn)
+    float t = (tClamped * 1.3 - 1)
+
+    return (pow2(-1.2 * t) + pow3(1.2 * t) + 0.4 ) * 1.2
+}
+
+float pow2(float in)
+{
+    return in * in
+}
+float pow3(float in)
+{
+    return in * in * in
+}
+float clamp01(float t){
+    if(t > 1){
+        t = 1
+    }
+    if (t < 0){
+        t = 0
+    }
+    return t
+}
+
+build void filledCircle(vector mid, float radius)
+{
+    float currentRad = layerWidth
+    while (currentRad < radius)
+    {
+        circle(mid, currentRad)
+        currentRad += layerWidth
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+walk void retract(){
+    RelMove((0,0,20))
+    vector pos = Position()
+    AbsMove((0,0,pos.z))
+}
+
+void setup()
+{
+    SetBedTemp(60)
+    WaitForBedTemp()
+    SetExtruderTemp(210)
+    WaitForExtruderTemp()
+
+    /* Setup speeds */
+    gcode{
+        M201 X500.00 Y500.00 Z100.00 E5000.00 ;Setup machine max acceleration
+        M203 X500.00 Y500.00 Z10.00 E50.00 ;Setup machine max feedrate
+        M204 P500.00 R1000.00 T500.00 ;Setup Print/Retract/Travel acceleration
+        M205 X8.00 Y8.00 Z0.40 E5.00 ;Setup Jerk
+        M220 S100 ;Reset Feedrate
+        M221 S100 ;Reset Flowrate
+    }
+
+    Home()
+    setupline()
+    SetExtrusionRate(0.025)
+
+}
+
+void setupline()
+{
+    gcode{
+        G1 Z2.0 F3000 ;Move Z Axis up
+        G1 X10.1 Y20 Z0.28 F5000.0 ;Move to start position
+        G1 X10.1 Y200.0 Z0.28 F1500.0 E15 ;Draw the first line
+        G1 X10.4 Y200.0 Z0.28 F5000.0 ;Move to side a little
+        G1 X10.4 Y20 Z0.28 F1500.0 E30 ;Draw the second line
+        G92 E0 ;Reset Extruder
+        G1 Z2.0 F3000 ;Move Z Axis up
+        G92 E0 ;Reset Extruder  
+    }
+}
+
+
+
+
+/*
+http://paulbourke.net/fractals/lsys/
+
+ Some symbols are now given a graphical meaning, 
+ for example, 
+ F means move forward drawing a line, 
+ + means turn right by some predefined angle, 
+ - means turn left. 
+
+ axiom = X+X+X+X+X+X+X+X
+X -> X+YF++YF-FX--FXFX-YF+X
+Y -> -FX+YFYF++YF+FX--FX-YF
+*/
+
+build void kochIsland(vector mid, float rotation, int iterations, float radiusMult)
+{
+    float stepLength = radiusMult * 0.1
+    walk{
+        AbsMove(mid)
+        TurnTo(65.25 + rotation)
+        walk Steps(kochRad * radiusMult)
+        TurnTo(0)
+    }
+
+    Left(rotation)
+    repeat(8)
+    {
+        kochX(iterations, stepLength)
+        Right(45)
+    }
+}
+void kochX(int iterations, float stepLength)
+{
+    if (iterations > 0)
+    {
+        int i = iterations - 1
+        
+        kochX(i, stepLength)
+        Right(45)
+        kochY(i, stepLength)
+        Steps(stepLength)
+        Right(45)
+        Right(45)
+        kochY(i, stepLength)
+        Steps(stepLength)
+        Left(45)
+        Steps(stepLength)
+        kochX(i, stepLength)
+        Left(45)
+        Left(45)
+        Steps(stepLength)
+        kochX(i, stepLength)
+        Steps(stepLength)
+        kochX(i, stepLength)
+        Left(45)
+        kochY(i, stepLength)
+        Steps(stepLength)
+        Right(45)
+        kochX(i, stepLength)
+    }
+}
+void kochY(int iterations, float stepLength)
+{
+    if (iterations > 0)
+    {
+        int i = iterations - 1
+
+        Left(45)
+        Steps(stepLength)
+        kochX(i, stepLength)
+        Right(45)
+        kochY(i, stepLength)
+        Steps(stepLength)
+        kochY(i, stepLength)
+        Steps(stepLength)
+        Right(45)
+        Right(45)
+        kochY(i, stepLength)
+        Steps(stepLength)
+        Right(45)
+        kochX(i, stepLength)
+        Steps(stepLength)
+        Left(45)
+        Left(45)
+        kochX(i, stepLength)
+        Steps(stepLength)
+        Left(45)
+        kochY(i, stepLength)
+        Steps(stepLength)
+    }
+}

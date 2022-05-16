@@ -7,7 +7,6 @@ namespace GOAT_Compiler.Exceptions
     {
         public RefUsedBeforeClosestDeclException(Node n, string name) : base(n, $"The closest declaration of variable: {name} is made after it is referenced")
         {
-            
         }
     }
 }
