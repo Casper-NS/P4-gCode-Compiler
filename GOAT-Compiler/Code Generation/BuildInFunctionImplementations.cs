@@ -120,6 +120,20 @@ namespace GOAT_Compiler.Code_Generation
             return null;
         }
 
+        public void StartUp()
+        {
+            _stream.WriteLine("G28");
+            _stream.WriteLine("G92 E0");
+            _stream.WriteLine("G90");
+        }
+
+        public void EndFile()
+        {
+            _stream.WriteLine("M106 S0");
+            _stream.WriteLine("M104 S0");
+            _stream.WriteLine("M140 S0");
+        }
+
         private void ThrowExceptionIfInNoneScope(string MovementFunctionName)
         {
             if (_machine.ExtrusionMode == ExtrusionMode.none)
