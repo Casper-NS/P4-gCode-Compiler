@@ -8,10 +8,10 @@ namespace GOAT_Compiler
 {
     internal class SymbolTableBuilder : SymbolTableVisitor
     {
-        /// <summary>
+ /*       /// <summary>
         /// The dictionary that stores the name of the type, that a variable or function declaration, is stored.
         /// </summary>
-        private readonly Dictionary<Node, string> _typeTable = new Dictionary<Node, string>();
+        private readonly Dictionary<Node, string> _typeTable = new Dictionary<Node, string>();*/
 
 
         private readonly List<Types> paramTypesList = new List<Types>();
@@ -30,20 +30,18 @@ namespace GOAT_Compiler
         /// <param name="node">The Node used as key in typetable</param>
         /// <returns>Returns the right enum Type for the given node</returns>
         /// <exception cref="TypeAccessException">The exception that is thrown if an invalid string is inputted</exception>
-        private Types ProcessTypeOfNode(Node node)
+        private Types ProcessTypeOfNode(PTypes node)
         {
-            switch (_typeTable[node])
+            switch (node)
             {
-                case "int":
+                case AIntTypes:
                     return Types.Integer;
-                case "float":
+                case AFloatTypes:
                     return Types.FloatingPoint;
-                case "vector":
+                case AVectorTypes:
                     return Types.Vector;
-                case "bool":
+                case ABoolTypes:
                     return Types.Boolean;
-                case "void":
-                    return Types.Void;
                 default:
                     throw new TypeAccessException();
             }
@@ -98,29 +96,5 @@ namespace GOAT_Compiler
                 throw new FunctionAlreadyDefinedException(node, name);
             }
         }
-
-        /// <summary>
-        /// Adds a string with the name of the right type to typeTable.
-        /// </summary>
-        /// <param name="node">The given node being anlysed</param>
-        public override void OutAIntTypes(AIntTypes node) => _typeTable.Add(node, "int");
-
-        /// <summary>
-        /// Adds a string with the name of the right type to typeTable.
-        /// </summary>
-        /// <param name="node">The given node being anlysed</param>
-        public override void OutAFloatTypes(AFloatTypes node) => _typeTable.Add(node, "float");
-
-        /// <summary>
-        /// Adds a string with the name of the right type to typeTable.
-        /// </summary>
-        /// <param name="node">The given node being anlysed</param>
-        public override void OutABoolTypes(ABoolTypes node) => _typeTable.Add(node, "bool");
-
-        /// <summary>
-        /// Adds a string with the name of the right type to typeTable. 
-        /// </summary>
-        /// <param name="node">The given node being anlysed</param>
-        public override void OutAVectorTypes(AVectorTypes node) => _typeTable.Add(node, "vector");
     }
 }
