@@ -13,9 +13,46 @@ namespace P4_GCode_Compiler
         {
             ReadArgs(args, out string fileIn, out string fileOut);
 
-            ReadAndGenerateAST(fileIn, out Start AST, out ISymbolTable symTable, out TypeChecker typeChecker);
+            try
+            {
+                ReadAndGenerateAST(fileIn, out Start AST, out ISymbolTable symTable, out TypeChecker typeChecker);
 
-            GenerateCode(fileOut, AST, symTable, typeChecker);
+                GenerateCode(fileOut, AST, symTable, typeChecker);
+
+                ShowSuccess("Compiled succesfully to " + fileOut + "!");
+
+            }
+            catch (CompilerException e)
+            {
+                ShowError(e.Message);
+            }
+            catch (CallBuildInWalkException e)
+            {
+                ShowError(e.Message);
+            }
+            catch (LexerException e)
+            {
+                ShowError(e.Message);
+            }
+            catch (ParserException e)
+            {
+                ShowError(e.Message);
+            }
+        }
+
+        static void ShowError(string error)
+        {
+            var tempCol = Console.ForegroundColor;
+            Console.ForegroundColor = ConsoleColor.Red;
+            Console.WriteLine(error);
+            Console.ForegroundColor = tempCol;
+        }
+        static void ShowSuccess(string success)
+        {
+            var tempCol = Console.ForegroundColor;
+            Console.ForegroundColor = ConsoleColor.Cyan;
+            Console.WriteLine(success);
+            Console.ForegroundColor = tempCol;
         }
 
         static void ReadArgs(string[] args, out string fileIn, out string fileOut)
@@ -37,10 +74,10 @@ namespace P4_GCode_Compiler
             AST = p.Parse();
             SymbolTableBuilder builder = new SymbolTableBuilder(symTable);
             AST.Apply(builder);
-            typeChecker = new TypeChecker(symTable);
-            AST.Apply(typeChecker);
             ScopeChecker scopeChecker = new ScopeChecker(symTable);
             AST.Apply(scopeChecker);
+            typeChecker = new TypeChecker(symTable);
+            AST.Apply(typeChecker);
         }
 
         static void GenerateCode(string file, Start AST, ISymbolTable symTable, TypeChecker typeChecker)

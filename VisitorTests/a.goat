@@ -1,0 +1,215 @@
+const float layerHeight = 0.2
+const float lineWidth = 0.4
+const int wallLayers = 46
+const float size = 10
+const int floorLineCount = 25
+
+const vector cornerPoint = (100, 100, 0)
+
+void main()
+{
+    setup()
+    int layer = 0
+        SetExtrusionRate(0.04)
+    hilbertFloor(0)
+    layer += 4
+        SetExtrusionRate(0.03)
+    repeat(wallLayers) {
+        wall(layerHeight * layer, -lineWidth)
+        wall(layerHeight * layer, 0)
+        layer += 1
+        SetFanPower(layer / wallLayers)
+    }
+    EazyFloor(layer * layerHeight)
+    layer += 2
+    walk AbsMove((0, 0, (layer) * layerHeight))
+            SetExtrusionRate(0.04)
+    hilbertFloor(layer * layerHeight)
+
+    Retract()
+}
+
+walk void Retract(){
+    RelMove((0,0,20))
+    Home()
+}
+
+void setup()
+{
+    SetBedTemp(60)
+    WaitForBedTemp()
+    SetExtruderTemp(210)
+    WaitForExtruderTemp()
+
+    /* Setup speeds */
+    gcode{
+        M201 X500.00 Y500.00 Z100.00 E5000.00 ;Setup machine max acceleration
+        M203 X500.00 Y500.00 Z10.00 E50.00 ;Setup machine max feedrate
+        M204 P500.00 R1000.00 T500.00 ;Setup Print/Retract/Travel acceleration
+        M205 X8.00 Y8.00 Z0.40 E5.00 ;Setup Jerk
+        M220 S100 ;Reset Feedrate
+        M221 S100 ;Reset Flowrate
+    }
+
+    Home()
+    setupline()
+    SetExtrusionRate(0.02)
+
+}
+
+void setupline()
+{
+    gcode{
+        G1 Z2.0 F3000 ;Move Z Axis up
+        G1 X10.1 Y20 Z0.28 F5000.0 ;Move to start position
+        G1 X10.1 Y200.0 Z0.28 F1500.0 E15 ;Draw the first line
+        G1 X10.4 Y200.0 Z0.28 F5000.0 ;Move to side a little
+        G1 X10.4 Y20 Z0.28 F1500.0 E30 ;Draw the second line
+        G92 E0 ;Reset Extruder
+        G1 Z2.0 F3000 ;Move Z Axis up
+        G92 E0 ;Reset Extruder  
+    }
+}
+
+build void wall(float z, float offset)
+{
+    walk AbsMove((0-offset, 0-offset, z) + cornerPoint)
+    AbsMove((-offset, size+offset, z) + cornerPoint)
+    AbsMove((size+offset, size+offset, z) + cornerPoint)
+    AbsMove((size+offset, -offset, z) + cornerPoint)
+    AbsMove((-offset, -offset, z) + cornerPoint)
+}
+
+build void EazyFloor(float z)
+{
+    int i = 1
+    walk AbsMove((0, 0, z) + cornerPoint)
+    repeat(floorLineCount){
+        if(i%2 == 1){
+            RelMove((0, size, 0))
+        } else
+        {
+            RelMove((0, -size, 0))
+        }
+        RelMove((lineWidth, 0, 0))
+        i += 1
+    }
+    RelMove((0, -size, 0))
+    
+    walk RelMove((0, 0, layerHeight))
+    
+    i = 1
+    repeat(floorLineCount){
+        if(i%2 == 1){
+            RelMove((-size, 0, 0))
+        } else
+        {
+            RelMove((size, 0, 0))
+        }
+        RelMove((0, lineWidth, 0))
+        i += 1
+    }
+    RelMove((size, 0, 0))
+}
+
+build void hilbertFloor(float z)
+{
+    walk AbsMove((0, 0, z) + cornerPoint) // go to corner
+
+    hilbert(size, 4)
+    z += layerHeight
+    walk AbsMove((size, size, z) + cornerPoint) /* go to corner*/
+    hilbert(-size, 4)
+    z += layerHeight
+    walk AbsMove((0, 0, z) + cornerPoint) /* go to corner*/
+    hilbert(size, 4)
+    z += layerHeight
+    walk AbsMove((size, size, z) + cornerPoint) /* go to corner*/
+    hilbert(-size, 4)
+    z += layerHeight
+    walk AbsMove((0, 0, z) + cornerPoint) /* go to corner*/
+
+}
+
+build void hilbert(float width, int iterations)
+{
+    int wides
+    int thingies = 1
+    int i = 1
+    while (i < iterations)
+    {
+        i += 1
+        thingies *= 2
+    } 
+    int stepsWide = thingies * 3 + (thingies - 1)
+    float stepLength = (width / stepsWide) * 2
+    hilbertX(stepLength, iterations)
+}
+
+build void hilbertX(float stepLength, int iterations)
+{
+    if (iterations > 0)
+    {        
+        int newIterations = iterations - 1
+
+        Left(90)
+        hilbertY(stepLength, newIterations)
+        Steps(stepLength)
+        Right(90)
+        hilbertX(stepLength, newIterations)
+        Steps(stepLength)
+        hilbertX(stepLength, newIterations)
+        Right(90)
+        Steps(stepLength)
+        hilbertY(stepLength, newIterations)
+        Left(90)
+    }
+}
+
+build void hilbertY(float stepLength, int iterations)
+{
+    if (iterations > 0)
+    {        
+        int newIterations = iterations - 1
+
+        Right(90)
+        hilbertX(stepLength, newIterations)
+        Steps(stepLength)
+        Left(90)
+        hilbertY(stepLength, newIterations)
+        Steps(stepLength)
+        hilbertY(stepLength, newIterations)
+        Left(90)
+        Steps(stepLength)
+        hilbertX(stepLength, newIterations)
+        Right(90)
+    }
+
+}
+
+
+float vaseInterpolation(float tIn)
+{
+    tClamped = clamp01(t)
+    float t = (tClamped * 1.3 - 1)
+
+    return (pow2(-1.2 * t) + pow3(1.2 * t) + 0.4 ) * 1.2
+}
+
+float pow2(float in)
+{
+    return in * in
+}
+float pow3(float in)
+{
+    return in * in * in
+}
+float clamp01(float t){
+    if(t > 1){
+        t = 1
+    }
+    if (t < 0){
+        t = 0
+    }
+    return t
+}
