@@ -8,12 +8,9 @@ namespace GOAT_Compiler
 {
     internal class SymbolTableBuilder : SymbolTableVisitor
     {
- /*       /// <summary>
-        /// The dictionary that stores the name of the type, that a variable or function declaration, is stored.
+        /// <summary>
+        /// This contains the types of the formal parameters by position, the first element is the type of the first formal param..
         /// </summary>
-        private readonly Dictionary<Node, string> _typeTable = new Dictionary<Node, string>();*/
-
-
         private readonly List<Types> paramTypesList = new List<Types>();
 
         /// <summary>
