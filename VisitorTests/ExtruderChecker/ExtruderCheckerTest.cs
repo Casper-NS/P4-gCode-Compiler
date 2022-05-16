@@ -1,9 +1,5 @@
 using GOAT_Compiler;
-using GOATCode.lexer;
 using GOATCode.node;
-using GOATCode.parser;
-using System;
-using System.IO;
 using VisitorTests;
 using VisitorTests.Utilities;
 using Xunit;
@@ -20,9 +16,10 @@ namespace ExtruderCheckerTest
             ISymbolTable symbolTable = FileReadingTestUtilities.BuildSymbolTable(s);
             ExtruderChecker checker = new ExtruderChecker(symbolTable);
 
-            Assert.Throws<StaticCallBuildInWalkException>(()=> s.Apply(checker));
+            Assert.Throws<StaticCallBuildInWalkException>(() => s.Apply(checker));
         }
-        class PushErrorThrownFilesEnumerator : BaseFilesEnumerator
+
+        private class PushErrorThrownFilesEnumerator : BaseFilesEnumerator
         {
             public override string RelativeFolderPath() => "ExtruderChecker/PushFilesError";
         }
@@ -37,10 +34,12 @@ namespace ExtruderCheckerTest
 
             s.Apply(checker);
         }
-        class ExtruderCheckerRunsFilesEnumerator : BaseFilesEnumerator
+
+        private class ExtruderCheckerRunsFilesEnumerator : BaseFilesEnumerator
         {
             public override string RelativeFolderPath() => "ExtruderChecker/RunsCorrectly";
         }
+
         [SkippableTheory(typeof(TestDependencyException))]
         [ClassData(typeof(ExtruderCheckerThrowsExtruderExceptionFilesEnumerator))]
         public void ExtruderCheckerThrowsBuildInWalk(string filePath)
@@ -50,7 +49,8 @@ namespace ExtruderCheckerTest
             ExtruderChecker checker = new ExtruderChecker(symbolTable);
             Assert.Throws<CallBuildInWalkException>(() => s.Apply(checker));
         }
-        class ExtruderCheckerThrowsExtruderExceptionFilesEnumerator : BaseFilesEnumerator
+
+        private class ExtruderCheckerThrowsExtruderExceptionFilesEnumerator : BaseFilesEnumerator
         {
             public override string RelativeFolderPath() => "ExtruderChecker/ThrowsBuildInWalk";
         }

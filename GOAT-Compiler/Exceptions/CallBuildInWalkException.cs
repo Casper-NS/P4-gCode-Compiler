@@ -3,7 +3,6 @@ using System.Collections.Generic;
 
 namespace GOAT_Compiler
 {
-
     internal class CallBuildInWalkException : Exception
     {
         internal CallBuildInWalkException(BFSNode node) : base(stringMessage(node))
@@ -32,9 +31,9 @@ namespace GOAT_Compiler
                 else
                 {
                     break;
-                } 
+                }
             }
             return message;
-        } 
+        }
     }
 }

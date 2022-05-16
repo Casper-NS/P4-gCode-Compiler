@@ -1,16 +1,13 @@
-﻿using System;
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace VisitorTests
 {
     internal abstract class BaseFilesEnumerator : IEnumerable<object[]>
     {
         public abstract string RelativeFolderPath();
+
         public IEnumerator<object[]> GetEnumerator()
         {
             foreach (var filePath in GetTestFilesRecursively(FileReadingTestUtilities.ProjectBaseDirectory + RelativeFolderPath()))
@@ -18,8 +15,8 @@ namespace VisitorTests
                 yield return filePath;
             }
         }
-        IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 
+        IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 
         private static IEnumerable<object[]> GetTestFilesRecursively(string directoryPath)
         {
@@ -37,8 +34,6 @@ namespace VisitorTests
                     yield return file;
                 }
             }
-
         }
     }
-
 }

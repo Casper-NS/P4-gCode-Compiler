@@ -1,15 +1,6 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using GOAT_Compiler;
+﻿using GOAT_Compiler;
 using GOAT_Compiler.Exceptions;
-using GOATCode.lexer;
 using GOATCode.node;
-using GOATCode.parser;
 using VisitorTests;
 using VisitorTests.Utilities;
 using Xunit;
@@ -41,12 +32,12 @@ namespace SymbolTableTest
         }
 
         [SkippableTheory(typeof(TestDependencyException))]
-        [ClassData(typeof(RefNotFoundFilesEnumerator))] 
+        [ClassData(typeof(RefNotFoundFilesEnumerator))]
         public void Test_RefNotFound_Exception(string filePath)
         {
             Start s = FileReadingTestUtilities.ParseFile(filePath);
             ISymbolTable symTab = FileReadingTestUtilities.BuildSymbolTable(s);
-            
+
             ScopeChecker scopeChecker = new ScopeChecker(symTab);
             Assert.Throws<RefNotFoundException>(() => s.Apply(scopeChecker));
         }
@@ -57,7 +48,7 @@ namespace SymbolTableTest
         {
             Start s = FileReadingTestUtilities.ParseFile(filePath);
             ISymbolTable symTab = FileReadingTestUtilities.BuildSymbolTable(s);
-            
+
             ScopeChecker scopeChecker = new ScopeChecker(symTab);
             Assert.Throws<VarNotInitializedException>(() => s.Apply(scopeChecker));
         }
@@ -77,14 +68,17 @@ namespace SymbolTableTest
         {
             public override string RelativeFolderPath() => "ScopeChecker/ScopeTestFiles/RefBeforeDecl";
         }
+
         private class RefNotFoundFilesEnumerator : BaseFilesEnumerator
         {
             public override string RelativeFolderPath() => "ScopeChecker/ScopeTestFiles/RefNotFound";
         }
+
         private class NotInitializedFilesEnumerator : BaseFilesEnumerator
         {
             public override string RelativeFolderPath() => "ScopeChecker/ScopeTestFiles/VarNotInitialized";
         }
+
         private class AssignToConstFilesEnumerator : BaseFilesEnumerator
         {
             public override string RelativeFolderPath() => "ScopeChecker/ScopeTestFiles/AssignToConst";

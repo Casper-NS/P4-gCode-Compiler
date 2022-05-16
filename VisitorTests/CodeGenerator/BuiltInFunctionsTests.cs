@@ -1,12 +1,8 @@
 ﻿using GOAT_Compiler;
 using GOATCode.node;
-using System;
-using System.Collections.Generic;
-using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using VisitorTests.Utilities;
 using Xunit;
 
@@ -29,7 +25,7 @@ namespace VisitorTests
             Start s = FileReadingTestUtilities.ParseString(GOATCode);
             ISymbolTable symbolTable = FileReadingTestUtilities.BuildSymbolTable(s);
             TypeChecker typeChecker = FileReadingTestUtilities.DoTypeChecking(s, symbolTable);
-            
+
             // run the code generator
             StringBuilder stringBuilder = new StringBuilder();
             CodeGenerator codeGenerator;
@@ -42,10 +38,10 @@ namespace VisitorTests
             // compare files
             Assert.Equal(GCode.Trim(), stringBuilder.ToString().Trim());
         }
-        class GeneratesExpectedCodeEnumerator : BaseFilesEnumerator
+
+        private class GeneratesExpectedCodeEnumerator : BaseFilesEnumerator
         {
             public override string RelativeFolderPath() => "CodeGenerator/Tests/Generated";
         }
-
     }
 }

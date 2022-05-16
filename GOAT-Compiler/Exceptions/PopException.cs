@@ -9,5 +9,4 @@ namespace GOAT_Compiler
             Console.WriteLine("Cannot pop " + e);
         }
     }
-
 }

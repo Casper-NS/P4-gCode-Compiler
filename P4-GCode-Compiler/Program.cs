@@ -1,15 +1,15 @@
-﻿using System;
-using System.IO;
-using GOAT_Compiler;
+﻿using GOAT_Compiler;
 using GOATCode.lexer;
 using GOATCode.node;
 using GOATCode.parser;
+using System;
+using System.IO;
 
 namespace P4_GCode_Compiler
 {
-    class Program
+    internal class Program
     {
-        static void Main(string[] args)
+        private static void Main(string[] args)
         {
             ReadArgs(args, out string fileIn, out string fileOut);
 
@@ -20,7 +20,6 @@ namespace P4_GCode_Compiler
                 GenerateCode(fileOut, AST, symTable, typeChecker);
 
                 ShowSuccess("Compiled succesfully to " + fileOut + "!");
-
             }
             catch (CompilerException e)
             {
@@ -40,14 +39,15 @@ namespace P4_GCode_Compiler
             }
         }
 
-        static void ShowError(string error)
+        private static void ShowError(string error)
         {
             var tempCol = Console.ForegroundColor;
             Console.ForegroundColor = ConsoleColor.Red;
             Console.WriteLine(error);
             Console.ForegroundColor = tempCol;
         }
-        static void ShowSuccess(string success)
+
+        private static void ShowSuccess(string success)
         {
             var tempCol = Console.ForegroundColor;
             Console.ForegroundColor = ConsoleColor.Cyan;
@@ -55,7 +55,7 @@ namespace P4_GCode_Compiler
             Console.ForegroundColor = tempCol;
         }
 
-        static void ReadArgs(string[] args, out string fileIn, out string fileOut)
+        private static void ReadArgs(string[] args, out string fileIn, out string fileOut)
         {
             if (args.Length != 2)
             {
@@ -65,7 +65,7 @@ namespace P4_GCode_Compiler
             fileOut = args[1];
         }
 
-        static void ReadAndGenerateAST(string file, out Start AST, out ISymbolTable symTable, out TypeChecker typeChecker)
+        private static void ReadAndGenerateAST(string file, out Start AST, out ISymbolTable symTable, out TypeChecker typeChecker)
         {
             symTable = new RecSymbolTable();
             StreamReader reader = new StreamReader(file);
@@ -80,7 +80,7 @@ namespace P4_GCode_Compiler
             AST.Apply(typeChecker);
         }
 
-        static void GenerateCode(string file, Start AST, ISymbolTable symTable, TypeChecker typeChecker)
+        private static void GenerateCode(string file, Start AST, ISymbolTable symTable, TypeChecker typeChecker)
         {
             using (Stream stream = new FileStream(file, FileMode.Create))
             {

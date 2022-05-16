@@ -1,6 +1,5 @@
 ﻿using GOATCode.analysis;
 using GOATCode.node;
-using System;
 using System.Collections.Generic;
 
 namespace GOAT_Compiler
@@ -19,14 +18,17 @@ namespace GOAT_Compiler
         /// The stack which maintains the current Extrude scope
         /// </summary>
         private readonly Stack<Extrude> _stack = new Stack<Extrude>();
+
         /// <summary>
         /// The hashmap which holds all the functions
         /// </summary>
         private readonly Dictionary<Symbol, BFSNode> _functions = new();
+
         /// <summary>
         /// The Symbol which is used for keeping track of which function's scope we are currently in
         /// </summary>
         private Symbol _currentSymbol;
+
         private readonly ISymbolTable _symbolTable;
 
         internal ExtruderChecker(ISymbolTable symbolTable)
@@ -68,11 +70,13 @@ namespace GOAT_Compiler
         /// <param name="node"></param>
         /// <returns></returns>
         private bool IsFunctionDeclared(AFuncDecl node) => _functions.ContainsKey(_symbolTable.GetFunctionSymbol(node.GetId().Text));
+
         private bool IsFunctionDeclared(AFunctionExp node) => _functions.ContainsKey(_symbolTable.GetFunctionSymbol(node.GetName().Text));
+
         private bool IsFunctionDeclared(AProcDecl node) => _functions.ContainsKey(_symbolTable.GetFunctionSymbol(node.GetId().Text));
 
         /// <summary>
-        /// Sets the "global-scope"'s extrude type to notSet. 
+        /// Sets the "global-scope"'s extrude type to notSet.
         /// </summary>
         /// <param name="node"></param>
         public override void InADeclProgram(ADeclProgram node) => _stack.Push(Extrude.NotSet);
@@ -91,6 +95,7 @@ namespace GOAT_Compiler
                 _functions.Add(_currentSymbol, new BFSNode(_currentSymbol.Name, Extrude.NotSet));
             }
         }
+
         public override void InAProcDecl(AProcDecl node)
         {
             _currentSymbol = _symbolTable.GetFunctionSymbol(node.GetId().Text);
@@ -108,7 +113,7 @@ namespace GOAT_Compiler
         /// <param name="node"></param>
         public override void OutAFunctionExp(AFunctionExp node)
         {
-            if (!IsFunctionDeclared(node)) 
+            if (!IsFunctionDeclared(node))
             {
                 _functions.Add(_symbolTable.GetFunctionSymbol(node.GetName().Text), new BFSNode(node.GetName().Text, Extrude.NotSet));
             }
@@ -123,6 +128,7 @@ namespace GOAT_Compiler
 
             _stack.Push(Extrude.None);
         }
+
         public override void OutANoneBlock(ANoneBlock node) => PopVerification(Extrude.None);
 
         public override void InABuildBlock(ABuildBlock node)
@@ -131,6 +137,7 @@ namespace GOAT_Compiler
 
             PushVerification(node, Extrude.Build);
         }
+
         public override void OutABuildBlock(ABuildBlock node) => PopVerification(Extrude.Build);
 
         public override void InAWalkBlock(AWalkBlock node)
@@ -139,16 +146,24 @@ namespace GOAT_Compiler
 
             _stack.Push(Extrude.Walk);
         }
+
         public override void OutAWalkBlock(AWalkBlock node) => PopVerification(Extrude.Walk);
 
         //All of the In and Out below pushes and pops the right extrusion type.
         public override void InABuildExp(ABuildExp node) => PushVerification(node, Extrude.Build);
+
         public override void OutABuildExp(ABuildExp node) => PopVerification(Extrude.Build);
+
         public override void InAWalkExp(AWalkExp node) => _stack.Push(Extrude.Walk);
+
         public override void OutAWalkExp(AWalkExp node) => PopVerification(Extrude.Walk);
+
         public override void InABuildStmt(ABuildStmt node) => PushVerification(node, Extrude.Build);
+
         public override void OutABuildStmt(ABuildStmt node) => PopVerification(Extrude.Build);
+
         public override void InAWalkStmt(AWalkStmt node) => _stack.Push(Extrude.Walk);
+
         public override void OutAWalkStmt(AWalkStmt node) => PopVerification(Extrude.Walk);
 
         /// <summary>
@@ -171,7 +186,7 @@ namespace GOAT_Compiler
             node.TheExtrudeTypeFromCallStack = Extrude.None;
 
             //while the list of function nodes to be checked is not empty...
-            while(frontier.Count > 0)
+            while (frontier.Count > 0)
             {
                 BFSNode curNode = frontier[0];
 

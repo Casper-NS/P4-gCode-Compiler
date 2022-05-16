@@ -2,14 +2,12 @@
 
 namespace GOAT_Compiler.Code_Generation
 {
-
     public enum ExtrusionMode
     {
         build,
         walk,
         none
     }
-
 
     /// <summary>
     /// The class that holds information about the CNC machine.
@@ -34,22 +32,22 @@ namespace GOAT_Compiler.Code_Generation
             get
             {
                 return _currentExtrusion;
-            } 
-            set 
+            }
+            set
             {
                 if (value < 0)
                 {
                     throw new Exception("The amount of extrusion cannot be negative.");
                 }
                 _currentExtrusion = value;
-            } 
+            }
         }
 
         /// <summary>
         /// The current extruder rate.
         /// </summary>
         public double ExtrusionRate { get; set; } = 0;
-        
+
         /// <summary>
         /// The current hot-bed temperature.
         /// </summary>
@@ -72,7 +70,7 @@ namespace GOAT_Compiler.Code_Generation
         /// <summary>
         /// The current extruder temperature.
         /// </summary>
-        public double ExtruderTemp 
+        public double ExtruderTemp
         {
             get
             {
@@ -87,11 +85,11 @@ namespace GOAT_Compiler.Code_Generation
                 _extruderTemp = value;
             }
         }
-        
+
         /// <summary>
         /// The current fan power (value from 0 to 1).
         /// </summary>
-        public double FanPower 
+        public double FanPower
         {
             get
             {
@@ -116,6 +114,5 @@ namespace GOAT_Compiler.Code_Generation
         /// The current rotation of the tutle, where 0 degrees is the positive x-axis.
         /// </summary>
         public double Rotation { get; set; } = 0;
-
     }
 }

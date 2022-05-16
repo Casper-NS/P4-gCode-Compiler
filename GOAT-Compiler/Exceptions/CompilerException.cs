@@ -1,9 +1,5 @@
 ﻿using GOATCode.node;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace GOAT_Compiler
 {
@@ -24,7 +20,9 @@ namespace GOAT_Compiler
 
         // The current AST ands its node positions are saved, to avoid revisiting when throwing multiple exceptions.
         private static NodePositionVisitor nodePositionVisitor = null;
+
         private static Start currentAst = null;
+
         private static string NodePrinter(Node node)
         {
             NodePosition pos;

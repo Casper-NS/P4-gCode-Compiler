@@ -32,7 +32,6 @@ namespace GOAT_Compiler
         /// If the symbol is not found, null is returned</returns>
         public Symbol GetFunctionSymbol(string name);
 
-
         /// <summary>
         /// Adds a variable symbol to the symbol table.
         /// If the same variable symbol exists in an outer scope it is temporarily removed from the table and stored in the new variable symbol.
@@ -63,7 +62,6 @@ namespace GOAT_Compiler
         /// If the symbol is not found, null is returned</returns>
         public Node GetFunctionNode(Symbol symbol);
 
-
         /// <summary>
         /// Checks whether the symbol table has been build.
         /// </summary>
@@ -76,6 +74,5 @@ namespace GOAT_Compiler
         /// <param name="symbol">The symbol to look for in the global scope.</param>
         /// <returns>Whether the given symbol is in the global scope.</returns>
         public bool IsGlobal(Symbol symbol);
-
     }
 }

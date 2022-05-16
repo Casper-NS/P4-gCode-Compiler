@@ -1,25 +1,28 @@
 ﻿using GOATCode.node;
 using System.Collections.Generic;
 
-
 namespace GOAT_Compiler
 {
-    class RecSymbolTable : ISymbolTable
+    internal class RecSymbolTable : ISymbolTable
     {
         private Table _globalScope = null;
         private Table currentScope = null;
+
         /// <summary>
         /// The stack that keeps track of which scope we are in, the top of the stack is the current scope.
         /// </summary>
         private readonly Stack<Table> scopeStack = new();
+
         /// <summary>
         /// Maps from a node to a symboltable. Nodes that open a scope create a symbol-table.
         /// </summary>
-        private readonly Dictionary<Node, Table> scopeMap = new ();
+        private readonly Dictionary<Node, Table> scopeMap = new();
+
         /// <summary>
         /// Maps from function id to the function symbol.
         /// </summary>
         private readonly Dictionary<string, Symbol> functionSymbols;
+
         /// <summary>
         /// Maps from function symbols to the node that declares the functions.
         /// Used to execute functions-calls in code-generator.
@@ -31,7 +34,7 @@ namespace GOAT_Compiler
         /// </summary>
         private bool buildComplete = false;
 
-        public RecSymbolTable() 
+        public RecSymbolTable()
         {
             functionSymbols = new Dictionary<string, Symbol>(BuiltInFunctions.FunctionsList);
         }
@@ -63,7 +66,6 @@ namespace GOAT_Compiler
             {
                 buildComplete = true;
             }
-
         }
 
         public Symbol GetVariableSymbol(string name) => currentScope.GetSymbol(name);
@@ -93,7 +95,7 @@ namespace GOAT_Compiler
         public bool IsGlobal(Symbol symbol) => (_globalScope.GetSymbol(symbol.Name) != null);
     }
 
-    class Table
+    internal class Table
     {
         public Table ParentTable { get; private set; }
         public List<Table> ChildrenTables { get; set; }
@@ -127,7 +129,7 @@ namespace GOAT_Compiler
             {
                 return symbol;
             }
-            else if(ParentTable != null)
+            else if (ParentTable != null)
             {
                 return ParentTable.GetSymbol(Name);
             }
