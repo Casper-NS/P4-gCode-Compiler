@@ -3,4 +3,10 @@
 	WaitForCurrentMove()
 }
 @
+G28
+G92 E0
+G90
 M400
+M106 S0
+M104 S0
+M140 S0

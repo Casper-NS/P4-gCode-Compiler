@@ -4,5 +4,11 @@
 	WaitForMillis(1000)
 }
 @
+G28
+G92 E0
+G90
 G4 P0
 G4 P1000
+M106 S0
+M104 S0
+M140 S0

@@ -6,7 +6,13 @@
 	WaitForExtruderTemp()
 }
 @
+G28
+G92 E0
+G90
 M140 S25
 M104 S30
 M190 R25
 M109 R30
+M106 S0
+M104 S0
+M140 S0
