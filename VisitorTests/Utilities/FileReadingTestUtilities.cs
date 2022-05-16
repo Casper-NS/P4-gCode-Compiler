@@ -1,10 +1,9 @@
+using GOAT_Compiler;
 using GOATCode.lexer;
 using GOATCode.node;
 using GOATCode.parser;
 using System;
 using System.IO;
-using Xunit;
-using GOAT_Compiler;
 using VisitorTests.Utilities;
 
 namespace VisitorTests
@@ -73,6 +72,5 @@ namespace VisitorTests
                 throw new TestDependencyException("Type checking", e);
             }
         }
-
     }
 }

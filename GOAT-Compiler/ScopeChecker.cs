@@ -1,11 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using GOAT_Compiler.Exceptions;
+﻿using GOAT_Compiler.Exceptions;
 using GOATCode.node;
+using System.Collections.Generic;
 
 namespace GOAT_Compiler
 {
-    class ScopeChecker : SymbolTableVisitor
+    internal class ScopeChecker : SymbolTableVisitor
     {
         private readonly HashSet<Symbol> isDeclared = new HashSet<Symbol>();
         private readonly HashSet<Symbol> isInitialized = new HashSet<Symbol>();
@@ -30,14 +29,12 @@ namespace GOAT_Compiler
             }
         }
 
-
         public override void OutAParamDecl(AParamDecl node)
         {
             Symbol symbol = _symbolTable.GetVariableSymbol(node.GetId().Text);
             isDeclared.Add(symbol);
             isInitialized.Add(symbol);
         }
-
 
         public override void OutAIdExp(AIdExp node)
         {
@@ -90,7 +87,6 @@ namespace GOAT_Compiler
             {
                 isInitialized.Add(symbol);
             }
-
         }
 
         public override void OutAAssignPlusStmt(AAssignPlusStmt node) => GetAndCheckSymbol(node, node.GetId().Text);
@@ -102,6 +98,7 @@ namespace GOAT_Compiler
         public override void OutAAssignModStmt(AAssignModStmt node) => GetAndCheckSymbol(node, node.GetId().Text);
 
         public override void OutAAssignDivisionStmt(AAssignDivisionStmt node) => GetAndCheckSymbol(node, node.GetId().Text);
+
         /// <summary>
         /// Checks that the symbol is declared in the current scope, and is initialised and isn't const.
         /// </summary>
@@ -130,8 +127,6 @@ namespace GOAT_Compiler
             {
                 throw new AssignConstException(node, $"Const variable named {symbol.Name} cant be changed");
             }
-
         }
-
     }
 }

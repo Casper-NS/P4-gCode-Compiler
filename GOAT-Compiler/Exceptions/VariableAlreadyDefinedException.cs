@@ -1,5 +1,4 @@
 ﻿using GOATCode.node;
-using System;
 
 namespace GOAT_Compiler.Exceptions
 {

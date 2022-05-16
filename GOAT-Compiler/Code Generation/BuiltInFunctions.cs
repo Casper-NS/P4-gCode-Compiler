@@ -1,9 +1,4 @@
-﻿using GOATCode.node;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 
 namespace GOAT_Compiler
 {
@@ -16,8 +11,8 @@ namespace GOAT_Compiler
         /// The Dictionary for built in functions, maps from a string to a Symbol
         /// </summary>
         internal static IReadOnlyDictionary<string, Symbol> FunctionsList => _functionsList;
-        
-        private static Dictionary<string, Symbol> _functionsList = new() 
+
+        private static Dictionary<string, Symbol> _functionsList = new()
         {
             { "RelMove", new Symbol("RelMove", Types.Void, Types.Vector) },
             { "AbsMove", new Symbol("AbsMove", Types.Void, Types.Vector) },
@@ -38,8 +33,8 @@ namespace GOAT_Compiler
             { "WaitForBedTemp", new Symbol("WaitForBedTemp", Types.Void) },
             { "WaitForExtruderTemp", new Symbol("WaitForExtruderTemp", Types.Void) },
             { "WaitForCurrentMove", new Symbol("WaitForCurrentMove", Types.Void) },
-            { "WaitForMillis", new Symbol("WaitForMillis", Types.Void, Types.FloatingPoint)},
-            { "SetFanPower", new Symbol("SetFanPower", Types.Void, Types.FloatingPoint)},
+            { "WaitForMillis", new Symbol("WaitForMillis", Types.Void, Types.FloatingPoint) },
+            { "SetFanPower", new Symbol("SetFanPower", Types.Void, Types.FloatingPoint) },
             { "Home", new Symbol("Home", Types.Void) }
         };
     }

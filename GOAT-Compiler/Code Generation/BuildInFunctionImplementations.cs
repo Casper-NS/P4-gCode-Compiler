@@ -1,9 +1,8 @@
-﻿using System;
+﻿using GOAT_Compiler.Exceptions;
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
-using System.Text;
-using GOAT_Compiler.Exceptions;
 
 namespace GOAT_Compiler.Code_Generation
 {
@@ -14,6 +13,7 @@ namespace GOAT_Compiler.Code_Generation
     {
         private readonly CNCMachine _machine;
         private readonly TextWriter _stream;
+
         public BuildInFunctionImplementations(CNCMachine newMachine, TextWriter stream)
         {
             CultureInfo.CurrentCulture = CultureInfo.InvariantCulture;
@@ -34,64 +34,85 @@ namespace GOAT_Compiler.Code_Generation
                 case "RelMove":
                     RelMove(actualParams[0]);
                     break;
+
                 case "AbsMove":
                     AbsMove(actualParams[0]);
                     break;
+
                 case "RelArcCW":
                     RelArc(actualParams[0], actualParams[1], false);
                     break;
+
                 case "RelArcCCW":
                     RelArc(actualParams[0], actualParams[1], true);
                     break;
+
                 case "AbsArcCW":
                     AbsArc(actualParams[0], actualParams[1], false);
                     break;
+
                 case "AbsArcCCW":
                     AbsArc(actualParams[0], actualParams[1], true);
                     break;
+
                 case "SetExtrusionRate":
                     SetExtrusionRate(actualParams[0]);
                     break;
+
                 case "SetBedTemp":
                     SetBedTemp(actualParams[0]);
                     break;
+
                 case "SetExtruderTemp":
                     SetExtruderTemp(actualParams[0]);
                     break;
+
                 case "SetFanPower":
                     SetFanPower(actualParams[0]);
                     break;
+
                 case "Steps":
                     Steps(actualParams[0]);
                     break;
+
                 case "Position":
                     return Position();
+
                 case "Lift":
                     Lift(actualParams[0]);
                     break;
+
                 case "Right":
                     Right(actualParams[0]);
                     break;
+
                 case "Left":
                     Left(actualParams[0]);
                     break;
+
                 case "Direction":
                     return Direction();
+
                 case "TurnTo":
                     TurnTo(actualParams[0]);
                     break;
+
                 case "WaitForBedTemp":
                     WaitForBedTemp();
                     break;
+
                 case "WaitForExtruderTemp":
                     WaitForExtruderTemp();
                     break;
+
                 case "WaitForCurrentMove":
                     WaitForCurrentMove();
                     break;
+
                 case "WaitForMillis":
                     WaitForMillis(actualParams[0]);
                     break;
+
                 case "Home":
                     Home();
                     break;
@@ -158,13 +179,14 @@ namespace GOAT_Compiler.Code_Generation
             _machine.Position = oldPosition + v;
             Vector v2 = _machine.Position;
             ThrowExceptionIfInNoneScope("RelArc");
-            if (VectorDistanceXY(oldPosition, v2) > Math.Abs(r)*2)
+            if (VectorDistanceXY(oldPosition, v2) > Math.Abs(r) * 2)
             {
                 throw new Exception("RelArc radius is too small.");
             }
             if (_machine.ExtrusionMode == ExtrusionMode.build)
             {
-                if(CCW) { 
+                if (CCW)
+                {
                     _machine.CurrentExtrusion += (_machine.ExtrusionRate * CircleLength(oldPosition, _machine.Position, r));
                     gLine = "G3 " + VectorToGCodeStringCoordinate(_machine.Position) + " E" + (decimal)_machine.CurrentExtrusion + " R" + (decimal)r;
                 }
@@ -187,7 +209,6 @@ namespace GOAT_Compiler.Code_Generation
             }
             _stream.WriteLine(gLine);
         }
-
 
         private void AbsArc(Vector v, double r, bool CCW)
         {
@@ -239,7 +260,7 @@ namespace GOAT_Compiler.Code_Generation
         }
 
         private void SetExtrusionRate(double rate) => _machine.ExtrusionRate = rate;
-        
+
         private void SetBedTemp(double temp)
         {
             _machine.HotBedTemp = temp;
@@ -250,12 +271,11 @@ namespace GOAT_Compiler.Code_Generation
 
         private void Steps(double step)
         {
-            Vector movement = new (Math.Cos(DegreesToRadians(_machine.Rotation))*step, 
-                                   Math.Sin(DegreesToRadians(_machine.Rotation))*step,
+            Vector movement = new(Math.Cos(DegreesToRadians(_machine.Rotation)) * step,
+                                   Math.Sin(DegreesToRadians(_machine.Rotation)) * step,
                                    0);
             RelMove(movement);
         }
-
 
         private void Lift(double step)
         {
@@ -275,16 +295,26 @@ namespace GOAT_Compiler.Code_Generation
         }
 
         private void Right(double deg) => _machine.Rotation -= deg;
+
         private void Left(double deg) => _machine.Rotation += deg;
+
         private double Direction() => _machine.Rotation;
+
         private void TurnTo(double deg) => _machine.Rotation = deg;
+
         private void WaitForBedTemp() => _stream.WriteLine("M190 R" + (decimal)_machine.HotBedTemp);
+
         private void WaitForExtruderTemp() => _stream.WriteLine("M109 R" + (decimal)_machine.ExtruderTemp);
+
         private void WaitForCurrentMove() => _stream.WriteLine("M400");
+
         private void WaitForMillis(int millis) => _stream.WriteLine("G4 P" + millis);
+
         // Math and Geometry functions:
         private static double DegreesToRadians(double degrees) => degrees * Math.PI / 180.0f;
+
         private static double VectorDistance(Vector v1, Vector v2) => Math.Sqrt(Math.Pow((v1.X - v2.X), 2) + Math.Pow(v1.Y - v2.Y, 2) + Math.Pow(v1.Z - v2.Z, 2));
+
         private static double VectorDistanceXY(Vector v1, Vector v2) => Math.Sqrt(Math.Pow((v1.X - v2.X), 2) + Math.Pow(v1.Y - v2.Y, 2));
 
         private static double CircleLength(Vector v1, Vector v2, double r)

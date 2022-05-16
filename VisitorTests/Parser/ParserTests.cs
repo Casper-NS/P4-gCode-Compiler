@@ -1,12 +1,8 @@
 using GOATCode.lexer;
 using GOATCode.parser;
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using System.IO;
 using VisitorTests;
 using Xunit;
-using Xunit.Sdk;
 
 namespace ParserTester
 {
@@ -36,6 +32,7 @@ namespace ParserTester
             Parser p = new Parser(l);
             Assert.Throws<LexerException>(() => p.Parse());
         }
+
         // Tests if all files in the ParserError folder throws lexer exceptions
         [SkippableTheory]
         [ClassData(typeof(ParserFilesEnumerator))]
@@ -51,10 +48,12 @@ namespace ParserTester
         {
             public override string RelativeFolderPath() => "Parser/ParseOK";
         }
+
         private class LexerFilesEnumerator : BaseFilesEnumerator
         {
             public override string RelativeFolderPath() => "Parser/LexErr";
         }
+
         private class ParserFilesEnumerator : BaseFilesEnumerator
         {
             public override string RelativeFolderPath() => "Parser/ParseErr";

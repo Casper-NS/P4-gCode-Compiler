@@ -1,10 +1,5 @@
 ﻿using GOAT_Compiler;
 using GOATCode.node;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Xunit;
 using static GOAT_Compiler.CodeGenerator;
 
@@ -24,7 +19,7 @@ namespace VisitorTests
             table.Put(symbol, value);
             Assert.Equal(value, table.Get(symbol, symbol.Type));
         }
-        
+
         [Theory]
         [InlineData("bool", Types.Boolean, true)]
         public void GetBooleanValuesFromRuntimeTable(string name, Types types, bool value)
@@ -37,7 +32,7 @@ namespace VisitorTests
             table.Put(symbol, value);
             Assert.Equal(value, table.Get(symbol, symbol.Type));
         }
-        
+
         [Theory]
         [InlineData("vector", Types.Vector, 2.2f, 3.3f, 4.4f)]
         public void GetVectorValuesFromRuntimeTable(string name, Types types, double x, double y, double z)

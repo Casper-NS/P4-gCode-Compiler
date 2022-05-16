@@ -1,10 +1,10 @@
-﻿using System;
+﻿using GOAT_Compiler.Code_Generation;
+using GOAT_Compiler.Exceptions;
+using GOATCode.node;
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
-using GOAT_Compiler.Code_Generation;
-using GOAT_Compiler.Exceptions;
-using GOATCode.node;
 
 namespace GOAT_Compiler
 {
@@ -14,29 +14,37 @@ namespace GOAT_Compiler
         /// The max amount of iterations of a while-loop
         /// </summary>
         private const int _maxIterationLimit = 100000;
+
         /// <summary>
         /// Stores the types of nodes with types, e.g. id-expression-nodes.
         /// </summary>
         private readonly Dictionary<Node, Types> typeMap;
+
         /// <summary>
         /// Stores the values of all expression nodes.
         /// </summary>
         private readonly RuntimeTable<Node> valueMap;
+
         private dynamic CurrentReturnValue = null;
         private bool BreakFromFunction = false;
+
         /// <summary>
         /// The top-value of the stack indicates wheter we are in a build-scope(true) or not(false).
         /// </summary>
         private readonly Stack<bool> BuildStack;
+
         private readonly CNCMachine _machine;
         private readonly BuildInFunctionImplementations _buildInFunctions;
+
         /// <summary>
         /// The textwriter which writes g-code to the output file.
         /// </summary>
         private readonly TextWriter _textWriter;
+
         private readonly List<dynamic> CurrentParams = new();
 
         internal RuntimeTable<Symbol> GlobalRT;
+
         /// <summary>
         /// A callstack of runtime tables, a table is added for each function-call.
         /// </summary>
@@ -104,7 +112,6 @@ namespace GOAT_Compiler
             OutADeclProgram(node);
         }
 
-
         public override void OutAVarDecl(AVarDecl node)
         {
             Symbol symbol = _symbolTable.GetVariableSymbol(node.GetId().Text);
@@ -116,12 +123,15 @@ namespace GOAT_Compiler
                     case Types.Integer:
                         RT.Put(symbol, GetValue(nodeExpr));
                         break;
+
                     case Types.FloatingPoint:
                         RT.Put(symbol, (double)GetValue(nodeExpr));
                         break;
+
                     case Types.Boolean:
                         RT.Put(symbol, GetValue(nodeExpr));
                         break;
+
                     case Types.Vector:
                         RT.Put(symbol, GetValue(nodeExpr));
                         break;
@@ -137,11 +147,13 @@ namespace GOAT_Compiler
                 switch (node.GetDot().Text)
                 {
                     case ".x":
-                        valueMap.Put(node, GetValue(VarSymbol).X); 
+                        valueMap.Put(node, GetValue(VarSymbol).X);
                         break;
+
                     case ".y":
                         valueMap.Put(node, GetValue(VarSymbol).Y);
                         break;
+
                     case ".z":
                         valueMap.Put(node, GetValue(VarSymbol).Z);
                         break;
@@ -170,6 +182,7 @@ namespace GOAT_Compiler
                 case Types.Integer:
                     valueMap.Put(node, int.Parse(node.GetNumber().Text));
                     break;
+
                 case Types.FloatingPoint:
                     valueMap.Put(node, double.Parse(node.GetNumber().Text, CultureInfo.InvariantCulture));
                     break;
@@ -237,7 +250,6 @@ namespace GOAT_Compiler
                 {
                     RTPutValue(idSymbol, GetValue(idSymbol) - GetValue(node.GetExp()));
                 }
-
             }
         }
 
@@ -311,7 +323,7 @@ namespace GOAT_Compiler
                 Vector Vec1 = ((Vector)GetValue(left));
                 Vector Vec2 = ((Vector)GetValue(right));
 
-                valueMap.Put(node, Vec1+Vec2);
+                valueMap.Put(node, Vec1 + Vec2);
             }
             else
             {
@@ -484,7 +496,6 @@ namespace GOAT_Compiler
                 {
                     throw new ExceededMaxIterationLimitException(node);
                 }
-
             }
             OutAWhileStmt(node);
         }
@@ -512,7 +523,6 @@ namespace GOAT_Compiler
             {
                 throw new ExceededMaxIterationLimitException(node);
             }
-
 
             OutARepeatStmt(node);
         }
@@ -676,7 +686,6 @@ namespace GOAT_Compiler
             foreach (var decl in decls)
             {
                 ((PDecl)decl).Apply(this);
-
             }
             if (node.GetBlock() != null)
             {
@@ -715,6 +724,7 @@ namespace GOAT_Compiler
                     IntMap.Add(key, value);
                 }
             }
+
             public void Put(TKey key, bool value)
             {
                 if (BoolMap.ContainsKey(key))
@@ -757,12 +767,16 @@ namespace GOAT_Compiler
                 {
                     case Types.Integer:
                         return IntMap[key];
+
                     case Types.FloatingPoint:
                         return FloatMap[key];
+
                     case Types.Boolean:
                         return BoolMap[key];
+
                     case Types.Vector:
                         return VecMap[key];
+
                     default:
                         return null;
                 }

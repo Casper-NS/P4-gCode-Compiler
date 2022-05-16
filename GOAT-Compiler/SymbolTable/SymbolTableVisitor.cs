@@ -1,10 +1,5 @@
 ﻿using GOATCode.analysis;
 using GOATCode.node;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace GOAT_Compiler
 {
@@ -12,18 +7,19 @@ namespace GOAT_Compiler
     /// A class that handles scopes for a symbol table
     /// If you inherit from this, scopes are handled automatically.
     /// For safety, this class will seal cases that include modifying scope.
-    /// Instead cases OutsideScope______ and InsideScope____ are included, 
+    /// Instead cases OutsideScope______ and InsideScope____ are included,
     /// that are run inside and outside the scope.
     /// </summary>
-    abstract class SymbolTableVisitor : DepthFirstAdapter
+    internal abstract class SymbolTableVisitor : DepthFirstAdapter
     {
         protected ISymbolTable _symbolTable;
+
         public SymbolTableVisitor(ISymbolTable symbolTable)
         {
             _symbolTable = symbolTable;
         }
 
-        public sealed override void InADeclProgram(ADeclProgram node)
+        public override sealed void InADeclProgram(ADeclProgram node)
         {
             OutsideScopeInADeclProgram(node);
             _symbolTable.OpenScope(node);

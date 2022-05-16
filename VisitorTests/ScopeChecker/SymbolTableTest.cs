@@ -1,18 +1,13 @@
+using GOAT_Compiler;
+using GOATCode.node;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using Xunit;
-using GOAT_Compiler;
-using GOATCode.lexer;
-using GOATCode.node;
-using GOATCode.parser;
-using VisitorTests;
 
 namespace SymbolTableTest
 {
     public class SymbolTableTest
     {
-
         [Theory]
         [InlineData("a", Types.Integer)]
         [InlineData("b", Types.Boolean)]

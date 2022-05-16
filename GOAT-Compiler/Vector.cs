@@ -12,7 +12,7 @@
             Y = y;
             Z = z;
         }
-        
+
         /// <summary>
         /// Overloads plus operator for the vector class.
         /// </summary>

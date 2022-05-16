@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace PrettyPrintATestFile
+﻿namespace PrettyPrintATestFile
 {
     internal partial class Program
     {

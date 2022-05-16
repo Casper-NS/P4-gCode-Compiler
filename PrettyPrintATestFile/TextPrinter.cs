@@ -4,7 +4,6 @@
  * without it getting overwritten by regenerating the parser.
  */
 
-
 using GOATCode.analysis;
 using GOATCode.node;
 using System;

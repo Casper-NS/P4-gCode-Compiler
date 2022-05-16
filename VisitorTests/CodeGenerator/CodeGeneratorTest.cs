@@ -1,12 +1,9 @@
 ﻿using GOAT_Compiler;
 using GOATCode.node;
 using System;
-using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using VisitorTests.Utilities;
 using Xunit;
 
@@ -18,13 +15,13 @@ namespace VisitorTests
         [InlineData("RelMoveTest.txt", "RelMoveTest.gcode")]
         public void CreatedFileChecker(string file, string outPutFileName)
         {
-            string TestFilePath = FileReadingTestUtilities.ProjectBaseDirectory + "CodeGenerator/Tests/InputFolder/"+ file;
+            string TestFilePath = FileReadingTestUtilities.ProjectBaseDirectory + "CodeGenerator/Tests/InputFolder/" + file;
             Start s = FileReadingTestUtilities.ParseFile(TestFilePath);
             ISymbolTable symbolTable = FileReadingTestUtilities.BuildSymbolTable(s);
             TypeChecker typeChecker = FileReadingTestUtilities.DoTypeChecking(s, symbolTable);
-            
+
             using (File.Create(outPutFileName)) { }
-            
+
             using (Stream stream = new FileStream(outPutFileName, FileMode.Open))
             {
                 using (StreamWriter writer = new StreamWriter(stream))
@@ -40,6 +37,7 @@ namespace VisitorTests
                 File.Delete(outPutFileName);
             }
         }
+
         [SkippableTheory(typeof(TestDependencyException))]
         [InlineData("RelMoveTest.txt", "RelMove.gcode")]
         public void CheckIfCreatedFileIsntEmpty(string file, string outPutFileName)
@@ -48,7 +46,7 @@ namespace VisitorTests
             Start s = FileReadingTestUtilities.ParseFile(TestFilePath);
             ISymbolTable symbolTable = FileReadingTestUtilities.BuildSymbolTable(s);
             TypeChecker typeChecker = FileReadingTestUtilities.DoTypeChecking(s, symbolTable);
-            
+
             CodeGenerator codeGenerator;
             using (File.Create(outPutFileName)) { }
 
@@ -60,7 +58,7 @@ namespace VisitorTests
                     s.Apply(codeGenerator);
                 }
             }
-            
+
             Assert.True(File.ReadAllText(outPutFileName).Length > 0);
             if (File.Exists(outPutFileName))
             {
@@ -107,11 +105,13 @@ namespace VisitorTests
             Assert.Equal(expectedFloat, f, 5);
         }
     }
-    class CodeGeneratorFilesEnumerator : BaseFilesEnumerator
+
+    internal class CodeGeneratorFilesEnumerator : BaseFilesEnumerator
     {
         public override string RelativeFolderPath() => "CodeGenerator/Tests/InputFolder";
     }
-    class FloatArithmeticWorksFilesEnumerator : BaseFilesEnumerator
+
+    internal class FloatArithmeticWorksFilesEnumerator : BaseFilesEnumerator
     {
         public override string RelativeFolderPath() => "CodeGenerator/Tests/FloatArithmetics";
     }

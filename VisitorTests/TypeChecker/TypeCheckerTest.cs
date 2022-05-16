@@ -1,14 +1,5 @@
 ﻿using GOAT_Compiler;
-using GOATCode.lexer;
 using GOATCode.node;
-using GOATCode.parser;
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using VisitorTests;
 using VisitorTests.Utilities;
 using Xunit;
@@ -73,6 +64,7 @@ namespace SymbolTableTest
         {
             public override string RelativeFolderPath() => "TypeChecker/TypesOK";
         }
+
         private class WrongFilesEnumerator : BaseFilesEnumerator
         {
             public override string RelativeFolderPath() => "TypeChecker/Wrong";

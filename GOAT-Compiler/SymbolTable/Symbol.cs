@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
-using System.Formats.Asn1;
+﻿using System.Collections.Generic;
 using System.Linq;
 
 namespace GOAT_Compiler
@@ -15,6 +11,7 @@ namespace GOAT_Compiler
         Boolean,
         Void
     };
+
     /// <summary>
     /// The symbol-class which is used for variables and functions. The symboltable stores symbols.
     /// </summary>
@@ -31,8 +28,9 @@ namespace GOAT_Compiler
         /// The name of the symbol (the id).
         /// </summary>
         public string Name { get; }
+
         /// <summary>
-        /// If the symbol is a variable, this is the type of the variable. 
+        /// If the symbol is a variable, this is the type of the variable.
         /// If the symbol is a function then this is the returntype of the function.
         /// </summary>
         public Types Type { get; }
