@@ -96,6 +96,7 @@ namespace GOAT_Compiler
 
         public override void CaseADeclProgram(ADeclProgram node)
         {
+            _buildInFunctions.StartUp();
             InADeclProgram(node);
             {
                 Object[] decls = new Object[node.GetDecl().Count];
@@ -110,6 +111,7 @@ namespace GOAT_Compiler
                 _symbolTable.GetFunctionNode(_symbolTable.GetFunctionSymbol("main")).Apply(this);
             }
             OutADeclProgram(node);
+            _buildInFunctions.EndFile();
         }
 
         public override void OutAVarDecl(AVarDecl node)
@@ -698,7 +700,7 @@ namespace GOAT_Compiler
 
         public override void CaseAGcodeStmt(AGcodeStmt node)
         {
-            string literal = node.GetGcodeLiteral().Text;
+            string literal = node.GetGcodeLiteral().Text.Trim();
             var linebyline = literal.Split(new string[] { "\r\n", "\r", "\n" }, StringSplitOptions.None);
             foreach (string line in linebyline)
             {
