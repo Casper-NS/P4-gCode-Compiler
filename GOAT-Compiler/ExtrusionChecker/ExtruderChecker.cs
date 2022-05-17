@@ -124,8 +124,6 @@ namespace GOAT_Compiler
         //and updates the scope extrude type.
         public override void InANoneBlock(ANoneBlock node)
         {
-            _functions[_currentSymbol].ExtrudeType = Extrude.None;
-
             _stack.Push(Extrude.None);
         }
 
@@ -133,8 +131,6 @@ namespace GOAT_Compiler
 
         public override void InABuildBlock(ABuildBlock node)
         {
-            _functions[_currentSymbol].ExtrudeType = Extrude.Build;
-
             PushVerification(node, Extrude.Build);
         }
 
@@ -142,8 +138,6 @@ namespace GOAT_Compiler
 
         public override void InAWalkBlock(AWalkBlock node)
         {
-            _functions[_currentSymbol].ExtrudeType = Extrude.Walk;
-
             _stack.Push(Extrude.Walk);
         }
 
