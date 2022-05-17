@@ -89,7 +89,7 @@ namespace GOAT_Compiler
 
             if (!IsFunctionDeclared(node))
             {
-                _functions.Add(_currentSymbol, new BFSNode(_currentSymbol.Name, Extrude.NotSet));
+                _functions.Add(_currentSymbol, new BFSNode(_currentSymbol.Name));
             }
         }
 
@@ -99,7 +99,7 @@ namespace GOAT_Compiler
 
             if (!IsFunctionDeclared(node))
             {
-                _functions.Add(_currentSymbol, new BFSNode(_currentSymbol.Name, Extrude.NotSet));
+                _functions.Add(_currentSymbol, new BFSNode(_currentSymbol.Name));
             }
         }
 
@@ -112,14 +112,14 @@ namespace GOAT_Compiler
         {
             if (!IsFunctionDeclared(node))
             {
-                _functions.Add(_symbolTable.GetFunctionSymbol(node.GetName().Text), new BFSNode(node.GetName().Text, Extrude.NotSet));
+                _functions.Add(_symbolTable.GetFunctionSymbol(node.GetName().Text), new BFSNode(node.GetName().Text));
             }
             _functions[_currentSymbol].AddFunctionCall(_functions[_symbolTable.GetFunctionSymbol(node.GetName().Text)], _stack.Peek());
         }
 
         //The In and Out of Blocks sets the extrude type to the function that is declared is
         //and updates the scope extrude type.
-        public override void InANoneBlock(ANoneBlock node) =>_stack.Push(Extrude.None);
+        public override void InANoneBlock(ANoneBlock node) => _stack.Push(Extrude.None);
 
         public override void OutANoneBlock(ANoneBlock node) => PopVerification(Extrude.None);
 
@@ -127,7 +127,7 @@ namespace GOAT_Compiler
 
         public override void OutABuildBlock(ABuildBlock node) => PopVerification(Extrude.Build);
 
-        public override void InAWalkBlock(AWalkBlock node) =>_stack.Push(Extrude.Walk);
+        public override void InAWalkBlock(AWalkBlock node) => _stack.Push(Extrude.Walk);
 
         public override void OutAWalkBlock(AWalkBlock node) => PopVerification(Extrude.Walk);
 
