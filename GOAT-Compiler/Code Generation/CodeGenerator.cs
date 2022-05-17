@@ -700,7 +700,7 @@ namespace GOAT_Compiler
 
         public override void CaseAGcodeStmt(AGcodeStmt node)
         {
-            string literal = node.GetGcodeLiteral().Text;
+            string literal = node.GetGcodeLiteral().Text.Trim();
             var linebyline = literal.Split(new string[] { "\r\n", "\r", "\n" }, StringSplitOptions.None);
             foreach (string line in linebyline)
             {
