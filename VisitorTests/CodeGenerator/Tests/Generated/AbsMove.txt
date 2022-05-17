@@ -5,11 +5,5 @@
 	build AbsMove((1,0,0))
 }
 @
-G28
-G92 E0
-G90
 G0 X-1 Y0 Z0
 G1 X1 Y0 Z0 E2
-M106 S0
-M104 S0
-M140 S0
