@@ -13,7 +13,7 @@ namespace VisitorTests
     {
         [SkippableTheory(typeof(TestDependencyException))]
         [ClassData(typeof(GeneratesExpectedCodeEnumerator))]
-        public void CreatedFileChecker(string file)
+        public void BuiltInFunctionTest(string file)
         {
             // get the file and split it into the two sections
             string TestFilePath = FileReadingTestUtilities.ProjectBaseDirectory + "CodeGenerator/Tests/InputFolder/" + file;
