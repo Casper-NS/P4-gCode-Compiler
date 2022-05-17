@@ -33,7 +33,7 @@ namespace GOAT_Compiler
         /// </summary>
         internal BFSNode CallerNode { get; set; }
 
-        internal BFSNode(string n, Extrude extrude) => Name = n;
+        internal BFSNode(string n) => Name = n;
 
         internal void AddFunctionCall(BFSNode dn, Extrude e) => FunctionCalls.Add(new FunctionCall(dn, e));
     }
