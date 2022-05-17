@@ -26,8 +26,6 @@ namespace GOAT_Compiler
 
         internal List<FunctionCall> FunctionCalls { get; private set; } = new();
 
-        internal Extrude ExtrudeType { get; set; }
-
         internal Extrude TheExtrudeTypeFromCallStack { get; set; } = Extrude.NotSet;
 
         /// <summary>
@@ -35,11 +33,7 @@ namespace GOAT_Compiler
         /// </summary>
         internal BFSNode CallerNode { get; set; }
 
-        internal BFSNode(string n, Extrude extrude)
-        {
-            Name = n;
-            ExtrudeType = extrude;
-        }
+        internal BFSNode(string n, Extrude extrude) => Name = n;
 
         internal void AddFunctionCall(BFSNode dn, Extrude e) => FunctionCalls.Add(new FunctionCall(dn, e));
     }

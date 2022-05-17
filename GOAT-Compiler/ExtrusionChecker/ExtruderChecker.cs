@@ -31,10 +31,7 @@ namespace GOAT_Compiler
 
         private readonly ISymbolTable _symbolTable;
 
-        internal ExtruderChecker(ISymbolTable symbolTable)
-        {
-            _symbolTable = symbolTable;
-        }
+        internal ExtruderChecker(ISymbolTable symbolTable) =>_symbolTable = symbolTable;
 
         /// <summary>
         /// This function is a small verifier that checks that it pops the expected extrude type.
@@ -122,30 +119,15 @@ namespace GOAT_Compiler
 
         //The In and Out of Blocks sets the extrude type to the function that is declared is
         //and updates the scope extrude type.
-        public override void InANoneBlock(ANoneBlock node)
-        {
-            _functions[_currentSymbol].ExtrudeType = Extrude.None;
-
-            _stack.Push(Extrude.None);
-        }
+        public override void InANoneBlock(ANoneBlock node) =>_stack.Push(Extrude.None);
 
         public override void OutANoneBlock(ANoneBlock node) => PopVerification(Extrude.None);
 
-        public override void InABuildBlock(ABuildBlock node)
-        {
-            _functions[_currentSymbol].ExtrudeType = Extrude.Build;
-
-            PushVerification(node, Extrude.Build);
-        }
+        public override void InABuildBlock(ABuildBlock node) => PushVerification(node, Extrude.Build);
 
         public override void OutABuildBlock(ABuildBlock node) => PopVerification(Extrude.Build);
 
-        public override void InAWalkBlock(AWalkBlock node)
-        {
-            _functions[_currentSymbol].ExtrudeType = Extrude.Walk;
-
-            _stack.Push(Extrude.Walk);
-        }
+        public override void InAWalkBlock(AWalkBlock node) =>_stack.Push(Extrude.Walk);
 
         public override void OutAWalkBlock(AWalkBlock node) => PopVerification(Extrude.Walk);
 
