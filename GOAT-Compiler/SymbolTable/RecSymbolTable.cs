@@ -98,13 +98,7 @@ namespace GOAT_Compiler
     internal class Table
     {
         public Table ParentTable { get; private set; }
-        public List<Table> ChildrenTables { get; set; }
         private readonly Dictionary<string, Symbol> Symbols;
-
-        /// <summary>
-        /// Keeps track of which tables have been visited, to ensure they are visited in order.
-        /// </summary>
-        public int VisitCounter { get; set; }
 
         /// <summary>
         /// Constructs a table and sets its parent to the given table
@@ -113,9 +107,7 @@ namespace GOAT_Compiler
         public Table(Table Parent)
         {
             Symbols = new Dictionary<string, Symbol>();
-            ChildrenTables = new List<Table>();
             ParentTable = Parent;
-            VisitCounter = 0;
         }
 
         /// <summary>
