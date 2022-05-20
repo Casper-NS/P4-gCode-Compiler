@@ -191,7 +191,19 @@ namespace GOAT_Compiler
             }
         }
 
-        public override void OutANegExp(ANegExp node) => valueMap.Put(node, -GetValue(node.GetExp()));
+        public override void OutANegExp(ANegExp node)
+        {
+            if (typeMap[node] == Types.Vector)
+            {
+                Vector old = GetValue(node.GetExp());
+                valueMap.Put(node, new Vector(-old.X, -old.Y, -old.Z));
+            }
+            else
+            {
+                valueMap.Put(node, -GetValue(node.GetExp()));
+            }
+        }
+
 
         public override void OutAAssignStmt(AAssignStmt node)
         {
