@@ -11,3 +11,10 @@ Compiler for g-code
 
 ### The update parser command:
 java -jar _absPathToSablecc.jar_ -t csharp,csharp-build  _absPathToGrammar.sablecc_
+
+
+#### How to use the compiler for GOAT-code:
+Open a terminal and execude the program with two parameters. 
+The first parameter is path of the file which you want to compile to G-code and the second parameter is the absolute path for the compiled file should have, this includes the name of the file and the ".gcode".
+Example: 
+P4/gCode-Compiler RelativePath/text.goat AbsolutePath/NameOfFile.gcode
