@@ -14,11 +14,11 @@ Step by step guide to using the GOAT-code compiler:
 
 2: Build the project.
 
-3: Open up the newly built P4-GCode-Compiler.
+3: Open up the P4-GCode-Compiler folder and navigate to \bin\Debug\net5.0.
 
-4: Inside the built P4-GCode-Compiler is GOAT.exe, which is the compiler. This can be run from a command line.
+4: Inside the folder is GOAT.exe, which is the compiler. This can be run from a command line.
 
-6: Insert or create a GOAT-code file in the same folder as GOAT.exe
+6: Insert or create a .goat or .txt file in the same folder as GOAT.exe
 
 7: Open up the folder containing GOAT.exe in a command line
 
@@ -33,7 +33,7 @@ Before using any compiled G-code, please run it through a G-code viewer such as 
 ## How to update the parser:
 - Open the "sableCC2 folder.
 - Open the "Generated" folder.
-- Replace the ".sablecc" file with the updated version of the grammar.
+- Edit the ".sablecc" file with the updated version of the grammar.
 - Open the Command Prompt (press windows-button and type "cmd", then press enter)
 - If you havn't already, then download the c# version of sableCC from this link: [sablecc-download](http://www.mare.ee/indrek/sablecc/) (the download link can be found in the installation topic)
 - Insert the following command:
