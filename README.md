@@ -26,10 +26,7 @@ Step by step guide to using the GOAT-code compiler:
 
 Example files can be found in the source code under the VisitorTests folder. Especially CubeClean.goat and Vase.goat are good examples of goat code files.
 
-Open a terminal and execude the program with two parameters. 
-The first parameter is path of the file which you want to compile to G-code and the second parameter is the absolute path for the compiled file should have, this includes the name of the file and the ".gcode".
-Example: 
-P4/gCode-Compiler RelativePath/text.goat AbsolutePath/NameOfFile.gcode
+It is not necessary to have your GOAT files inside the same folder as GOAT.exe, if you use absolute paths instead of relative paths.
 
 Before using any compiled G-code, please run it through a G-code viewer such as https://ncviewer.com/ or https://nraynaud.github.io/webgcode/.
 
