@@ -1,6 +1,11 @@
 # GOAT-code compiler
-GOAT (G-code Offering Abstraction and Turtling) is a programming language that offers higher level abstraction over G-code.
+GOAT-code (G-code Offering Abstraction and Turtling) is a programming language that offers higher level abstraction over G-code.
 This project is a GOAT-code to G-code compiler.
+
+This compiler generates G-code that should be supported by:
+Marlin, RepRapFirmware, Repetier, Smoothie, Klipper, Prusa, MK4Duo, Sprinter, Machinekit and Redeem.
+
+However, it has only been tested on Marlin
 
 ## How to use the compiler for GOAT-code:
 Open a terminal and execude the program with two parameters. 
@@ -8,6 +13,7 @@ The first parameter is path of the file which you want to compile to G-code and 
 Example: 
 P4/gCode-Compiler RelativePath/text.goat AbsolutePath/NameOfFile.gcode
 
+Before using any compiled G-code, please run it through a G-code viewer such as https://ncviewer.com/ or https://nraynaud.github.io/webgcode/.
 
 ## How to update the parser:
 - Open the "sableCC2 folder.
