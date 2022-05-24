@@ -1,6 +1,6 @@
 # GOAT-code compiler
-GOAT (G-code Offering Abstraction and Turtling) is a higher level abstraction over G-code.
-This project is a GOAT-code to G-code compiler
+GOAT (G-code Offering Abstraction and Turtling) is a programming language that offers higher level abstraction over G-code.
+This project is a GOAT-code to G-code compiler.
 
 ## How to use the compiler for GOAT-code:
 Open a terminal and execude the program with two parameters. 
