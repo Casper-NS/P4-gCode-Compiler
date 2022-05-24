@@ -1,5 +1,13 @@
-# P4-gCode-Compiler
-Compiler for g-code
+# GOAT-code compiler
+GOAT (G-code Offering Abstraction and Turtling) is a higher level abstraction over G-code.
+This project is a GOAT-code to G-code compiler
+
+## How to use the compiler for GOAT-code:
+Open a terminal and execude the program with two parameters. 
+The first parameter is path of the file which you want to compile to G-code and the second parameter is the absolute path for the compiled file should have, this includes the name of the file and the ".gcode".
+Example: 
+P4/gCode-Compiler RelativePath/text.goat AbsolutePath/NameOfFile.gcode
+
 
 ## How to update the parser:
 - Open the "sableCC2 folder.
@@ -13,8 +21,3 @@ Compiler for g-code
 java -jar _absPathToSablecc.jar_ -t csharp,csharp-build  _absPathToGrammar.sablecc_
 
 
-#### How to use the compiler for GOAT-code:
-Open a terminal and execude the program with two parameters. 
-The first parameter is path of the file which you want to compile to G-code and the second parameter is the absolute path for the compiled file should have, this includes the name of the file and the ".gcode".
-Example: 
-P4/gCode-Compiler RelativePath/text.goat AbsolutePath/NameOfFile.gcode
