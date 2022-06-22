@@ -78,6 +78,8 @@ namespace P4_GCode_Compiler
             AST.Apply(scopeChecker);
             typeChecker = new TypeChecker(symTable);
             AST.Apply(typeChecker);
+            ExtruderChecker extruderChecker = new ExtruderChecker(symTable);
+            AST.Apply(extruderChecker);
         }
 
         private static void GenerateCode(string file, Start AST, ISymbolTable symTable, TypeChecker typeChecker)
